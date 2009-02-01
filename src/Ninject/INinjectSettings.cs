@@ -2,7 +2,7 @@
 
 namespace Ninject
 {
-	public class KernelOptions
+	public interface INinjectSettings
 	{
 	}
 }

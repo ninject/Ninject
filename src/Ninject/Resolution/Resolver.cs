@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Components;
 using Ninject.Planning;
 using Ninject.Resolution.Strategies;
 
 namespace Ninject.Resolution
 {
-	public class Resolver : IResolver
+	public class Resolver : NinjectComponent, IResolver
 	{
 		public IPlanner Planner { get; set; }
 		public IPipeline Pipeline { get; set; }

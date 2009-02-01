@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using Ninject.Infrastructure.Components;
 using Ninject.Syntax;
 
 namespace Ninject.Selection.Heuristics
 {
-	public class StandardConstructorScorer : IConstructorScorer
+	public class StandardConstructorScorer : NinjectComponent, IConstructorScorer
 	{
 		public int Score(ConstructorInfo constructor)
 		{

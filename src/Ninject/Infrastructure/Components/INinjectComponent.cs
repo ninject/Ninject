@@ -2,5 +2,8 @@
 
 namespace Ninject.Infrastructure.Components
 {
-	public interface INinjectComponent { }
+	public interface INinjectComponent
+	{
+		INinjectSettings Settings { get; set; }
+	}
 }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Ninject.Infrastructure.Components;
 using Ninject.Selection.Heuristics;
 
 namespace Ninject.Selection
 {
-	public class Selector : ISelector
+	public class Selector : NinjectComponent, ISelector
 	{
 		public BindingFlags Flags { get; set; }
 		public IConstructorScorer ConstructorScorer { get; set; }

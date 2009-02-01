@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Ninject.Infrastructure.Components;
 using Ninject.Injection.Injectors;
 using Ninject.Injection.Injectors.Linq;
 
 namespace Ninject.Injection
 {
-	public class StandardInjectorFactory : IInjectorFactory
+	public class StandardInjectorFactory : NinjectComponent, IInjectorFactory
 	{
 		private readonly Dictionary<ConstructorInfo, IConstructorInjector> _constructorInjectors = new Dictionary<ConstructorInfo, IConstructorInjector>();
 		private readonly Dictionary<MethodInfo, IMethodInjector> _methodInjectors = new Dictionary<MethodInfo, IMethodInjector>();

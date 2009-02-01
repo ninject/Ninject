@@ -35,6 +35,20 @@ namespace Ninject.Tests.StandardKernelTests
 			Assert.NotNull(weapon);
 			Assert.IsType<Sword>(weapon);
 		}
+
+		[Fact]
+		public void DependenciesAreInjectedViaConstructor()
+		{
+			kernel.Bind<IWeapon>().To<Sword>();
+			kernel.Bind<IWarrior>().To<Samurai>();
+
+			var warrior = kernel.Get<IWarrior>();
+
+			Assert.NotNull(warrior);
+			Assert.IsType<Samurai>(warrior);
+			Assert.NotNull(warrior.Weapon);
+			Assert.IsType<Sword>(warrior.Weapon);
+		}
 	}
 
 	public class WhenGetIsCalledForSelfBoundService : StandardKernelContext
@@ -46,6 +60,19 @@ namespace Ninject.Tests.StandardKernelTests
 			var weapon = kernel.Get<Sword>();
 			Assert.NotNull(weapon);
 			Assert.IsType<Sword>(weapon);
+		}
+
+		[Fact]
+		public void DependenciesAreInjectedViaConstructor()
+		{
+			kernel.Bind<IWeapon>().To<Sword>();
+			kernel.Bind<Samurai>().ToSelf();
+
+			var samurai = kernel.Get<Samurai>();
+
+			Assert.NotNull(samurai);
+			Assert.NotNull(samurai.Weapon);
+			Assert.IsType<Sword>(samurai.Weapon);
 		}
 	}
 

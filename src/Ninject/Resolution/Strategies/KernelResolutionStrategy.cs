@@ -1,9 +1,10 @@
 ﻿using System;
 using Ninject.Activation;
+using Ninject.Infrastructure.Components;
 
 namespace Ninject.Resolution.Strategies
 {
-	public class KernelResolutionStrategy : IResolutionStrategy
+	public class KernelResolutionStrategy : NinjectComponent, IResolutionStrategy
 	{
 		public bool Supports(IRequest request)
 		{

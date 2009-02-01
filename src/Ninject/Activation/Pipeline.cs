@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation.Strategies;
+using Ninject.Infrastructure.Components;
 using Ninject.Syntax;
 
 namespace Ninject.Activation
 {
-	public class Pipeline : IPipeline
+	public class Pipeline : NinjectComponent, IPipeline
 	{
 		public IList<IActivationStrategy> Strategies { get; private set; }
 

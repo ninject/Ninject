@@ -2,28 +2,18 @@
 using System.Collections.Generic;
 using Ninject.Activation;
 using Ninject.Parameters;
-using Ninject.Planning.Targets;
 using Ninject.Resolution;
 
 namespace Ninject.Infrastructure
 {
-	public class ResolutionScope : IResolutionScope
+	public class ResolutionScope : DisposableObject, IResolutionScope
 	{
-		public IKernel Kernel { get; private set; }
+		private readonly IResolutionRoot _parent;
 
-		public ResolutionScope(IKernel kernel)
+		public ResolutionScope(IResolutionRoot parent)
 		{
-			Kernel = kernel;
+			_parent = parent;
 		}
-
-		public void Dispose()
-		{
-			Disposed(this, EventArgs.Empty);
-			Disposed = null;
-			GC.SuppressFinalize(this);
-		}
-
-		public event EventHandler Disposed = delegate { };
 
 		public IEnumerable<IContext> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
 		{
@@ -32,7 +22,7 @@ namespace Ninject.Infrastructure
 
 		public IEnumerable<IContext> Resolve(IRequest request)
 		{
-			return Kernel.Resolve(request);
+			return _parent.Resolve(request);
 		}
 
 		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)

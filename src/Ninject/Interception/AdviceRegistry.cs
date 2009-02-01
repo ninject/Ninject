@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure.Components;
 using Ninject.Interception.Advice;
 
 namespace Ninject.Interception
 {
-	public class AdviceRegistry : IAdviceRegistry
+	public class AdviceRegistry : NinjectComponent, IAdviceRegistry
 	{
 		private readonly List<IAdvice> _advice = new List<IAdvice>();
 

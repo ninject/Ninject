@@ -8,17 +8,22 @@ using Ninject.Syntax;
 
 namespace Ninject.Infrastructure.Components
 {
-	public class ComponentContainer : IComponentContainer
+	public class ComponentContainer : DisposableObject, IComponentContainer
 	{
 		private readonly Multimap<Type, Type> _mappings = new Multimap<Type, Type>();
 		private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
 
-		public void Dispose()
-		{
-			foreach (Type service in _mappings.Keys)
-				RemoveAll(service);
+		public INinjectSettings Settings { get; set; }
 
-			GC.SuppressFinalize(this);
+		public override void Dispose()
+		{
+			foreach (object instance in _instances.Values)
+				instance.TryDispose();
+
+			_mappings.Clear();
+			_instances.Clear();
+
+			base.Dispose();
 		}
 
 		public void Add<TService, TImplementation>()
@@ -36,15 +41,14 @@ namespace Ninject.Infrastructure.Components
 
 		public void RemoveAll(Type service)
 		{
-			foreach (object instance in _instances.Values)
+			foreach (Type implementation in _mappings[service])
 			{
-				var disposable = instance as IDisposable;
+				if (_instances.ContainsKey(implementation))
+					_instances[implementation].TryDispose();
 
-				if (disposable != null)
-					disposable.Dispose();
+				_instances.Remove(implementation);
 			}
 
-			_instances.Remove(service);
 			_mappings.RemoveAll(service);
 		}
 

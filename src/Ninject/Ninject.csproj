@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AutomatedRelease|AnyCPU' ">
     <OutputPath>..\..\build\release\</OutputPath>
@@ -104,7 +105,10 @@
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Bindings\BindingMetadata.cs" />
     <Compile Include="Bindings\IBindingMetadata.cs" />
+    <Compile Include="Infrastructure\Components\NinjectComponent.cs" />
+    <Compile Include="INinjectSettings.cs" />
     <Compile Include="ExtensionsForIBindingRoot.cs" />
+    <Compile Include="Infrastructure\DisposableObject.cs" />
     <Compile Include="Infrastructure\IResolutionScope.cs" />
     <Compile Include="Infrastructure\INotifyWhenDisposed.cs" />
     <Compile Include="Infrastructure\IResolutionRoot.cs" />
@@ -123,7 +127,7 @@
     <Compile Include="Interception\Dispatcher.cs" />
     <Compile Include="Interception\IInterceptor.cs" />
     <Compile Include="Interception\MethodCall.cs" />
-    <Compile Include="KernelOptions.cs" />
+    <Compile Include="NinjectSettings.cs" />
     <Compile Include="Creation\StandardProvider.cs" />
     <Compile Include="Creation\Provider.cs" />
     <Compile Include="ExtensionsForIResolutionRoot.cs" />
@@ -201,6 +205,7 @@
     <Compile Include="Bindings\BindingBuilder.cs" />
     <Compile Include="Bindings\Binding.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
+    <Compile Include="Syntax\ExtensionsForObject.cs" />
     <Compile Include="Syntax\IBindingWithNameMetadataWhenOrInScopeSyntax.cs" />
     <Compile Include="Syntax\IBindingWithNameSyntax.cs" />
     <Compile Include="Syntax\ExtensionsForICollection.cs" />

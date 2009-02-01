@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading;
+using Ninject.Infrastructure.Components;
 
 namespace Ninject.Activation.Caching
 {
-	public class CachePruner : ICachePruner
+	public class CachePruner : NinjectComponent, ICachePruner
 	{
 		private const int PollTimeoutMs = 1000;
 
@@ -21,8 +22,12 @@ namespace Ninject.Activation.Caching
 
 		public void StopPruning()
 		{
-			_timer.Dispose();
-			_timer = null;
+			if (_timer != null)
+			{
+				_timer.Dispose();
+				_timer = null;
+			}
+
 			_indicator = null;
 		}
 

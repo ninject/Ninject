@@ -22,8 +22,8 @@ namespace Ninject
 			AddComponents();
 		}
 
-		public StandardKernel(KernelOptions options, params IModule[] modules)
-			: base(options, modules)
+		public StandardKernel(INinjectSettings settings, params IModule[] modules)
+			: base(settings, modules)
 		{
 			AddComponents();
 		}

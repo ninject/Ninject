@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ninject.Infrastructure.Components;
 using Ninject.Injection;
 
 namespace Ninject.Messaging
 {
-	public class Bus : IBus
+	public class Bus : NinjectComponent, IBus
 	{
 		private readonly Dictionary<string, IChannel> _channels = new Dictionary<string, IChannel>();
 
@@ -15,14 +16,14 @@ namespace Ninject.Messaging
 			InjectorFactory = injectorFactory;
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			foreach (IChannel channel in _channels.Values)
 				channel.Dispose();
 
 			_channels.Clear();
 
-			GC.SuppressFinalize(this);
+			base.Dispose();
 		}
 
 		public IChannel GetOrOpenChannel(string name)

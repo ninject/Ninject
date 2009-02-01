@@ -5,6 +5,8 @@ namespace Ninject.Infrastructure.Components
 {
 	public interface IComponentContainer : IDisposable
 	{
+		INinjectSettings Settings { get; set; }
+
 		void Add<TService, TImplementation>()
 			where TService : INinjectComponent
 			where TImplementation : TService, INinjectComponent;

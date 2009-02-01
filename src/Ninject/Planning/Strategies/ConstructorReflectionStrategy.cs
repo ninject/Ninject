@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using Ninject.Infrastructure.Components;
 using Ninject.Planning.Directives;
 using Ninject.Selection;
 
 namespace Ninject.Planning.Strategies
 {
-	public class ConstructorReflectionStrategy : IPlanningStrategy
+	public class ConstructorReflectionStrategy : NinjectComponent, IPlanningStrategy
 	{
 		public ISelector Selector { get; set; }
 

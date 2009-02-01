@@ -13,25 +13,32 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
-	public abstract class KernelBase : IKernel
+	public abstract class KernelBase : DisposableObject, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
 
-		public KernelOptions Options { get; private set; }
+		public INinjectSettings Settings { get; private set; }
 		public IComponentContainer Components { get; private set; }
 
 		protected KernelBase(params IModule[] modules)
-			: this(new ComponentContainer(), new KernelOptions(), modules) { }
+			: this(new ComponentContainer(), new NinjectSettings(), modules) { }
 
-		protected KernelBase(KernelOptions options, params IModule[] modules)
-			: this(new ComponentContainer(), options, modules) { }
+		protected KernelBase(INinjectSettings settings, params IModule[] modules)
+			: this(new ComponentContainer(), settings, modules) { }
 
-		protected KernelBase(IComponentContainer components, KernelOptions options, params IModule[] modules)
+		protected KernelBase(IComponentContainer components, INinjectSettings settings, params IModule[] modules)
 		{
-			Options = options;
+			Settings = settings;
 			Components = components;
+			components.Settings = settings;
 			modules.Map(Load);
+		}
+
+		public override void Dispose()
+		{
+			if (Components != null) Components.Dispose();
+			base.Dispose();
 		}
 
 		public virtual void Load(IModule module)

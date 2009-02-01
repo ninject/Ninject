@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure.Components;
 using Ninject.Planning.Strategies;
 using Ninject.Syntax;
 
 namespace Ninject.Planning
 {
-	public class Planner : IPlanner
+	public class Planner : NinjectComponent, IPlanner
 	{
 		private readonly Dictionary<Type, IPlan> _plans = new Dictionary<Type, IPlan>();
 

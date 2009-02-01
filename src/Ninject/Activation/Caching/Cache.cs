@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Components;
 using Ninject.Syntax;
 
 namespace Ninject.Activation.Caching
 {
-	public class Cache : IDisposable, ICache
+	public class Cache : NinjectComponent, ICache
 	{
 		private readonly Multimap<Type, CacheEntry> _entries = new Multimap<Type, CacheEntry>();
 		private readonly object _mutex = new object();
@@ -20,11 +21,15 @@ namespace Ninject.Activation.Caching
 			Pruner.StartPruning(this);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
-			Pruner.StopPruning();
-			Pruner = null;
-			GC.SuppressFinalize(this);
+			if (Pruner != null)
+			{
+				Pruner.StopPruning();
+				Pruner = null;
+			}
+
+			base.Dispose();
 		}
 
 		public void Remember(IContext context)

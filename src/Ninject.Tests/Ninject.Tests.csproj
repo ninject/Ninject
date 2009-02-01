@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConstructorInjectorTests.cs" />
+    <Compile Include="CachePrunerTests.cs" />
+    <Compile Include="BuiltinScopeTests.cs" />
+    <Compile Include="ResolutionScopeTests.cs" />
     <Compile Include="MethodInjectionStrategyTests.cs" />
     <Compile Include="PipelineTests.cs" />
     <Compile Include="MethodInjectorTests.cs" />

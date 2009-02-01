@@ -8,9 +8,9 @@ using Ninject.Modules;
 
 namespace Ninject
 {
-	public interface IKernel : IBindingRoot, IResolutionRoot
+	public interface IKernel : IBindingRoot, IResolutionRoot, INotifyWhenDisposed
 	{
-		KernelOptions Options { get; }
+		INinjectSettings Settings { get; }
 		IComponentContainer Components { get; }
 
 		void Load(IModule module);

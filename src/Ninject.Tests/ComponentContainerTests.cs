@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Components;
 using Xunit;
 
@@ -182,7 +183,7 @@ namespace Ninject.Tests.ComponentContainerTests
 		}
 	}
 
-	internal class AsksForList : IAsksForList
+	internal class AsksForList : NinjectComponent, IAsksForList
 	{
 		public List<ITestService> Services { get; set; }
 
@@ -197,7 +198,7 @@ namespace Ninject.Tests.ComponentContainerTests
 		List<ITestService> Services { get; set; }
 	}
 
-	internal class AsksForArray : IAsksForArray
+	internal class AsksForArray : NinjectComponent, IAsksForArray
 	{
 		public ITestService[] Services { get; set; }
 
@@ -212,7 +213,7 @@ namespace Ninject.Tests.ComponentContainerTests
 		ITestService[] Services { get; set; }
 	}
 
-	internal class AsksForCollection : IAsksForCollection
+	internal class AsksForCollection : NinjectComponent, IAsksForCollection
 	{
 		public ICollection<ITestService> Services { get; set; }
 
@@ -227,7 +228,7 @@ namespace Ninject.Tests.ComponentContainerTests
 		ICollection<ITestService> Services { get; set; }
 	}
 
-	internal class AsksForEnumerable : IAsksForEnumerable
+	internal class AsksForEnumerable : NinjectComponent, IAsksForEnumerable
 	{
 		public ITestService SecondService { get; set; }
 
@@ -242,20 +243,8 @@ namespace Ninject.Tests.ComponentContainerTests
 		ITestService SecondService { get; set; }
 	}
 
-	internal class TestServiceA : ITestService
-	{
-		public bool IsDisposed { get; set; }
-		public void Dispose() { IsDisposed = true; }
-	}
+	internal class TestServiceA : NinjectComponent, ITestService { }
+	internal class TestServiceB : NinjectComponent, ITestService { }
 
-	internal class TestServiceB : ITestService
-	{
-		public bool IsDisposed { get; set; }
-		public void Dispose() { IsDisposed = true; }
-	}
-
-	internal interface ITestService : INinjectComponent, IDisposable
-	{
-		bool IsDisposed { get; set; }
-	}
+	internal interface ITestService : INinjectComponent, INotifyWhenDisposed { }
 }
