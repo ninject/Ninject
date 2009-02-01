@@ -1,0 +1,26 @@
+<Project DefaultTargets="Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+	
+	<UsingTask AssemblyFile="tools\xunit.net\xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit"/>
+
+	<PropertyGroup Condition="'$(BuildType)' == ''">
+		<BuildType>Release</BuildType>
+	</PropertyGroup>
+	
+	<Target Name="Build">
+		<MSBuild Projects="Ninject.sln" Targets="Build" Properties="Configuration=$(BuildType)"/>
+	</Target>
+	
+	<Target Name="Test" DependsOnTargets="Build">
+		<MakeDir Directories="build\reports" />
+		<Exec Command="..\..\tools\ncover\ncover.console.exe &quot;..\..\tools\xunit.net\xunit.console.exe&quot; &quot;Ninject.Tests.dll&quot; //reg //w &quot;.&quot; //x &quot;..\reports\Coverage.xml&quot;"
+		      WorkingDirectory="build\$(BuildType)\"/>
+	</Target>
+
+	<Target Name="Merge" DependsOnTargets="Test">
+    <Exec Command="move $(TargetDir)Ninject.dll $(TargetDir)Ninject.input.dll"
+          WorkingDirectory="build\$(BuildType)\" />
+		<Exec Command="..\..\tools\ilmerge\ilmerge.exe /target:dll /out:$(TargetDir)Ninject.dll $(TargetDir)Ninject.input.dll $(TargetDir)LinFu.DynamicProxy.dll"
+		      WorkingDirectory="build\$(BuildType)\" />
+	</Target>
+	
+</Project>
