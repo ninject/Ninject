@@ -37,7 +37,7 @@ namespace Ninject.Activation
 
 		public bool Matches(IBinding binding)
 		{
-			return Constraints.All(c => c.Matches(binding));
+			return Constraints.All(c => c.Matches(binding.Metadata));
 		}
 
 		public object GetScope()

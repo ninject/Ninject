@@ -5,19 +5,19 @@ namespace Ninject.Resolution
 {
 	public class PredicateConstraint : IConstraint
 	{
-		public Func<IBinding, bool> Predicate { get; set; }
+		public Func<IBindingMetadata, bool> Predicate { get; set; }
 
-		public PredicateConstraint(Func<IBinding, bool> predicate)
+		public PredicateConstraint(Func<IBindingMetadata, bool> predicate)
 		{
 			Predicate = predicate;
 		}
 
-		public bool Matches(IBinding binding)
+		public bool Matches(IBindingMetadata metadata)
 		{
-			return Predicate(binding);
+			return Predicate(metadata);
 		}
 
-		public static implicit operator PredicateConstraint(Func<IBinding, bool> predicate)
+		public static implicit operator PredicateConstraint(Func<IBindingMetadata, bool> predicate)
 		{
 			return new PredicateConstraint(predicate);
 		}

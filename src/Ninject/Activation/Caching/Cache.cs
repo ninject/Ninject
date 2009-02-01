@@ -55,7 +55,7 @@ namespace Ninject.Activation.Caching
 			lock (_mutex)
 			{
 				foreach (Type type in _entries.Keys)
-					_entries[type].Where(e => !e.Scope.IsAlive).Map(Forget);
+					_entries[type].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
 			}
 		}
 

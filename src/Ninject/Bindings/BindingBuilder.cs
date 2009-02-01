@@ -59,16 +59,16 @@ namespace Ninject.Bindings
 			return this;
 		}
 
-		public IBindingWhenOrInScopeSyntax WithName(string name)
+		public IBindingMetadataWhenOrInScopeSyntax WithName(string name)
 		{
 			String.Intern(name);
-			Binding.Name = name;
+			Binding.Metadata.Name = name;
 			return this;
 		}
 
 		public IBindingMetadataWhenOrInScopeSyntax WithMetadata(string key, object value)
 		{
-			Binding.SetMetadata(key, value);
+			Binding.Metadata.Set(key, value);
 			return this;
 		}
 

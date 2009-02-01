@@ -102,6 +102,8 @@
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="Bindings\BindingMetadata.cs" />
+    <Compile Include="Bindings\IBindingMetadata.cs" />
     <Compile Include="ExtensionsForIBindingRoot.cs" />
     <Compile Include="Infrastructure\IResolutionScope.cs" />
     <Compile Include="Infrastructure\INotifyWhenDisposed.cs" />

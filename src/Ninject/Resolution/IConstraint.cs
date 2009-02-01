@@ -5,6 +5,6 @@ namespace Ninject.Resolution
 {
 	public interface IConstraint
 	{
-		bool Matches(IBinding binding);
+		bool Matches(IBindingMetadata metadata);
 	}
 }

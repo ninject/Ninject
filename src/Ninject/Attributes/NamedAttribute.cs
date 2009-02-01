@@ -12,9 +12,9 @@ namespace Ninject
 			Name = name;
 		}
 
-		public override bool Matches(IBinding binding)
+		public override bool Matches(IBindingMetadata metadata)
 		{
-			return binding.Name == Name;
+			return metadata.Name == Name;
 		}
 	}
 }

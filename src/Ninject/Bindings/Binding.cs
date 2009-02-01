@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Ninject.Activation;
 using Ninject.Creation;
 
@@ -7,10 +6,8 @@ namespace Ninject.Bindings
 {
 	public class Binding : IBinding
 	{
-		private readonly Dictionary<string, object> _metadata = new Dictionary<string, object>();
-
 		public Type Service { get; set; }
-		public string Name { get; set; }
+		public IBindingMetadata Metadata { get; set; }
 
 		public Func<IContext, IProvider> ProviderCallback { get; set; }
 		public Func<IRequest, bool> ConditionCallback { get; set; }
@@ -19,16 +16,7 @@ namespace Ninject.Bindings
 		public Binding(Type service)
 		{
 			Service = service;
-		}
-
-		public object GetMetadata(string key)
-		{
-			return _metadata.ContainsKey(key) ? _metadata[key] : null;
-		}
-
-		public void SetMetadata(string key, object value)
-		{
-			_metadata[key] = value;
+			Metadata = new BindingMetadata();
 		}
 
 		public IProvider GetProvider(IContext context)
