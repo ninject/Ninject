@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Injection.Injectors;
 
 namespace Ninject.Injection

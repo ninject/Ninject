@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Interception.Advice;
 
 namespace Ninject.Interception

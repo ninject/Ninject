@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Planning.Strategies;
 
 namespace Ninject.Planning

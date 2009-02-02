@@ -40,7 +40,7 @@ namespace Ninject.Creation
 
 		public object GetValue(IContext context, ITarget target)
 		{
-			var parameter = context.Request.Parameters.OfType<ConstructorArgument>().Where(p => p.Name == target.Name).SingleOrDefault();
+			var parameter = context.Parameters.OfType<ConstructorArgument>().Where(p => p.Name == target.Name).SingleOrDefault();
 			return parameter != null ? parameter.GetValue(context) : target.ResolveWithin(context);
 		}
 

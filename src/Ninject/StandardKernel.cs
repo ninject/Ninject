@@ -33,6 +33,8 @@ namespace Ninject
 			Components.Add<IPipeline, Pipeline>();
 			Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
 			Components.Add<IActivationStrategy, MethodInjectionStrategy>();
+			Components.Add<IActivationStrategy, InitializableStrategy>();
+			Components.Add<IActivationStrategy, StartableStrategy>();
 			Components.Add<IActivationStrategy, DisposableStrategy>();
 
 			Components.Add<ICache, Cache>();
@@ -52,6 +54,7 @@ namespace Ninject
 
 			Components.Add<IResolver, Resolver>();
 			Components.Add<IResolutionStrategy, KernelResolutionStrategy>();
+			Components.Add<IResolutionStrategy, ComponentResolutionStrategy>();
 
 			Components.Add<IAdviceRegistry, AdviceRegistry>();
 		}

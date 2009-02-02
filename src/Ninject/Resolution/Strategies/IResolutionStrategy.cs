@@ -1,6 +1,6 @@
 ﻿using System;
 using Ninject.Activation;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 
 namespace Ninject.Resolution.Strategies
 {

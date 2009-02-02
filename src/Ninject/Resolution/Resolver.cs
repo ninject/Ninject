@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Planning;
 using Ninject.Resolution.Strategies;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Activation.Strategies;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 
 namespace Ninject.Activation
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 
 namespace Ninject.Planning.Strategies
 {

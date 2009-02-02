@@ -1,12 +1,16 @@
 ﻿using System;
-using Ninject.Bindings;
+using System.Collections.Generic;
+using System.Linq;
 using Ninject.Creation;
+using Ninject.Infrastructure.Tracing;
+using Ninject.Parameters;
 using Ninject.Planning;
+using Ninject.Planning.Bindings;
 using Ninject.Resolution;
 
 namespace Ninject.Activation
 {
-	public class Context : IContext
+	public class Context : TraceInfoProvider, IContext
 	{
 		private IProvider _provider;
 		private Type _implementation;
@@ -15,6 +19,7 @@ namespace Ninject.Activation
 		public IRequest Request { get; set; }
 		public IBinding Binding { get; set; }
 		public IPlan Plan { get; set; }
+		public ICollection<IParameter> Parameters { get; set; }
 		public object Instance { get; set; }
 
 		public IResolver Resolver { get; set; }
@@ -48,6 +53,7 @@ namespace Ninject.Activation
 			Request = request;
 			Binding = binding;
 			Resolver = resolver;
+			Parameters = request.Parameters.Union(binding.Parameters).ToList();
 		}
 
 		public object Resolve()

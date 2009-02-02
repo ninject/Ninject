@@ -1,5 +1,4 @@
 ﻿using System;
-using Ninject.Infrastructure;
 using Ninject.Syntax;
 
 namespace Ninject

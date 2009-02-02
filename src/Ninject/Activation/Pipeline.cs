@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation.Strategies;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Syntax;
 
 namespace Ninject.Activation

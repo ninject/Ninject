@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Injection.Injectors;
 using Ninject.Injection.Injectors.Linq;
 

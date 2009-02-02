@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Activation;
-using Ninject.Bindings;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
+using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
+using Ninject.Planning.Bindings;
+using Ninject.Syntax;
 
 namespace Ninject
 {

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Ninject.Planning.Targets
 {
-	public class ParameterTarget : TargetBase<ParameterInfo>
+	public class ParameterTarget : Target<ParameterInfo>
 	{
 		public override Type Type
 		{

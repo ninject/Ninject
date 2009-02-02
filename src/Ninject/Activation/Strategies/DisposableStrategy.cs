@@ -2,14 +2,11 @@
 
 namespace Ninject.Activation.Strategies
 {
-	public class DisposableStrategy : ActivationStrategyBase
+	public class DisposableStrategy : ActivationStrategyFor<IDisposable>
 	{
-		public override void Deactivate(IContext context)
+		public override void Deactivate(IContext context, IDisposable instance)
 		{
-			var disposable = context.Instance as IDisposable;
-
-			if (disposable != null)
-				disposable.Dispose();
+			instance.Dispose();
 		}
 	}
 }

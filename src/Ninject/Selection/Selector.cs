@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Selection.Heuristics;
 
 namespace Ninject.Selection

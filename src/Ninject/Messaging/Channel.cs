@@ -2,33 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Ninject.Injection;
+using Ninject.Infrastructure.Disposal;
+using Ninject.Injection.Injectors;
 using Ninject.Syntax;
 
 namespace Ninject.Messaging
 {
-	public class Channel : IChannel
+	public class Channel : DisposableObject, IChannel
 	{
 		public string Name { get; private set; }
-		public IInjectorFactory InjectorFactory { get; set; }
 		public ICollection<IPublication> Publications { get; private set; }
 		public ICollection<ISubscription> Subscriptions { get; private set; }
 		public bool IsEnabled { get; set; }
 
-		public Channel(string name, IInjectorFactory injectorFactory)
+		public Channel(string name)
 		{
 			Name = name;
-			InjectorFactory = injectorFactory;
 			Publications = new List<IPublication>();
 			Subscriptions = new List<ISubscription>();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Publications.Map(publication => publication.Dispose());
+
 			Publications.Clear();
 			Subscriptions.Clear();
-			GC.SuppressFinalize(this);
+
+			base.Dispose();
 		}
 
 		public void AddPublication(object publisher, EventInfo evt)
@@ -36,9 +37,8 @@ namespace Ninject.Messaging
 			Publications.Add(new Publication(this, publisher, evt));
 		}
 
-		public void AddSubscription(object subscriber, MethodInfo handler, DeliveryThread thread)
+		public void AddSubscription(object subscriber, IMethodInjector injector, DeliveryThread thread)
 		{
-			var injector = InjectorFactory.GetMethodInjector(handler);
 			Subscriptions.Add(new Subscription(this, subscriber, injector, thread));
 		}
 

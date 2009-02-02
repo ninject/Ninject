@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Ninject.Bindings;
 using Ninject.Parameters;
+using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
 using Ninject.Resolution;
 
@@ -15,7 +15,7 @@ namespace Ninject.Activation
 		ICollection<IConstraint> Constraints { get; }
 		ICollection<IParameter> Parameters { get; }
 
-		bool Matches(IBinding binding);
+		bool ConstraintsSatisfiedBy(IBinding binding);
 		object GetScope();
 	}
 }

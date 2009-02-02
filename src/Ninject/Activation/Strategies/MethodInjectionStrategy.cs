@@ -5,7 +5,7 @@ using Ninject.Planning.Directives;
 
 namespace Ninject.Activation.Strategies
 {
-	public class MethodInjectionStrategy : ActivationStrategyBase
+	public class MethodInjectionStrategy : ActivationStrategy
 	{
 		public IKernel Kernel { get; set; }
 		public IInjectorFactory InjectorFactory { get; set; }

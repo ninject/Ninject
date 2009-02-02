@@ -1,5 +1,5 @@
 ﻿using System;
-using Ninject.Bindings;
+using Ninject.Planning.Bindings;
 using Ninject.Resolution;
 
 namespace Ninject

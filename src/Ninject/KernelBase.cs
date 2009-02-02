@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
+using Ninject.Activation.Scope;
+using Ninject.Components;
 using Ninject.Creation;
 using Ninject.Infrastructure;
-using Ninject.Bindings;
-using Ninject.Infrastructure.Components;
+using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
 using Ninject.Parameters;
+using Ninject.Planning.Bindings;
 using Ninject.Resolution;
 using Ninject.Syntax;
 
@@ -67,7 +69,9 @@ namespace Ninject
 			if (!_bindings.ContainsKey(request.Service) && (!request.Service.IsGenericType || !_bindings.ContainsKey(request.Service.GetGenericTypeDefinition())))
 				RegisterImplicitSelfBinding(request.Service);
 
-			return GetBindings(request).Where(binding => request.Matches(binding)).Select(binding => CreateContext(request, binding));
+			return GetBindings(request)
+				.Where(binding => binding.Matches(request) && request.ConstraintsSatisfiedBy(binding))
+				.Select(binding => CreateContext(request, binding));
 		}
 
 		public IBindingToSyntax Bind(Type service)
@@ -103,7 +107,7 @@ namespace Ninject
 
 		public IResolutionRoot BeginScope()
 		{
-			return new ResolutionScope(this);
+			return new ActivationScope(this);
 		}
 
 		protected virtual void RegisterImplicitSelfBinding(Type service)
@@ -123,6 +127,11 @@ namespace Ninject
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
 			return new Context(this, request, binding, Components.Get<IResolver>());
+		}
+
+		object IServiceProvider.GetService(Type serviceType)
+		{
+			return this.Get(serviceType);
 		}
 	}
 }

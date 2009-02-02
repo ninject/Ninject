@@ -84,9 +84,12 @@
     <Compile Include="Activation\Pipeline.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Strategies\ActivationStrategyBase.cs">
+    <Compile Include="Activation\Strategies\ActivationStrategy.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
+    <Compile Include="Activation\Strategies\StartableStrategy.cs" />
+    <Compile Include="Activation\Strategies\ActivationStrategyFor.cs" />
     <Compile Include="Activation\Strategies\DisposableStrategy.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,16 +106,20 @@
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
-    <Compile Include="Bindings\BindingMetadata.cs" />
-    <Compile Include="Bindings\IBindingMetadata.cs" />
-    <Compile Include="Infrastructure\Components\NinjectComponent.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="IStartable.cs" />
+    <Compile Include="Planning\Bindings\BindingMetadata.cs" />
+    <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
+    <Compile Include="Components\NinjectComponent.cs" />
+    <Compile Include="Infrastructure\Tracing\TraceInfoProvider.cs" />
     <Compile Include="INinjectSettings.cs" />
     <Compile Include="ExtensionsForIBindingRoot.cs" />
-    <Compile Include="Infrastructure\DisposableObject.cs" />
-    <Compile Include="Infrastructure\IResolutionScope.cs" />
-    <Compile Include="Infrastructure\INotifyWhenDisposed.cs" />
-    <Compile Include="Infrastructure\IResolutionRoot.cs" />
-    <Compile Include="Infrastructure\ResolutionScope.cs" />
+    <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
+    <Compile Include="Activation\Scope\IActivationScope.cs" />
+    <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
+    <Compile Include="Resolution\Strategies\ComponentResolutionStrategy.cs" />
+    <Compile Include="Syntax\IResolutionRoot.cs" />
+    <Compile Include="Activation\Scope\ActivationScope.cs" />
     <Compile Include="Infrastructure\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Tracing\IHaveTraceInfo.cs" />
     <Compile Include="Infrastructure\Tracing\TraceInfo.cs" />
@@ -133,10 +140,10 @@
     <Compile Include="ExtensionsForIResolutionRoot.cs" />
     <Compile Include="Creation\ConstantProvider.cs" />
     <Compile Include="Infrastructure\LinqReflection.cs" />
-    <Compile Include="Infrastructure\Components\INinjectComponent.cs" />
-    <Compile Include="Infrastructure\Components\ComponentContainer.cs" />
-    <Compile Include="Infrastructure\Components\IComponentContainer.cs" />
-    <Compile Include="Infrastructure\IBindingRoot.cs" />
+    <Compile Include="Components\INinjectComponent.cs" />
+    <Compile Include="Components\ComponentContainer.cs" />
+    <Compile Include="Components\IComponentContainer.cs" />
+    <Compile Include="Syntax\IBindingRoot.cs" />
     <Compile Include="Creation\CallbackProvider.cs" />
     <Compile Include="Injection\StandardInjectorFactory.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
@@ -158,7 +165,7 @@
     <Compile Include="Messaging\ISubscription.cs" />
     <Compile Include="Messaging\Subscription.cs" />
     <Compile Include="Messaging\Publication.cs" />
-    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\StandardModule.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />
@@ -168,7 +175,7 @@
     <Compile Include="Planning\Strategies\MethodInterceptionStrategy.cs" />
     <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
     <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
-    <Compile Include="Planning\Targets\TargetBase.cs" />
+    <Compile Include="Planning\Targets\Target.cs" />
     <Compile Include="Resolution\PredicateConstraint.cs" />
     <Compile Include="Resolution\IConstraint.cs" />
     <Compile Include="Resolution\Resolver.cs" />
@@ -202,23 +209,15 @@
     <Compile Include="Creation\IProvider.cs" />
     <Compile Include="Planning\Plan.cs" />
     <Compile Include="KernelBase.cs" />
-    <Compile Include="Bindings\BindingBuilder.cs" />
-    <Compile Include="Bindings\Binding.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder.cs" />
+    <Compile Include="Planning\Bindings\Binding.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
-    <Compile Include="Syntax\ExtensionsForObject.cs" />
-    <Compile Include="Syntax\IBindingWithNameMetadataWhenOrInScopeSyntax.cs" />
-    <Compile Include="Syntax\IBindingWithNameSyntax.cs" />
     <Compile Include="Syntax\ExtensionsForICollection.cs" />
     <Compile Include="Syntax\ExtensionsForTargetInvocationException.cs" />
-    <Compile Include="Syntax\IBindingWhenOrInScopeSyntax.cs" />
-    <Compile Include="Syntax\IBindingMetadataSyntax.cs" />
     <Compile Include="Syntax\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Syntax\ExtensionsForIEnumerable.cs" />
-    <Compile Include="Syntax\IBindingMetadataWhenOrInScopeSyntax.cs" />
-    <Compile Include="Syntax\IBindingInScopeSyntax.cs" />
-    <Compile Include="Syntax\IBindingToSyntax.cs" />
-    <Compile Include="Syntax\IBindingWhenSyntax.cs" />
-    <Compile Include="Bindings\IBinding.cs" />
+    <Compile Include="Syntax\BindingSyntax.cs" />
+    <Compile Include="Planning\Bindings\IBinding.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\IFluentSyntax.cs" />

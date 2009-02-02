@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using Ninject.Infrastructure.Disposal;
 
 namespace Ninject.Messaging
 {
-	public class Publication : IPublication
+	public class Publication : DisposableObject, IPublication
 	{
-		private static readonly MethodInfo BroadcastMethod = typeof(Channel).GetMethod("Broadcast");
+		private static readonly MethodInfo BroadcastMethod = typeof(IChannel).GetMethod("Broadcast");
 
 		public IChannel Channel { get; set; }
 		public object Publisher { get; set; }
@@ -21,11 +22,11 @@ namespace Ninject.Messaging
 			Event.AddEventHandler(Publisher, PublishDelegate);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Event.RemoveEventHandler(Publisher, PublishDelegate);
 			PublishDelegate = null;
-			GC.SuppressFinalize(this);
+			base.Dispose();
 		}
 	}
 }

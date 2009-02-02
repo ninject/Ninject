@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 
 namespace Ninject.Activation.Caching
 {

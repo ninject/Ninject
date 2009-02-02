@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ninject.Bindings;
 using Ninject.Parameters;
+using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
 using Ninject.Resolution;
 
@@ -35,7 +35,7 @@ namespace Ninject.Activation
 			ScopeCallback = scopeCallback;
 		}
 
-		public bool Matches(IBinding binding)
+		public bool ConstraintsSatisfiedBy(IBinding binding)
 		{
 			return Constraints.All(c => c.Matches(binding.Metadata));
 		}

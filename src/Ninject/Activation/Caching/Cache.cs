@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Ninject.Components;
 using Ninject.Infrastructure;
-using Ninject.Infrastructure.Components;
+using Ninject.Infrastructure.Disposal;
 using Ninject.Syntax;
 
 namespace Ninject.Activation.Caching

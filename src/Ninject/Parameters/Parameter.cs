@@ -21,5 +21,21 @@ namespace Ninject.Parameters
 		{
 			return _valueCallback(context);
 		}
+
+		public override bool Equals(object obj)
+		{
+			var parameter = obj as IParameter;
+			return parameter != null ? Equals(parameter) : base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return GetType().GetHashCode() ^ Name.GetHashCode();
+		}
+
+		public bool Equals(IParameter other)
+		{
+			return other.GetType() == GetType() && other.Name.Equals(Name);
+		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Ninject.Injection.Injectors;
 
 namespace Ninject.Messaging
 {
@@ -7,7 +8,7 @@ namespace Ninject.Messaging
 	{
 		bool IsEnabled { get; set; }
 		void AddPublication(object publisher, EventInfo evt);
-		void AddSubscription(object subscriber, MethodInfo handler, DeliveryThread thread);
+		void AddSubscription(object subscriber, IMethodInjector injector, DeliveryThread thread);
 		void RemoveAllPublications(object publisher);
 		void RemoveAllSubscriptions(object subscriber);
 	}

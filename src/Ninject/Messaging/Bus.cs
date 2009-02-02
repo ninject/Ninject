@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ninject.Infrastructure.Components;
+using Ninject.Components;
 using Ninject.Injection;
 
 namespace Ninject.Messaging
@@ -55,7 +55,7 @@ namespace Ninject.Messaging
 
 		protected virtual IChannel CreateChannel(string name)
 		{
-			return new Channel(name, InjectorFactory);
+			return new Channel(name);
 		}
 	}
 }
