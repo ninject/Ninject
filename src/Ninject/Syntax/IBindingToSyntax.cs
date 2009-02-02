@@ -6,12 +6,12 @@ namespace Ninject.Syntax
 {
 	public interface IBindingToSyntax : IFluentSyntax
 	{
-		IBindingMetadataWhenOrInScopeSyntax ToSelf();
-		IBindingMetadataWhenOrInScopeSyntax To<TImplementation>();
-		IBindingMetadataWhenOrInScopeSyntax To(Type implementation);
-		IBindingMetadataWhenOrInScopeSyntax ToProvider<TProvider>() where TProvider : IProvider;
-		IBindingMetadataWhenOrInScopeSyntax ToProvider(IProvider provider);
-		IBindingMetadataWhenOrInScopeSyntax ToMethod<T>(Func<IContext, T> provider);
-		IBindingMetadataWhenOrInScopeSyntax ToConstant<T>(T value);
+		IBindingWithNameMetadataWhenOrInScopeSyntax ToSelf();
+		IBindingWithNameMetadataWhenOrInScopeSyntax To<TImplementation>();
+		IBindingWithNameMetadataWhenOrInScopeSyntax To(Type implementation);
+		IBindingWithNameMetadataWhenOrInScopeSyntax ToProvider<TProvider>() where TProvider : IProvider;
+		IBindingWithNameMetadataWhenOrInScopeSyntax ToProvider(IProvider provider);
+		IBindingWithNameMetadataWhenOrInScopeSyntax ToMethod<T>(Func<IContext, T> provider);
+		IBindingWithNameMetadataWhenOrInScopeSyntax ToConstant<T>(T value);
 	}
 }

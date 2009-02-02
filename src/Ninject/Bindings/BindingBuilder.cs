@@ -7,7 +7,7 @@ using Ninject.Syntax;
 
 namespace Ninject.Bindings
 {
-	public class BindingBuilder : IBindingToSyntax, IBindingWhenOrInScopeSyntax, IBindingMetadataWhenOrInScopeSyntax
+	public class BindingBuilder : IBindingToSyntax, IBindingWhenOrInScopeSyntax, IBindingMetadataWhenOrInScopeSyntax, IBindingWithNameMetadataWhenOrInScopeSyntax
 	{
 		public Binding Binding { get; set; }
 
@@ -16,44 +16,44 @@ namespace Ninject.Bindings
 			Binding = binding;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax ToSelf()
+		public IBindingWithNameMetadataWhenOrInScopeSyntax ToSelf()
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(Binding.Service);
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax To<TImplementation>()
+		public IBindingWithNameMetadataWhenOrInScopeSyntax To<TImplementation>()
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax To(Type implementation)
+		public IBindingWithNameMetadataWhenOrInScopeSyntax To(Type implementation)
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax ToMethod<T>(Func<IContext, T> method)
+		public IBindingWithNameMetadataWhenOrInScopeSyntax ToMethod<T>(Func<IContext, T> method)
 		{
 			Binding.ProviderCallback = ctx => new CallbackProvider<T>(method);
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax ToProvider<TProvider>()
+		public IBindingWithNameMetadataWhenOrInScopeSyntax ToProvider<TProvider>()
 			where TProvider : IProvider
 		{
 			Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax ToProvider(IProvider provider)
+		public IBindingWithNameMetadataWhenOrInScopeSyntax ToProvider(IProvider provider)
 		{
 			Binding.ProviderCallback = ctx => provider;
 			return this;
 		}
 
-		public IBindingMetadataWhenOrInScopeSyntax ToConstant<T>(T value)
+		public IBindingWithNameMetadataWhenOrInScopeSyntax ToConstant<T>(T value)
 		{
 			Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
 			return this;
