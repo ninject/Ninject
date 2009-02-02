@@ -108,7 +108,7 @@ namespace Ninject.Tests.BuiltInScopeTests
 			Assert.NotSame(weapon1, weapon2);
 		}
 
-		[Fact]
+		[Fact(Skip = "Need to rethink time-based tests")]
 		public void InstancesActivatedWithinScopeAreDeactivatedWithinASecondOfThreadEnding()
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();

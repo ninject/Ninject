@@ -82,16 +82,17 @@ namespace Ninject.Infrastructure.Components
 
 		private object CreateNewInstance(Type type)
 		{
-			object instance = FormatterServices.GetSafeUninitializedObject(type);
-			_instances.Add(type, instance);
+			var component = FormatterServices.GetSafeUninitializedObject(type) as INinjectComponent;
+			_instances.Add(type, component);
 
 			ConstructorInfo constructor = SelectConstructor(type);
 			var arguments = constructor.GetParameters().Select(parameter => GetValueForParameter(parameter)).ToArray();
 
 			try
 			{
-				constructor.Invoke(instance, arguments);
-				return instance;
+				constructor.Invoke(component, arguments);
+				component.Settings = Settings;
+				return component;
 			}
 			catch (TargetInvocationException ex)
 			{

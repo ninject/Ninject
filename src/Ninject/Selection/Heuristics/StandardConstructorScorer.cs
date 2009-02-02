@@ -9,7 +9,7 @@ namespace Ninject.Selection.Heuristics
 	{
 		public int Score(ConstructorInfo constructor)
 		{
-			return constructor.HasAttribute<InjectAttribute>() ? Int32.MaxValue : constructor.GetParameters().Length;
+			return constructor.HasAttribute(Settings.InjectAttribute) ? Int32.MaxValue : constructor.GetParameters().Length;
 		}
 	}
 }

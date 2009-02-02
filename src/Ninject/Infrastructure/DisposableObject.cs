@@ -8,12 +8,15 @@ namespace Ninject.Infrastructure
 
 		public virtual void Dispose()
 		{
-			if (!IsDisposed)
+			lock (this)
 			{
-				Disposed(this, EventArgs.Empty);
-				Disposed = null;
-				IsDisposed = true;
-				GC.SuppressFinalize(this);
+				if (!IsDisposed)
+				{
+					Disposed(this, EventArgs.Empty);
+					Disposed = null;
+					IsDisposed = true;
+					GC.SuppressFinalize(this);
+				}
 			}
 		}
 

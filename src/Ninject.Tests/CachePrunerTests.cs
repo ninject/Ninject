@@ -20,7 +20,7 @@ namespace Ninject.Tests.CachePrunerTests
 
 	public class WhenStartPruningIsCalled : CachePrunerContext
 	{
-		[Fact]
+		[Fact(Skip = "Need to rethink time-based tests")]
 		public void CacheIsPrunedEverySecondIfGarbageCollectionHasOccurred()
 		{
 			cacheMock.Setup(x => x.Prune()).AtMostOnce();

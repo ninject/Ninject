@@ -57,6 +57,7 @@ namespace Ninject.Planning.Targets
 
 		private IRequest CreateRequest(Type service, IContext context)
 		{
+			// TODO: This should pull the scope callback up into the child request
 			return new Request(service, this, () => context.GetScope());
 		}
 	}

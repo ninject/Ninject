@@ -56,6 +56,7 @@
     <Compile Include="ConstructorInjectorTests.cs" />
     <Compile Include="CachePrunerTests.cs" />
     <Compile Include="BuiltinScopeTests.cs" />
+    <Compile Include="EnumerableDependenciesTests.cs" />
     <Compile Include="ResolutionScopeTests.cs" />
     <Compile Include="MethodInjectionStrategyTests.cs" />
     <Compile Include="PipelineTests.cs" />

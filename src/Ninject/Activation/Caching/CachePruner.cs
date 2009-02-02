@@ -6,18 +6,16 @@ namespace Ninject.Activation.Caching
 {
 	public class CachePruner : NinjectComponent, ICachePruner
 	{
-		private const int PollTimeoutMs = 1000;
-
-		private static WeakReference _indicator;
-		private static Timer _timer;
+		private static WeakReference _indicator = new WeakReference(new object());
+		private Timer _timer;
 
 		public void StartPruning(ICache cache)
 		{
 			if (_timer != null)
 				StopPruning();
 
-			_indicator = new WeakReference(new object());
-			_timer = new Timer(PruneCache, cache, PollTimeoutMs, PollTimeoutMs);
+			int timeoutMs = Settings.CachePruneTimeoutMs;
+			_timer = new Timer(PruneCache, cache, timeoutMs, timeoutMs);
 		}
 
 		public void StopPruning()
@@ -27,8 +25,6 @@ namespace Ninject.Activation.Caching
 				_timer.Dispose();
 				_timer = null;
 			}
-
-			_indicator = null;
 		}
 
 		private static void PruneCache(object cache)
