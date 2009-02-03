@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Ninject.Creation;
 using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 using Ninject.Planning;

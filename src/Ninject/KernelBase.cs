@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
+using Ninject.Activation.Providers;
 using Ninject.Activation.Scope;
 using Ninject.Components;
-using Ninject.Creation;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
@@ -46,17 +46,39 @@ namespace Ninject
 		public virtual void Load(IModule module)
 		{
 			_modules.Add(module.Name, module);
+			module.Kernel = this;
+			module.Load();
 		}
 
 		public virtual void Unload(string moduleName)
 		{
-			_modules[moduleName].Unload();
-			_modules.Remove(moduleName);
+			IModule module = _modules[moduleName];
+
+			module.Unload();
+			module.Kernel = null;
+
+			_modules.Remove(module.Name);
 		}
 
 		public virtual void Unload(IModule module)
 		{
 			Unload(module.Name);
+		}
+
+		public bool CanResolve(IRequest request)
+		{
+			var resolver = Components.Get<IResolver>();
+
+			if (_bindings.ContainsKey(request.Service))
+				return true;
+
+			if (resolver.HasStrategy(request))
+				return true;
+
+			if (request.Service.IsGenericType && _bindings.ContainsKey(request.Service.GetGenericTypeDefinition()))
+				return true;
+
+			return false;
 		}
 
 		public virtual IEnumerable<IContext> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
@@ -66,8 +88,11 @@ namespace Ninject
 
 		public virtual IEnumerable<IContext> Resolve(IRequest request)
 		{
-			if (!_bindings.ContainsKey(request.Service) && (!request.Service.IsGenericType || !_bindings.ContainsKey(request.Service.GetGenericTypeDefinition())))
-				RegisterImplicitSelfBinding(request.Service);
+			if (!CanResolve(request))
+			{
+				if (!TryRegisterImplicitSelfBinding(request.Service))
+					throw new NotSupportedException(String.Format("No binding registered for {0}", request.Service)); 
+			}
 
 			return GetBindings(request)
 				.Where(binding => binding.Matches(request) && request.ConstraintsSatisfiedBy(binding))
@@ -115,13 +140,15 @@ namespace Ninject
 			return new ActivationScope(this);
 		}
 
-		protected virtual void RegisterImplicitSelfBinding(Type service)
+		public virtual bool TryRegisterImplicitSelfBinding(Type service)
 		{
 			if (service.IsInterface || service.IsAbstract || service.ContainsGenericParameters)
-				throw new NotSupportedException();
+				return false;
 
 			var binding = new Binding(service) { ProviderCallback = StandardProvider.GetCreationCallback(service) };
 			AddBinding(binding);
+
+			return true;
 		}
 
 		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)

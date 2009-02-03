@@ -1,6 +1,5 @@
 ﻿using System;
 using Ninject.Activation;
-using Ninject.Creation;
 using Ninject.Parameters;
 
 namespace Ninject.Syntax

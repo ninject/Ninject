@@ -1,7 +1,7 @@
 ﻿using System;
 using Ninject.Activation;
 
-namespace Ninject.Creation
+namespace Ninject.Activation.Providers
 {
 	public class ConstantProvider<T> : Provider<T>
 	{

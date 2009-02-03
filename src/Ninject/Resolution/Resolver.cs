@@ -24,6 +24,11 @@ namespace Ninject.Resolution
 			Strategies = strategies.ToList();
 		}
 
+		public bool HasStrategy(IRequest request)
+		{
+			return Strategies.Any(s => s.Supports(request));
+		}
+
 		public object Resolve(IContext context)
 		{
 			if (context.Instance != null)

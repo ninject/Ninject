@@ -1,7 +1,6 @@
 ﻿using System;
-using Ninject.Activation;
 
-namespace Ninject.Creation
+namespace Ninject.Activation
 {
 	public abstract class Provider<T> : IProvider
 	{

@@ -16,6 +16,11 @@ namespace Ninject.Activation.Scope
 			_parent = parent;
 		}
 
+		public bool CanResolve(IRequest request)
+		{
+			return _parent.CanResolve(request);
+		}
+
 		public IEnumerable<IContext> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
 		{
 			return Resolve(CreateDirectRequest(service, constraints, parameters));

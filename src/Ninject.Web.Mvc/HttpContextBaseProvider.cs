@@ -1,7 +1,6 @@
 using System;
 using System.Web;
 using Ninject.Activation;
-using Ninject.Creation;
 
 namespace Ninject.Web.Mvc
 {

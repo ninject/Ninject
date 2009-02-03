@@ -1,7 +1,6 @@
 ﻿using System;
-using Ninject.Activation;
 
-namespace Ninject.Creation
+namespace Ninject.Activation.Providers
 {
 	public class CallbackProvider<T> : Provider<T>
 	{

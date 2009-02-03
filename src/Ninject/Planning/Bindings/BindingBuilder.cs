@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Web;
 using Ninject.Activation;
-using Ninject.Creation;
+using Ninject.Activation.Providers;
 using Ninject.Parameters;
 using Ninject.Syntax;
 
@@ -93,7 +93,7 @@ namespace Ninject.Planning.Bindings
 
 		public IBindingNamedOrWithSyntax InRequestScope()
 		{
-			Binding.ScopeCallback = ctx => HttpContext.Current.Request;
+			Binding.ScopeCallback = ctx => HttpContext.Current;
 			return this;
 		}
 

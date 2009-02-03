@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Ninject.Activation;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 
-namespace Ninject.Creation
+namespace Ninject.Activation.Providers
 {
 	public class StandardProvider : IProvider
 	{
