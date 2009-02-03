@@ -106,6 +106,7 @@
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
     <Compile Include="Planning\Bindings\BindingMetadata.cs" />
@@ -113,7 +114,6 @@
     <Compile Include="Components\NinjectComponent.cs" />
     <Compile Include="Infrastructure\Tracing\TraceInfoProvider.cs" />
     <Compile Include="INinjectSettings.cs" />
-    <Compile Include="ExtensionsForIBindingRoot.cs" />
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Scope\IActivationScope.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />

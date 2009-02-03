@@ -42,6 +42,11 @@ namespace Ninject.Modules
 		{
 		}
 
+		public IBindingToSyntax Bind<T>()
+		{
+			return Bind(typeof(T));
+		}
+
 		public IBindingToSyntax Bind(Type service)
 		{
 			var binding = new Binding(service);
