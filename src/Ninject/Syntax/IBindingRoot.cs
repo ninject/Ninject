@@ -5,7 +5,8 @@ namespace Ninject.Syntax
 {
 	public interface IBindingRoot
 	{
-		IBindingToSyntax Bind(Type service);
+		IBindingToSyntax<T> Bind<T>();
+		IBindingToSyntax<object> Bind(Type service);
 		void AddBinding(IBinding binding);
 		void RemoveBinding(IBinding binding);
 	}

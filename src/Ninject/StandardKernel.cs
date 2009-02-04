@@ -8,7 +8,6 @@ using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
 using Ninject.Resolution;
-using Ninject.Resolution.Strategies;
 using Ninject.Selection;
 using Ninject.Selection.Heuristics;
 
@@ -20,12 +19,19 @@ namespace Ninject
 			: base(modules)
 		{
 			AddComponents();
+			RegisterSpecialBindings();
 		}
 
 		public StandardKernel(INinjectSettings settings, params IModule[] modules)
 			: base(settings, modules)
 		{
 			AddComponents();
+			RegisterSpecialBindings();
+		}
+
+		private void RegisterSpecialBindings()
+		{
+			Bind<IKernel>().ToConstant(this);
 		}
 
 		private void AddComponents()
@@ -53,8 +59,6 @@ namespace Ninject
 			Components.Add<IInjectorFactory, StandardInjectorFactory>();
 
 			Components.Add<IResolver, Resolver>();
-			Components.Add<IResolutionStrategy, KernelResolutionStrategy>();
-			Components.Add<IResolutionStrategy, ComponentResolutionStrategy>();
 
 			Components.Add<IAdviceRegistry, AdviceRegistry>();
 		}

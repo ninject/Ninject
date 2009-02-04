@@ -106,7 +106,7 @@
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
-    <Compile Include="IHaveKernel.cs" />
+    <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
     <Compile Include="Planning\Bindings\BindingMetadata.cs" />
@@ -117,7 +117,6 @@
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Scope\IActivationScope.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
-    <Compile Include="Resolution\Strategies\ComponentResolutionStrategy.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
     <Compile Include="Infrastructure\FormatExtensions.cs" />
@@ -179,8 +178,6 @@
     <Compile Include="Resolution\PredicateConstraint.cs" />
     <Compile Include="Resolution\IConstraint.cs" />
     <Compile Include="Resolution\Resolver.cs" />
-    <Compile Include="Resolution\Strategies\IResolutionStrategy.cs" />
-    <Compile Include="Resolution\Strategies\KernelResolutionStrategy.cs" />
     <Compile Include="Selection\Heuristics\StandardMethodInterceptionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IMethodInjectionHeuristic.cs" />

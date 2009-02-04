@@ -42,16 +42,14 @@ namespace Ninject.Modules
 		{
 		}
 
-		public IBindingToSyntax Bind<T>()
+		public IBindingToSyntax<T> Bind<T>()
 		{
-			return Bind(typeof(T));
+			return RegisterBindingAndCreateBuilder<T>(typeof(T));
 		}
 
-		public IBindingToSyntax Bind(Type service)
+		public IBindingToSyntax<object> Bind(Type service)
 		{
-			var binding = new Binding(service);
-			AddBinding(binding);
-			return new BindingBuilder(binding);
+			return RegisterBindingAndCreateBuilder<object>(service);
 		}
 
 		public void AddBinding(IBinding binding)
@@ -63,6 +61,13 @@ namespace Ninject.Modules
 		public void RemoveBinding(IBinding binding)
 		{
 			Kernel.RemoveBinding(binding);
+		}
+
+		protected virtual BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)
+		{
+			var binding = new Binding(service);
+			AddBinding(binding);
+			return new BindingBuilder<T>(binding);
 		}
 	}
 }

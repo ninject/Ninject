@@ -17,5 +17,6 @@ namespace Ninject.Activation
 
 		bool ConstraintsSatisfiedBy(IBinding binding);
 		object GetScope();
+		IRequest CreateChild(Type service, ITarget target);
 	}
 }

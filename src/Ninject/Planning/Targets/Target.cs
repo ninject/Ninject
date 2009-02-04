@@ -52,13 +52,8 @@ namespace Ninject.Planning.Targets
 
 		private IEnumerable<object> ResolveInstances(Type service, IContext parent)
 		{
-			return parent.Kernel.Resolve(CreateRequest(service, parent)).Select(ctx => ctx.Resolve());
-		}
-
-		private IRequest CreateRequest(Type service, IContext context)
-		{
-			// TODO: This should pull the scope callback up into the child request
-			return new Request(service, this, () => context.GetScope());
+			var request = parent.Request.CreateChild(service, this);
+			return parent.Kernel.Resolve(request).Select(ctx => ctx.Resolve());
 		}
 	}
 }

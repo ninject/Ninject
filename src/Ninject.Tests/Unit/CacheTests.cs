@@ -2,6 +2,7 @@
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Planning.Bindings;
 using Ninject.Tests.Fakes;
 using Xunit;
 
@@ -12,6 +13,7 @@ namespace Ninject.Tests.Unit.CacheTests
 		protected Mock<IPipeline> activatorMock;
 		protected Mock<ICachePruner> prunerMock;
 		protected Mock<IContext> contextMock;
+		protected Mock<IBinding> bindingMock;
 		protected Cache cache;
 
 		public CacheContext()
@@ -19,6 +21,7 @@ namespace Ninject.Tests.Unit.CacheTests
 			activatorMock = new Mock<IPipeline>();
 			prunerMock = new Mock<ICachePruner>();
 			contextMock = new Mock<IContext>();
+			bindingMock = new Mock<IBinding>();
 			cache = new Cache(activatorMock.Object, prunerMock.Object);
 		}
 	}
@@ -56,7 +59,7 @@ namespace Ninject.Tests.Unit.CacheTests
 		public void ReturnsNullIfNoInstancesHaveBeenAddedToCache()
 		{
 			var scope = new object();
-			object instance = cache.TryGet(typeof(Sword), scope);
+			object instance = cache.TryGet(bindingMock.Object, scope);
 			Assert.Null(instance);
 		}
 
@@ -66,13 +69,13 @@ namespace Ninject.Tests.Unit.CacheTests
 			var scope = new object();
 			var sword = new Sword();
 
-			contextMock.SetupGet(x => x.Implementation).Returns(typeof(Sword));
+			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(sword);
 			contextMock.Setup(x => x.GetScope()).Returns(scope);
 
 			cache.Remember(contextMock.Object);
 
-			object instance = cache.TryGet(typeof(Sword), scope);
+			object instance = cache.TryGet(bindingMock.Object, scope);
 			Assert.Same(sword, instance);
 		}
 
@@ -82,13 +85,13 @@ namespace Ninject.Tests.Unit.CacheTests
 			var scope = new object();
 			var sword = new Sword();
 
-			contextMock.SetupGet(x => x.Implementation).Returns(typeof(Sword));
+			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(sword);
 			contextMock.Setup(x => x.GetScope()).Returns(scope);
 
 			cache.Remember(contextMock.Object);
 
-			object instance = cache.TryGet(typeof(Sword), new object());
+			object instance = cache.TryGet(bindingMock.Object, new object());
 			Assert.Null(instance);
 		}
 
@@ -98,13 +101,13 @@ namespace Ninject.Tests.Unit.CacheTests
 			var scope = new object();
 			var sword = new Sword();
 
-			contextMock.SetupGet(x => x.Implementation).Returns(typeof(Sword));
+			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(sword);
 			contextMock.Setup(x => x.GetScope()).Returns(scope);
 
 			cache.Remember(contextMock.Object);
 
-			object instance = cache.TryGet(typeof(Sword), scope);
+			object instance = cache.TryGet(bindingMock.Object, scope);
 			Assert.Same(sword, instance);
 
 			scope = null;
@@ -112,7 +115,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			GC.Collect();
 
-			instance = cache.TryGet(typeof(Sword), scope);
+			instance = cache.TryGet(bindingMock.Object, scope);
 			Assert.Null(instance);
 		}
 	}

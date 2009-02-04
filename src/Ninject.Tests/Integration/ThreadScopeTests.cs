@@ -4,65 +4,19 @@ using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
 
-namespace Ninject.Tests.Integration.BuiltInScopeTests
+namespace Ninject.Tests.Integration.ThreadScopeTests
 {
-	public class BuiltInScopeContext
+	public class ThreadScopeContext
 	{
 		protected readonly StandardKernel kernel;
 
-		public BuiltInScopeContext()
+		public ThreadScopeContext()
 		{
 			kernel = new StandardKernel();
 		}
 	}
 
-	public class WhenServiceIsBoundWithSingletonScope : BuiltInScopeContext
-	{
-		[Fact]
-		public void FirstActivatedInstanceIsReused()
-		{
-			kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
-
-			var weapon1 = kernel.Get<IWeapon>();
-			var weapon2 = kernel.Get<IWeapon>();
-
-			Assert.Same(weapon1, weapon2);
-		}
-
-		[Fact]
-		public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
-		{
-			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
-
-			bool instanceWasDisposed = false;
-
-			var instance = kernel.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
-			instance = null;
-
-			GC.Collect();
-
-			Assert.False(instanceWasDisposed);
-		}
-
-		[Fact]
-		public void InstancesAreDeactivatedWhenKernelIsDisposed()
-		{
-			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
-
-			bool instanceWasDisposed = false;
-
-			var instance = kernel.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
-			kernel.Dispose();
-
-			Assert.True(instanceWasDisposed);
-		}
-	}
-
-	public class WhenServiceIsBoundWithThreadScope : BuiltInScopeContext
+	public class WhenServiceIsBoundWithThreadScope : ThreadScopeContext
 	{
 		[Fact]
 		public void FirstActivatedInstanceIsReusedWithinThread()

@@ -1,12 +1,13 @@
 ﻿using System;
 using Ninject.Components;
+using Ninject.Planning.Bindings;
 
 namespace Ninject.Activation.Caching
 {
 	public interface ICache : INinjectComponent
 	{
 		void Remember(IContext context);
-		object TryGet(Type type, object scope);
+		object TryGet(IBinding binding, object scope);
 		void Prune();
 	}
 }

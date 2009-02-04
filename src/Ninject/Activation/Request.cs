@@ -44,5 +44,10 @@ namespace Ninject.Activation
 		{
 			return ScopeCallback == null ? null : ScopeCallback();
 		}
+
+		public IRequest CreateChild(Type service, ITarget target)
+		{
+			return new Request(service, target, ScopeCallback);
+		}
 	}
 }

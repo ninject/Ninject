@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 
 namespace Ninject.Planning.Bindings
 {
+	[DebuggerDisplay("{IntrospectionInfo} from {TraceInfo}")]
 	public class Binding : TraceInfoProvider, IBinding
 	{
 		public Type Service { get; set; }
@@ -16,6 +19,8 @@ namespace Ninject.Planning.Bindings
 		public Func<IRequest, bool> ConditionCallback { get; set; }
 		public Func<IContext, object> ScopeCallback { get; set; }
 
+		public string IntrospectionInfo { get; set; }
+
 		public Binding(Type service) : this(service, new BindingMetadata()) { }
 
 		public Binding(Type service, IBindingMetadata metadata)
@@ -23,6 +28,7 @@ namespace Ninject.Planning.Bindings
 			Service = service;
 			Metadata = metadata;
 			Parameters = new List<IParameter>();
+			IntrospectionInfo = "Binding from " + service.Format();
 		}
 
 		public IProvider GetProvider(IContext context)

@@ -23,13 +23,16 @@ namespace Ninject
 		public INinjectSettings Settings { get; private set; }
 		public IComponentContainer Components { get; private set; }
 
-		protected KernelBase(params IModule[] modules)
+		protected KernelBase()
+			: this(new ComponentContainer(), new NinjectSettings(), new IModule[0]) { }
+
+		protected KernelBase(IEnumerable<IModule> modules)
 			: this(new ComponentContainer(), new NinjectSettings(), modules) { }
 
-		protected KernelBase(INinjectSettings settings, params IModule[] modules)
+		protected KernelBase(INinjectSettings settings, IEnumerable<IModule> modules)
 			: this(new ComponentContainer(), settings, modules) { }
 
-		protected KernelBase(IComponentContainer components, INinjectSettings settings, params IModule[] modules)
+		protected KernelBase(IComponentContainer components, INinjectSettings settings, IEnumerable<IModule> modules)
 		{
 			Settings = settings;
 			Components = components;
@@ -67,12 +70,7 @@ namespace Ninject
 
 		public bool CanResolve(IRequest request)
 		{
-			var resolver = Components.Get<IResolver>();
-
 			if (_bindings.ContainsKey(request.Service))
-				return true;
-
-			if (resolver.HasStrategy(request))
 				return true;
 
 			if (request.Service.IsGenericType && _bindings.ContainsKey(request.Service.GetGenericTypeDefinition()))
@@ -99,16 +97,14 @@ namespace Ninject
 				.Select(binding => CreateContext(request, binding));
 		}
 
-		public IBindingToSyntax Bind<T>()
+		public IBindingToSyntax<T> Bind<T>()
 		{
-			return Bind(typeof(T));
+			return RegisterBindingAndCreateBuilder<T>(typeof(T));
 		}
 
-		public IBindingToSyntax Bind(Type service)
+		public IBindingToSyntax<object> Bind(Type service)
 		{
-			var binding = new Binding(service);
-			AddBinding(binding);
-			return new BindingBuilder(binding);
+			return RegisterBindingAndCreateBuilder<object>(service);
 		}
 
 		public void AddBinding(IBinding binding)
@@ -149,6 +145,13 @@ namespace Ninject
 			AddBinding(binding);
 
 			return true;
+		}
+
+		protected virtual BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)
+		{
+			var binding = new Binding(service);
+			AddBinding(binding);
+			return new BindingBuilder<T>(binding);
 		}
 
 		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)

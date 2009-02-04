@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using Ninject.Infrastructure;
 
 namespace Ninject.Web.Mvc
 {

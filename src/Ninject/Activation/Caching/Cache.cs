@@ -3,13 +3,14 @@ using System.Linq;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 
 namespace Ninject.Activation.Caching
 {
 	public class Cache : NinjectComponent, ICache
 	{
-		private readonly Multimap<Type, CacheEntry> _entries = new Multimap<Type, CacheEntry>();
+		private readonly Multimap<IBinding, CacheEntry> _entries = new Multimap<IBinding, CacheEntry>();
 		private readonly object _mutex = new object();
 
 		public IPipeline Pipeline { get; set; }
@@ -38,7 +39,7 @@ namespace Ninject.Activation.Caching
 			lock (_mutex)
 			{
 				var entry = new CacheEntry(context);
-				_entries[context.Implementation].Add(entry);
+				_entries[context.Binding].Add(entry);
 
 				var scope = context.GetScope() as INotifyWhenDisposed;
 
@@ -47,12 +48,12 @@ namespace Ninject.Activation.Caching
 			}
 		}
 
-		public object TryGet(Type type, object scope)
+		public object TryGet(IBinding binding, object scope)
 		{
 			lock (_mutex)
 			{
 				Prune();
-				return _entries[type].Where(x => ReferenceEquals(x.Scope.Target, scope)).Select(x => x.Context.Instance).SingleOrDefault();
+				return _entries[binding].Where(x => ReferenceEquals(x.Scope.Target, scope)).Select(x => x.Context.Instance).SingleOrDefault();
 			}
 		}
 
@@ -60,8 +61,8 @@ namespace Ninject.Activation.Caching
 		{
 			lock (_mutex)
 			{
-				foreach (Type type in _entries.Keys)
-					_entries[type].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
+				foreach (IBinding binding in _entries.Keys)
+					_entries[binding].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
 			}
 		}
 
@@ -70,7 +71,7 @@ namespace Ninject.Activation.Caching
 			lock (_mutex)
 			{
 				Pipeline.Deactivate(entry.Context);
-				_entries[entry.Context.Implementation].Remove(entry);
+				_entries[entry.Context.Binding].Remove(entry);
 			}
 		}
 

@@ -58,7 +58,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ControllerFactory.cs" />
+    <Compile Include="NinjectControllerFactory.cs" />
     <Compile Include="ControllerNamer.cs" />
     <Compile Include="ControllerRegistry.cs" />
     <Compile Include="NinjectHttpApplication.cs" />

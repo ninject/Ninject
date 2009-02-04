@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ninject
+namespace Ninject.Infrastructure
 {
 	public interface IHaveKernel
 	{
