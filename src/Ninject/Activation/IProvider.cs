@@ -4,8 +4,7 @@ namespace Ninject.Activation
 {
 	public interface IProvider
 	{
-		Type Prototype { get; }
-		Type GetImplementationType(IContext context);
+		Type Type { get; }
 		object Create(IContext context);
 	}
 }

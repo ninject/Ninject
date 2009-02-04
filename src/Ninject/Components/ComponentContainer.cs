@@ -15,7 +15,7 @@ namespace Ninject.Components
 		private readonly Multimap<Type, Type> _mappings = new Multimap<Type, Type>();
 		private readonly Dictionary<Type, INinjectComponent> _instances = new Dictionary<Type, INinjectComponent>();
 
-		public INinjectSettings Settings { get; set; }
+		public IKernel Kernel { get; set; }
 
 		public override void Dispose()
 		{
@@ -68,7 +68,12 @@ namespace Ninject.Components
 
 		public object Get(Type service)
 		{
-			return GetAll(service).FirstOrDefault();
+			Type implementation = _mappings[service].FirstOrDefault();
+
+			if (implementation == null)
+				throw new InvalidOperationException(String.Format("No component has been registered that satisfies the service {0}", service));
+
+			return ResolveInstance(implementation);
 		}
 
 		public IEnumerable<object> GetAll(Type service)
@@ -93,7 +98,7 @@ namespace Ninject.Components
 			try
 			{
 				constructor.Invoke(component, arguments);
-				component.Settings = Settings;
+				component.Settings = Kernel.Settings;
 				return component;
 			}
 			catch (TargetInvocationException ex)
@@ -106,6 +111,9 @@ namespace Ninject.Components
 		private object GetValueForParameter(ParameterInfo parameter)
 		{
 			Type service = parameter.ParameterType;
+
+			if (typeof(IKernel).IsAssignableFrom(service))
+				return Kernel;
 
 			if (service.IsArray)
 			{
@@ -133,7 +141,12 @@ namespace Ninject.Components
 
 		private ConstructorInfo SelectConstructor(Type type)
 		{
-			return type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
+			var constructor = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
+
+			if (constructor == null)
+				throw new NotSupportedException(String.Format("Couldn't resolve a constructor to create instance of type {0}", type));
+
+			return constructor;
 		}
 
 		private IEnumerable GetAllSlow(Type service)

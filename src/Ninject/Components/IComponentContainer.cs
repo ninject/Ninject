@@ -5,7 +5,7 @@ namespace Ninject.Components
 {
 	public interface IComponentContainer : IDisposable
 	{
-		INinjectSettings Settings { get; set; }
+		IKernel Kernel { get; set; }
 
 		void Add<TService, TImplementation>()
 			where TService : INinjectComponent

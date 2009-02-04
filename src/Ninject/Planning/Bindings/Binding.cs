@@ -11,6 +11,8 @@ namespace Ninject.Planning.Bindings
 	[DebuggerDisplay("{IntrospectionInfo} from {TraceInfo}")]
 	public class Binding : TraceInfoProvider, IBinding
 	{
+		private IProvider _provider;
+
 		public Type Service { get; set; }
 		public IBindingMetadata Metadata { get; set; }
 		public ICollection<IParameter> Parameters { get; private set; }
@@ -33,7 +35,10 @@ namespace Ninject.Planning.Bindings
 
 		public IProvider GetProvider(IContext context)
 		{
-			return ProviderCallback == null ? null : ProviderCallback(context);
+			if (_provider == null)
+				_provider = ProviderCallback(context);
+
+			return _provider;
 		}
 
 		public object GetScope(IContext context)

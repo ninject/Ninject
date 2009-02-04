@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Activation;
-using Ninject.Resolution;
+using Ninject.Activation.Constraints;
 
 namespace Ninject.Planning.Targets
 {

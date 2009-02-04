@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Activation.Constraints;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
-using Ninject.Resolution;
 using Ninject.Syntax;
 
 namespace Ninject

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
+using Ninject.Activation.Caching;
+using Ninject.Activation.Constraints;
 using Ninject.Activation.Providers;
 using Ninject.Activation.Scope;
 using Ninject.Components;
@@ -10,7 +12,6 @@ using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
-using Ninject.Resolution;
 using Ninject.Syntax;
 
 namespace Ninject
@@ -36,7 +37,7 @@ namespace Ninject
 		{
 			Settings = settings;
 			Components = components;
-			components.Settings = settings;
+			components.Kernel = this;
 			modules.Map(Load);
 		}
 
@@ -161,7 +162,29 @@ namespace Ninject
 
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
-			return new Context(this, request, binding, Components.Get<IResolver>());
+			return new Context(this, request, binding, ResolveContext);
+		}
+
+		protected virtual object ResolveContext(IContext context)
+		{
+			var cache = Components.Get<ICache>();
+
+			lock (context.Binding)
+			{
+				object scope = context.GetScope();
+
+				context.Instance = cache.TryGet(context.Binding, scope);
+
+				if (context.Instance != null)
+					return context.Instance;
+
+				IProvider provider = context.GetProvider();
+				context.Instance = provider.Create(context);
+
+				cache.Remember(context);
+
+				return context.Instance;
+			}
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

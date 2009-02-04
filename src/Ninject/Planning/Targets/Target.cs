@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
+using Ninject.Activation.Constraints;
 using Ninject.Infrastructure;
-using Ninject.Resolution;
 using Ninject.Syntax;
 
 namespace Ninject.Planning.Targets

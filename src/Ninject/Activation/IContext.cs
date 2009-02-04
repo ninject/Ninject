@@ -13,11 +13,10 @@ namespace Ninject.Activation
 		IRequest Request { get; }
 		IBinding Binding { get; }
 		IPlan Plan { get; set; }
-		IProvider Provider { get; }
-		Type Implementation { get; }
 		ICollection<IParameter> Parameters { get; }
 		object Instance { get; set; }
 
+		IProvider GetProvider();
 		object GetScope();
 		object Resolve();
 	}

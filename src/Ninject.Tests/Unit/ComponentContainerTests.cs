@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Ninject.Components;
 using Ninject.Infrastructure.Disposal;
 using Xunit;
@@ -10,20 +11,23 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 	public class ComponentContainerContext
 	{
 		protected readonly ComponentContainer container;
+		protected readonly Mock<IKernel> kernelMock;
 
 		public ComponentContainerContext()
 		{
 			container = new ComponentContainer();
+			kernelMock = new Mock<IKernel>();
+
+			container.Kernel = kernelMock.Object;
 		}
 	}
 
 	public class WhenGetIsCalled : ComponentContainerContext
 	{
 		[Fact]
-		public void ReturnsNullWhenNoImplementationRegisteredForService()
+		public void ThrowsExceptionIfNoImplementationRegisteredForService()
 		{
-			var service = container.Get<ITestService>();
-			Assert.Null(service);
+			Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
 		}
 
 		[Fact]
@@ -162,8 +166,8 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			Assert.NotNull(service1);
 
 			container.RemoveAll<ITestService>();
-			var service2 = container.Get<ITestService>();
-			Assert.Null(service2);
+
+			Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
 		}
 
 		[Fact]

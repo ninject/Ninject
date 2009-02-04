@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Activation.Constraints;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
-using Ninject.Resolution;
 
 namespace Ninject.Activation
 {

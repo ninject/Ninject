@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ninject.Activation.Constraints;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Parameters;
-using Ninject.Resolution;
 using Ninject.Syntax;
 
 namespace Ninject.Activation.Scope

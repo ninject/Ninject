@@ -2,6 +2,7 @@
 using System.Linq;
 using Ninject.Injection;
 using Ninject.Parameters;
+using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 
@@ -9,32 +10,40 @@ namespace Ninject.Activation.Providers
 {
 	public class StandardProvider : IProvider
 	{
-		public IKernel Kernel { get; set; }
+		public Type Type { get; private set; }
+
 		public IInjectorFactory InjectorFactory { get; set; }
+		public IPlanner Planner { get; set; }
+		public IPipeline Pipeline { get; set; }
 
-		public Type Prototype { get; private set; }
-
-		public StandardProvider(Type prototype, IKernel kernel, IInjectorFactory injectorFactory)
+		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner, IPipeline pipeline)
 		{
-			Prototype = prototype;
-			Kernel = kernel;
+			if (planner == null)
+				throw new ArgumentNullException();
+
+			Type = type;
 			InjectorFactory = injectorFactory;
-		}
-
-		public virtual Type GetImplementationType(IContext context)
-		{
-			return Prototype.ContainsGenericParameters ? Prototype.MakeGenericType(context.Request.Service.GetGenericArguments()) : Prototype;
+			Planner = planner;
+			Pipeline = pipeline;
 		}
 
 		public virtual object Create(IContext context)
 		{
+			context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
+
 			var directive = context.Plan.GetOne<ConstructorInjectionDirective>();
 
 			if (directive == null)
 				throw new InvalidOperationException();
 
 			var injector = InjectorFactory.GetConstructorInjector(directive.Member);
-			return injector.Invoke(directive.Targets.Select(target => GetValue(context, target)).ToArray());
+			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
+
+			context.Instance = injector.Invoke(arguments);
+
+			Pipeline.Activate(context);
+
+			return context.Instance;
 		}
 
 		public object GetValue(IContext context, ITarget target)
@@ -43,9 +52,17 @@ namespace Ninject.Activation.Providers
 			return parameter != null ? parameter.GetValue(context) : target.ResolveWithin(context);
 		}
 
+		private Type GetImplementationType(Type service)
+		{
+			return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
+		}
+
 		public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
 		{
-			return ctx => new StandardProvider(prototype, ctx.Kernel, ctx.Kernel.Components.Get<IInjectorFactory>());
+			return ctx => new StandardProvider(prototype,
+				ctx.Kernel.Components.Get<IInjectorFactory>(),
+				ctx.Kernel.Components.Get<IPlanner>(),
+				ctx.Kernel.Components.Get<IPipeline>());
 		}
 	}
 }

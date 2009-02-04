@@ -7,7 +7,6 @@ using Ninject.Interception;
 using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
-using Ninject.Resolution;
 using Ninject.Selection;
 using Ninject.Selection.Heuristics;
 
@@ -27,11 +26,6 @@ namespace Ninject
 		{
 			AddComponents();
 			RegisterSpecialBindings();
-		}
-
-		private void RegisterSpecialBindings()
-		{
-			Bind<IKernel>().ToConstant(this);
 		}
 
 		private void AddComponents()
@@ -56,11 +50,14 @@ namespace Ninject
 			Components.Add<IPropertyInjectionHeuristic, StandardPropertyInjectionHeuristic>();
 			Components.Add<IMethodInjectionHeuristic, StandardMethodInjectionHeuristic>();
 			Components.Add<IMethodInterceptionHeuristic, StandardMethodInterceptionHeuristic>();
+
 			Components.Add<IInjectorFactory, StandardInjectorFactory>();
-
-			Components.Add<IResolver, Resolver>();
-
 			Components.Add<IAdviceRegistry, AdviceRegistry>();
+		}
+
+		private void RegisterSpecialBindings()
+		{
+			Bind<IKernel>().ToConstant(this);
 		}
 	}
 }

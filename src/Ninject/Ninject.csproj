@@ -175,9 +175,8 @@
     <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
     <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
     <Compile Include="Planning\Targets\Target.cs" />
-    <Compile Include="Resolution\PredicateConstraint.cs" />
-    <Compile Include="Resolution\IConstraint.cs" />
-    <Compile Include="Resolution\Resolver.cs" />
+    <Compile Include="Activation\Constraints\PredicateConstraint.cs" />
+    <Compile Include="Activation\Constraints\IConstraint.cs" />
     <Compile Include="Selection\Heuristics\StandardMethodInterceptionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IMethodInjectionHeuristic.cs" />
@@ -194,7 +193,6 @@
     <Compile Include="Planning\Targets\PropertyTarget.cs" />
     <Compile Include="Planning\Targets\ParameterTarget.cs" />
     <Compile Include="Planning\Targets\ITarget.cs" />
-    <Compile Include="Resolution\IResolver.cs" />
     <Compile Include="Selection\Selector.cs" />
     <Compile Include="Selection\ISelector.cs" />
     <Compile Include="Planning\Directives\ConstructorInjectionDirective.cs" />

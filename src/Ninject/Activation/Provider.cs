@@ -4,14 +4,9 @@ namespace Ninject.Activation
 {
 	public abstract class Provider<T> : IProvider
 	{
-		public virtual Type Prototype
+		public virtual Type Type
 		{
 			get { return typeof(T); }
-		}
-
-		public virtual Type GetImplementationType(IContext context)
-		{
-			return typeof(T);
 		}
 
 		public object Create(IContext context)

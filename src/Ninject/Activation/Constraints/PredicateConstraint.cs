@@ -1,7 +1,7 @@
 ﻿using System;
 using Ninject.Planning.Bindings;
 
-namespace Ninject.Resolution
+namespace Ninject.Activation.Constraints
 {
 	public class PredicateConstraint : IConstraint
 	{

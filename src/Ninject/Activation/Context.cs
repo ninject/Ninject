@@ -5,14 +5,12 @@ using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
-using Ninject.Resolution;
 
 namespace Ninject.Activation
 {
 	public class Context : TraceInfoProvider, IContext
 	{
-		private IProvider _provider;
-		private Type _implementation;
+		private readonly Func<IContext, object> _resolveCallback;
 
 		public IKernel Kernel { get; set; }
 		public IRequest Request { get; set; }
@@ -21,24 +19,13 @@ namespace Ninject.Activation
 		public ICollection<IParameter> Parameters { get; set; }
 		public object Instance { get; set; }
 
-		public IResolver Resolver { get; set; }
-
-		public IProvider Provider
+		public Context(IKernel kernel, IRequest request, IBinding binding, Func<IContext, object> resolveCallback)
 		{
-			get
-			{
-				if (_provider == null) _provider = Binding.GetProvider(this);
-				return _provider;
-			}
-		}
-
-		public Type Implementation
-		{
-			get
-			{
-				if (_implementation == null) _implementation = Provider.GetImplementationType(this);
-				return _implementation;
-			}
+			Kernel = kernel;
+			Request = request;
+			Binding = binding;
+			Parameters = request.Parameters.Union(binding.Parameters).ToList();
+			_resolveCallback = resolveCallback;
 		}
 
 		public object GetScope()
@@ -46,18 +33,14 @@ namespace Ninject.Activation
 			return Request.GetScope() ?? Binding.GetScope(this);
 		}
 
-		public Context(IKernel kernel, IRequest request, IBinding binding, IResolver resolver)
+		public IProvider GetProvider()
 		{
-			Kernel = kernel;
-			Request = request;
-			Binding = binding;
-			Resolver = resolver;
-			Parameters = request.Parameters.Union(binding.Parameters).ToList();
+			return Binding.GetProvider(this);
 		}
 
 		public object Resolve()
 		{
-			return Resolver.Resolve(this);
+			return _resolveCallback(this);
 		}
 	}
 }

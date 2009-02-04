@@ -1,6 +1,6 @@
 ﻿using System;
+using Ninject.Activation.Constraints;
 using Ninject.Planning.Bindings;
-using Ninject.Resolution;
 
 namespace Ninject
 {

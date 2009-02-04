@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Activation;
+using Ninject.Activation.Constraints;
 using Ninject.Parameters;
-using Ninject.Resolution;
 
 namespace Ninject.Syntax
 {
