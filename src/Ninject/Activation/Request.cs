@@ -10,6 +10,7 @@ namespace Ninject.Activation
 {
 	public class Request : IRequest
 	{
+		public IRequest Parent { get; set; }
 		public ITarget Target { get; set; }
 		public Type Service { get; set; }
 
@@ -18,20 +19,21 @@ namespace Ninject.Activation
 
 		public Func<object> ScopeCallback { get; set; }
 
-		public Request(Type service, ITarget target, Func<object> scopeCallback)
-		{
-			Service = service;
-			Target = target;
-			Constraints = target.GetConstraints().ToList();
-			Parameters = new List<IParameter>();
-			ScopeCallback = scopeCallback;
-		}
-
 		public Request(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
 		{
 			Service = service;
 			Constraints = constraints.ToList();
 			Parameters = parameters.ToList();
+			ScopeCallback = scopeCallback;
+		}
+
+		public Request(IRequest parent, Type service, ITarget target, Func<object> scopeCallback)
+		{
+			Parent = parent;
+			Service = service;
+			Target = target;
+			Constraints = target.GetConstraints().ToList();
+			Parameters = new List<IParameter>();
 			ScopeCallback = scopeCallback;
 		}
 
@@ -47,7 +49,7 @@ namespace Ninject.Activation
 
 		public IRequest CreateChild(Type service, ITarget target)
 		{
-			return new Request(service, target, ScopeCallback);
+			return new Request(this, service, target, ScopeCallback);
 		}
 	}
 }

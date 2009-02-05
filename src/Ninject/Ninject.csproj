@@ -103,12 +103,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ConstraintAttribute.cs" />
+    <Compile Include="Attributes\SubscribeAttribute.cs" />
+    <Compile Include="Attributes\PublishAttribute.cs" />
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
+    <Compile Include="Messaging\Messages\BindingMessage.cs" />
+    <Compile Include="Messaging\Messages\ModuleMessage.cs" />
     <Compile Include="Planning\Bindings\BindingMetadata.cs" />
     <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
     <Compile Include="Components\NinjectComponent.cs" />
@@ -117,6 +121,8 @@
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Scope\IActivationScope.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
+    <Compile Include="Syntax\ExtensionsForEventHandler.cs" />
+    <Compile Include="Syntax\ExtensionsForIList.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
     <Compile Include="Infrastructure\FormatExtensions.cs" />

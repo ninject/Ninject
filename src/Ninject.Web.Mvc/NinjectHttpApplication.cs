@@ -9,21 +9,17 @@ namespace Ninject.Web.Mvc
 	public abstract class NinjectHttpApplication : HttpApplication, IHaveKernel
 	{
 		private static IKernel _kernel;
-		private static readonly object _mutex = new object();
 
-		public IKernel Kernel
+		IKernel IHaveKernel.Kernel
 		{
 			get { return _kernel; }
 		}
 
-		public override void Init()
+		public void Application_Start()
 		{
-			lock (_mutex)
-			{
-				_kernel = CreateKernel();
-				_kernel.Load(new MvcModule());
-				ControllerBuilder.Current.SetControllerFactory(_kernel.Get<IControllerFactory>());
-			}
+			_kernel = CreateKernel();
+			_kernel.Load(new MvcModule());
+			ControllerBuilder.Current.SetControllerFactory(_kernel.Get<IControllerFactory>());
 		}
 
 		public void RegisterAllControllersIn(string assemblyName)

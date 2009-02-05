@@ -16,6 +16,9 @@ namespace Ninject.Activation
 		ICollection<IParameter> Parameters { get; }
 		object Instance { get; set; }
 
+		Type[] GenericArguments { get; }
+		bool HasInferredGenericArguments { get; }
+
 		IProvider GetProvider();
 		object GetScope();
 		object Resolve();

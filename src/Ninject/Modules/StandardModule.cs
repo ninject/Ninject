@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ninject.Messaging.Messages;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 
@@ -10,6 +11,9 @@ namespace Ninject.Modules
 		public IKernel Kernel { get; set; }
 		public string Name { get; set; }
 		public ICollection<IBinding> Bindings { get; set; }
+
+		public event EventHandler<BindingMessage> BindingAdded;
+		public event EventHandler<BindingMessage> BindingRemoved;
 
 		protected StandardModule()
 		{
@@ -54,13 +58,16 @@ namespace Ninject.Modules
 
 		public void AddBinding(IBinding binding)
 		{
-			Bindings.Add(binding);
 			Kernel.AddBinding(binding);
+			Bindings.Add(binding);
+			BindingAdded.Raise(this, new BindingMessage(binding));
 		}
 
 		public void RemoveBinding(IBinding binding)
 		{
 			Kernel.RemoveBinding(binding);
+			Bindings.Remove(binding);
+			BindingRemoved.Raise(this, new BindingMessage(binding));
 		}
 
 		protected virtual BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)

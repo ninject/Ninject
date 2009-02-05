@@ -9,6 +9,7 @@ namespace Ninject.Activation
 {
 	public interface IRequest
 	{
+		IRequest Parent { get; }
 		ITarget Target { get; }
 		Type Service { get; }
 

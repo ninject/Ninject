@@ -14,21 +14,10 @@ namespace Ninject
 {
 	public class StandardKernel : KernelBase
 	{
-		public StandardKernel(params IModule[] modules)
-			: base(modules)
-		{
-			AddComponents();
-			RegisterSpecialBindings();
-		}
+		public StandardKernel(params IModule[] modules) : base(modules) { }
+		public StandardKernel(INinjectSettings settings, params IModule[] modules) : base(settings, modules) { }
 
-		public StandardKernel(INinjectSettings settings, params IModule[] modules)
-			: base(settings, modules)
-		{
-			AddComponents();
-			RegisterSpecialBindings();
-		}
-
-		private void AddComponents()
+		protected override void AddComponents()
 		{
 			Components.Add<IPipeline, Pipeline>();
 			Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
@@ -55,9 +44,9 @@ namespace Ninject
 			Components.Add<IAdviceRegistry, AdviceRegistry>();
 		}
 
-		private void RegisterSpecialBindings()
+		protected override void RegisterSpecialBindings()
 		{
-			Bind<IKernel>().ToConstant(this);
+			Bind<IKernel>().ToConstant(this).InSingletonScope();
 		}
 	}
 }

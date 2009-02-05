@@ -68,10 +68,22 @@ namespace Ninject.Components
 
 		public object Get(Type service)
 		{
+			if (service == typeof(IKernel))
+				return Kernel;
+
+			if (service.IsGenericType)
+			{
+				Type gtd = service.GetGenericTypeDefinition();
+				Type argument = service.GetGenericArguments()[0];
+
+				if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
+					return LinqReflection.CastSlow(GetAll(argument), argument);
+			}
+
 			Type implementation = _mappings[service].FirstOrDefault();
 
 			if (implementation == null)
-				throw new InvalidOperationException(String.Format("No component has been registered that satisfies the service {0}", service));
+				throw new InvalidOperationException(String.Format("No component of type {0} has been registered", service));
 
 			return ResolveInstance(implementation);
 		}
@@ -93,7 +105,7 @@ namespace Ninject.Components
 			_instances.Add(type, component);
 
 			ConstructorInfo constructor = SelectConstructor(type);
-			var arguments = constructor.GetParameters().Select(parameter => GetValueForParameter(parameter)).ToArray();
+			var arguments = constructor.GetParameters().Select(parameter => Get(parameter.ParameterType)).ToArray();
 
 			try
 			{
@@ -108,37 +120,6 @@ namespace Ninject.Components
 			}
 		}
 
-		private object GetValueForParameter(ParameterInfo parameter)
-		{
-			Type service = parameter.ParameterType;
-
-			if (typeof(IKernel).IsAssignableFrom(service))
-				return Kernel;
-
-			if (service.IsArray)
-			{
-				Type element = service.GetElementType();
-				return LinqReflection.ToArraySlow(GetAllSlow(element), element);
-			}
-
-			if (service.IsGenericType)
-			{
-				Type gtd = service.GetGenericTypeDefinition();
-				Type argument = service.GetGenericArguments()[0];
-
-				if (typeof(List<>).IsAssignableFrom(gtd))
-					return LinqReflection.ToListSlow(GetAllSlow(argument), argument);
-
-				if (gtd.IsInterface && typeof(ICollection<>).IsAssignableFrom(gtd))
-					return LinqReflection.ToListSlow(GetAllSlow(argument), argument);
-
-				if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
-					return GetAllSlow(argument);
-			}
-
-			return Get(service);
-		}
-
 		private ConstructorInfo SelectConstructor(Type type)
 		{
 			var constructor = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
@@ -147,12 +128,6 @@ namespace Ninject.Components
 				throw new NotSupportedException(String.Format("Couldn't resolve a constructor to create instance of type {0}", type));
 
 			return constructor;
-		}
-
-		private IEnumerable GetAllSlow(Type service)
-		{
-			var method = GetType().GetMethod("GetAll", Type.EmptyTypes).MakeGenericMethod(service);
-			return method.Invoke(this, null) as IEnumerable;
 		}
 	}
 }

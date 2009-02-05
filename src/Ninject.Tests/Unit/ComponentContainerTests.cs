@@ -63,57 +63,6 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			Assert.NotNull(asks.SecondService);
 			Assert.IsType<TestServiceB>(asks.SecondService);
 		}
-
-		[Fact]
-		public void InjectsListOfServicesWhenConstructorArgumentIsICollection()
-		{
-			container.Add<ITestService, TestServiceA>();
-			container.Add<ITestService, TestServiceB>();
-			container.Add<IAsksForCollection, AsksForCollection>();
-			var asks = container.Get<IAsksForCollection>();
-
-			Assert.NotNull(asks);
-			Assert.NotNull(asks.Services);
-			Assert.Equal(2, asks.Services.Count);
-
-			var list = asks.Services as List<ITestService>;
-
-			Assert.IsType<TestServiceA>(list[0]);
-			Assert.IsType<TestServiceB>(list[1]);
-		}
-
-		[Fact]
-		public void InjectsListOfServicesWhenConstructorArgumentIsList()
-		{
-			container.Add<ITestService, TestServiceA>();
-			container.Add<ITestService, TestServiceB>();
-			container.Add<IAsksForList, AsksForList>();
-			var asks = container.Get<IAsksForList>();
-
-			Assert.NotNull(asks);
-			Assert.NotNull(asks.Services);
-			Assert.Equal(2, asks.Services.Count);
-
-			var list = asks.Services;
-
-			Assert.IsType<TestServiceA>(list[0]);
-			Assert.IsType<TestServiceB>(list[1]);
-		}
-
-		[Fact]
-		public void InjectsArrayOfServicesWhenConstructorArgumentIsArray()
-		{
-			container.Add<ITestService, TestServiceA>();
-			container.Add<ITestService, TestServiceB>();
-			container.Add<IAsksForArray, AsksForArray>();
-			var asks = container.Get<IAsksForArray>();
-
-			Assert.NotNull(asks);
-			Assert.NotNull(asks.Services);
-			Assert.Equal(2, asks.Services.Length);
-			Assert.IsType<TestServiceA>(asks.Services[0]);
-			Assert.IsType<TestServiceB>(asks.Services[1]);
-		}
 	}
 
 	public class WhenGetAllIsCalledOnComponentContainer : ComponentContainerContext
@@ -185,51 +134,6 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			Assert.True(services[0].IsDisposed);
 			Assert.True(services[1].IsDisposed);
 		}
-	}
-
-	internal class AsksForList : NinjectComponent, IAsksForList
-	{
-		public List<ITestService> Services { get; set; }
-
-		public AsksForList(List<ITestService> services)
-		{
-			Services = services;
-		}
-	}
-
-	internal interface IAsksForList : INinjectComponent
-	{
-		List<ITestService> Services { get; set; }
-	}
-
-	internal class AsksForArray : NinjectComponent, IAsksForArray
-	{
-		public ITestService[] Services { get; set; }
-
-		public AsksForArray(ITestService[] services)
-		{
-			Services = services;
-		}
-	}
-
-	internal interface IAsksForArray : INinjectComponent
-	{
-		ITestService[] Services { get; set; }
-	}
-
-	internal class AsksForCollection : NinjectComponent, IAsksForCollection
-	{
-		public ICollection<ITestService> Services { get; set; }
-
-		public AsksForCollection(ICollection<ITestService> services)
-		{
-			Services = services;
-		}
-	}
-
-	internal interface IAsksForCollection : INinjectComponent
-	{
-		ICollection<ITestService> Services { get; set; }
 	}
 
 	internal class AsksForEnumerable : NinjectComponent, IAsksForEnumerable

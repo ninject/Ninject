@@ -10,14 +10,16 @@ namespace Ninject.Activation.Caching
 {
 	public class Cache : NinjectComponent, ICache
 	{
-		private readonly Multimap<IBinding, CacheEntry> _entries = new Multimap<IBinding, CacheEntry>();
 		private readonly object _mutex = new object();
 
 		public IPipeline Pipeline { get; set; }
 		public ICachePruner Pruner { get; set; }
 
+		public Multimap<IBinding, CacheEntry> Entries { get; private set; }
+
 		public Cache(IPipeline pipeline, ICachePruner pruner)
 		{
+			Entries = new Multimap<IBinding, CacheEntry>();
 			Pipeline = pipeline;
 			Pruner = pruner;
 			Pruner.StartPruning(this);
@@ -39,7 +41,7 @@ namespace Ninject.Activation.Caching
 			lock (_mutex)
 			{
 				var entry = new CacheEntry(context);
-				_entries[context.Binding].Add(entry);
+				Entries[context.Binding].Add(entry);
 
 				var scope = context.GetScope() as INotifyWhenDisposed;
 
@@ -48,12 +50,32 @@ namespace Ninject.Activation.Caching
 			}
 		}
 
-		public object TryGet(IBinding binding, object scope)
+		public object TryGet(IContext context)
 		{
 			lock (_mutex)
 			{
 				Prune();
-				return _entries[binding].Where(x => ReferenceEquals(x.Scope.Target, scope)).Select(x => x.Context.Instance).SingleOrDefault();
+
+				var scope = context.GetScope();
+
+				foreach (CacheEntry entry in Entries[context.Binding])
+				{
+					if (!ReferenceEquals(entry.Scope.Target, scope))
+						continue;
+
+					if (context.HasInferredGenericArguments)
+					{
+						var cachedArguments = entry.Context.GenericArguments;
+						var arguments = context.GenericArguments;
+
+						if (!cachedArguments.ElementsEqual(arguments))
+							continue;
+					}
+
+					return entry.Context.Instance;
+				}
+
+				return null;
 			}
 		}
 
@@ -61,8 +83,8 @@ namespace Ninject.Activation.Caching
 		{
 			lock (_mutex)
 			{
-				foreach (IBinding binding in _entries.Keys)
-					_entries[binding].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
+				foreach (IBinding binding in Entries.Keys)
+					Entries[binding].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
 			}
 		}
 
@@ -71,11 +93,11 @@ namespace Ninject.Activation.Caching
 			lock (_mutex)
 			{
 				Pipeline.Deactivate(entry.Context);
-				_entries[entry.Context.Binding].Remove(entry);
+				Entries[entry.Context.Binding].Remove(entry);
 			}
 		}
 
-		private class CacheEntry
+		public class CacheEntry
 		{
 			public IContext Context { get; set; }
 			public WeakReference Scope { get; set; }
