@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
+#if !NO_WEB
 using System.Web;
+#endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Infrastructure;
@@ -104,12 +106,14 @@ namespace Ninject.Planning.Bindings
 			return this;
 		}
 
+#if !NO_WEB
 		public IBindingNamedOrWithSyntax<T> InRequestScope()
 		{
 			Binding.ScopeCallback = ctx => HttpContext.Current;
 			Binding.IntrospectionInfo += " in request scope";
 			return this;
 		}
+#endif
 
 		public IBindingNamedOrWithSyntax<T> InScope(Func<IContext, object> scope)
 		{

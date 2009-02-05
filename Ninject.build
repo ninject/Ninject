@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Ninject" default="all">
+
+	<property name="path.base" value="${project::get-base-directory()}"/>
+	<property name="path.bin" value="${path.base}/bin"/>
+	<property name="path.lib" value="${path.base}/lib"/>
+	<property name="path.dist" value="${path.base}/dist"/>
+	<property name="path.docs" value="${path.base}/docs"/>
+	<property name="path.src" value="${path.base}/src"/>
+	<property name="path.tools" value="${path.base}/tools"/>
+	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
+	<property name="path.tools.moq" value="${path.tools}/moq"/>
+
+	<property name="version" value="2.0.0.0" overwrite="false"/>
+	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
+	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
+	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
+	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
+	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
+
+	<property name="package" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
+	<property name="build.asminfo" value="SharedBuildAssemblyInfo.cs"/>
+	
+	<target name="rebuild" depends="clean, all"/>
+
+	<target name="debug">
+		<property name="build.config" value="debug"/>
+	</target>
+
+	<target name="release">
+		<property name="build.config" value="release"/>
+	</target>
+
+	<target name="all" depends="config">
+		<call target="platform-net35"/>
+		<call target="platform-silverlight20"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
+		<delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+	</target>
+
+	<target name="init" depends="create-assembly-info">
+		<mkdir dir="${path.bin}" if="${not(directory::exists(path.bin))}"/>
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+	</target>
+
+	<target name="config" depends="init">
+		<property name="build.config" value="debug" overwrite="false"/>
+		<call target="config-build-${build.config}"/>
+	</target>
+
+	<target name="config-build-debug">
+		<property name="build.debug" value="true"/>
+		<property name="build.optimize" value="false" overwrite="false"/>
+		<property name="global.build.defines" value="DEBUG,TRACE"/>
+	</target>
+
+	<target name="config-build-release">
+		<property name="build.debug" value="false"/>
+		<property name="build.optimize" value="true" overwrite="false"/>
+		<property name="global.build.defines" value="TRACE,STRONG"/>
+	</target>
+
+	<target name="get-subversion-revision-number">
+		<if test="${version.revision=='0'}">
+			<!-- Credit to Ayende Rahien -->
+			<exec program="svn" commandline='info "${project::get-base-directory()}" --xml' output="_svn.xml" failonerror="false"/>
+			<xmlpeek file="_svn.xml" xpath="/info/entry/@revision" property="version.revision" failonerror="false"/>
+			<delete file="_svn.xml" failonerror="false"/>
+		</if>
+	</target>
+
+	<target name="create-assembly-info" depends="get-subversion-revision-number">
+		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
+			<imports>
+				<import namespace="System"/>
+				<import namespace="System.Reflection"/>
+				<import namespace="System.Runtime.InteropServices"/>
+			</imports>
+			<attributes>
+				<attribute type="AssemblyProductAttribute" value="Ninject: Lightweight dependency injection for .NET"/>
+				<attribute type="AssemblyCompanyAttribute" value="Enkari, Ltd."/>
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright © 2007-2009 Enkari, Ltd. and contributors"/>
+				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
+				<attribute type="ComVisibleAttribute" value="false"/>
+				<attribute type="CLSCompliantAttribute" value="true"/>
+			</attributes>
+		</asminfo>
+	</target>
+
+	<target name="config-platform-net35">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.platform" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
+		<property name="current.path.bin" value="${path.bin}/net-3.5/${build.config}"/>
+		<property name="current.path.test" value="${path.bin}/net-3.5/tests" />
+		<property name="current.path.lib" value="${path.lib}" />
+	</target>
+
+	<target name="config-platform-silverlight20">
+		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
+		<property name="build.platform" value="silverlight-2.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+		<property name="current.path.bin" value="${path.bin}/silverlight-2.0/${build.config}"/>
+		<property name="current.path.test" value="${path.bin}/silverlight-2.0/tests" />
+		<property name="current.path.lib" value="${path.lib}" />
+	</target>
+
+	<target name="ensure-platform-selected">
+		<if test="${not(property::exists('build.platform'))}">
+			<call target="config-platform-net35"/>
+		</if>
+	</target>
+
+	<target name="platform-net35" depends="config">
+		<if test="${framework::exists('net-3.5')}">
+			<echo message="Building Ninject ${build.version} for .NET Framework v3.5."/>
+			<call target="config-platform-net35"/>
+			<copy todir="${current.path.bin}">
+				<fileset basedir="${current.path.lib}">
+					<include name="*.dll"/>
+					<include name="*.xml"/>
+				</fileset>
+			</copy>
+			<call target="core"/>
+			<call target="test" />
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('net-3.5'))}">
+			<echo message="The .NET Framework v3.5 compiler is required. Skipping platform."/>
+		</if>
+	</target>
+	
+	<target name="platform-silverlight20" depends="config">
+		<if test="${framework::exists('silverlight-2.0')}">
+			<echo message="Building Ninject ${build.version} for Silverlight v2.0."/>
+			<call target="config-platform-silverlight20"/>
+			<copy todir="${current.path.bin}">
+				<fileset basedir="${current.path.lib}">
+					<include name="*.dll"/>
+					<include name="*.xml"/>
+				</fileset>
+			</copy>
+			<call target="core"/>
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('silverlight-2.0'))}">
+			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
+		</if>
+	</target>
+
+	<target name="core" depends="config, ensure-platform-selected">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Ninject.dll">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Ninject/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="LinFu.DynamicProxy.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="compile-tests">
+		<mkdir dir="${current.path.test}"/>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${current.path.bin}">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.xunit}">
+				<include name="xunit.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.moq}">
+				<include name="Moq.dll"/>
+			</fileset>
+		</copy>
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.test}/Ninject.Tests.dll">
+			<sources basedir="${path.src}">
+				<include name="Ninject.Tests/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.test}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="Moq.dll"/>
+				<include name="xunit.dll"/>
+				<include name="Ninject.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="test" depends="compile-tests">
+		<xunit unless="${skip.tests}" workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}"/>
+	</target>
+
+	<target name="package-platform" if="${package}">
+		<zip zipfile="${path.dist}\Ninject-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
+			<fileset basedir="${current.path.bin}">
+				<include name="*.dll"/>
+				<include name="*.pdb"/>
+				<include name="*.xml"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="package-source" if="${package}">
+		<zip zipfile="${path.dist}\Ninject-${build.version}-source.zip" ziplevel="9">
+			<fileset basedir="${path.src}">
+				<include name="**/*.cs"/>
+				<include name="**/*.csproj"/>
+				<include name="**/*.sln"/>
+				<include name="**/*.txt"/>
+				<include name="**/*.build"/>
+			</fileset>
+		</zip>
+	</target>
+
+</project>

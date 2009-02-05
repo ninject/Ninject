@@ -101,16 +101,16 @@ namespace Ninject.Components
 
 		private object CreateNewInstance(Type type)
 		{
-			var component = FormatterServices.GetSafeUninitializedObject(type) as INinjectComponent;
-			_instances.Add(type, component);
-
 			ConstructorInfo constructor = SelectConstructor(type);
 			var arguments = constructor.GetParameters().Select(parameter => Get(parameter.ParameterType)).ToArray();
 
 			try
 			{
-				constructor.Invoke(component, arguments);
+				var component = constructor.Invoke(arguments) as INinjectComponent;
+
 				component.Settings = Kernel.Settings;
+				_instances.Add(type, component);
+
 				return component;
 			}
 			catch (TargetInvocationException ex)

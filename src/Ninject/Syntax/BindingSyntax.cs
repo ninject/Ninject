@@ -25,7 +25,9 @@ namespace Ninject.Syntax
 		IBindingNamedOrWithSyntax<T> InSingletonScope();
 		IBindingNamedOrWithSyntax<T> InTransientScope();
 		IBindingNamedOrWithSyntax<T> InThreadScope();
+#if !NO_WEB
 		IBindingNamedOrWithSyntax<T> InRequestScope();
+#endif
 		IBindingNamedOrWithSyntax<T> InScope(Func<IContext, object> scope);
 	}
 
