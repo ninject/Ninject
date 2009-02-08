@@ -14,7 +14,7 @@ namespace Ninject.Activation.Caching
 			if (_timer != null)
 				StopPruning();
 
-			int timeoutMs = Settings.CachePruneTimeoutMs;
+			int timeoutMs = Kernel.Settings.CachePruneTimeoutMs;
 			_timer = new Timer(PruneCache, cache, timeoutMs, timeoutMs);
 		}
 

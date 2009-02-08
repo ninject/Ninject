@@ -5,6 +5,6 @@ namespace Ninject.Components
 {
 	public abstract class NinjectComponent : DisposableObject, INinjectComponent
 	{
-		public INinjectSettings Settings { get; set; }
+		public IKernel Kernel { get; set; }
 	}
 }

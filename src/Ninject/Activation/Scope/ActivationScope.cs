@@ -21,12 +21,12 @@ namespace Ninject.Activation.Scope
 			return _parent.CanResolve(request);
 		}
 
-		public IEnumerable<IContext> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
+		public IEnumerable<IHook> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
 		{
 			return Resolve(CreateDirectRequest(service, constraints, parameters));
 		}
 
-		public IEnumerable<IContext> Resolve(IRequest request)
+		public IEnumerable<IHook> Resolve(IRequest request)
 		{
 			return _parent.Resolve(request);
 		}

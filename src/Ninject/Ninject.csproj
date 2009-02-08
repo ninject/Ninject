@@ -71,6 +71,7 @@
     <Compile Include="Activation\Context.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Activation\IHook.cs" />
     <Compile Include="Activation\Request.cs" />
     <Compile Include="Activation\IContext.cs">
       <SubType>Code</SubType>
@@ -103,16 +104,19 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ConstraintAttribute.cs" />
-    <Compile Include="Attributes\SubscribeAttribute.cs" />
-    <Compile Include="Attributes\PublishAttribute.cs" />
+    <Compile Include="Attributes\IgnoreModule.cs" />
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="Infrastructure\KernelHook.cs" />
+    <Compile Include="ModuleLoadExtensions.cs" />
+    <Compile Include="Events\BindingEventArgs.cs" />
+    <Compile Include="Events\ModuleEventArgs.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
-    <Compile Include="Messaging\Messages\BindingMessage.cs" />
-    <Compile Include="Messaging\Messages\ModuleMessage.cs" />
+    <Compile Include="Modules\IModuleLoader.cs" />
+    <Compile Include="Modules\ModuleLoader.cs" />
     <Compile Include="Planning\Bindings\BindingMetadata.cs" />
     <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
     <Compile Include="Components\NinjectComponent.cs" />
@@ -142,7 +146,7 @@
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
-    <Compile Include="ExtensionsForIResolutionRoot.cs" />
+    <Compile Include="ResolutionExtensions.cs" />
     <Compile Include="Activation\Providers\ConstantProvider.cs" />
     <Compile Include="Infrastructure\LinqReflection.cs" />
     <Compile Include="Components\INinjectComponent.cs" />
@@ -161,16 +165,7 @@
     <Compile Include="Injection\Injectors\IFieldInjector.cs" />
     <Compile Include="Injection\Injectors\IMethodInjector.cs" />
     <Compile Include="Injection\Injectors\IPropertyInjector.cs" />
-    <Compile Include="Messaging\Channel.cs" />
-    <Compile Include="Messaging\Bus.cs" />
-    <Compile Include="Messaging\DeliveryThread.cs" />
-    <Compile Include="Messaging\IBus.cs" />
-    <Compile Include="Messaging\IChannel.cs" />
-    <Compile Include="Messaging\IPublication.cs" />
-    <Compile Include="Messaging\ISubscription.cs" />
-    <Compile Include="Messaging\Subscription.cs" />
-    <Compile Include="Messaging\Publication.cs" />
-    <Compile Include="Modules\StandardModule.cs" />
+    <Compile Include="Modules\Module.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />

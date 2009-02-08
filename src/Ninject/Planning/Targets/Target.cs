@@ -53,7 +53,7 @@ namespace Ninject.Planning.Targets
 		private IEnumerable<object> ResolveInstances(Type service, IContext parent)
 		{
 			var request = parent.Request.CreateChild(service, this);
-			return parent.Kernel.Resolve(request).Select(ctx => ctx.Resolve());
+			return parent.Kernel.Resolve(request).Select(hook => hook.Resolve());
 		}
 	}
 }

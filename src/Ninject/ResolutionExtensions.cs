@@ -8,7 +8,7 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
-	public static class ExtensionsForIResolutionRoot
+	public static class ResolutionExtensions
 	{
 		public static T Get<T>(this IResolutionRoot root, params IParameter[] parameters)
 		{

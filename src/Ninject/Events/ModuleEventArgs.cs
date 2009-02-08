@@ -1,13 +1,13 @@
 ﻿using System;
 using Ninject.Modules;
 
-namespace Ninject.Messaging.Messages
+namespace Ninject.Events
 {
-	public class ModuleMessage : EventArgs
+	public class ModuleEventArgs : EventArgs
 	{
 		public IModule Module { get; private set; }
 
-		public ModuleMessage(IModule module)
+		public ModuleEventArgs(IModule module)
 		{
 			Module = module;
 		}

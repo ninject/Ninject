@@ -12,15 +12,13 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
 	public class MethodInjectionStrategyContext
 	{
-		protected Mock<IKernel> kernelMock;
 		protected Mock<IInjectorFactory> injectorFactoryMock;
 		protected readonly MethodInjectionStrategy strategy;
 
 		public MethodInjectionStrategyContext()
 		{
-			kernelMock = new Mock<IKernel>();
 			injectorFactoryMock = new Mock<IInjectorFactory>();
-			strategy = new MethodInjectionStrategy(kernelMock.Object, injectorFactoryMock.Object);
+			strategy = new MethodInjectionStrategy(injectorFactoryMock.Object);
 		}
 	}
 

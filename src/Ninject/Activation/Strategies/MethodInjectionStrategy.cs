@@ -7,12 +7,10 @@ namespace Ninject.Activation.Strategies
 {
 	public class MethodInjectionStrategy : ActivationStrategy
 	{
-		public IKernel Kernel { get; set; }
 		public IInjectorFactory InjectorFactory { get; set; }
 
-		public MethodInjectionStrategy(IKernel kernel, IInjectorFactory injectorFactory)
+		public MethodInjectionStrategy(IInjectorFactory injectorFactory)
 		{
-			Kernel = kernel;
 			InjectorFactory = injectorFactory;
 		}
 

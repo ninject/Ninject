@@ -1,30 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ninject.Messaging.Messages;
+using Ninject.Events;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 
 namespace Ninject.Modules
 {
-	public abstract class StandardModule : IModule
+	public abstract class Module : IModule
 	{
 		public IKernel Kernel { get; set; }
-		public string Name { get; set; }
 		public ICollection<IBinding> Bindings { get; set; }
 
-		public event EventHandler<BindingMessage> BindingAdded;
-		public event EventHandler<BindingMessage> BindingRemoved;
+		public event EventHandler<BindingEventArgs> BindingAdded;
+		public event EventHandler<BindingEventArgs> BindingRemoved;
 
-		protected StandardModule()
+		protected Module()
 		{
 			Bindings = new List<IBinding>();
-			Name = GetType().FullName;
-		}
-
-		protected StandardModule(string name)
-			: this()
-		{
-			Name = name;
 		}
 
 		public void OnLoad(IKernel kernel)
@@ -60,14 +52,14 @@ namespace Ninject.Modules
 		{
 			Kernel.AddBinding(binding);
 			Bindings.Add(binding);
-			BindingAdded.Raise(this, new BindingMessage(binding));
+			BindingAdded.Raise(this, new BindingEventArgs(binding));
 		}
 
 		public void RemoveBinding(IBinding binding)
 		{
 			Kernel.RemoveBinding(binding);
 			Bindings.Remove(binding);
-			BindingRemoved.Raise(this, new BindingMessage(binding));
+			BindingRemoved.Raise(this, new BindingEventArgs(binding));
 		}
 
 		protected virtual BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)

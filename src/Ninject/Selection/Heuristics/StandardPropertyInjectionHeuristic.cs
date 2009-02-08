@@ -9,7 +9,7 @@ namespace Ninject.Selection.Heuristics
 	{
 		public bool ShouldInject(PropertyInfo property)
 		{
-			return property.HasAttribute(Settings.InjectAttribute);
+			return property.HasAttribute(Kernel.Settings.InjectAttribute);
 		}
 	}
 }

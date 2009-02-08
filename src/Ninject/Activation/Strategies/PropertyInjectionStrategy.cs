@@ -9,12 +9,10 @@ namespace Ninject.Activation.Strategies
 {
 	public class PropertyInjectionStrategy : ActivationStrategy
 	{
-		public IKernel Kernel { get; set; }
 		public IInjectorFactory InjectorFactory { get; set; }
 
-		public PropertyInjectionStrategy(IKernel kernel, IInjectorFactory injectorFactory)
+		public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
 		{
-			Kernel = kernel;
 			InjectorFactory = injectorFactory;
 		}
 

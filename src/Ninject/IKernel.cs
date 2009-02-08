@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Ninject.Activation;
 using Ninject.Components;
+using Ninject.Events;
 using Ninject.Infrastructure.Disposal;
-using Ninject.Messaging.Messages;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
@@ -15,12 +15,12 @@ namespace Ninject
 		INinjectSettings Settings { get; }
 		IComponentContainer Components { get; }
 
-		event EventHandler<ModuleMessage> ModuleLoaded;
-		event EventHandler<ModuleMessage> ModuleUnloaded;
+		event EventHandler<ModuleEventArgs> ModuleLoaded;
+		event EventHandler<ModuleEventArgs> ModuleUnloaded;
 
-		void Load(IModule module);
-		void Unload(string moduleName);
-		void Unload(IModule module);
+		bool HasModule(Type moduleType);
+		void LoadModule(IModule module);
+		void UnloadModule(Type moduleType);
 
 		void Inject(object instance);
 		IEnumerable<IBinding> GetBindings(IRequest request);

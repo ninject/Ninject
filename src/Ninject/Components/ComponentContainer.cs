@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Syntax;
@@ -107,8 +105,7 @@ namespace Ninject.Components
 			try
 			{
 				var component = constructor.Invoke(arguments) as INinjectComponent;
-
-				component.Settings = Kernel.Settings;
+				component.Kernel = Kernel;
 				_instances.Add(type, component);
 
 				return component;

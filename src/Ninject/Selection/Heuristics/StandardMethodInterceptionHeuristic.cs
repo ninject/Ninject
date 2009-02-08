@@ -9,7 +9,7 @@ namespace Ninject.Selection.Heuristics
 	{
 		public bool ShouldIntercept(MethodInfo method)
 		{
-			return method.HasAttribute(Settings.InjectAttribute);
+			return method.HasAttribute(Kernel.Settings.InjectAttribute);
 		}
 	}
 }

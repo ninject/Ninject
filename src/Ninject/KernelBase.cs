@@ -7,9 +7,9 @@ using Ninject.Activation.Constraints;
 using Ninject.Activation.Providers;
 using Ninject.Activation.Scope;
 using Ninject.Components;
+using Ninject.Events;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
-using Ninject.Messaging.Messages;
 using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
@@ -20,15 +20,15 @@ namespace Ninject
 	public abstract class KernelBase : DisposableObject, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
-		private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
+		private readonly Dictionary<Type, IModule> _modules = new Dictionary<Type, IModule>();
 
 		public INinjectSettings Settings { get; private set; }
 		public IComponentContainer Components { get; private set; }
 
-		public event EventHandler<BindingMessage> BindingAdded;
-		public event EventHandler<BindingMessage> BindingRemoved;
-		public event EventHandler<ModuleMessage> ModuleLoaded;
-		public event EventHandler<ModuleMessage> ModuleUnloaded;
+		public event EventHandler<BindingEventArgs> BindingAdded;
+		public event EventHandler<BindingEventArgs> BindingRemoved;
+		public event EventHandler<ModuleEventArgs> ModuleLoaded;
+		public event EventHandler<ModuleEventArgs> ModuleUnloaded;
 
 		protected KernelBase()
 			: this(new ComponentContainer(), new NinjectSettings(), new IModule[0]) { }
@@ -47,9 +47,8 @@ namespace Ninject
 			components.Kernel = this;
 
 			AddComponents();
-			RegisterSpecialBindings();
 
-			modules.Map(Load);
+			modules.Map(LoadModule);
 		}
 
 		public override void Dispose()
@@ -58,31 +57,31 @@ namespace Ninject
 			base.Dispose();
 		}
 
-		public virtual void Load(IModule module)
+		public virtual bool HasModule(Type moduleType)
 		{
-			_modules.Add(module.Name, module);
+			return _modules.ContainsKey(moduleType);
+		}
+
+		public virtual void LoadModule(IModule module)
+		{
+			_modules.Add(module.GetType(), module);
 
 			module.Kernel = this;
 			module.Load();
 
-			ModuleLoaded.Raise(this, new ModuleMessage(module));
+			ModuleLoaded.Raise(this, new ModuleEventArgs(module));
 		}
 
-		public virtual void Unload(string moduleName)
+		public virtual void UnloadModule(Type moduleType)
 		{
-			IModule module = _modules[moduleName];
+			IModule module = _modules[moduleType];
 
 			module.Unload();
 			module.Kernel = null;
 
-			_modules.Remove(module.Name);
+			_modules.Remove(moduleType);
 
-			ModuleUnloaded.Raise(this, new ModuleMessage(module));
-		}
-
-		public virtual void Unload(IModule module)
-		{
-			Unload(module.Name);
+			ModuleUnloaded.Raise(this, new ModuleEventArgs(module));
 		}
 
 		public void Inject(object instance)
@@ -101,13 +100,18 @@ namespace Ninject
 			return false;
 		}
 
-		public virtual IEnumerable<IContext> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
+		public virtual IEnumerable<IHook> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
 		{
 			return Resolve(CreateDirectRequest(service, constraints, parameters));
 		}
 
-		public virtual IEnumerable<IContext> Resolve(IRequest request)
+		public virtual IEnumerable<IHook> Resolve(IRequest request)
 		{
+			if (request.Service.IsAssignableFrom(GetType()))
+			{
+				return new[] { new KernelHook(this) };
+			}
+
 			if (!CanResolve(request))
 			{
 				if (!TryRegisterImplicitSelfBinding(request.Service))
@@ -116,7 +120,7 @@ namespace Ninject
 
 			return GetBindings(request)
 				.Where(binding => binding.Matches(request) && request.ConstraintsSatisfiedBy(binding))
-				.Select(binding => CreateContext(request, binding));
+				.Select(binding => CreateContext(request, binding)).Cast<IHook>();
 		}
 
 		public IBindingToSyntax<T> Bind<T>()
@@ -132,13 +136,13 @@ namespace Ninject
 		public void AddBinding(IBinding binding)
 		{
 			_bindings.Add(binding.Service, binding);
-			BindingAdded.Raise(this, new BindingMessage(binding));
+			BindingAdded.Raise(this, new BindingEventArgs(binding));
 		}
 
 		public void RemoveBinding(IBinding binding)
 		{
 			_bindings.Remove(binding.Service, binding);
-			BindingRemoved.Raise(this, new BindingMessage(binding));
+			BindingRemoved.Raise(this, new BindingEventArgs(binding));
 		}
 
 		public virtual IEnumerable<IBinding> GetBindings(IRequest request)
@@ -161,7 +165,6 @@ namespace Ninject
 		}
 
 		protected abstract void AddComponents();
-		protected abstract void RegisterSpecialBindings();
 
 		protected virtual bool TryRegisterImplicitSelfBinding(Type service)
 		{

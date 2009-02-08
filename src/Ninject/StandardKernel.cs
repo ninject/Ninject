@@ -42,11 +42,7 @@ namespace Ninject
 
 			Components.Add<IInjectorFactory, StandardInjectorFactory>();
 			Components.Add<IAdviceRegistry, AdviceRegistry>();
-		}
-
-		protected override void RegisterSpecialBindings()
-		{
-			Bind<IKernel>().ToConstant(this).InSingletonScope();
+			Components.Add<IModuleLoader, ModuleLoader>();
 		}
 	}
 }
