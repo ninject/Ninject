@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Activation.Constraints;
+using Ninject.Activation.Hooks;
 using Ninject.Activation.Providers;
 using Ninject.Activation.Scope;
 using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Infrastructure.Language;
 using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
@@ -100,7 +101,7 @@ namespace Ninject
 			return false;
 		}
 
-		public virtual IEnumerable<IHook> Resolve(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
+		public virtual IEnumerable<IHook> Resolve(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters)
 		{
 			return Resolve(CreateDirectRequest(service, constraints, parameters));
 		}
@@ -108,9 +109,7 @@ namespace Ninject
 		public virtual IEnumerable<IHook> Resolve(IRequest request)
 		{
 			if (request.Service.IsAssignableFrom(GetType()))
-			{
-				return new[] { new KernelHook(this) };
-			}
+				return new[] { new ConstantHook(this) };
 
 			if (!CanResolve(request))
 			{
@@ -119,8 +118,8 @@ namespace Ninject
 			}
 
 			return GetBindings(request)
-				.Where(binding => binding.Matches(request) && request.ConstraintsSatisfiedBy(binding))
-				.Select(binding => CreateContext(request, binding)).Cast<IHook>();
+				.Where(binding => binding.ConditionsSatisfiedBy(request) && request.ConstraintsSatisfiedBy(binding))
+				.Select(binding => CreateHook(CreateContext(request, binding)));
 		}
 
 		public IBindingToSyntax<T> Bind<T>()
@@ -184,14 +183,19 @@ namespace Ninject
 			return new BindingBuilder<T>(binding);
 		}
 
-		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters)
+		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters)
 		{
 			return new Request(service, constraints, parameters, null);
 		}
 
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
-			return new Context(this, request, binding, Components.Get<ICache>());
+			return new Context(this, request, binding);
+		}
+
+		protected virtual IHook CreateHook(IContext context)
+		{
+			return new ContextResolutionHook(context, Components.Get<ICache>());
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

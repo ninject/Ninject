@@ -6,7 +6,6 @@ using Ninject.Modules;
 
 namespace Ninject.Web.Mvc
 {
-	[IgnoreModule]
 	public class MvcModule : Module
 	{
 		public override void Load()

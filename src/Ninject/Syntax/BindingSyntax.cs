@@ -17,7 +17,7 @@ namespace Ninject.Syntax
 
 	public interface IBindingWhenSyntax<T> : IFluentSyntax
 	{
-		IBindingInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition);
+		IBindingWhenInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition);
 	}
 
 	public interface IBindingInSyntax<T> : IFluentSyntax

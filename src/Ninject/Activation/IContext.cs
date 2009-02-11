@@ -7,7 +7,7 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Activation
 {
-	public interface IContext : IHook, IHaveTraceInfo
+	public interface IContext : IHaveTraceInfo
 	{
 		IKernel Kernel { get; }
 		IRequest Request { get; }

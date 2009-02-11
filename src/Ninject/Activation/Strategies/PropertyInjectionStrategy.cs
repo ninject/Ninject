@@ -9,7 +9,7 @@ namespace Ninject.Activation.Strategies
 {
 	public class PropertyInjectionStrategy : ActivationStrategy
 	{
-		public IInjectorFactory InjectorFactory { get; set; }
+		public IInjectorFactory InjectorFactory { get; private set; }
 
 		public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
 		{

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ninject.Syntax
+namespace Ninject.Tests
 {
 	public static class ExtensionsForIEnumerable
 	{

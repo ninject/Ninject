@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Ninject.Activation;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Tracing;
@@ -13,12 +14,13 @@ namespace Ninject.Planning.Bindings
 	{
 		private IProvider _provider;
 
-		public Type Service { get; set; }
-		public IBindingMetadata Metadata { get; set; }
+		public Type Service { get; private set; }
+		public IBindingMetadata Metadata { get; private set; }
+
+		public ICollection<Func<IRequest, bool>> Conditions { get; private set; }
 		public ICollection<IParameter> Parameters { get; private set; }
 
 		public Func<IContext, IProvider> ProviderCallback { get; set; }
-		public Func<IRequest, bool> ConditionCallback { get; set; }
 		public Func<IContext, object> ScopeCallback { get; set; }
 
 		public string IntrospectionInfo { get; set; }
@@ -29,6 +31,7 @@ namespace Ninject.Planning.Bindings
 		{
 			Service = service;
 			Metadata = metadata;
+			Conditions = new List<Func<IRequest, bool>>();
 			Parameters = new List<IParameter>();
 			IntrospectionInfo = "Binding from " + service.Format();
 		}
@@ -46,9 +49,9 @@ namespace Ninject.Planning.Bindings
 			return ScopeCallback == null ? null : ScopeCallback(context);
 		}
 
-		public bool Matches(IRequest request)
+		public bool ConditionsSatisfiedBy(IRequest request)
 		{
-			return ConditionCallback == null || ConditionCallback(request);
+			return Conditions.All(condition => condition(request));
 		}
 	}
 }

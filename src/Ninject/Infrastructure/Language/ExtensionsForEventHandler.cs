@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Ninject.Syntax
+namespace Ninject.Infrastructure.Language
 {
-	public static class ExtensionsForEventHandler
+	internal static class ExtensionsForEventHandler
 	{
 		public static void Raise<T>(this EventHandler<T> handler, object sender, T message)
 			where T : EventArgs

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ninject.Activation.Constraints;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
@@ -14,16 +13,16 @@ namespace Ninject.Activation
 		public ITarget Target { get; set; }
 		public Type Service { get; set; }
 
-		public ICollection<IConstraint> Constraints { get; set; }
+		public ICollection<Func<IBindingMetadata, bool>> Constraints { get; set; }
 		public ICollection<IParameter> Parameters { get; set; }
 
 		public Func<object> ScopeCallback { get; set; }
 
-		public Request(Type service, IEnumerable<IConstraint> constraints, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
+		public Request(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
 		{
 			Service = service;
-			Constraints = constraints.ToList();
-			Parameters = parameters.ToList();
+			Constraints = constraints == null ? new List<Func<IBindingMetadata, bool>>() : constraints.ToList();
+			Parameters = parameters == null ? new List<IParameter>() : parameters.ToList();
 			ScopeCallback = scopeCallback;
 		}
 
@@ -39,7 +38,7 @@ namespace Ninject.Activation
 
 		public bool ConstraintsSatisfiedBy(IBinding binding)
 		{
-			return Constraints.All(c => c.Matches(binding.Metadata));
+			return Constraints.All(constraint => constraint(binding.Metadata));
 		}
 
 		public object GetScope()

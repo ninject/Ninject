@@ -10,10 +10,12 @@ namespace Ninject.Planning.Bindings
 	{
 		Type Service { get; }
 		IBindingMetadata Metadata { get; }
+
+		ICollection<Func<IRequest, bool>> Conditions { get; }
 		ICollection<IParameter> Parameters { get; }
 
 		IProvider GetProvider(IContext context);
 		object GetScope(IContext context);
-		bool Matches(IRequest request);
+		bool ConditionsSatisfiedBy(IRequest request);
 	}
 }

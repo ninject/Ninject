@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ninject.Activation.Constraints;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
@@ -12,7 +11,7 @@ namespace Ninject
 	{
 		public static T Get<T>(this IResolutionRoot root, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), new IConstraint[0], parameters).Select(ctx => ctx.Resolve()).Cast<T>().FirstOrDefault();
+			return root.Resolve(typeof(T), null, parameters).Select(ctx => ctx.Resolve()).Cast<T>().FirstOrDefault();
 		}
 
 		public static T Get<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
@@ -22,12 +21,12 @@ namespace Ninject
 
 		public static T Get<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> predicate, params IParameter[] parameters)
 		{
-			return (T)root.Resolve(typeof(T), new[] { new PredicateConstraint(predicate) }, parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
+			return (T)root.Resolve(typeof(T), new[] { predicate }, parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
 		}
 
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), new IConstraint[0], parameters).Select(ctx => ctx.Resolve()).Cast<T>();
+			return root.Resolve(typeof(T), null, parameters).Select(ctx => ctx.Resolve()).Cast<T>();
 		}
 
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
@@ -37,12 +36,12 @@ namespace Ninject
 
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> predicate, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), new[] { new PredicateConstraint(predicate) }, parameters).Select(ctx => ctx.Resolve()).Cast<T>();
+			return root.Resolve(typeof(T), new[] { predicate }, parameters).Select(ctx => ctx.Resolve()).Cast<T>();
 		}
 
 		public static object Get(this IResolutionRoot root, Type type, params IParameter[] parameters)
 		{
-			return root.Resolve(type, new IConstraint[0], parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
+			return root.Resolve(type, null, parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
 		}
 
 		public static object Get(this IResolutionRoot root, Type type, string name, params IParameter[] parameters)
@@ -52,12 +51,12 @@ namespace Ninject
 
 		public static object Get(this IResolutionRoot root, Type type, Func<IBindingMetadata, bool> predicate, params IParameter[] parameters)
 		{
-			return root.Resolve(type, new[] { new PredicateConstraint(predicate) }, parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
+			return root.Resolve(type, new[] { predicate }, parameters).Select(ctx => ctx.Resolve()).FirstOrDefault();
 		}
 
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type type, params IParameter[] parameters)
 		{
-			return root.Resolve(type, new IConstraint[0], parameters).Select(ctx => ctx.Resolve());
+			return root.Resolve(type, null, parameters).Select(ctx => ctx.Resolve());
 		}
 
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type type, string name, params IParameter[] parameters)
@@ -67,7 +66,7 @@ namespace Ninject
 
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type type, Func<IBindingMetadata, bool> predicate, params IParameter[] parameters)
 		{
-			return root.Resolve(type, new[] { new PredicateConstraint(predicate) }, parameters).Select(ctx => ctx.Resolve());
+			return root.Resolve(type, new[] { predicate }, parameters).Select(ctx => ctx.Resolve());
 		}
 	}
 }

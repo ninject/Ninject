@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
-using Ninject.Syntax;
+using Ninject.Infrastructure.Language;
 
 namespace Ninject.Components
 {

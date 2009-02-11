@@ -1,11 +1,10 @@
 ﻿using System;
-using Ninject.Activation;
 
 namespace Ninject.Activation.Providers
 {
 	public class ConstantProvider<T> : Provider<T>
 	{
-		public T Value { get; set; }
+		public T Value { get; private set; }
 
 		public ConstantProvider(T value)
 		{

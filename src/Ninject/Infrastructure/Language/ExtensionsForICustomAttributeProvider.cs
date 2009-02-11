@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Ninject.Syntax
+namespace Ninject.Infrastructure.Language
 {
-	public static class ExtensionsForICustomAttributeProvider
+	internal static class ExtensionsForICustomAttributeProvider
 	{
 		public static T GetOneAttribute<T>(this ICustomAttributeProvider member)
 			where T : Attribute

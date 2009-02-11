@@ -6,8 +6,8 @@ namespace Ninject.Planning.Directives
 {
 	public class PropertyInjectionDirective : IDirective
 	{
-		public PropertyInfo Member { get; set; }
-		public ITarget Target { get; set; }
+		public PropertyInfo Member { get; private set; }
+		public ITarget Target { get; private set; }
 
 		public PropertyInjectionDirective(PropertyInfo member)
 		{

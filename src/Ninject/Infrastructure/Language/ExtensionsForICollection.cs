@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Ninject.Syntax
+namespace Ninject.Infrastructure.Language
 {
-	public static class ExtensionsForICollection
+	internal static class ExtensionsForICollection
 	{
 		public static void RemoveWhere<T>(this ICollection<T> collection, Func<T, bool> condition)
 		{

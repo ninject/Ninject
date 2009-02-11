@@ -12,9 +12,9 @@ namespace Ninject.Activation.Providers
 	{
 		public Type Type { get; private set; }
 
-		public IInjectorFactory InjectorFactory { get; set; }
-		public IPlanner Planner { get; set; }
-		public IPipeline Pipeline { get; set; }
+		public IInjectorFactory InjectorFactory { get; private set; }
+		public IPlanner Planner { get; private set; }
+		public IPipeline Pipeline { get; private set; }
 
 		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner, IPipeline pipeline)
 		{

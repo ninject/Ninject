@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Ninject.Components;
-using Ninject.Syntax;
+using Ninject.Infrastructure.Language;
 
 namespace Ninject.Selection.Heuristics
 {

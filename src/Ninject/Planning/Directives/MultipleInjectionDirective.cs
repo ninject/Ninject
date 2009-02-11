@@ -8,8 +8,8 @@ namespace Ninject.Planning.Directives
 	public abstract class MultipleInjectionDirective<T> : IDirective
 		where T : MethodBase
 	{
-		public T Member { get; set; }
-		public ITarget[] Targets { get; set; }
+		public T Member { get; private set; }
+		public ITarget[] Targets { get; private set; }
 
 		protected MultipleInjectionDirective(T member)
 		{

@@ -3,8 +3,8 @@ using System.Linq;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
-using Ninject.Syntax;
 
 namespace Ninject.Activation.Caching
 {
@@ -12,9 +12,8 @@ namespace Ninject.Activation.Caching
 	{
 		private readonly object _mutex = new object();
 
-		public IPipeline Pipeline { get; set; }
-		public ICachePruner Pruner { get; set; }
-
+		public IPipeline Pipeline { get; private set; }
+		public ICachePruner Pruner { get; private set; }
 		public Multimap<IBinding, CacheEntry> Entries { get; private set; }
 
 		public Cache(IPipeline pipeline, ICachePruner pruner)

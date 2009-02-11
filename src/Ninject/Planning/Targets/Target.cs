@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
-using Ninject.Activation.Constraints;
 using Ninject.Infrastructure;
-using Ninject.Syntax;
+using Ninject.Infrastructure.Language;
+using Ninject.Planning.Bindings;
 
 namespace Ninject.Planning.Targets
 {
@@ -22,9 +22,9 @@ namespace Ninject.Planning.Targets
 			Site = site;
 		}
 
-		public IEnumerable<IConstraint> GetConstraints()
+		public IEnumerable<Func<IBindingMetadata, bool>> GetConstraints()
 		{
-			return Site.GetAttributes<ConstraintAttribute>().Cast<IConstraint>();
+			return Site.GetAttributes<ConstraintAttribute>().Select(a => new Func<IBindingMetadata, bool>(a.Matches));
 		}
 
 		public object ResolveWithin(IContext parent)

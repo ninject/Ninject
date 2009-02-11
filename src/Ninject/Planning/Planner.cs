@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Components;
+using Ninject.Infrastructure.Language;
 using Ninject.Planning.Strategies;
-using Ninject.Syntax;
 
 namespace Ninject.Planning
 {
@@ -23,12 +23,17 @@ namespace Ninject.Planning
 			if (_plans.ContainsKey(type))
 				return _plans[type];
 
-			var plan = new Plan(type);
+			var plan = CreateEmptyPlan(type);
 			_plans.Add(type, plan);
 
 			Strategies.Map(s => s.Execute(plan));
 
 			return plan;
+		}
+
+		protected virtual IPlan CreateEmptyPlan(Type type)
+		{
+			return new Plan(type);
 		}
 	}
 }

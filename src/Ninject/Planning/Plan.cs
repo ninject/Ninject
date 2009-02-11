@@ -7,18 +7,18 @@ namespace Ninject.Planning
 {
 	public class Plan : IPlan
 	{
-		private readonly List<IDirective> _directives = new List<IDirective>();
-
 		public Type Type { get; private set; }
+		public ICollection<IDirective> Directives { get; private set; }
 
 		public Plan(Type type)
 		{
 			Type = type;
+			Directives = new List<IDirective>();
 		}
 
 		public void Add(IDirective directive)
 		{
-			_directives.Add(directive);
+			Directives.Add(directive);
 		}
 
 		public bool Has<TDirective>()
@@ -36,7 +36,7 @@ namespace Ninject.Planning
 		public IEnumerable<TDirective> GetAll<TDirective>()
 			where TDirective : IDirective
 		{
-			return _directives.OfType<TDirective>();
+			return Directives.OfType<TDirective>();
 		}
 	}
 }

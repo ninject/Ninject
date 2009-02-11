@@ -4,7 +4,7 @@ namespace Ninject.Activation.Providers
 {
 	public class CallbackProvider<T> : Provider<T>
 	{
-		public Func<IContext, T> Method { get; set; }
+		public Func<IContext, T> Method { get; private set; }
 
 		public CallbackProvider(Func<IContext, T> method)
 		{

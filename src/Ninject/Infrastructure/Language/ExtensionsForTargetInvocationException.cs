@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Ninject.Syntax
+namespace Ninject.Infrastructure.Language
 {
-	public static class ExtensionsForTargetInvocationException
+	internal static class ExtensionsForTargetInvocationException
 	{
 		public static void RethrowInnerException(this TargetInvocationException exception)
 		{

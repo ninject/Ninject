@@ -8,7 +8,7 @@ namespace Ninject.Planning.Strategies
 {
 	public class PropertyReflectionStrategy : NinjectComponent, IPlanningStrategy
 	{
-		public ISelector Selector { get; set; }
+		public ISelector Selector { get; private set; }
 
 		public PropertyReflectionStrategy(ISelector selector)
 		{

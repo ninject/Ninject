@@ -11,8 +11,6 @@ namespace Ninject.Activation
 {
 	public class Context : TraceInfoProvider, IContext
 	{
-		public ICache Cache { get; set; }
-
 		public IKernel Kernel { get; set; }
 		public IRequest Request { get; set; }
 		public IBinding Binding { get; set; }
@@ -23,12 +21,11 @@ namespace Ninject.Activation
 		public Type[] GenericArguments { get; private set; }
 		public bool HasInferredGenericArguments { get; private set; }
 
-		public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache)
+		public Context(IKernel kernel, IRequest request, IBinding binding)
 		{
 			Kernel = kernel;
 			Request = request;
 			Binding = binding;
-			Cache = cache;
 			Parameters = request.Parameters.Union(binding.Parameters).ToList();
 
 			if (binding.Service.IsGenericTypeDefinition)
@@ -46,23 +43,6 @@ namespace Ninject.Activation
 		public IProvider GetProvider()
 		{
 			return Binding.GetProvider(this);
-		}
-
-		public object Resolve()
-		{
-			lock (Binding)
-			{
-				Instance = Cache.TryGet(this);
-
-				if (Instance != null)
-					return Instance;
-
-				Instance = GetProvider().Create(this);
-
-				Cache.Remember(this);
-
-				return Instance;
-			}
 		}
 	}
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ninject.Syntax
+namespace Ninject.Infrastructure.Language
 {
-	public static class ExtensionsForIList
+	internal static class ExtensionsForIList
 	{
 		public static bool ElementsEqual<T>(this IList<T> collection, IList<T> other)
 		{

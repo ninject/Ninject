@@ -26,7 +26,8 @@ namespace Ninject.Web.Mvc
 
 		public void RegisterAllControllersIn(Assembly assembly)
 		{
-			FindControllersIn(assembly).Map(t => _controllers[t.Name] = t.Type);
+			foreach (ControllerDefinition definition in FindControllersIn(assembly))
+				_controllers[definition.Name] = definition.Type;
 		}
 
 		public void Register(string controllerName, Type controllerType)

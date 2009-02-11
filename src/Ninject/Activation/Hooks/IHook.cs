@@ -1,6 +1,6 @@
 using System;
 
-namespace Ninject.Activation
+namespace Ninject.Activation.Hooks
 {
 	public interface IHook
 	{

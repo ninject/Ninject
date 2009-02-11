@@ -13,7 +13,7 @@ namespace Ninject.Planning.Bindings
 {
 	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedOrWithSyntax<T>, IBindingInNamedOrWithSyntax<T>, IBindingNamedOrWithSyntax<T>
 	{
-		public Binding Binding { get; set; }
+		public Binding Binding { get; private set; }
 
 		public BindingBuilder(Binding binding)
 		{
@@ -70,9 +70,9 @@ namespace Ninject.Planning.Bindings
 			return this;
 		}
 
-		public IBindingInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition)
+		public IBindingWhenInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition)
 		{
-			Binding.ConditionCallback = condition;
+			Binding.Conditions.Add(condition);
 			Binding.IntrospectionInfo += " (conditionally)";
 			return this;
 		}

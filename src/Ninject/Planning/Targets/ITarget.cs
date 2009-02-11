@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Activation;
-using Ninject.Activation.Constraints;
+using Ninject.Planning.Bindings;
 
 namespace Ninject.Planning.Targets
 {
@@ -9,7 +9,7 @@ namespace Ninject.Planning.Targets
 	{
 		Type Type { get; }
 		string Name { get; }
-		IEnumerable<IConstraint> GetConstraints();
+		IEnumerable<Func<IBindingMetadata, bool>> GetConstraints();
 		object ResolveWithin(IContext parent);
 	}
 }

@@ -71,7 +71,8 @@
     <Compile Include="Activation\Context.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\IHook.cs" />
+    <Compile Include="Activation\Hooks\ContextResolutionHook.cs" />
+    <Compile Include="Activation\Hooks\IHook.cs" />
     <Compile Include="Activation\Request.cs" />
     <Compile Include="Activation\IContext.cs">
       <SubType>Code</SubType>
@@ -104,12 +105,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ConstraintAttribute.cs" />
-    <Compile Include="Attributes\IgnoreModule.cs" />
     <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
-    <Compile Include="Infrastructure\KernelHook.cs" />
-    <Compile Include="ModuleLoadExtensions.cs" />
+    <Compile Include="Activation\Hooks\ConstantHook.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIList.cs" />
+    <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
     <Compile Include="Events\ModuleEventArgs.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
@@ -125,8 +126,7 @@
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Scope\IActivationScope.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
-    <Compile Include="Syntax\ExtensionsForEventHandler.cs" />
-    <Compile Include="Syntax\ExtensionsForIList.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
     <Compile Include="Infrastructure\FormatExtensions.cs" />
@@ -146,7 +146,7 @@
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
-    <Compile Include="ResolutionExtensions.cs" />
+    <Compile Include="Syntax\ResolutionExtensions.cs" />
     <Compile Include="Activation\Providers\ConstantProvider.cs" />
     <Compile Include="Infrastructure\LinqReflection.cs" />
     <Compile Include="Components\INinjectComponent.cs" />
@@ -176,8 +176,6 @@
     <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
     <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
     <Compile Include="Planning\Targets\Target.cs" />
-    <Compile Include="Activation\Constraints\PredicateConstraint.cs" />
-    <Compile Include="Activation\Constraints\IConstraint.cs" />
     <Compile Include="Selection\Heuristics\StandardMethodInterceptionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IMethodInjectionHeuristic.cs" />
@@ -208,10 +206,10 @@
     <Compile Include="Planning\Bindings\BindingBuilder.cs" />
     <Compile Include="Planning\Bindings\Binding.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
-    <Compile Include="Syntax\ExtensionsForICollection.cs" />
-    <Compile Include="Syntax\ExtensionsForTargetInvocationException.cs" />
-    <Compile Include="Syntax\ExtensionsForICustomAttributeProvider.cs" />
-    <Compile Include="Syntax\ExtensionsForIEnumerable.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICollection.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
     <Compile Include="Syntax\BindingSyntax.cs" />
     <Compile Include="Planning\Bindings\IBinding.cs" />
     <Compile Include="IKernel.cs" />

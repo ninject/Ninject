@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation.Strategies;
 using Ninject.Components;
-using Ninject.Syntax;
+using Ninject.Infrastructure.Language;
 
 namespace Ninject.Activation
 {

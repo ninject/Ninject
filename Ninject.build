@@ -247,7 +247,7 @@
 	</target>
 
 	<target name="test" depends="compile-tests" unless="${skip.tests}">
-		<xunit workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}"/>
+		<xunit workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}/results.html"/>
 	</target>
 
 	<target name="package" depends="all">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ninject.Events;
+using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 

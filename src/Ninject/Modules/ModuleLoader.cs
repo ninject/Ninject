@@ -15,6 +15,9 @@ namespace Ninject.Modules
 		{
 			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
 			{
+				if (Kernel.HasModule(type))
+					continue;
+
 				var module = Activator.CreateInstance(type) as IModule;
 				Kernel.LoadModule(module);
 			}
@@ -76,9 +79,6 @@ namespace Ninject.Modules
 		protected virtual bool IsLoadableModule(Type type)
 		{
 			if (!typeof(IModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
-				return false;
-
-			if (type.HasAttribute<IgnoreModule>())
 				return false;
 
 			return type.GetConstructor(Type.EmptyTypes) != null;

@@ -6,7 +6,7 @@ namespace Ninject.Activation.Caching
 {
 	public class CachePruner : NinjectComponent, ICachePruner
 	{
-		private static WeakReference _indicator = new WeakReference(new object());
+		private static readonly WeakReference _indicator = new WeakReference(new object());
 		private Timer _timer;
 
 		public void StartPruning(ICache cache)
