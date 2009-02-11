@@ -3,7 +3,6 @@
 
 	<property name="path.base" value="${project::get-base-directory()}"/>
 	<property name="path.build" value="${path.base}/build"/>
-	<property name="path.working" value="${path.base}/build/working"/>
 	<property name="path.lib" value="${path.base}/lib"/>
 	<property name="path.dist" value="${path.base}/dist"/>
 	<property name="path.docs" value="${path.base}/docs"/>
@@ -11,8 +10,7 @@
 	<property name="path.tools" value="${path.base}/tools"/>
 	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
 	<property name="path.tools.moq" value="${path.tools}/moq"/>
-	<property name="path.tools.ilmerge" value="${path.tools}/ilmerge"/>
-	<property name="path.tools.mono" value="${path.tools}/mono"/>
+	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
 
 	<property name="version" value="2.0.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
@@ -22,7 +20,7 @@
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
 	<property name="build.platform" value="net-3.5" overwrite="false"/>
-	<property name="build.asminfo" value="SharedBuildAssemblyInfo.cs"/>
+	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
@@ -59,6 +57,7 @@
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright © 2007-2009 Enkari, Ltd. and contributors"/>
 				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
 				<attribute type="ComVisibleAttribute" value="false"/>
+				<attribute type="CLSCompliantAttribute" value="true"/>
 			</attributes>
 		</asminfo>
 	</target>
@@ -72,14 +71,15 @@
 		<call target="config-platform-${build.platform}"/>
 		
 		<property name="current.path.build" value="${path.build}/${build.platform}/${build.config}"/>
+		<property name="current.path.build.lib" value="${path.build}/${build.platform}/${build.config}/lib"/>
 		<property name="current.path.build.extensions" value="${path.build}/${build.platform}/${build.config}/extensions"/>
 		<property name="current.path.test" value="${path.build}/${build.platform}/tests" />
 		
 		<mkdir dir="${current.path.build}" if="${not(directory::exists(current.path.build))}"/>
+		<mkdir dir="${current.path.build.lib}" if="${not(directory::exists(current.path.build.lib))}"/>
 		<mkdir dir="${current.path.build.extensions}" if="${not(directory::exists(current.path.build.extensions))}"/>
-		<mkdir dir="${path.working}" if="${not(directory::exists(path.working))}"/>
-		
-		<copy todir="${path.working}">
+
+		<copy todir="${current.path.build.lib}">
 			<fileset basedir="${path.lib}">
 				<include name="*.dll"/>
 				<include name="*.xml"/>
@@ -110,59 +110,23 @@
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 	</target>
 
-	<target name="compile-core">
+	<target name="core" depends="init">
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         keyfile="${path.src}/Ninject.snk" output="${path.working}/Ninject.dll">
+         keyfile="${path.src}/Ninject.snk" output="${current.path.build}/Ninject.dll">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Ninject/**/*.cs"/>
 			</sources>
-			<references basedir="${path.working}">
+			<references>
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="LinFu.DynamicProxy.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
 			</nowarn>
 		</csc>
-	</target>
-
-	<target name="link-core" depends="compile-core">
-		<monolinker verbose="true" path="${path.tools.mono}/monolinker.exe" libraryPath="${path.working}" debug="${build.debug}" outputPath="${path.working}/linked">
-			<assemblies basedir="${path.working}">
-				<include name="Ninject.dll"/>
-			</assemblies>
-		</monolinker>
-	</target>
-
-	<target name="merge-core" depends="link-core">
-		<!--
-		<monomerge verbose="true" path="${path.tools.mono}/monomerge.exe" input="${path.working}/Ninject.dll" output="${current.path.build}/Ninject.dll">
-			<assemblies basedir="${path.working}">
-				<include name="LinFu.DynamicProxy.dll"/>
-			</assemblies>
-		</monomerge>
-		-->
-		<ilmerge path="${path.tools.ilmerge}/ilmerge.exe" internalize="true" keyfile="${path.src}/Ninject.snk" input="${path.working}/linked/Ninject.dll" output="${current.path.build}/Ninject.dll">
-			<assemblies basedir="${path.working}/linked">
-				<include name="LinFu.DynamicProxy.dll"/>
-			</assemblies>
-		</ilmerge>
-	</target>
-
-	<target name="sign-core" depends="merge-core">
-		<delay-sign keyfile="${path.src}/Ninject.snk">
-			<targets basedir="${current.path.build}">
-				<include name="Ninject.dll"/>
-			</targets>
-		</delay-sign>
-	</target>
-
-	<target name="core" depends="init sign-core">
-		<copy file="${current.path.build}/Ninject.dll" todir="${path.working}" overwrite="true"/>
 	</target>
 
 	<target name="csl" depends="init core">
@@ -172,13 +136,13 @@
 				<include name="${build.asminfo}"/>
 				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
 			</sources>
-			<references basedir="${path.working}">
+			<references basedir="${current.path.build}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="Microsoft.Practices.ServiceLocation.dll"/>
 				<include name="Ninject.dll"/>
+				<include name="lib/Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -186,22 +150,22 @@
 		</csc>
 	</target>
 
-	<target name="mvc">
+	<target name="mvc" depends="init core">
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.build.extensions}/Ninject.Web.Mvc.dll">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Ninject.Web.Mvc/**/*.cs"/>
 			</sources>
-			<references basedir="${path.working}">
+			<references basedir="${current.path.build}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="System.Web.Abstractions.dll"/>
-				<include name="System.Web.Mvc.dll"/>
-				<include name="System.Web.Routing.dll"/>
 				<include name="Ninject.dll"/>
+				<include name="lib/System.Web.Abstractions.dll"/>
+				<include name="lib/System.Web.Mvc.dll"/>
+				<include name="lib/System.Web.Routing.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -211,9 +175,9 @@
 
 	<target name="compile-tests" depends="core" unless="${skip.tests}">
 		<mkdir dir="${current.path.test}"/>
-		<copy todir="${current.path.test}">
+		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">
-				<include name="*.dll"/>
+				<include name="**/*.dll"/>
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}">
@@ -248,23 +212,26 @@
 
 	<target name="test" depends="compile-tests" unless="${skip.tests}">
 		<xunit workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}/results.html"/>
+		<!--
+		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
+					commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;Ninject.Tests.dll&quot; //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
+		-->
 	</target>
-
+	
 	<target name="package" depends="all">
 		<zip zipfile="${path.dist}\Ninject-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.build}">
-				<include name="*.dll"/>
-				<include name="*.pdb"/>
-				<include name="*.xml"/>
+				<include name="**/*.*"/>
 			</fileset>
 		</zip>
 		<zip zipfile="${path.dist}\Ninject-${build.version}-source.zip" ziplevel="9">
-			<fileset basedir="${path.src}">
+			<fileset basedir="${path.base}">
 				<include name="**/*.cs"/>
 				<include name="**/*.csproj"/>
 				<include name="**/*.sln"/>
 				<include name="**/*.txt"/>
 				<include name="**/*.build"/>
+				<include name="**/*.snk"/>
 			</fileset>
 		</zip>
 	</target>

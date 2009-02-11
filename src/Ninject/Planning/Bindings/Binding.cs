@@ -20,6 +20,9 @@ namespace Ninject.Planning.Bindings
 		public ICollection<Func<IRequest, bool>> Conditions { get; private set; }
 		public ICollection<IParameter> Parameters { get; private set; }
 
+		public ICollection<Action<IContext>> ActivationActions { get; private set; }
+		public ICollection<Action<IContext>> DeactivationActions { get; private set; }
+
 		public Func<IContext, IProvider> ProviderCallback { get; set; }
 		public Func<IContext, object> ScopeCallback { get; set; }
 
@@ -33,6 +36,8 @@ namespace Ninject.Planning.Bindings
 			Metadata = metadata;
 			Conditions = new List<Func<IRequest, bool>>();
 			Parameters = new List<IParameter>();
+			ActivationActions = new List<Action<IContext>>();
+			DeactivationActions = new List<Action<IContext>>();
 			IntrospectionInfo = "Binding from " + service.Format();
 		}
 

@@ -3,7 +3,6 @@ using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
 using Ninject.Injection;
-using Ninject.Interception;
 using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
@@ -24,6 +23,7 @@ namespace Ninject
 			Components.Add<IActivationStrategy, MethodInjectionStrategy>();
 			Components.Add<IActivationStrategy, InitializableStrategy>();
 			Components.Add<IActivationStrategy, StartableStrategy>();
+			Components.Add<IActivationStrategy, BindingActionStrategy>();
 			Components.Add<IActivationStrategy, DisposableStrategy>();
 
 			Components.Add<ICache, Cache>();
@@ -41,7 +41,6 @@ namespace Ninject
 			Components.Add<IMethodInterceptionHeuristic, StandardMethodInterceptionHeuristic>();
 
 			Components.Add<IInjectorFactory, StandardInjectorFactory>();
-			Components.Add<IAdviceRegistry, AdviceRegistry>();
 			Components.Add<IModuleLoader, ModuleLoader>();
 		}
 	}

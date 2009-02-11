@@ -14,6 +14,9 @@ namespace Ninject.Planning.Bindings
 		ICollection<Func<IRequest, bool>> Conditions { get; }
 		ICollection<IParameter> Parameters { get; }
 
+		ICollection<Action<IContext>> ActivationActions { get; }
+		ICollection<Action<IContext>> DeactivationActions { get; }
+
 		IProvider GetProvider(IContext context);
 		object GetScope(IContext context);
 		bool ConditionsSatisfiedBy(IRequest request);

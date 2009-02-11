@@ -11,7 +11,7 @@ using Ninject.Syntax;
 
 namespace Ninject.Planning.Bindings
 {
-	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedOrWithSyntax<T>, IBindingInNamedOrWithSyntax<T>, IBindingNamedOrWithSyntax<T>
+	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedOrWithSyntax<T>, IBindingInNamedOrWithSyntax<T>, IBindingNamedOrWithSyntax<T>, IBindingWithOrOnSyntax<T>
 	{
 		public Binding Binding { get; private set; }
 
@@ -122,40 +122,52 @@ namespace Ninject.Planning.Bindings
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithConstructorArgument(string name, object value)
+		public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, object value)
 		{
 			Binding.Parameters.Add(new ConstructorArgument(name, value));
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback)
+		public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback)
 		{
 			Binding.Parameters.Add(new ConstructorArgument(name, valueCallback));
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithPropertyValue(string name, object value)
+		public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, object value)
 		{
 			Binding.Parameters.Add(new PropertyValue(name, value));
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback)
+		public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback)
 		{
 			Binding.Parameters.Add(new PropertyValue(name, valueCallback));
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithParameter(IParameter parameter)
+		public IBindingWithOrOnSyntax<T> WithParameter(IParameter parameter)
 		{
 			Binding.Parameters.Add(parameter);
 			return this;
 		}
 
-		public IBindingWithSyntax<T> WithMetadata(string key, object value)
+		public IBindingWithOrOnSyntax<T> WithMetadata(string key, object value)
 		{
 			Binding.Metadata.Set(key, value);
 			Binding.IntrospectionInfo += " with metadata " + key + " = " + value;
+			return this;
+		}
+
+		public IBindingOnSyntax<T> OnActivation(Action<T> action)
+		{
+			Binding.ActivationActions.Add(ctx => action((T)ctx.Instance));
+			return this;
+		}
+
+		public IBindingOnSyntax<T> OnDeactivation(Action<T> action)
+		{
+			Binding.DeactivationActions.Add(ctx => action((T)ctx.Instance));
 			return this;
 		}
 	}

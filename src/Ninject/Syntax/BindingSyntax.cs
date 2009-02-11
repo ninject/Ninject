@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Ninject.Activation;
 using Ninject.Parameters;
 
@@ -38,15 +39,22 @@ namespace Ninject.Syntax
 
 	public interface IBindingWithSyntax<T> : IFluentSyntax
 	{
-		IBindingWithSyntax<T> WithConstructorArgument(string name, object value);
-		IBindingWithSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback);
-		IBindingWithSyntax<T> WithPropertyValue(string name, object value);
-		IBindingWithSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback);
-		IBindingWithSyntax<T> WithParameter(IParameter parameter);
-		IBindingWithSyntax<T> WithMetadata(string key, object value);
+		IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, object value);
+		IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback);
+		IBindingWithOrOnSyntax<T> WithPropertyValue(string name, object value);
+		IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback);
+		IBindingWithOrOnSyntax<T> WithParameter(IParameter parameter);
+		IBindingWithOrOnSyntax<T> WithMetadata(string key, object value);
+	}
+
+	public interface IBindingOnSyntax<T> : IFluentSyntax
+	{
+		IBindingOnSyntax<T> OnActivation(Action<T> action);
+		IBindingOnSyntax<T> OnDeactivation(Action<T> action);
 	}
 
 	public interface IBindingWhenInNamedOrWithSyntax<T> : IBindingWhenSyntax<T>, IBindingInSyntax<T>, IBindingNamedSyntax<T>, IBindingWithSyntax<T> { }
 	public interface IBindingInNamedOrWithSyntax<T> : IBindingInSyntax<T>, IBindingNamedSyntax<T>, IBindingWithSyntax<T> { }
 	public interface IBindingNamedOrWithSyntax<T> : IBindingNamedSyntax<T>, IBindingWithSyntax<T> { }
+	public interface IBindingWithOrOnSyntax<T> : IBindingWithSyntax<T>, IBindingOnSyntax<T> { }
 }

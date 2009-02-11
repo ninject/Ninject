@@ -42,10 +42,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinFu.DynamicProxy, Version=1.0.3233.18231, Culture=neutral, PublicKeyToken=62a6874124340d6e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\LinFu.DynamicProxy.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -89,6 +85,7 @@
     <Compile Include="Activation\Strategies\ActivationStrategy.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Activation\Strategies\BindingActionStrategy.cs" />
     <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
     <Compile Include="Activation\Strategies\StartableStrategy.cs" />
     <Compile Include="Activation\Strategies\ActivationStrategyFor.cs" />
@@ -105,7 +102,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ConstraintAttribute.cs" />
-    <Compile Include="Attributes\InterceptAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Activation\Hooks\ConstantHook.cs" />
@@ -134,15 +130,6 @@
     <Compile Include="Infrastructure\Tracing\TraceInfo.cs" />
     <Compile Include="Injection\Injectors\Linq\MethodInjectorBase.cs" />
     <Compile Include="Injection\Injectors\Linq\VoidMethodInjector.cs" />
-    <Compile Include="Interception\Advice\DynamicAdvice.cs" />
-    <Compile Include="Interception\Advice\StaticAdvice.cs" />
-    <Compile Include="Interception\Advice\IAdvice.cs" />
-    <Compile Include="Interception\AdviceRegistry.cs" />
-    <Compile Include="Interception\IAdviceRegistry.cs" />
-    <Compile Include="Interception\Invocation.cs" />
-    <Compile Include="Interception\Dispatcher.cs" />
-    <Compile Include="Interception\IInterceptor.cs" />
-    <Compile Include="Interception\MethodCall.cs" />
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
