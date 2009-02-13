@@ -4,11 +4,18 @@ using Ninject.Components;
 
 namespace Ninject.Activation.Caching
 {
+	/// <summary>
+	/// Periodically prunes an <see cref="ICache"/>.
+	/// </summary>
 	public class CachePruner : NinjectComponent, ICachePruner
 	{
 		private static readonly WeakReference _indicator = new WeakReference(new object());
 		private Timer _timer;
 
+		/// <summary>
+		/// Starts periodically pruning the specified cache.
+		/// </summary>
+		/// <param name="cache">The cache to prune.</param>
 		public void StartPruning(ICache cache)
 		{
 			if (_timer != null)
@@ -18,6 +25,9 @@ namespace Ninject.Activation.Caching
 			_timer = new Timer(PruneCache, cache, timeoutMs, timeoutMs);
 		}
 
+		/// <summary>
+		/// Stops the periodic pruning operation.
+		/// </summary>
 		public void StopPruning()
 		{
 			if (_timer != null)

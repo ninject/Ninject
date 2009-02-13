@@ -23,6 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\build\debug\Ninject.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\..\build\release\Ninject.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AutomatedRelease|AnyCPU' ">
     <OutputPath>..\..\build\release\</OutputPath>
@@ -105,6 +108,8 @@
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Activation\Hooks\ConstantHook.cs" />
+    <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIList.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
@@ -125,11 +130,10 @@
     <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
-    <Compile Include="Infrastructure\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Tracing\IHaveTraceInfo.cs" />
     <Compile Include="Infrastructure\Tracing\TraceInfo.cs" />
-    <Compile Include="Injection\Injectors\Linq\MethodInjectorBase.cs" />
-    <Compile Include="Injection\Injectors\Linq\VoidMethodInjector.cs" />
+    <Compile Include="Injection\Linq\MethodInjectorBase.cs" />
+    <Compile Include="Injection\Linq\VoidMethodInjector.cs" />
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
@@ -141,39 +145,33 @@
     <Compile Include="Components\IComponentContainer.cs" />
     <Compile Include="Syntax\IBindingRoot.cs" />
     <Compile Include="Activation\Providers\CallbackProvider.cs" />
-    <Compile Include="Injection\StandardInjectorFactory.cs" />
+    <Compile Include="Injection\Linq\InjectorFactory.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
-    <Compile Include="Injection\Injectors\Linq\ConstructorInjector.cs" />
-    <Compile Include="Injection\Injectors\Linq\MethodInjector.cs" />
-    <Compile Include="Injection\Injectors\Linq\ExpressionInjectorBase.cs" />
-    <Compile Include="Injection\Injectors\IInjector.cs" />
-    <Compile Include="Injection\Injectors\Linq\PropertyInjector.cs" />
-    <Compile Include="Injection\Injectors\IConstructorInjector.cs" />
-    <Compile Include="Injection\Injectors\IFieldInjector.cs" />
-    <Compile Include="Injection\Injectors\IMethodInjector.cs" />
-    <Compile Include="Injection\Injectors\IPropertyInjector.cs" />
+    <Compile Include="Injection\Linq\ConstructorInjector.cs" />
+    <Compile Include="Injection\Linq\MethodInjector.cs" />
+    <Compile Include="Injection\Linq\ExpressionBasedInjector.cs" />
+    <Compile Include="Injection\Linq\PropertyInjector.cs" />
+    <Compile Include="Injection\IConstructorInjector.cs" />
+    <Compile Include="Injection\IMethodInjector.cs" />
+    <Compile Include="Injection\IPropertyInjector.cs" />
     <Compile Include="Modules\Module.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />
     <Compile Include="Parameters\Parameter.cs" />
     <Compile Include="Parameters\IParameter.cs" />
-    <Compile Include="Planning\Directives\StaticMethodInterceptionDirective.cs" />
-    <Compile Include="Planning\Strategies\MethodInterceptionStrategy.cs" />
     <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
     <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
     <Compile Include="Planning\Targets\Target.cs" />
-    <Compile Include="Selection\Heuristics\StandardMethodInterceptionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IMethodInjectionHeuristic.cs" />
-    <Compile Include="Selection\Heuristics\IMethodInterceptionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardMethodInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardConstructorScorer.cs" />
     <Compile Include="Selection\Heuristics\IPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IConstructorScorer.cs" />
     <Compile Include="StandardKernel.cs" />
     <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />
-    <Compile Include="Planning\Directives\MultipleInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirectiveBase.cs" />
     <Compile Include="Planning\Directives\PropertyInjectionDirective.cs" />
     <Compile Include="Planning\IPlan.cs" />
     <Compile Include="Planning\Targets\PropertyTarget.cs" />

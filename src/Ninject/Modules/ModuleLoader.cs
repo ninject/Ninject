@@ -5,12 +5,18 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using Ninject.Components;
-using Ninject.Syntax;
 
 namespace Ninject.Modules
 {
+	/// <summary>
+	/// Automatically finds and loads modules from assemblies.
+	/// </summary>
 	public class ModuleLoader : NinjectComponent, IModuleLoader
 	{
+		/// <summary>
+		/// Loads all loadable modules defined in the specified assembly.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
 		public void LoadModules(Assembly assembly)
 		{
 			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
@@ -23,6 +29,10 @@ namespace Ninject.Modules
 			}
 		}
 
+		/// <summary>
+		/// Loads all loadable modules defined in the assembly with the specified assembly name or filename.
+		/// </summary>
+		/// <param name="assemblyOrFileName">Name of the assembly or file.</param>
 		public void LoadModules(string assemblyOrFileName)
 		{
 			AssemblyName name;
@@ -39,20 +49,35 @@ namespace Ninject.Modules
 			LoadModules(Assembly.Load(name));
 		}
 
+		/// <summary>
+		/// Scans specified path for assemblies that match the specified pattern(s),
+		/// and loads any modules defined therein into the kernel.
+		/// </summary>
+		/// <param name="path">The path to scan.</param>
+		/// <param name="patterns">The patterns to match.</param>
+		/// <param name="recursive">If <c>true</c>, scan all subdirectories of the path as well.</param>
 		public void ScanAndLoadModules(string path, IEnumerable<string> patterns, bool recursive)
 		{
 			var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 			var normalizedPath = NormalizePath(path);
 			var files = patterns.SelectMany(pattern => Directory.GetFiles(normalizedPath, pattern, searchOption));
 
-			foreach (AssemblyName assemblyName in FindAssembliesWithModules(files))
-				LoadModules(Assembly.Load(assemblyName));
-		}
-
-		protected virtual IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> files)
-		{
 			AppDomain temporaryDomain = CreateTemporaryAppDomain();
 
+			foreach (AssemblyName assemblyName in FindAssembliesWithModules(temporaryDomain, files))
+				LoadModules(Assembly.Load(assemblyName));
+
+			AppDomain.Unload(temporaryDomain);
+		}
+
+		/// <summary>
+		/// Scans the specified series of files for assemblies that contain loadable modules.
+		/// </summary>
+		/// <param name="temporaryDomain">The temporary <see cref="AppDomain"/> to load assemblies in to check them.</param>
+		/// <param name="files">The files to check.</param>
+		/// <returns>The names of the assemblies that contain loadable modules.</returns>
+		protected virtual IEnumerable<AssemblyName> FindAssembliesWithModules(AppDomain temporaryDomain, IEnumerable<string> files)
+		{
 			foreach (string file in files)
 			{
 				var assemblyName = new AssemblyName { CodeBase = file };
@@ -72,10 +97,13 @@ namespace Ninject.Modules
 				if (assembly.GetExportedTypes().Any(IsLoadableModule))
 					yield return assemblyName;
 			}
-
-			AppDomain.Unload(temporaryDomain);
 		}
 
+		/// <summary>
+		/// Determines whether the specified type represents a loadable module.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns><c>True</c> if the type represents a loadable module; otherwise <c>false</c>.</returns>
 		protected virtual bool IsLoadableModule(Type type)
 		{
 			if (!typeof(IModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
@@ -84,6 +112,11 @@ namespace Ninject.Modules
 			return type.GetConstructor(Type.EmptyTypes) != null;
 		}
 
+		/// <summary>
+		/// Normalizes the provided path.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>The normalized path.</returns>
 		protected virtual string NormalizePath(string path)
 		{
 			if (path.StartsWith("~"))

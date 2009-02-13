@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Injection.Injectors.Linq;
+using Ninject.Injection.Linq;
 using Ninject.Tests.Fakes;
 using Xunit;
 

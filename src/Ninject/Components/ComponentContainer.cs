@@ -8,13 +8,22 @@ using Ninject.Infrastructure.Language;
 
 namespace Ninject.Components
 {
+	/// <summary>
+	/// An internal container that manages and resolves components that contribute to Ninject.
+	/// </summary>
 	public class ComponentContainer : DisposableObject, IComponentContainer
 	{
 		private readonly Multimap<Type, Type> _mappings = new Multimap<Type, Type>();
 		private readonly Dictionary<Type, INinjectComponent> _instances = new Dictionary<Type, INinjectComponent>();
 
+		/// <summary>
+		/// Gets or sets the kernel that owns the component container.
+		/// </summary>
 		public IKernel Kernel { get; set; }
 
+		/// <summary>
+		/// Releases resources held by the object.
+		/// </summary>
 		public override void Dispose()
 		{
 			foreach (INinjectComponent instance in _instances.Values)
@@ -26,6 +35,11 @@ namespace Ninject.Components
 			base.Dispose();
 		}
 
+		/// <summary>
+		/// Registers a service in the container.
+		/// </summary>
+		/// <typeparam name="TService">The component's service type.</typeparam>
+		/// <typeparam name="TImplementation">The component's implementation type.</typeparam>
 		public void Add<TService, TImplementation>()
 			where TService : INinjectComponent
 			where TImplementation : TService, INinjectComponent
@@ -33,12 +47,20 @@ namespace Ninject.Components
 			_mappings.Add(typeof(TService), typeof(TImplementation));
 		}
 
+		/// <summary>
+		/// Removes all registrations for the specified service.
+		/// </summary>
+		/// <typeparam name="T">The component's service type.</typeparam>
 		public void RemoveAll<T>()
 			where T : INinjectComponent
 		{
 			RemoveAll(typeof(T));
 		}
 
+		/// <summary>
+		/// Removes all registrations for the specified service.
+		/// </summary>
+		/// <param name="service">The component's service type.</param>
 		public void RemoveAll(Type service)
 		{
 			foreach (Type implementation in _mappings[service])
@@ -52,18 +74,33 @@ namespace Ninject.Components
 			_mappings.RemoveAll(service);
 		}
 
+		/// <summary>
+		/// Gets one instance of the specified component.
+		/// </summary>
+		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <returns>The instance of the component.</returns>
 		public T Get<T>()
 			where T : INinjectComponent
 		{
 			return (T) Get(typeof(T));
 		}
 
+		/// <summary>
+		/// Gets all available instances of the specified component.
+		/// </summary>
+		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <returns>A series of instances of the specified component.</returns>
 		public IEnumerable<T> GetAll<T>()
 			where T : INinjectComponent
 		{
 			return GetAll(typeof(T)).Cast<T>();
 		}
 
+		/// <summary>
+		/// Gets one instance of the specified component.
+		/// </summary>
+		/// <param name="service">The component's service type.</param>
+		/// <returns>The instance of the component.</returns>
 		public object Get(Type service)
 		{
 			if (service == typeof(IKernel))
@@ -86,6 +123,11 @@ namespace Ninject.Components
 			return ResolveInstance(implementation);
 		}
 
+		/// <summary>
+		/// Gets all available instances of the specified component.
+		/// </summary>
+		/// <param name="service">The component's service type.</param>
+		/// <returns>A series of instances of the specified component.</returns>
 		public IEnumerable<object> GetAll(Type service)
 		{
 			foreach (Type implementation in _mappings[service])

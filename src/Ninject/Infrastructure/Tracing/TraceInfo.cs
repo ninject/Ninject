@@ -5,39 +5,71 @@ using System.Reflection;
 
 namespace Ninject.Infrastructure.Tracing
 {
+	/// <summary>
+	/// Contains information indicating where an object was created in code.
+	/// </summary>
 	public class TraceInfo
 	{
 		private readonly RuntimeTypeHandle _typeHandle;
 		private readonly RuntimeMethodHandle _methodHandle;
 
+		/// <summary>
+		/// Gets the type that created the object.
+		/// </summary>
 		public Type Type
 		{
 			get { return Type.GetTypeFromHandle(_typeHandle); }
 		}
 
+		/// <summary>
+		/// Gets the method or constructor that created the object.
+		/// </summary>
 		public MethodBase Method
 		{
 			get { return MethodBase.GetMethodFromHandle(_methodHandle); }
 		}
 
-		public string FileName { get; set; }
-		public string FilePath { get; set; }
-		public int LineNumber { get; set; }
+		/// <summary>
+		/// Gets the name of the file which contains the code that created the object.
+		/// </summary>
+		public string FileName { get; private set; }
 
+		/// <summary>
+		/// Gets the path of the file which contains the code that created the object.
+		/// </summary>
+		public string FilePath { get; private set; }
+
+		/// <summary>
+		/// Gets the line number of the file which contains the code that created the object.
+		/// </summary>
+		public int LineNumber { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating whether file information is available.
+		/// </summary>
 		public bool HasFileInfo
 		{
 			get { return !String.IsNullOrEmpty(FileName); }
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TraceInfo"/> class.
+		/// </summary>
+		/// <param name="type">The type that created the object.</param>
+		/// <param name="method">The method or constructor that created the object.</param>
 		public TraceInfo(Type type, MethodBase method)
 		{
 			_typeHandle = type.TypeHandle;
 			_methodHandle = method.MethodHandle;
 		}
 
+		/// <summary>
+		/// Converts the object into its string representation.
+		/// </summary>
+		/// <returns>The string representation of the object.</returns>
 		public override string ToString()
 		{
-			string result = Type.Format() + "." + Method.Name + "()";
+			string result = Type + "." + Method.Name + "()";
 
 			if (HasFileInfo)
 				result += " at " + FileName + ":" + LineNumber;
@@ -45,6 +77,10 @@ namespace Ninject.Infrastructure.Tracing
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a <see cref="TraceInfo"/> from the current stack trace.
+		/// </summary>
+		/// <returns>The created <see cref="TraceInfo"/> object.</returns>
 		public static TraceInfo FromStackTrace()
 		{
 			var trace = new StackTrace(true);

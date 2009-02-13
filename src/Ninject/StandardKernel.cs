@@ -3,6 +3,7 @@ using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
 using Ninject.Injection;
+using Ninject.Injection.Linq;
 using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
@@ -11,11 +12,27 @@ using Ninject.Selection.Heuristics;
 
 namespace Ninject
 {
+	/// <summary>
+	/// The standard implementation of a kernel.
+	/// </summary>
 	public class StandardKernel : KernelBase
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
+		/// </summary>
+		/// <param name="modules">The modules to load into the kernel.</param>
 		public StandardKernel(params IModule[] modules) : base(modules) { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
+		/// </summary>
+		/// <param name="settings">The configuration to use.</param>
+		/// <param name="modules">The modules to load into the kernel.</param>
 		public StandardKernel(INinjectSettings settings, params IModule[] modules) : base(settings, modules) { }
 
+		/// <summary>
+		/// Adds components to the kernel during startup.
+		/// </summary>
 		protected override void AddComponents()
 		{
 			Components.Add<IPipeline, Pipeline>();
@@ -38,9 +55,8 @@ namespace Ninject
 			Components.Add<IConstructorScorer, StandardConstructorScorer>();
 			Components.Add<IPropertyInjectionHeuristic, StandardPropertyInjectionHeuristic>();
 			Components.Add<IMethodInjectionHeuristic, StandardMethodInjectionHeuristic>();
-			Components.Add<IMethodInterceptionHeuristic, StandardMethodInterceptionHeuristic>();
 
-			Components.Add<IInjectorFactory, StandardInjectorFactory>();
+			Components.Add<IInjectorFactory, InjectorFactory>();
 			Components.Add<IModuleLoader, ModuleLoader>();
 		}
 	}

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ninject.Infrastructure
 {
-	public static class LinqReflection
+	internal static class LinqReflection
 	{
 		public static object CastSlow(IEnumerable series, Type elementType)
 		{
