@@ -212,10 +212,8 @@
 
 	<target name="test" depends="compile-tests" unless="${skip.tests}">
 		<xunit workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}/results.html"/>
-		<!--
 		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
-					commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;Ninject.Tests.dll&quot; //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
-		-->
+					commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;Ninject.Tests.dll&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
 	</target>
 	
 	<target name="package" depends="all">
