@@ -38,13 +38,13 @@ namespace Ninject.Syntax
 		event EventHandler<BindingEventArgs> BindingRemoved;
 
 		/// <summary>
-		/// Declares a binding for the specified service.
+		/// Declares a binding for the specified service using the fluent syntax.
 		/// </summary>
 		/// <typeparam name="T">The service to bind.</typeparam>
 		IBindingToSyntax<T> Bind<T>();
 
 		/// <summary>
-		/// Declares a binding for the specified service.
+		/// Declares a binding for the specified service using the fluent syntax.
 		/// </summary>
 		/// <param name="service">The service to bind.</param>
 		IBindingToSyntax<object> Bind(Type service);

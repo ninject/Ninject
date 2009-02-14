@@ -4,7 +4,6 @@ using System.Linq;
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
-using Ninject.Syntax;
 using Xunit;
 
 namespace Ninject.Tests.Unit.PipelineTests
@@ -41,11 +40,7 @@ namespace Ninject.Tests.Unit.PipelineTests
 		public void CallsActivateOnStrategies()
 		{
 			var contextMock = new Mock<IContext>();
-
-			strategyMocks.Map(mock => mock.Setup(x => x.Activate(contextMock.Object)).AtMostOnce());
-
 			pipeline.Activate(contextMock.Object);
-
 			strategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object)));
 		}
 	}
@@ -56,11 +51,7 @@ namespace Ninject.Tests.Unit.PipelineTests
 		public void CallsDeactivateOnStrategies()
 		{
 			var contextMock = new Mock<IContext>();
-
-			strategyMocks.Map(mock => mock.Setup(x => x.Deactivate(contextMock.Object)).AtMostOnce());
-
 			pipeline.Deactivate(contextMock.Object);
-
 			strategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object)));
 		}
 	}

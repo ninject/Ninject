@@ -159,6 +159,44 @@ namespace Ninject
 		}
 
 		/// <summary>
+		/// Declares a binding for the specified service using the fluent syntax.
+		/// </summary>
+		/// <typeparam name="T">The service to bind.</typeparam>
+		public IBindingToSyntax<T> Bind<T>()
+		{
+			return RegisterBindingAndCreateBuilder<T>(typeof(T));
+		}
+
+		/// <summary>
+		/// Declares a binding for the specified service using the fluent syntax.
+		/// </summary>
+		/// <param name="service">The service to bind.</param>
+		public IBindingToSyntax<object> Bind(Type service)
+		{
+			return RegisterBindingAndCreateBuilder<object>(service);
+		}
+
+		/// <summary>
+		/// Registers the specified binding.
+		/// </summary>
+		/// <param name="binding">The binding to add.</param>
+		public void AddBinding(IBinding binding)
+		{
+			_bindings.Add(binding.Service, binding);
+			BindingAdded.Raise(this, new BindingEventArgs(binding));
+		}
+
+		/// <summary>
+		/// Unregisters the specified binding.
+		/// </summary>
+		/// <param name="binding">The binding to remove.</param>
+		public void RemoveBinding(IBinding binding)
+		{
+			_bindings.Remove(binding.Service, binding);
+			BindingRemoved.Raise(this, new BindingEventArgs(binding));
+		}
+
+		/// <summary>
 		/// Injects the specified existing instance, without managing its lifecycle.
 		/// </summary>
 		/// <param name="instance">The instance to inject.</param>
@@ -172,7 +210,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
-		public bool CanResolve(IRequest request)
+		public virtual bool CanResolve(IRequest request)
 		{
 			if (_bindings.ContainsKey(request.Service))
 				return true;
@@ -214,44 +252,6 @@ namespace Ninject
 			return GetBindings(request)
 				.Where(binding => binding.ConditionsSatisfiedBy(request) && request.ConstraintsSatisfiedBy(binding))
 				.Select(binding => CreateHook(CreateContext(request, binding)));
-		}
-
-		/// <summary>
-		/// Declares a binding for the specified service.
-		/// </summary>
-		/// <typeparam name="T">The service to bind.</typeparam>
-		public IBindingToSyntax<T> Bind<T>()
-		{
-			return RegisterBindingAndCreateBuilder<T>(typeof(T));
-		}
-
-		/// <summary>
-		/// Declares a binding for the specified service.
-		/// </summary>
-		/// <param name="service">The service to bind.</param>
-		public IBindingToSyntax<object> Bind(Type service)
-		{
-			return RegisterBindingAndCreateBuilder<object>(service);
-		}
-
-		/// <summary>
-		/// Registers the specified binding.
-		/// </summary>
-		/// <param name="binding">The binding to add.</param>
-		public void AddBinding(IBinding binding)
-		{
-			_bindings.Add(binding.Service, binding);
-			BindingAdded.Raise(this, new BindingEventArgs(binding));
-		}
-
-		/// <summary>
-		/// Unregisters the specified binding.
-		/// </summary>
-		/// <param name="binding">The binding to remove.</param>
-		public void RemoveBinding(IBinding binding)
-		{
-			_bindings.Remove(binding.Service, binding);
-			BindingRemoved.Raise(this, new BindingEventArgs(binding));
 		}
 
 		/// <summary>

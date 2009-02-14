@@ -61,6 +61,15 @@
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <Compile Include="Unit\CallbackProviderTests.cs" />
+    <Compile Include="Unit\ConstantProviderTests.cs" />
+    <Compile Include="Unit\ActivationScopeTests.cs" />
+    <Compile Include="Unit\BindingActionStrategyTests.cs" />
+    <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
+    <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
+    <Compile Include="Unit\StartableStrategyTests.cs" />
+    <Compile Include="Unit\InitializableStrategyTests.cs" />
+    <Compile Include="Unit\DisposableStrategyTests.cs" />
     <Compile Include="Unit\MethodInjectionStrategyTests.cs" />
     <Compile Include="Unit\PipelineTests.cs" />
     <Compile Include="Unit\MethodInjectorTests.cs" />

@@ -41,7 +41,7 @@ namespace Ninject.Planning.Directives
 		public ITarget[] Targets { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase{T}"/> class.
+		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="member">The method described by the directive.</param>
 		protected MethodInjectionDirectiveBase(T member)

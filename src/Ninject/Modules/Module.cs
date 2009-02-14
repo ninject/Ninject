@@ -90,7 +90,7 @@ namespace Ninject.Modules
 		public virtual void Unload() { }
 
 		/// <summary>
-		/// Declares a binding for the specified service.
+		/// Declares a binding for the specified service using the fluent syntax.
 		/// </summary>
 		/// <typeparam name="T">The service to bind.</typeparam>
 		public IBindingToSyntax<T> Bind<T>()
@@ -99,7 +99,7 @@ namespace Ninject.Modules
 		}
 
 		/// <summary>
-		/// Declares a binding for the specified service.
+		/// Declares a binding for the specified service using the fluent syntax.
 		/// </summary>
 		/// <param name="service">The service to bind.</param>
 		public IBindingToSyntax<object> Bind(Type service)
