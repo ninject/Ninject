@@ -111,6 +111,7 @@
     <Compile Include="ActivationException.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIList.cs" />
+    <Compile Include="Injection\Linq\MethodInjectionExpressionHelper.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
     <Compile Include="Events\ModuleEventArgs.cs" />

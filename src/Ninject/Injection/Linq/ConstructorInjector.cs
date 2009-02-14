@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 #endregion
@@ -51,21 +52,12 @@ namespace Ninject.Injection.Linq
 		/// <returns>The constructed expression tree.</returns>
 		protected override Expression<Func<object[], object>> BuildExpression(ConstructorInfo member)
 		{
-			ParameterExpression argumentParameter = Expression.Parameter(typeof(object[]), "arguments");
-
-			ParameterInfo[] parameters = member.GetParameters();
-			Expression[] arguments = new Expression[parameters.Length];
-
-			for (int idx = 0; idx < parameters.Length; idx++)
-			{
-				arguments[idx] = Expression.Convert(
-					Expression.ArrayIndex(argumentParameter, Expression.Constant(idx)),
-					parameters[idx].ParameterType);
-			}
+			ParameterExpression argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
+			var arguments = MethodInjectionExpressionHelper.CreateParameterExpressions(member, argumentsParameter);
 
 			NewExpression newCall = Expression.New(member, arguments);
 
-			return Expression.Lambda<Func<object[], object>>(newCall, argumentParameter);
+			return Expression.Lambda<Func<object[], object>>(newCall, argumentsParameter);
 		}
 	}
 }
