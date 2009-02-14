@@ -31,6 +31,6 @@ namespace Ninject.Injection
 		/// <param name="target">The target object on which to call the method.</param>
 		/// <param name="values">The values to inject.</param>
 		/// <returns>The return value of the method, or <see langword="null"/> if the method returns <see type="void"/>.</returns>
-		object Invoke(object target, params object[] values);
+		object Invoke(object target, object[] values);
 	}
 }

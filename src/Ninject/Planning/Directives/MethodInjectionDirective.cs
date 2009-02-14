@@ -29,7 +29,7 @@ namespace Ninject.Planning.Directives
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MethodInjectionDirective"/> class.
 		/// </summary>
-		/// <param name="member">The method described by the directive.</param>
-		public MethodInjectionDirective(MethodInfo member) : base(member) { }
+		/// <param name="method">The method described by the directive.</param>
+		public MethodInjectionDirective(MethodInfo method) : base(method) { }
 	}
 }

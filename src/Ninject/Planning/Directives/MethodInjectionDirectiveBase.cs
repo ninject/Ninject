@@ -30,6 +30,8 @@ namespace Ninject.Planning.Directives
 	public abstract class MethodInjectionDirectiveBase<T> : IDirective
 		where T : MethodBase
 	{
+		private ITarget[] _targets;
+
 		/// <summary>
 		/// Gets the member associated with the directive.
 		/// </summary>
@@ -38,16 +40,22 @@ namespace Ninject.Planning.Directives
 		/// <summary>
 		/// Gets the targets for the directive.
 		/// </summary>
-		public ITarget[] Targets { get; private set; }
+		public ITarget[] Targets
+		{
+			get
+			{
+				if (_targets == null) _targets = GetParameterTargets(Member);
+				return _targets;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;T&gt;"/> class.
 		/// </summary>
-		/// <param name="member">The method described by the directive.</param>
-		protected MethodInjectionDirectiveBase(T member)
+		/// <param name="method">The method described by the directive.</param>
+		protected MethodInjectionDirectiveBase(T method)
 		{
-			Member = member;
-			Targets = GetParameterTargets(member);
+			Member = method;
 		}
 
 		/// <summary>
@@ -55,7 +63,7 @@ namespace Ninject.Planning.Directives
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <returns>The targets for the method's parameters.</returns>
-		protected ITarget[] GetParameterTargets(T method)
+		protected virtual ITarget[] GetParameterTargets(T method)
 		{
 			return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
 		}

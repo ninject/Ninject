@@ -30,6 +30,6 @@ namespace Ninject.Injection
 		/// </summary>
 		/// <param name="values">The values to inject.</param>
 		/// <returns>The object created by the constructor.</returns>
-		object Invoke(params object[] values);
+		object Invoke(object[] values);
 	}
 }
