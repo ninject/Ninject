@@ -65,6 +65,8 @@
     <Compile Include="Unit\ConstantProviderTests.cs" />
     <Compile Include="Unit\ActivationScopeTests.cs" />
     <Compile Include="Unit\BindingActionStrategyTests.cs" />
+    <Compile Include="Unit\NamedAttributeTests.cs" />
+    <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
     <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
     <Compile Include="Unit\StartableStrategyTests.cs" />

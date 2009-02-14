@@ -44,7 +44,7 @@ namespace Ninject.Planning.Directives
 		{
 			get
 			{
-				if (_targets == null) _targets = GetParameterTargets(Member);
+				if (_targets == null) _targets = CreateTargetsFromParameters(Member);
 				return _targets;
 			}
 		}
@@ -63,7 +63,7 @@ namespace Ninject.Planning.Directives
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <returns>The targets for the method's parameters.</returns>
-		protected virtual ITarget[] GetParameterTargets(T method)
+		protected virtual ITarget[] CreateTargetsFromParameters(T method)
 		{
 			return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
 		}

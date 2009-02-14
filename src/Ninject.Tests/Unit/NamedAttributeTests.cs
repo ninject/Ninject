@@ -1,0 +1,36 @@
+﻿using System;
+using Moq;
+using Ninject.Planning.Bindings;
+using Xunit;
+
+namespace Ninject.Tests.Unit.NamedAttributeTests
+{
+	public class NamedAttributeContext
+	{
+		protected readonly NamedAttribute attribute;
+		protected readonly Mock<IBindingMetadata> metadataMock;
+
+		public NamedAttributeContext()
+		{
+			attribute = new NamedAttribute("foo");
+			metadataMock = new Mock<IBindingMetadata>();
+		}
+	}
+
+	public class WhenMatchesIsCalled : NamedAttributeContext
+	{
+		[Fact]
+		public void ReturnsTrueIfTheNameMatches()
+		{
+			metadataMock.SetupGet(x => x.Name).Returns("foo");
+			Assert.True(attribute.Matches(metadataMock.Object));
+		}
+
+		[Fact]
+		public void ReturnsFalseIfTheNameDoesNotMatch()
+		{
+			metadataMock.SetupGet(x => x.Name).Returns("bar");
+			Assert.False(attribute.Matches(metadataMock.Object));
+		}
+	}
+}

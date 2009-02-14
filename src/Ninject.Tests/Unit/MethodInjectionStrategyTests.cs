@@ -27,20 +27,23 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 
 	public class WhenActivateIsCalled : MethodInjectionStrategyContext
 	{
-		[Fact]
-		public void CreatesAndInvokesMethodInjectorsAsDescribedByMethodInjectionDirectivesInPlan()
+		protected Dummy instance = new Dummy();
+		protected MethodInfo method1 = typeof(Dummy).GetMethod("Foo");
+		protected MethodInfo method2 = typeof(Dummy).GetMethod("Bar");
+		protected Mock<IContext> contextMock;
+		protected Mock<IPlan> planMock;
+		protected Mock<IMethodInjector> methodInjectorMock1;
+		protected Mock<IMethodInjector> methodInjectorMock2;
+		protected FakeMethodInjectionDirective[] directives;
+
+		public WhenActivateIsCalled()
 		{
-			var instance = new Dummy();
+			contextMock = new Mock<IContext>();
+			planMock = new Mock<IPlan>();
+			methodInjectorMock1 = new Mock<IMethodInjector>();
+			methodInjectorMock2 = new Mock<IMethodInjector>();
 
-			var method1 = typeof(Dummy).GetMethod("Foo");
-			var method2 = typeof(Dummy).GetMethod("Bar");
-
-			var contextMock = new Mock<IContext>();
-			var planMock = new Mock<IPlan>();
-			var methodInjectorMock1 = new Mock<IMethodInjector>();
-			var methodInjectorMock2 = new Mock<IMethodInjector>();
-
-			var directives = new[] { new FakeMethodInjectionDirective(method1), new FakeMethodInjectionDirective(method2) };
+			directives = new[] { new FakeMethodInjectionDirective(method1), new FakeMethodInjectionDirective(method2) };
 
 			injectorFactoryMock.Setup(x => x.GetMethodInjector(method1)).Returns(methodInjectorMock1.Object).AtMostOnce();
 			injectorFactoryMock.Setup(x => x.GetMethodInjector(method2)).Returns(methodInjectorMock2.Object).AtMostOnce();
@@ -49,14 +52,38 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
 
 			planMock.Setup(x => x.GetAll<MethodInjectionDirective>()).Returns(directives);
+		}
 
+		[Fact]
+		public void ReadsMethodInjectorsFromPlan()
+		{
 			strategy.Activate(contextMock.Object);
 
-			contextMock.VerifyGet(x => x.Plan);
 			planMock.Verify(x => x.GetAll<MethodInjectionDirective>());
+		}
+
+		[Fact]
+		public void CreatesMethodInjectorsForEachDirective()
+		{
+			strategy.Activate(contextMock.Object);
+
 			injectorFactoryMock.Verify(x => x.GetMethodInjector(method1));
 			injectorFactoryMock.Verify(x => x.GetMethodInjector(method2));
+		}
+
+		[Fact]
+		public void ResolvesValuesForEachTargetOfEachDirective()
+		{
+			strategy.Activate(contextMock.Object);
+
 			directives.Map(d => d.TargetMocks.Map(m => m.Verify(x => x.ResolveWithin(contextMock.Object))));
+		}
+
+		[Fact]
+		public void InvokesInjectorsForEachDirective()
+		{
+			strategy.Activate(contextMock.Object);
+
 			methodInjectorMock1.Verify(x => x.Invoke(instance, It.Is<object[]>(a => a.Length == 2)));
 			methodInjectorMock2.Verify(x => x.Invoke(instance, It.Is<object[]>(a => a.Length == 1)));
 		}
@@ -68,7 +95,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 
 		public FakeMethodInjectionDirective(MethodInfo method) : base(method) { }
 
-		protected override ITarget[] GetParameterTargets(MethodInfo method)
+		protected override ITarget[] CreateTargetsFromParameters(MethodInfo method)
 		{
 			TargetMocks = method.GetParameters().Select(p => new Mock<ITarget>()).ToArray();
 			return TargetMocks.Select(m => m.Object).ToArray();
