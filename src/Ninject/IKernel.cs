@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
+using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 #endregion
@@ -76,7 +77,8 @@ namespace Ninject
 		/// Injects the specified existing instance, without managing its lifecycle.
 		/// </summary>
 		/// <param name="instance">The instance to inject.</param>
-		void Inject(object instance);
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		void Inject(object instance, params IParameter[] parameters);
 
 		/// <summary>
 		/// Gets the bindings that match the request.

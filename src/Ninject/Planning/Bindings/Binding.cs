@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,9 +45,9 @@ namespace Ninject.Planning.Bindings
 		public IBindingMetadata Metadata { get; private set; }
 
 		/// <summary>
-		/// Gets the conditions defined for the binding.
+		/// Gets or sets the condition defined for the binding.
 		/// </summary>
-		public ICollection<Func<IRequest, bool>> Conditions { get; private set; }
+		public Func<IRequest, bool> Condition { get; set; }
 
 		/// <summary>
 		/// Gets the parameters defined for the binding.
@@ -94,7 +94,6 @@ namespace Ninject.Planning.Bindings
 		{
 			Service = service;
 			Metadata = metadata;
-			Conditions = new List<Func<IRequest, bool>>();
 			Parameters = new List<IParameter>();
 			ActivationActions = new List<Action<IContext>>();
 			DeactivationActions = new List<Action<IContext>>();
@@ -129,9 +128,9 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
-		public bool ConditionsSatisfiedBy(IRequest request)
+		public bool Matches(IRequest request)
 		{
-			return Conditions.All(condition => condition(request));
+			return Condition == null || Condition(request);
 		}
 	}
 }

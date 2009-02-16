@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -65,7 +65,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static T Get<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return (T)root.Resolve(typeof(T), new[] { constraint }, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
+			return (T)root.Resolve(typeof(T), constraint, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), new[] { constraint }, parameters).Select(hook => hook.Resolve()).Cast<T>();
+			return root.Resolve(typeof(T), constraint, parameters).Select(hook => hook.Resolve()).Cast<T>();
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static object Get(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(service, new[] { constraint }, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
+			return root.Resolve(service, constraint, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(service, new[] { constraint }, parameters).Select(hook => hook.Resolve());
+			return root.Resolve(service, constraint, parameters).Select(hook => hook.Resolve());
 		}
 	}
 }

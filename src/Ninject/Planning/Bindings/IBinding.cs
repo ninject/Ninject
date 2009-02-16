@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,9 +40,9 @@ namespace Ninject.Planning.Bindings
 		IBindingMetadata Metadata { get; }
 
 		/// <summary>
-		/// Gets the conditions defined for the binding.
+		/// Gets or sets the condition defined for the binding.
 		/// </summary>
-		ICollection<Func<IRequest, bool>> Conditions { get; }
+		Func<IRequest, bool> Condition { get; set; }
 
 		/// <summary>
 		/// Gets the parameters defined for the binding.
@@ -74,10 +74,11 @@ namespace Ninject.Planning.Bindings
 		object GetScope(IContext context);
 
 		/// <summary>
-		/// Determines whether the specified request satisfies the conditions defined on this binding.
+		/// Determines whether the specified request satisfies the condition defined on the binding,
+		/// if one was defined.
 		/// </summary>
 		/// <param name="request">The request.</param>
-		/// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
-		bool ConditionsSatisfiedBy(IRequest request);
+		/// <returns><c>True</c> if the request satisfies the condition; otherwise <c>false</c>.</returns>
+		bool Matches(IRequest request);
 	}
 }

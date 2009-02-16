@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +53,7 @@ namespace Ninject.Injection.Linq
 		protected override Expression<Func<object[], object>> BuildExpression(ConstructorInfo member)
 		{
 			ParameterExpression argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
-			var arguments = MethodInjectionExpressionHelper.CreateParameterExpressions(member, argumentsParameter);
+			var arguments = ExpressionHelper.CreateParameterExpressions(member, argumentsParameter);
 
 			NewExpression newCall = Expression.New(member, arguments);
 

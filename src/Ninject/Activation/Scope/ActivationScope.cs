@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,12 +60,12 @@ namespace Ninject.Activation.Scope
 		/// Resolves the specified request.
 		/// </summary>
 		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraints">The constraints to apply to the bindings to determine if they match the request.</param>
+		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<IHook> Resolve(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters)
+		public IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
 		{
-			return Resolve(CreateDirectRequest(service, constraints, parameters));
+			return Resolve(CreateDirectRequest(service, constraint, parameters));
 		}
 
 		/// <summary>
@@ -82,12 +82,12 @@ namespace Ninject.Activation.Scope
 		/// Creates a request for the specified service.
 		/// </summary>
 		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraints">The constraints to apply to the bindings to determine if they match the request.</param>
+		/// <param name="constraint">The constraints to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <returns>The created request.</returns>
-		protected virtual IRequest CreateDirectRequest(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters)
+		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
 		{
-			return new Request(service, constraints, parameters, () => this);
+			return new Request(service, constraint, parameters, () => this);
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

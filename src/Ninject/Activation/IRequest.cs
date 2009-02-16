@@ -1,5 +1,5 @@
 #region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,9 +45,9 @@ namespace Ninject.Activation
 		ITarget Target { get; }
 
 		/// <summary>
-		/// Gets the constraints that will be applied to filter the bindings used for the request.
+		/// Gets the constraint that will be applied to filter the bindings used for the request.
 		/// </summary>
-		ICollection<Func<IBindingMetadata, bool>> Constraints { get; }
+		Func<IBindingMetadata, bool> Constraint { get; }
 
 		/// <summary>
 		/// Gets the parameters that affect the resolution.
@@ -55,11 +55,11 @@ namespace Ninject.Activation
 		ICollection<IParameter> Parameters { get; }
 
 		/// <summary>
-		/// Determines whether the specified binding satisfies the constraints defined on this request.
+		/// Determines whether the specified binding satisfies the constraint defined on this request.
 		/// </summary>
 		/// <param name="binding">The binding.</param>
-		/// <returns><c>True</c> if the binding satisfies the constraints; otherwise <c>false</c>.</returns>
-		bool ConstraintsSatisfiedBy(IBinding binding);
+		/// <returns><c>True</c> if the binding satisfies the constraint; otherwise <c>false</c>.</returns>
+		bool Matches(IBinding binding);
 
 		/// <summary>
 		/// Gets the scope if one was specified in the request.

@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,44 +31,44 @@ namespace Ninject.Syntax
 		/// <summary>
 		/// Indicates that the service should be self-bound.
 		/// </summary>
-		IBindingWhenInNamedOrWithSyntax<T> ToSelf();
+		IBindingWhenInNamedWithOrOnSyntax<T> ToSelf();
 
 		/// <summary>
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <typeparam name="TImplementation">The implementation type.</typeparam>
-		IBindingWhenInNamedOrWithSyntax<T> To<TImplementation>() where TImplementation : T;
+		IBindingWhenInNamedWithOrOnSyntax<T> To<TImplementation>() where TImplementation : T;
 
 		/// <summary>
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <param name="implementation">The implementation type.</param>
-		IBindingWhenInNamedOrWithSyntax<T> To(Type implementation);
+		IBindingWhenInNamedWithOrOnSyntax<T> To(Type implementation);
 
 		/// <summary>
 		/// Indicates that the service should be bound to an instance of the specified provider type.
 		/// The instance will be activated via the kernel when an instance of the service is activated.
 		/// </summary>
 		/// <typeparam name="TProvider">The type of provider to activate.</typeparam>
-		IBindingWhenInNamedOrWithSyntax<T> ToProvider<TProvider>() where TProvider : IProvider;
+		IBindingWhenInNamedWithOrOnSyntax<T> ToProvider<TProvider>() where TProvider : IProvider;
 
 		/// <summary>
 		/// Indicates that the service should be bound to the specified provider.
 		/// </summary>
 		/// <param name="provider">The provider.</param>
-		IBindingWhenInNamedOrWithSyntax<T> ToProvider(IProvider provider);
+		IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(IProvider provider);
 
 		/// <summary>
 		/// Indicates that the service should be bound to the specified callback method.
 		/// </summary>
 		/// <param name="method">The method.</param>
-		IBindingWhenInNamedOrWithSyntax<T> ToMethod(Func<IContext, T> method);
+		IBindingWhenInNamedWithOrOnSyntax<T> ToMethod(Func<IContext, T> method);
 
 		/// <summary>
 		/// Indicates that the service should be bound to the specified constant value.
 		/// </summary>
 		/// <param name="value">The constant value.</param>
-		IBindingWhenInNamedOrWithSyntax<T> ToConstant(T value);
+		IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value);
 	}
 
 	/// <summary>
@@ -81,47 +81,47 @@ namespace Ninject.Syntax
 		/// Indicates that the binding should be used only for requests that support the specified condition.
 		/// </summary>
 		/// <param name="condition">The condition.</param>
-		IBindingWhenInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition);
+		IBindingInNamedWithOrOnSyntax<T> When(Func<IRequest, bool> condition);
 
 		/// <summary>
 		/// Indicates that the binding should be used only for injections on the specified type.
 		/// </summary>
 		/// <typeparam name="TParent">The type.</typeparam>
-		IBindingWhenInNamedOrWithSyntax<T> WhenInjectedInto<TParent>();
+		IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>();
 
 		/// <summary>
 		/// Indicates that the binding should be used only for injections on the specified type.
 		/// </summary>
 		/// <param name="parent">The type.</param>
-		IBindingWhenInNamedOrWithSyntax<T> WhenInjectedInto(Type parent);
+		IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent);
 
 		/// <summary>
 		/// Indicates that the binding should be used only when the member being injected has
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
-		IBindingWhenInNamedOrWithSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute;
+		IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute;
 
 		/// <summary>
 		/// Indicates that the binding should be used only when the target being injected has
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
-		IBindingWhenInNamedOrWithSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute;
+		IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute;
 
 		/// <summary>
 		/// Indicates that the binding should be used only when the member being injected has
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <param name="attributeType">The type of attribute.</param>
-		IBindingWhenInNamedOrWithSyntax<T> WhenMemberHas(Type attributeType);
+		IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType);
 
 		/// <summary>
 		/// Indicates that the binding should be used only when the target being injected has
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <param name="attributeType">The type of attribute.</param>
-		IBindingWhenInNamedOrWithSyntax<T> WhenTargetHas(Type attributeType);
+		IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType);
 	}
 
 	/// <summary>
@@ -248,7 +248,7 @@ namespace Ninject.Syntax
 	/// Used to set the condition, scope, name, or add additional information or actions to a binding.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingWhenInNamedOrWithSyntax<T> : IBindingWhenSyntax<T>, IBindingInSyntax<T>, IBindingNamedSyntax<T>, IBindingWithSyntax<T> { }
+	public interface IBindingWhenInNamedWithOrOnSyntax<T> : IBindingWhenSyntax<T>, IBindingInSyntax<T>, IBindingNamedSyntax<T>, IBindingWithSyntax<T>, IBindingOnSyntax<T> { }
 
 	/// <summary>
 	/// Used to set the scope, name, or add additional information or actions to a binding.

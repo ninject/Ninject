@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,7 +48,7 @@ namespace Ninject.Activation
 		/// <summary>
 		/// Gets the constraints that will be applied to filter the bindings used for the request.
 		/// </summary>
-		public ICollection<Func<IBindingMetadata, bool>> Constraints { get; set; }
+		public Func<IBindingMetadata, bool> Constraint { get; set; }
 
 		/// <summary>
 		/// Gets the parameters that affect the resolution.
@@ -64,13 +64,13 @@ namespace Ninject.Activation
 		/// Initializes a new instance of the <see cref="Request"/> class.
 		/// </summary>
 		/// <param name="service">The service that was requested.</param>
-		/// <param name="constraints">The constraints that will be applied to filter the bindings used for the request.</param>
+		/// <param name="constraint">The constraint that will be applied to filter the bindings used for the request.</param>
 		/// <param name="parameters">The parameters that affect the resolution.</param>
 		/// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
-		public Request(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
+		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
 		{
 			Service = service;
-			Constraints = constraints == null ? new List<Func<IBindingMetadata, bool>>() : constraints.ToList();
+			Constraint = constraint;
 			Parameters = parameters == null ? new List<IParameter>() : parameters.ToList();
 			ScopeCallback = scopeCallback;
 		}
@@ -87,7 +87,7 @@ namespace Ninject.Activation
 			Parent = parent;
 			Service = service;
 			Target = target;
-			Constraints = target.GetConstraints().ToList();
+			Constraint = target.Constraint;
 			Parameters = new List<IParameter>();
 			ScopeCallback = scopeCallback;
 		}
@@ -97,9 +97,9 @@ namespace Ninject.Activation
 		/// </summary>
 		/// <param name="binding">The binding.</param>
 		/// <returns><c>True</c> if the binding satisfies the constraints; otherwise <c>false</c>.</returns>
-		public bool ConstraintsSatisfiedBy(IBinding binding)
+		public bool Matches(IBinding binding)
 		{
-			return Constraints.All(constraint => constraint(binding.Metadata));
+			return Constraint == null || Constraint(binding.Metadata);
 		}
 
 		/// <summary>

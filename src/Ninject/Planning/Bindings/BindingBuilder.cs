@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ namespace Ninject.Planning.Bindings
 	/// <summary>
 	/// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
 	/// </summary>
-	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedOrWithSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
+	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
 	{
 		/// <summary>
 		/// Gets the binding being built.
@@ -51,7 +51,7 @@ namespace Ninject.Planning.Bindings
 		/// <summary>
 		/// Indicates that the service should be self-bound.
 		/// </summary>
-		public IBindingWhenInNamedOrWithSyntax<T> ToSelf()
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToSelf()
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(Binding.Service);
 			Binding.IntrospectionInfo += " to self";
@@ -62,7 +62,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <typeparam name="TImplementation">The implementation type.</typeparam>
-		public IBindingWhenInNamedOrWithSyntax<T> To<TImplementation>()
+		public IBindingWhenInNamedWithOrOnSyntax<T> To<TImplementation>()
 			where TImplementation : T
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
@@ -74,7 +74,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <param name="implementation">The implementation type.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> To(Type implementation)
+		public IBindingWhenInNamedWithOrOnSyntax<T> To(Type implementation)
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
 			Binding.IntrospectionInfo += " to " + implementation;
@@ -86,7 +86,7 @@ namespace Ninject.Planning.Bindings
 		/// The instance will be activated via the kernel when an instance of the service is activated.
 		/// </summary>
 		/// <typeparam name="TProvider">The type of provider to activate.</typeparam>
-		public IBindingWhenInNamedOrWithSyntax<T> ToProvider<TProvider>()
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider<TProvider>()
 			where TProvider : IProvider
 		{
 			Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
@@ -98,7 +98,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the service should be bound to the specified provider.
 		/// </summary>
 		/// <param name="provider">The provider.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> ToProvider(IProvider provider)
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(IProvider provider)
 		{
 			Binding.ProviderCallback = ctx => provider;
 			Binding.IntrospectionInfo += " to external instance of provider " + provider.GetType();
@@ -109,7 +109,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the service should be bound to the specified callback method.
 		/// </summary>
 		/// <param name="method">The method.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> ToMethod(Func<IContext, T> method)
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToMethod(Func<IContext, T> method)
 		{
 			Binding.ProviderCallback = ctx => new CallbackProvider<T>(method);
 			Binding.IntrospectionInfo += " to method " + method.Method;
@@ -120,7 +120,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the service should be bound to the specified constant value.
 		/// </summary>
 		/// <param name="value">The constant value.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> ToConstant(T value)
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value)
 		{
 			Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
 			Binding.IntrospectionInfo += " to constant " + value;
@@ -131,9 +131,9 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the binding should be used only for requests that support the specified condition.
 		/// </summary>
 		/// <param name="condition">The condition.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> When(Func<IRequest, bool> condition)
+		public IBindingInNamedWithOrOnSyntax<T> When(Func<IRequest, bool> condition)
 		{
-			Binding.Conditions.Add(condition);
+			Binding.Condition = condition;
 			Binding.IntrospectionInfo += " (conditionally)";
 			return this;
 		}
@@ -142,7 +142,7 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the binding should be used only for injections on the specified type.
 		/// </summary>
 		/// <typeparam name="TParent">The type.</typeparam>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenInjectedInto<TParent>()
+		public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>()
 		{
 			return WhenInjectedInto(typeof(TParent));
 		}
@@ -151,9 +151,10 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the binding should be used only for injections on the specified type.
 		/// </summary>
 		/// <param name="parent">The type.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenInjectedInto(Type parent)
+		public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
 		{
-			Binding.Conditions.Add(r => r.Target.Member.ReflectedType == parent);
+			Binding.Condition = r => r.Target.Member.ReflectedType == parent;
+			Binding.IntrospectionInfo += " (conditionally)";
 			return this;
 		}
 
@@ -162,7 +163,7 @@ namespace Ninject.Planning.Bindings
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute
+		public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute
 		{
 			return WhenMemberHas(typeof(TAttribute));
 		}
@@ -172,12 +173,14 @@ namespace Ninject.Planning.Bindings
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <param name="attributeType">The type of attribute.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenMemberHas(Type attributeType)
+		public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException();
 
-			Binding.Conditions.Add(r => r.Target.Member.HasAttribute(attributeType));
+			Binding.Condition = r => r.Target.Member.HasAttribute(attributeType);
+			Binding.IntrospectionInfo += " (conditionally)";
+
 			return this;
 		}
 
@@ -186,7 +189,7 @@ namespace Ninject.Planning.Bindings
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute
+		public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute
 		{
 			return WhenTargetHas(typeof(TAttribute));
 		}
@@ -196,12 +199,14 @@ namespace Ninject.Planning.Bindings
 		/// an attribute of the specified type.
 		/// </summary>
 		/// <param name="attributeType">The type of attribute.</param>
-		public IBindingWhenInNamedOrWithSyntax<T> WhenTargetHas(Type attributeType)
+		public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException();
 
-			Binding.Conditions.Add(r => r.Target.HasAttribute(attributeType));
+			Binding.Condition = r => r.Target.HasAttribute(attributeType);
+			Binding.IntrospectionInfo += " (conditionally)";
+
 			return this;
 		}
 

@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,10 +45,9 @@ namespace Ninject.Planning.Targets
 		MemberInfo Member { get; }
 
 		/// <summary>
-		/// Reads the constraints from the target.
+		/// Gets the constraint defined on the target.
 		/// </summary>
-		/// <returns>A series of constraints read from the target.</returns>
-		IEnumerable<Func<IBindingMetadata, bool>> GetConstraints();
+		Func<IBindingMetadata, bool> Constraint { get; }
 
 		/// <summary>
 		/// Resolves a value for the target within the specified parent context.

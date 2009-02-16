@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,8 @@ namespace Ninject.Planning.Targets
 	public abstract class Target<T> : ITarget
 		where T : ICustomAttributeProvider
 	{
+		private Func<IBindingMetadata, bool> _constraint;
+
 		/// <summary>
 		/// Gets the member that contains the target.
 		/// </summary>
@@ -53,6 +55,18 @@ namespace Ninject.Planning.Targets
 		/// Gets the type of the target.
 		/// </summary>
 		public abstract Type Type { get; }
+
+		/// <summary>
+		/// Gets the constraint defined on the target.
+		/// </summary>
+		public Func<IBindingMetadata, bool> Constraint
+		{
+			get
+			{
+				if (_constraint == null) _constraint = ReadConstraintFromAttributes();
+				return _constraint;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Target&lt;T&gt;"/> class.
@@ -98,15 +112,6 @@ namespace Ninject.Planning.Targets
 		}
 
 		/// <summary>
-		/// Reads the constraints from the target.
-		/// </summary>
-		/// <returns>A series of constraints read from the target.</returns>
-		public IEnumerable<Func<IBindingMetadata, bool>> GetConstraints()
-		{
-			return Site.GetAttributes<ConstraintAttribute>().Select(a => new Func<IBindingMetadata, bool>(a.Matches));
-		}
-
-		/// <summary>
 		/// Resolves a value for the target within the specified parent context.
 		/// </summary>
 		/// <param name="parent">The parent context.</param>
@@ -138,6 +143,16 @@ namespace Ninject.Planning.Targets
 		{
 			var request = parent.Request.CreateChild(service, this);
 			return parent.Kernel.Resolve(request).Select(hook => hook.Resolve());
+		}
+
+		private Func<IBindingMetadata, bool> ReadConstraintFromAttributes()
+		{
+			ConstraintAttribute[] attributes = Site.GetAttributes<ConstraintAttribute>().ToArray();
+
+			if (attributes.Length == 0) return null;
+			if (attributes.Length == 1) return attributes[0].Matches;
+
+			return metadata => attributes.All(attribute => attribute.Matches(metadata));
 		}
 	}
 }

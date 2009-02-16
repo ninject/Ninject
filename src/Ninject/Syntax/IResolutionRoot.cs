@@ -1,5 +1,5 @@
 ﻿#region License
-// Author: Nate Kohari <nkohari@gmail.com>
+// Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,10 +41,10 @@ namespace Ninject.Syntax
 		/// Resolves the specified request.
 		/// </summary>
 		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraints">The constraints to apply to the bindings to determine if they match the request.</param>
+		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<IHook> Resolve(Type service, IEnumerable<Func<IBindingMetadata, bool>> constraints, IEnumerable<IParameter> parameters);
+		IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters);
 
 		/// <summary>
 		/// Resolves the specified request.
