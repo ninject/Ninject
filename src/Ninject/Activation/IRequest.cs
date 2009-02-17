@@ -55,6 +55,12 @@ namespace Ninject.Activation
 		ICollection<IParameter> Parameters { get; }
 
 		/// <summary>
+		/// Gets the collection of bindings which have been activated either by this request or
+		/// one of its ancestors.
+		/// </summary>
+		ICollection<IBinding> ActiveBindings { get; }
+
+		/// <summary>
 		/// Determines whether the specified binding satisfies the constraint defined on this request.
 		/// </summary>
 		/// <param name="binding">The binding.</param>

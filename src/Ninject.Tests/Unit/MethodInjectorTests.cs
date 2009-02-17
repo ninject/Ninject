@@ -33,7 +33,7 @@ namespace Ninject.Tests.Unit.MethodInjectorTests
 		public void CallsMethod()
 		{
 			var samurai = new Samurai(new Sword());
-			injector.Invoke(samurai, "evildoer");
+			injector.Invoke(samurai, new[] { "evildoer" });
 			Assert.True(samurai.IsBattleHardened);
 		}
 
@@ -41,7 +41,7 @@ namespace Ninject.Tests.Unit.MethodInjectorTests
 		public void ReturnsValueFromMethod()
 		{
 			var samurai = new Samurai(new Sword());
-			var result = injector.Invoke(samurai, "evildoer") as string;
+			var result = injector.Invoke(samurai, new[] { "evildoer" }) as string;
 			Assert.Equal("Attacked evildoer with a sword", result);
 		}
 	}

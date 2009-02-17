@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using Ninject.Activation.Caching;
+using Ninject.Planning;
 #endregion
 
 namespace Ninject.Activation.Hooks
@@ -24,7 +25,7 @@ namespace Ninject.Activation.Hooks
 	/// <summary>
 	/// A hook that resolves a context.
 	/// </summary>
-	public class ContextResolutionHook : IHook
+	public class ContextHook : IHook
 	{
 		/// <summary>
 		/// Gets the context that will be resolved by the hook.
@@ -32,19 +33,33 @@ namespace Ninject.Activation.Hooks
 		public IContext Context { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the cache.
+		/// Gets or the cache component.
 		/// </summary>
 		public ICache Cache { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ContextResolutionHook"/> class.
+		/// Gets or the planner component.
+		/// </summary>
+		public IPlanner Planner { get; private set; }
+
+		/// <summary>
+		/// Gets or the planner component.
+		/// </summary>
+		public IPipeline Pipeline { get; private set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ContextHook"/> class.
 		/// </summary>
 		/// <param name="context">The context to resolve.</param>
 		/// <param name="cache">The cache to use to look up instances for re-use.</param>
-		public ContextResolutionHook(IContext context, ICache cache)
+		/// <param name="planner">The planner used to generate activation plans for instances.</param>
+		/// <param name="pipeline">The pipeline used to activate instances.</param>
+		public ContextHook(IContext context, ICache cache, IPlanner planner, IPipeline pipeline)
 		{
 			Context = context;
 			Cache = cache;
+			Planner = planner;
+			Pipeline = pipeline;
 		}
 
 		/// <summary>
@@ -55,6 +70,11 @@ namespace Ninject.Activation.Hooks
 		{
 			lock (Context.Binding)
 			{
+				if (Context.Request.ActiveBindings.Contains(Context.Binding))
+					throw new ActivationException();
+
+				Context.Request.ActiveBindings.Add(Context.Binding);
+
 				Context.Instance = Cache.TryGet(Context);
 
 				if (Context.Instance != null)
@@ -62,6 +82,13 @@ namespace Ninject.Activation.Hooks
 
 				Context.Instance = Context.GetProvider().Create(Context);
 				Cache.Remember(Context);
+
+				Context.Request.ActiveBindings.Remove(Context.Binding);
+
+				if (Context.Plan == null)
+					Planner.GetPlan(Context.Instance.GetType());
+
+				Pipeline.Activate(Context);
 
 				return Context.Instance;
 			}

@@ -39,7 +39,7 @@ namespace Ninject.Injection.Linq
 		/// </summary>
 		/// <param name="values">The values to inject.</param>
 		/// <returns>The object created by the constructor.</returns>
-		public object Invoke(params object[] values)
+		public object Invoke(object[] values)
 		{
 			return Callback.Invoke(values);
 		}

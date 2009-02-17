@@ -75,7 +75,10 @@ namespace Ninject
 			Components.Add<IMethodInjectionHeuristic, StandardMethodInjectionHeuristic>();
 
 			Components.Add<IInjectorFactory, InjectorFactory>();
+
+			#if !SILVERLIGHT
 			Components.Add<IModuleLoader, ModuleLoader>();
+			#endif
 		}
 	}
 }

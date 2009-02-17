@@ -33,14 +33,14 @@ namespace Ninject.Tests.Unit.ConstructorInjectorTests
 		public void CallsConstructor()
 		{
 			var sword = new Sword();
-			var samurai = injector.Invoke(sword) as Samurai;
+			var samurai = injector.Invoke(new[] { sword }) as Samurai;
 			Assert.Same(sword, samurai.Weapon);
 		}
 
 		[Fact]
 		public void CallsConstructorWithNullArgumentIfOneIsSpecified()
 		{
-			var samurai = injector.Invoke((IWeapon)null) as Samurai;
+			var samurai = injector.Invoke(new[] { (IWeapon)null }) as Samurai;
 			Assert.NotNull(samurai);
 		}
 	}

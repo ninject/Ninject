@@ -47,23 +47,16 @@ namespace Ninject.Activation.Providers
 		public IPlanner Planner { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the pipeline component.
-		/// </summary>
-		public IPipeline Pipeline { get; private set; }
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="StandardProvider"/> class.
 		/// </summary>
 		/// <param name="type">The type (or prototype) of instances the provider creates.</param>
 		/// <param name="injectorFactory">The injector factory component.</param>
 		/// <param name="planner">The planner component.</param>
-		/// <param name="pipeline">The pipeline component.</param>
-		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner, IPipeline pipeline)
+		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner)
 		{
 			Type = type;
 			InjectorFactory = injectorFactory;
 			Planner = planner;
-			Pipeline = pipeline;
 		}
 
 		/// <summary>
@@ -73,19 +66,18 @@ namespace Ninject.Activation.Providers
 		/// <returns>The created instance.</returns>
 		public virtual object Create(IContext context)
 		{
-			context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
+			if (context.Plan == null)
+				context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
 
 			var directive = context.Plan.GetOne<ConstructorInjectionDirective>();
 
 			if (directive == null)
-				throw new InvalidOperationException();
+				throw new ActivationException();
 
 			var injector = InjectorFactory.GetConstructorInjector(directive.Member);
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
 
 			context.Instance = injector.Invoke(arguments);
-
-			Pipeline.Activate(context);
 
 			return context.Instance;
 		}
@@ -123,8 +115,7 @@ namespace Ninject.Activation.Providers
 		{
 			return ctx => new StandardProvider(prototype,
 				ctx.Kernel.Components.Get<IInjectorFactory>(),
-				ctx.Kernel.Components.Get<IPlanner>(),
-				ctx.Kernel.Components.Get<IPipeline>());
+				ctx.Kernel.Components.Get<IPlanner>());
 		}
 	}
 }

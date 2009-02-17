@@ -1,3 +1,4 @@
+#if !SILVERLIGHT
 #region License
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
@@ -50,3 +51,4 @@ namespace Ninject.Modules
 		void ScanAndLoadModules(string path, IEnumerable<string> patterns, bool recursive);
 	}
 }
+#endif //!SILVERLIGHT

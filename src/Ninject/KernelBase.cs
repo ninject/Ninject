@@ -30,6 +30,7 @@ using Ninject.Infrastructure.Disposal;
 using Ninject.Infrastructure.Language;
 using Ninject.Modules;
 using Ninject.Parameters;
+using Ninject.Planning;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 #endregion
@@ -347,7 +348,7 @@ namespace Ninject
 		/// <returns>The created hook.</returns>
 		protected virtual IHook CreateHook(IContext context)
 		{
-			return new ContextResolutionHook(context, Components.Get<ICache>());
+			return new ContextHook(context, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

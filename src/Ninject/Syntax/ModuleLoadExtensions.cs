@@ -60,6 +60,7 @@ namespace Ninject
 			kernel.UnloadModule(typeof(TModule));
 		}
 
+		#if !SILVERLIGHT
 		/// <summary>
 		/// Scans the application's base directory for assemblies, and if they have loadable modules, loads them.
 		/// </summary>
@@ -147,5 +148,6 @@ namespace Ninject
 		{
 			return kernel.Components.Get<IModuleLoader>();
 		}
+		#endif //!SILVERLIGHT
 	}
 }

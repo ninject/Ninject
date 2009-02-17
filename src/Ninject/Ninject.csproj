@@ -70,7 +70,7 @@
     <Compile Include="Activation\Context.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Hooks\ContextResolutionHook.cs" />
+    <Compile Include="Activation\Hooks\ContextHook.cs" />
     <Compile Include="Activation\Hooks\IHook.cs" />
     <Compile Include="Activation\Request.cs" />
     <Compile Include="Activation\IContext.cs">

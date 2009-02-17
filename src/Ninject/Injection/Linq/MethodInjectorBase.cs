@@ -41,7 +41,7 @@ namespace Ninject.Injection.Linq
 		/// <param name="target">The target object on which to call the method.</param>
 		/// <param name="values">The values to inject.</param>
 		/// <returns>The return value of the method, or <see langword="null"/> if the method returns <see type="void"/>.</returns>
-		public abstract object Invoke(object target, params object[] values);
+		public abstract object Invoke(object target, object[] values);
 
 		/// <summary>
 		/// Builds the expression tree that can be compiled into a delegate, which in turn

@@ -110,9 +110,15 @@
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 	</target>
 
+	<target name="config-platform-mono-2.0">
+		<property name="nant.settings.currentframework" value="mono-2.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO"/>
+	</target>
+
 	<target name="core" depends="init">
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          keyfile="${path.src}/Ninject.snk" output="${current.path.build}/Ninject.dll">
+			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Ninject/**/*.cs"/>
@@ -121,17 +127,15 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
-				<include name="System.Web.dll"/>
+				<include name="System.Web.dll" unless="${build.platform == 'silverlight-2.0'}"/>
 			</references>
-			<nowarn>
-				<warning number="1584"/>
-			</nowarn>
 		</csc>
 	</target>
 
 	<target name="csl" depends="init core">
-		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         keyfile="${path.src}/Ninject.snk" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
+			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
@@ -144,15 +148,13 @@
 				<include name="Ninject.dll"/>
 				<include name="lib/Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
-			<nowarn>
-				<warning number="1584"/>
-			</nowarn>
 		</csc>
 	</target>
 
-	<target name="mvc" depends="init core">
-		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.build.extensions}/Ninject.Web.Mvc.dll">
+	<target name="mvc" depends="init core" unless="${build.platform == 'silverlight-2.0'}">
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         keyfile="${path.src}/Ninject.snk" output="${current.path.build.extensions}/Ninject.Web.Mvc.dll">
+			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Ninject.Web.Mvc/**/*.cs"/>
@@ -167,13 +169,10 @@
 				<include name="lib/System.Web.Mvc.dll"/>
 				<include name="lib/System.Web.Routing.dll"/>
 			</references>
-			<nowarn>
-				<warning number="1584"/>
-			</nowarn>
 		</csc>
 	</target>
 
-	<target name="compile-tests" depends="core" unless="${skip.tests}">
+	<target name="compile-tests" depends="core" if="${build.platform == 'net-3.5'}" unless="${skip.tests}">
 		<mkdir dir="${current.path.test}"/>
 		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">
@@ -210,7 +209,7 @@
 		</csc>
 	</target>
 
-	<target name="test" depends="compile-tests" unless="${skip.tests}">
+	<target name="test" depends="compile-tests" if="${build.platform == 'net-3.5'}" unless="${skip.tests}">
 		<xunit workingDir="${current.path.test}" assembly="Ninject.Tests.dll" html="${current.path.test}/results.html"/>
 		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
 					commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;Ninject.Tests.dll&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>

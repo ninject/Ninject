@@ -33,7 +33,7 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		public void CallsMethod()
 		{
 			var samurai = new Samurai(new Sword());
-			injector.Invoke(samurai, "Bob");
+			injector.Invoke(samurai, new[] { "Bob" });
 			Assert.Equal("Bob", samurai.Name);
 		}
 
@@ -42,7 +42,7 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		{
 			var samurai = new Samurai(new Sword());
 			samurai.Name = "Bob";
-			injector.Invoke(samurai, (string)null);
+			injector.Invoke(samurai, new[] { (string)null });
 			Assert.Null(samurai.Name);
 		}
 	}

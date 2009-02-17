@@ -33,32 +33,38 @@ namespace Ninject.Activation
 		/// <summary>
 		/// Gets the service that was requested.
 		/// </summary>
-		public Type Service { get; set; }
+		public Type Service { get; private set; }
 
 		/// <summary>
 		/// Gets the parent request.
 		/// </summary>
-		public IRequest Parent { get; set; }
+		public IRequest Parent { get; private set; }
 
 		/// <summary>
 		/// Gets the target that will receive the injection, if any.
 		/// </summary>
-		public ITarget Target { get; set; }
+		public ITarget Target { get; private set; }
 
 		/// <summary>
-		/// Gets the constraints that will be applied to filter the bindings used for the request.
+		/// Gets the constraint that will be applied to filter the bindings used for the request.
 		/// </summary>
-		public Func<IBindingMetadata, bool> Constraint { get; set; }
+		public Func<IBindingMetadata, bool> Constraint { get; private set; }
 
 		/// <summary>
 		/// Gets the parameters that affect the resolution.
 		/// </summary>
-		public ICollection<IParameter> Parameters { get; set; }
+		public ICollection<IParameter> Parameters { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the callback that resolves the scope for the request, if an external scope was provided.
+		/// Gets the collection of bindings which have been activated either by this request or
+		/// one of its ancestors.
 		/// </summary>
-		public Func<object> ScopeCallback { get; set; }
+		public ICollection<IBinding> ActiveBindings { get; private set; }
+
+		/// <summary>
+		/// Gets the callback that resolves the scope for the request, if an external scope was provided.
+		/// </summary>
+		public Func<object> ScopeCallback { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Request"/> class.
@@ -72,6 +78,7 @@ namespace Ninject.Activation
 			Service = service;
 			Constraint = constraint;
 			Parameters = parameters == null ? new List<IParameter>() : parameters.ToList();
+			ActiveBindings = new List<IBinding>();
 			ScopeCallback = scopeCallback;
 		}
 
@@ -89,6 +96,7 @@ namespace Ninject.Activation
 			Target = target;
 			Constraint = target.Constraint;
 			Parameters = new List<IParameter>();
+			ActiveBindings = new List<IBinding>(parent.ActiveBindings);
 			ScopeCallback = scopeCallback;
 		}
 

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionsForIEnumerable.cs" />
+    <Compile Include="Integration\CircularDependenciesTests.cs" />
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Unit\ConstructorInjectorTests.cs" />
