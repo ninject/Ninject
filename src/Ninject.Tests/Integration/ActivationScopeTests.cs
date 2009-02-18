@@ -28,7 +28,7 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 			var weapon1 = scope.Get<IWeapon>();
 			var weapon2 = scope.Get<IWeapon>();
 
-			Assert.Same(weapon1, weapon2);
+			weapon1.ShouldBeSameAs(weapon2);
 		}
 
 		[Fact]
@@ -39,7 +39,7 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 			var weapon1 = scope.Get<IWeapon>();
 			var weapon2 = kernel.Get<IWeapon>();
 
-			Assert.NotSame(weapon1, weapon2);
+			weapon1.ShouldNotBeSameAs(weapon2);
 		}
 
 		[Fact]
@@ -54,7 +54,7 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 
 			GC.Collect();
 
-			Assert.False(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeFalse();
 		}
 	}
 
@@ -72,7 +72,7 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 
 			scope.Dispose();
 
-			Assert.True(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeTrue();
 		}
 	}
 

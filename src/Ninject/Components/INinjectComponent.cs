@@ -26,8 +26,8 @@ namespace Ninject.Components
 	public interface INinjectComponent : IDisposable
 	{
 		/// <summary>
-		/// Gets or sets the kernel that the component is attached to.
+		/// Gets or sets the settings that are being used.
 		/// </summary>
-		IKernel Kernel { get; set; }
+		INinjectSettings Settings { get; set; }
 	}
 }

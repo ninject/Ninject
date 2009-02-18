@@ -27,10 +27,10 @@ namespace Ninject.Tests.Unit.PipelineTests
 		[Fact]
 		public void HasListOfStrategies()
 		{
-			Assert.NotNull(pipeline.Strategies);
+			pipeline.Strategies.ShouldNotBeNull();
 
 			for (int idx = 0; idx < strategyMocks.Count; idx++)
-				Assert.Same(strategyMocks[idx].Object, pipeline.Strategies[idx]);
+				pipeline.Strategies[idx].ShouldBeSameAs(strategyMocks[idx].Object);
 		}
 	}
 

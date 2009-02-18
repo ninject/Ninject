@@ -96,6 +96,13 @@ namespace Ninject.Syntax
 		IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent);
 
 		/// <summary>
+		/// Indicates that the binding should be used only when the class being injected has
+		/// an attribute of the specified type.
+		/// </summary>
+		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
+		IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute;
+
+		/// <summary>
 		/// Indicates that the binding should be used only when the member being injected has
 		/// an attribute of the specified type.
 		/// </summary>
@@ -108,6 +115,13 @@ namespace Ninject.Syntax
 		/// </summary>
 		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
 		IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute;
+
+		/// <summary>
+		/// Indicates that the binding should be used only when the class being injected has
+		/// an attribute of the specified type.
+		/// </summary>
+		/// <param name="attributeType">The type of attribute.</param>
+		IBindingInNamedWithOrOnSyntax<T> WhenClassHas(Type attributeType);
 
 		/// <summary>
 		/// Indicates that the binding should be used only when the member being injected has

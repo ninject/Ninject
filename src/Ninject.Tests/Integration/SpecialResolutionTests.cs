@@ -21,9 +21,9 @@ namespace Ninject.Tests.Integration.SpecialResolutionTests
 			kernel.Bind<RequestsKernel>().ToSelf();
 			var instance = kernel.Get<RequestsKernel>();
 
-			Assert.NotNull(instance);
-			Assert.NotNull(instance.Kernel);
-			Assert.Same(kernel, instance.Kernel);
+			instance.ShouldNotBeNull();
+			instance.Kernel.ShouldNotBeNull();
+			instance.Kernel.ShouldBeSameAs(kernel);
 		}
 	}
 

@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
 			strategy.Activate(contextMock.Object);
 
-			Assert.True(instance.WasInitialized);
+			instance.WasInitialized.ShouldBeTrue();
 		}
 
 		[Fact]

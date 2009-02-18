@@ -18,16 +18,17 @@
 using System;
 #endregion
 
-namespace Ninject.Infrastructure.Tracing
+namespace Ninject.Infrastructure
 {
 	/// <summary>
-	/// Indicates that the object has <see cref="TraceInfo"/>.
+	/// Watches the garbage collector, and signals when it has been run.
 	/// </summary>
-	public interface IHaveTraceInfo
+	public interface IGarbageCollectionWatcher : IDisposable
 	{
 		/// <summary>
-		/// Gets the trace info for the object.
+		/// Occurs when the garbage collector has run. Since the GC operation may be concurrent,
+		/// collection may not be complete when this event is fired.
 		/// </summary>
-		TraceInfo TraceInfo { get; }
+		event EventHandler GarbageCollected;
 	}
 }

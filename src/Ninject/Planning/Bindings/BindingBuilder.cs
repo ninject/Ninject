@@ -22,6 +22,7 @@ using System.Web;
 #endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Parameters;
 using Ninject.Syntax;
@@ -54,7 +55,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToSelf()
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(Binding.Service);
-			Binding.IntrospectionInfo += " to self";
 			return this;
 		}
 
@@ -66,7 +66,6 @@ namespace Ninject.Planning.Bindings
 			where TImplementation : T
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
-			Binding.IntrospectionInfo += " to " + typeof(TImplementation);
 			return this;
 		}
 
@@ -77,7 +76,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> To(Type implementation)
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
-			Binding.IntrospectionInfo += " to " + implementation;
 			return this;
 		}
 
@@ -90,7 +88,6 @@ namespace Ninject.Planning.Bindings
 			where TProvider : IProvider
 		{
 			Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
-			Binding.IntrospectionInfo += " to provider " + typeof(TProvider);
 			return this;
 		}
 
@@ -101,7 +98,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(IProvider provider)
 		{
 			Binding.ProviderCallback = ctx => provider;
-			Binding.IntrospectionInfo += " to external instance of provider " + provider.GetType();
 			return this;
 		}
 
@@ -112,7 +108,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToMethod(Func<IContext, T> method)
 		{
 			Binding.ProviderCallback = ctx => new CallbackProvider<T>(method);
-			Binding.IntrospectionInfo += " to method " + method.Method;
 			return this;
 		}
 
@@ -123,7 +118,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value)
 		{
 			Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
-			Binding.IntrospectionInfo += " to constant " + value;
 			return this;
 		}
 
@@ -134,7 +128,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingInNamedWithOrOnSyntax<T> When(Func<IRequest, bool> condition)
 		{
 			Binding.Condition = condition;
-			Binding.IntrospectionInfo += " (conditionally)";
 			return this;
 		}
 
@@ -154,8 +147,17 @@ namespace Ninject.Planning.Bindings
 		public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
 		{
 			Binding.Condition = r => r.Target.Member.ReflectedType == parent;
-			Binding.IntrospectionInfo += " (conditionally)";
 			return this;
+		}
+
+		/// <summary>
+		/// Indicates that the binding should be used only when the class being injected has
+		/// an attribute of the specified type.
+		/// </summary>
+		/// <typeparam name="TAttribute">The type of attribute.</typeparam>
+		public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute
+		{
+			return WhenClassHas(typeof(TAttribute));
 		}
 
 		/// <summary>
@@ -169,22 +171,6 @@ namespace Ninject.Planning.Bindings
 		}
 
 		/// <summary>
-		/// Indicates that the binding should be used only when the member being injected has
-		/// an attribute of the specified type.
-		/// </summary>
-		/// <param name="attributeType">The type of attribute.</param>
-		public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
-		{
-			if (!typeof(Attribute).IsAssignableFrom(attributeType))
-				throw new InvalidOperationException();
-
-			Binding.Condition = r => r.Target.Member.HasAttribute(attributeType);
-			Binding.IntrospectionInfo += " (conditionally)";
-
-			return this;
-		}
-
-		/// <summary>
 		/// Indicates that the binding should be used only when the target being injected has
 		/// an attribute of the specified type.
 		/// </summary>
@@ -195,6 +181,36 @@ namespace Ninject.Planning.Bindings
 		}
 
 		/// <summary>
+		/// Indicates that the binding should be used only when the class being injected has
+		/// an attribute of the specified type.
+		/// </summary>
+		/// <param name="attributeType">The type of attribute.</param>
+		public IBindingInNamedWithOrOnSyntax<T> WhenClassHas(Type attributeType)
+		{
+			if (!typeof(Attribute).IsAssignableFrom(attributeType))
+				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenClassHas", attributeType));
+
+			Binding.Condition = r => r.Target.Member.ReflectedType.HasAttribute(attributeType);
+
+			return this;
+		}
+
+		/// <summary>
+		/// Indicates that the binding should be used only when the member being injected has
+		/// an attribute of the specified type.
+		/// </summary>
+		/// <param name="attributeType">The type of attribute.</param>
+		public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
+		{
+			if (!typeof(Attribute).IsAssignableFrom(attributeType))
+				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenMemberHas", attributeType));
+
+			Binding.Condition = r => r.Target.Member.HasAttribute(attributeType);
+
+			return this;
+		}
+
+		/// <summary>
 		/// Indicates that the binding should be used only when the target being injected has
 		/// an attribute of the specified type.
 		/// </summary>
@@ -202,10 +218,9 @@ namespace Ninject.Planning.Bindings
 		public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenTargetHas", attributeType));
 
 			Binding.Condition = r => r.Target.HasAttribute(attributeType);
-			Binding.IntrospectionInfo += " (conditionally)";
 
 			return this;
 		}
@@ -219,7 +234,6 @@ namespace Ninject.Planning.Bindings
 		{
 			String.Intern(name);
 			Binding.Metadata.Name = name;
-			Binding.IntrospectionInfo += " with name '" + name + "'";
 			return this;
 		}
 
@@ -230,7 +244,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingNamedWithOrOnSyntax<T> InSingletonScope()
 		{
 			Binding.ScopeCallback = ctx => ctx.Kernel;
-			Binding.IntrospectionInfo += " in singleton scope";
 			return this;
 		}
 
@@ -241,7 +254,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingNamedWithOrOnSyntax<T> InTransientScope()
 		{
 			Binding.ScopeCallback = null;
-			Binding.IntrospectionInfo += " in transient scope";
 			return this;
 		}
 
@@ -251,7 +263,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingNamedWithOrOnSyntax<T> InThreadScope()
 		{
 			Binding.ScopeCallback = ctx => Thread.CurrentThread;
-			Binding.IntrospectionInfo += " in thread scope";
 			return this;
 		}
 
@@ -263,7 +274,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingNamedWithOrOnSyntax<T> InRequestScope()
 		{
 			Binding.ScopeCallback = ctx => HttpContext.Current;
-			Binding.IntrospectionInfo += " in request scope";
 			return this;
 		}
 		#endif
@@ -276,7 +286,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingNamedWithOrOnSyntax<T> InScope(Func<IContext, object> scope)
 		{
 			Binding.ScopeCallback = scope;
-			Binding.IntrospectionInfo += " in custom scope";
 			return this;
 		}
 
@@ -342,7 +351,6 @@ namespace Ninject.Planning.Bindings
 		public IBindingWithOrOnSyntax<T> WithMetadata(string key, object value)
 		{
 			Binding.Metadata.Set(key, value);
-			Binding.IntrospectionInfo += " with metadata " + key + " = " + value;
 			return this;
 		}
 

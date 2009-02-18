@@ -27,6 +27,7 @@ using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Modules;
 using Ninject.Parameters;
@@ -229,10 +230,11 @@ namespace Ninject
 		/// <param name="service">The service to resolve.</param>
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+		public virtual IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
-			return Resolve(CreateDirectRequest(service, constraint, parameters));
+			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
 		}
 
 		/// <summary>
@@ -242,13 +244,15 @@ namespace Ninject
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
 		public virtual IEnumerable<IHook> Resolve(IRequest request)
 		{
-			if (request.Service.IsAssignableFrom(GetType()))
+			if (request.Service == typeof(IKernel))
 				return new[] { new ConstantHook(this) };
 
-			if (!CanResolve(request))
+			if (!CanResolve(request) && !TryRegisterImplicitSelfBinding(request.Service))
 			{
-				if (!TryRegisterImplicitSelfBinding(request.Service))
-					throw new NotSupportedException(String.Format("No binding registered for {0}", request.Service)); 
+				if (request.IsOptional)
+					return Enumerable.Empty<IHook>();
+				else
+					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
 			return GetBindings(request)
@@ -300,6 +304,8 @@ namespace Ninject
 				return false;
 
 			var binding = new Binding(service) { ProviderCallback = StandardProvider.GetCreationCallback(service) };
+			binding.Metadata.IsImplicit = true;
+
 			AddBinding(binding);
 
 			return true;
@@ -324,10 +330,11 @@ namespace Ninject
 		/// <param name="service">The service to resolve.</param>
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>The created request.</returns>
-		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
-			return new Request(service, constraint, parameters, null);
+			return new Request(service, constraint, parameters, null, isOptional);
 		}
 
 		/// <summary>

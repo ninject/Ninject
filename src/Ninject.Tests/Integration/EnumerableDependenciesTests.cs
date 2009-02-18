@@ -26,11 +26,11 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 			var parent = kernel.Get<IParent>();
 
-			Assert.NotNull(parent);
-			Assert.NotNull(parent.Children);
-			Assert.Equal(2, parent.Children.Length);
-			Assert.IsType<ChildA>(parent.Children[0]);
-			Assert.IsType<ChildB>(parent.Children[1]);
+			parent.ShouldNotBeNull();
+			parent.Children.ShouldNotBeNull();
+			parent.Children.Length.ShouldBe(2);
+			parent.Children[0].ShouldBeInstanceOf<ChildA>();
+			parent.Children[1].ShouldBeInstanceOf<ChildB>();
 		}
 	}
 
@@ -45,10 +45,10 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 			var parent = kernel.Get<IParent>();
 
-			Assert.NotNull(parent);
-			Assert.NotNull(parent.Children);
-			Assert.Equal(1, parent.Children.Length);
-			Assert.IsType<ChildB>(parent.Children[0]);
+			parent.ShouldNotBeNull();
+			parent.Children.ShouldNotBeNull();
+			parent.Children.Length.ShouldBe(1);
+			parent.Children[0].ShouldBeInstanceOf<ChildB>();
 		}
 	}
 

@@ -53,12 +53,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecExtensions.cs" />
+    <Compile Include="ExtensionsForWeakReference.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />
     <Compile Include="Integration\CircularDependenciesTests.cs" />
+    <Compile Include="Integration\TransientScopeTests.cs" />
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Unit\ConstructorInjectorTests.cs" />
-    <Compile Include="Unit\CachePrunerTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />

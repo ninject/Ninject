@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Ninject.Activation.Caching;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
@@ -12,7 +13,8 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 
 		public ThreadScopeContext()
 		{
-			kernel = new StandardKernel();
+			var settings = new NinjectSettings { CachePruningIntervalMs = Int32.MaxValue };
+			kernel = new StandardKernel(settings);
 		}
 	}
 
@@ -37,9 +39,9 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			thread.Start();
 			thread.Join();
 
-			Assert.NotNull(weapon1);
-			Assert.NotNull(weapon2);
-			Assert.Same(weapon1, weapon2);
+			weapon1.ShouldNotBeNull();
+			weapon2.ShouldNotBeNull();
+			weapon1.ShouldBeSameAs(weapon2);
 		}
 
 		[Fact]
@@ -57,21 +59,23 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			thread.Start();
 			thread.Join();
 
-			Assert.NotNull(weapon1);
-			Assert.NotNull(weapon2);
-			Assert.NotSame(weapon1, weapon2);
+			weapon1.ShouldNotBeNull();
+			weapon2.ShouldNotBeNull();
+			weapon1.ShouldNotBeSameAs(weapon2);
 		}
 
-		[Fact(Skip = "Need to rethink time-based tests")]
-		public void InstancesActivatedWithinScopeAreDeactivatedWithinASecondOfThreadEnding()
+		[Fact]
+		public void InstancesActivatedWithinScopeAreDeactivatedAfterThreadIsGarbageCollectedAndCacheIsPruned()
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();
+			var cache = kernel.Components.Get<ICache>();
 
 			NotifiesWhenDisposed instance = null;
 
 			ThreadStart callback = () => instance = kernel.Get<NotifiesWhenDisposed>();
 
 			var thread = new Thread(callback);
+			var threadReference = new WeakReference(thread);
 
 			thread.Start();
 			thread.Join();
@@ -79,10 +83,12 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			thread = null;
 
 			GC.Collect();
-			Thread.Sleep(1500);
 
-			Assert.NotNull(instance);
-			Assert.True(instance.IsDisposed);
+			threadReference.WaitUntilGarbageCollected();
+			cache.Prune();
+
+			instance.ShouldNotBeNull();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
 

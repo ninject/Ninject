@@ -27,8 +27,8 @@ namespace Ninject.Components
 	public abstract class NinjectComponent : DisposableObject, INinjectComponent
 	{
 		/// <summary>
-		/// Gets or sets the kernel that the component is attached to.
+		/// Gets or sets the settings that are being used.
 		/// </summary>
-		public IKernel Kernel { get; set; }
+		public INinjectSettings Settings { get; set; }
 	}
 }

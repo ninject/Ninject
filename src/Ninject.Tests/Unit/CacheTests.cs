@@ -2,6 +2,7 @@
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Tests.Fakes;
 using Xunit;
@@ -11,43 +12,26 @@ namespace Ninject.Tests.Unit.CacheTests
 	public class CacheContext
 	{
 		protected Mock<IPipeline> activatorMock;
-		protected Mock<ICachePruner> prunerMock;
+		protected Mock<IGarbageCollectionWatcher> gcWatcherMock;
 		protected Mock<IBinding> bindingMock;
 		protected Cache cache;
 
 		public CacheContext()
 		{
 			activatorMock = new Mock<IPipeline>();
-			prunerMock = new Mock<ICachePruner>();
+			gcWatcherMock = new Mock<IGarbageCollectionWatcher>();
 			bindingMock = new Mock<IBinding>();
-			cache = new Cache(activatorMock.Object, prunerMock.Object);
-		}
-	}
-
-	public class WhenCacheIsCreated
-	{
-		[Fact]
-		public void AsksPrunerToStartPruning()
-		{
-			var activatorMock = new Mock<IPipeline>();
-			var prunerMock = new Mock<ICachePruner>();
-
-			prunerMock.Setup(x => x.StartPruning(It.IsAny<Cache>())).AtMostOnce();
-
-			var cache = new Cache(activatorMock.Object, prunerMock.Object);
-
-			prunerMock.Verify(x => x.StartPruning(cache));
+			cache = new Cache(activatorMock.Object) { GCWatcher = gcWatcherMock.Object };
 		}
 	}
 
 	public class WhenCacheIsDisposed : CacheContext
 	{
 		[Fact]
-		public void AsksPrunerToStopPruning()
+		public void DisposesOfGCWatcher()
 		{
-			prunerMock.Setup(x => x.StopPruning()).AtMostOnce();
 			cache.Dispose();
-			prunerMock.Verify(x => x.StopPruning());
+			gcWatcherMock.Verify(x => x.Dispose());
 		}
 	}
 
@@ -64,7 +48,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock.Object);
 
-			Assert.Null(instance);
+			instance.ShouldBeNull();
 		}
 
 		[Fact]
@@ -86,7 +70,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			Assert.Same(sword, instance);
+			instance.ShouldBeSameAs(sword);
 		}
 
 		[Fact]
@@ -107,7 +91,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			Assert.Null(instance);
+			instance.ShouldBeNull();
 		}
 	}
 
@@ -136,7 +120,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			Assert.Same(sword, instance);
+			instance.ShouldBeSameAs(sword);
 		}
 
 		[Fact]
@@ -162,7 +146,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			Assert.Null(instance);
+			instance.ShouldBeNull();
 		}
 	}
 }

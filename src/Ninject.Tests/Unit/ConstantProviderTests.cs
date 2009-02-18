@@ -25,8 +25,10 @@ namespace Ninject.Tests.Unit.ConstantProviderTests
 		{
 			var sword = new Sword();
 			provider = new ConstantProvider<Sword>(sword);
+
 			var result = provider.Create(contextMock.Object);
-			Assert.Same(sword, result);
+
+			result.ShouldBeSameAs(sword);
 		}
 	}
 }

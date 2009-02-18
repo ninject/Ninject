@@ -51,14 +51,14 @@ namespace Ninject.Tests.Unit.ActivationScopeTests
 		[Fact]
 		public void ScopeCreatesRequestAndDelegatesCallToParent()
 		{
-			scope.Resolve(typeof(IWeapon), null, new IParameter[0]);
+			scope.Resolve(typeof(IWeapon), null, new IParameter[0], false);
 			parentMock.Verify(x => x.Resolve(It.Is<Request>(r => r.Service == typeof(IWeapon) && r.Constraint == null && r.Parameters.Count == 0)));
 		}
 
 		[Fact]
 		public void ScopeCreatesRequestWithItselfAsScope()
 		{
-			scope.Resolve(typeof(IWeapon), null, new IParameter[0]);
+			scope.Resolve(typeof(IWeapon), null, new IParameter[0], false);
 			parentMock.Verify(x => x.Resolve(It.Is<Request>(r => ReferenceEquals(r.ScopeCallback(), scope))));
 		}
 	}

@@ -32,52 +32,52 @@ namespace Ninject.Components
 		IKernel Kernel { get; set; }
 
 		/// <summary>
-		/// Registers a service in the container.
+		/// Registers a component in the container.
 		/// </summary>
-		/// <typeparam name="TService">The component's service type.</typeparam>
+		/// <typeparam name="TComponent">The component type.</typeparam>
 		/// <typeparam name="TImplementation">The component's implementation type.</typeparam>
-		void Add<TService, TImplementation>()
-			where TService : INinjectComponent
-			where TImplementation : TService, INinjectComponent;
+		void Add<TComponent, TImplementation>()
+			where TComponent : INinjectComponent
+			where TImplementation : TComponent, INinjectComponent;
 
 		/// <summary>
-		/// Removes all registrations for the specified service.
+		/// Removes all registrations for the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		void RemoveAll<T>() where T : INinjectComponent;
 
 		/// <summary>
-		/// Removes all registrations for the specified service.
+		/// Removes all registrations for the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
-		void RemoveAll(Type service);
+		/// <param name="component">The component's type.</param>
+		void RemoveAll(Type component);
 
 		/// <summary>
 		/// Gets one instance of the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		/// <returns>The instance of the component.</returns>
 		T Get<T>() where T : INinjectComponent;
 
 		/// <summary>
 		/// Gets all available instances of the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		/// <returns>A series of instances of the specified component.</returns>
 		IEnumerable<T> GetAll<T>() where T : INinjectComponent;
 
 		/// <summary>
 		/// Gets one instance of the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
+		/// <param name="component">The component type.</param>
 		/// <returns>The instance of the component.</returns>
-		object Get(Type service);
+		object Get(Type component);
 
 		/// <summary>
 		/// Gets all available instances of the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
+		/// <param name="component">The component type.</param>
 		/// <returns>A series of instances of the specified component.</returns>
-		IEnumerable<object> GetAll(Type service);
+		IEnumerable<object> GetAll(Type component);
 	}
 }

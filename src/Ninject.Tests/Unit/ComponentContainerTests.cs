@@ -34,10 +34,11 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 		public void ReturnsInstanceWhenOneImplementationIsRegistered()
 		{
 			container.Add<ITestService, TestServiceA>();
+
 			var service = container.Get<ITestService>();
 
-			Assert.NotNull(service);
-			Assert.IsType<TestServiceA>(service);
+			service.ShouldNotBeNull();
+			service.ShouldBeInstanceOf<TestServiceA>();
 		}
 
 		[Fact]
@@ -45,10 +46,11 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 		{
 			container.Add<ITestService, TestServiceA>();
 			container.Add<ITestService, TestServiceB>();
+
 			var service = container.Get<ITestService>();
 
-			Assert.NotNull(service);
-			Assert.IsType<TestServiceA>(service);
+			service.ShouldNotBeNull();
+			service.ShouldBeInstanceOf<TestServiceA>();
 		}
 
 		[Fact]
@@ -57,11 +59,12 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			container.Add<ITestService, TestServiceA>();
 			container.Add<ITestService, TestServiceB>();
 			container.Add<IAsksForEnumerable, AsksForEnumerable>();
+
 			var asks = container.Get<IAsksForEnumerable>();
 
-			Assert.NotNull(asks);
-			Assert.NotNull(asks.SecondService);
-			Assert.IsType<TestServiceB>(asks.SecondService);
+			asks.ShouldNotBeNull();
+			asks.SecondService.ShouldNotBeNull();
+			asks.SecondService.ShouldBeInstanceOf<TestServiceB>();
 		}
 	}
 
@@ -71,11 +74,12 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 		public void ReturnsSeriesWithSingleItem()
 		{
 			container.Add<ITestService, TestServiceA>();
+
 			var services = container.GetAll<ITestService>().ToList();
 
-			Assert.NotNull(services);
-			Assert.Equal(1, services.Count);
-			Assert.IsType<TestServiceA>(services[0]);
+			services.ShouldNotBeNull();
+			services.Count.ShouldBe(1);
+			services[0].ShouldBeInstanceOf<TestServiceA>();
 		}
 
 		[Fact]
@@ -85,10 +89,10 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			container.Add<ITestService, TestServiceB>();
 			var services = container.GetAll<ITestService>().ToList();
 
-			Assert.NotNull(services);
-			Assert.Equal(2, services.Count);
-			Assert.IsType<TestServiceA>(services[0]);
-			Assert.IsType<TestServiceB>(services[1]);
+			services.ShouldNotBeNull();
+			services.Count.ShouldBe(2);
+			services[0].ShouldBeInstanceOf<TestServiceA>();
+			services[1].ShouldBeInstanceOf<TestServiceB>();
 		}
 
 		[Fact]
@@ -99,9 +103,9 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 			var service1 = container.Get<ITestService>();
 			var service2 = container.Get<ITestService>();
 
-			Assert.NotNull(service1);
-			Assert.NotNull(service2);
-			Assert.Same(service1, service2);
+			service1.ShouldNotBeNull();
+			service2.ShouldNotBeNull();
+			service1.ShouldBeSameAs(service2);
 		}
 	}
 
@@ -111,11 +115,11 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 		public void RemovesAllMappings()
 		{
 			container.Add<ITestService, TestServiceA>();
+
 			var service1 = container.Get<ITestService>();
-			Assert.NotNull(service1);
+			service1.ShouldNotBeNull();
 
 			container.RemoveAll<ITestService>();
-
 			Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
 		}
 
@@ -124,15 +128,15 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 		{
 			container.Add<ITestService, TestServiceA>();
 			container.Add<ITestService, TestServiceB>();
-			var services = container.GetAll<ITestService>().ToList();
 
-			Assert.NotNull(services);
-			Assert.Equal(2, services.Count);
+			var services = container.GetAll<ITestService>().ToList();
+			services.ShouldNotBeNull();
+			services.Count.ShouldBe(2);
 
 			container.RemoveAll<ITestService>();
 
-			Assert.True(services[0].IsDisposed);
-			Assert.True(services[1].IsDisposed);
+			services[0].IsDisposed.ShouldBeTrue();
+			services[1].IsDisposed.ShouldBeTrue();
 		}
 	}
 

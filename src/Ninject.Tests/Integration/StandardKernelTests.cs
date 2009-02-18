@@ -21,9 +21,11 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
 		{
 			kernel.Bind<IWeapon>().To<Sword>();
+
 			var weapon = kernel.Get<IWeapon>();
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 
 		[Fact]
@@ -31,9 +33,11 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		{
 			kernel.Bind<IWeapon>().To<Sword>();
 			kernel.Bind<IWeapon>().To<Shuriken>();
+
 			var weapon = kernel.Get<IWeapon>();
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 
 		[Fact]
@@ -44,10 +48,10 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var warrior = kernel.Get<IWarrior>();
 
-			Assert.NotNull(warrior);
-			Assert.IsType<Samurai>(warrior);
-			Assert.NotNull(warrior.Weapon);
-			Assert.IsType<Sword>(warrior.Weapon);
+			warrior.ShouldNotBeNull();
+			warrior.ShouldBeInstanceOf<Samurai>();
+			warrior.Weapon.ShouldNotBeNull();
+			warrior.Weapon.ShouldBeInstanceOf<Sword>();
 		}
 	}
 
@@ -57,9 +61,11 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
 		{
 			kernel.Bind<Sword>().ToSelf();
+
 			var weapon = kernel.Get<Sword>();
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 
 		[Fact]
@@ -70,9 +76,9 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var samurai = kernel.Get<Samurai>();
 
-			Assert.NotNull(samurai);
-			Assert.NotNull(samurai.Weapon);
-			Assert.IsType<Sword>(samurai.Weapon);
+			samurai.ShouldNotBeNull();
+			samurai.Weapon.ShouldNotBeNull();
+			samurai.Weapon.ShouldBeInstanceOf<Sword>();
 		}
 	}
 
@@ -82,34 +88,36 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		public void ImplicitSelfBindingIsRegisteredAndActivated()
 		{
 			var weapon = kernel.Get<Sword>();
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 
 		[Fact]
 		public void ImplicitSelfBindingForGenericTypeIsRegisteredAndActivated()
 		{
 			var service = kernel.Get<GenericService<int>>();
-			Assert.NotNull(service);
-			Assert.IsType<GenericService<int>>(service);
+
+			service.ShouldNotBeNull();
+			service.ShouldBeInstanceOf<GenericService<int>>();
 		}
 
 		[Fact]
 		public void ThrowsExceptionIfAnUnboundInterfaceIsRequested()
 		{
-			Assert.Throws<NotSupportedException>(() => kernel.Get<IWeapon>());
+			Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
 		}
 
 		[Fact]
 		public void ThrowsExceptionIfAnUnboundAbstractClassIsRequested()
 		{
-			Assert.Throws<NotSupportedException>(() => kernel.Get<AbstractWeapon>());
+			Assert.Throws<ActivationException>(() => kernel.Get<AbstractWeapon>());
 		}
 
 		[Fact]
 		public void ThrowsExceptionIfAnOpenGenericTypeIsRequested()
 		{
-			Assert.Throws<NotSupportedException>(() => kernel.Get(typeof(IGeneric<>)));
+			Assert.Throws<ActivationException>(() => kernel.Get(typeof(IGeneric<>)));
 		}
 	}
 
@@ -119,9 +127,11 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		public void GenericParametersAreInferred()
 		{
 			kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
+
 			var service = kernel.Get<IGeneric<int>>();
-			Assert.NotNull(service);
-			Assert.IsType<GenericService<int>>(service);
+
+			service.ShouldNotBeNull();
+			service.ShouldBeInstanceOf<GenericService<int>>();
 		}
 	}
 
@@ -135,10 +145,10 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var weapons = kernel.GetAll<IWeapon>().ToArray();
 
-			Assert.NotNull(weapons);
-			Assert.Equal(2, weapons.Length);
-			Assert.IsType<Sword>(weapons[0]);
-			Assert.IsType<Shuriken>(weapons[1]);
+			weapons.ShouldNotBeNull();
+			weapons.Length.ShouldBe(2);
+			weapons[0].ShouldBeInstanceOf<Sword>();
+			weapons[1].ShouldBeInstanceOf<Shuriken>();
 		}
 	}
 
@@ -152,10 +162,10 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var services = kernel.GetAll<IGeneric<int>>().ToArray();
 
-			Assert.NotNull(services);
-			Assert.Equal(2, services.Length);
-			Assert.IsType<GenericService<int>>(services[0]);
-			Assert.IsType<GenericService2<int>>(services[1]);
+			services.ShouldNotBeNull();
+			services.Length.ShouldBe(2);
+			services[0].ShouldBeInstanceOf<GenericService<int>>();
+			services[1].ShouldBeInstanceOf<GenericService2<int>>();
 		}
 	}
 
@@ -169,8 +179,8 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var weapon = kernel.Get<IWeapon>("sword");
 
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 
 		[Fact]
@@ -181,8 +191,8 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 
 			var weapon = kernel.Get<IWeapon>(x => x.Get<string>("type") == "melee");
 
-			Assert.NotNull(weapon);
-			Assert.IsType<Sword>(weapon);
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
 		}
 	}
 

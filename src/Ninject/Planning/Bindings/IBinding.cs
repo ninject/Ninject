@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Activation;
-using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 #endregion
 
@@ -27,7 +26,7 @@ namespace Ninject.Planning.Bindings
 	/// <summary>
 	/// Contains information about a service registration.
 	/// </summary>
-	public interface IBinding : IHaveTraceInfo
+	public interface IBinding
 	{
 		/// <summary>
 		/// Gets the service type that is controlled by the binding.

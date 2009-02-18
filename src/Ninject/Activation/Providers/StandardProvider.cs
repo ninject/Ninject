@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Linq;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -72,7 +73,7 @@ namespace Ninject.Activation.Providers
 			var directive = context.Plan.GetOne<ConstructorInjectionDirective>();
 
 			if (directive == null)
-				throw new ActivationException();
+				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
 
 			var injector = InjectorFactory.GetConstructorInjector(directive.Member);
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();

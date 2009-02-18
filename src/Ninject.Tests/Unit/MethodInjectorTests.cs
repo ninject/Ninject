@@ -23,7 +23,7 @@ namespace Ninject.Tests.Unit.MethodInjectorTests
 		[Fact]
 		public void CanGetCallback()
 		{
-			Assert.NotNull(injector.Callback);
+			injector.Callback.ShouldNotBeNull();
 		}
 	}
 
@@ -33,16 +33,20 @@ namespace Ninject.Tests.Unit.MethodInjectorTests
 		public void CallsMethod()
 		{
 			var samurai = new Samurai(new Sword());
+
 			injector.Invoke(samurai, new[] { "evildoer" });
-			Assert.True(samurai.IsBattleHardened);
+
+			samurai.IsBattleHardened.ShouldBeTrue();
 		}
 
 		[Fact]
 		public void ReturnsValueFromMethod()
 		{
 			var samurai = new Samurai(new Sword());
+
 			var result = injector.Invoke(samurai, new[] { "evildoer" }) as string;
-			Assert.Equal("Attacked evildoer with a sword", result);
+
+			result.ShouldBe("Attacked evildoer with a sword");
 		}
 	}
 }

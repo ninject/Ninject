@@ -32,6 +32,11 @@ namespace Ninject.Parameters
 		string Name { get; }
 
 		/// <summary>
+		/// Gets a value indicating whether the parameter should be inherited into child requests.
+		/// </summary>
+		bool ShouldInherit { get; }
+
+		/// <summary>
 		/// Gets the value for the parameter within the specified context.
 		/// </summary>
 		/// <param name="context">The context.</param>

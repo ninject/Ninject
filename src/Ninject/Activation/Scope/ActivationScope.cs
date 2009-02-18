@@ -62,10 +62,11 @@ namespace Ninject.Activation.Scope
 		/// <param name="service">The service to resolve.</param>
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+		public IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
-			return Resolve(CreateDirectRequest(service, constraint, parameters));
+			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
 		}
 
 		/// <summary>
@@ -84,10 +85,11 @@ namespace Ninject.Activation.Scope
 		/// <param name="service">The service to resolve.</param>
 		/// <param name="constraint">The constraints to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>The created request.</returns>
-		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
-			return new Request(service, constraint, parameters, () => this);
+			return new Request(service, constraint, parameters, () => this, isOptional);
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

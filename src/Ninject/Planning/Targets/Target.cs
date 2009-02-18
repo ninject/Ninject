@@ -69,6 +69,14 @@ namespace Ninject.Planning.Targets
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether the target represents an optional dependency.
+		/// </summary>
+		public bool IsOptional
+		{
+			get { return Site.HasAttribute<OptionalAttribute>(); }
+		}
+
+			/// <summary>
 		/// Initializes a new instance of the <see cref="Target&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="member">The member that contains the target.</param>

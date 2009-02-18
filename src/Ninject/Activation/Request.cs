@@ -56,10 +56,19 @@ namespace Ninject.Activation
 		public ICollection<IParameter> Parameters { get; private set; }
 
 		/// <summary>
-		/// Gets the collection of bindings which have been activated either by this request or
-		/// one of its ancestors.
+		/// Gets the stack of bindings which have been activated by either this request or its ancestors.
 		/// </summary>
-		public ICollection<IBinding> ActiveBindings { get; private set; }
+		public Stack<IBinding> ActiveBindings { get; private set; }
+
+		/// <summary>
+		/// Gets the recursive depth at which this request occurs.
+		/// </summary>
+		public int Depth { get; private set; }
+
+		/// <summary>
+		/// Gets or sets value indicating whether the request is optional.
+		/// </summary>
+		public bool IsOptional { get; set; }
 
 		/// <summary>
 		/// Gets the callback that resolves the scope for the request, if an external scope was provided.
@@ -73,13 +82,16 @@ namespace Ninject.Activation
 		/// <param name="constraint">The constraint that will be applied to filter the bindings used for the request.</param>
 		/// <param name="parameters">The parameters that affect the resolution.</param>
 		/// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
-		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback)
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
+		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional)
 		{
 			Service = service;
 			Constraint = constraint;
 			Parameters = parameters == null ? new List<IParameter>() : parameters.ToList();
-			ActiveBindings = new List<IBinding>();
 			ScopeCallback = scopeCallback;
+			ActiveBindings = new Stack<IBinding>();
+			Depth = 0;
+			IsOptional = isOptional;
 		}
 
 		/// <summary>
@@ -95,9 +107,11 @@ namespace Ninject.Activation
 			Service = service;
 			Target = target;
 			Constraint = target.Constraint;
-			Parameters = new List<IParameter>();
-			ActiveBindings = new List<IBinding>(parent.ActiveBindings);
+			IsOptional = target.IsOptional;
+			Parameters = parent.Parameters.Where(p => p.ShouldInherit).ToList();
 			ScopeCallback = scopeCallback;
+			ActiveBindings = new Stack<IBinding>(parent.ActiveBindings);
+			Depth = parent.Depth + 1;
 		}
 
 		/// <summary>

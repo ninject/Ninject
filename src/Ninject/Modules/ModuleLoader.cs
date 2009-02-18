@@ -33,6 +33,20 @@ namespace Ninject.Modules
 	public class ModuleLoader : NinjectComponent, IModuleLoader
 	{
 		/// <summary>
+		/// Gets or sets the kernel into which modules will be loaded.
+		/// </summary>
+		public IKernel Kernel { get; private set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ModuleLoader"/> class.
+		/// </summary>
+		/// <param name="kernel">The kernel into which modules will be loaded.</param>
+		public ModuleLoader(IKernel kernel)
+		{
+			Kernel = kernel;
+		}
+
+		/// <summary>
 		/// Loads all loadable modules defined in the specified assembly.
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>

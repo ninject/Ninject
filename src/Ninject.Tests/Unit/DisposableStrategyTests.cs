@@ -29,7 +29,7 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
 			strategy.Deactivate(contextMock.Object);
 
-			Assert.True(instance.IsDisposed);
+			instance.IsDisposed.ShouldBeTrue();
 		}
 
 		[Fact]

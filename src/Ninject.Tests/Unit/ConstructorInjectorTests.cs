@@ -23,7 +23,7 @@ namespace Ninject.Tests.Unit.ConstructorInjectorTests
 		[Fact]
 		public void CanGetCallback()
 		{
-			Assert.NotNull(injector.Callback);
+			injector.Callback.ShouldNotBeNull();
 		}
 	}
 
@@ -33,15 +33,20 @@ namespace Ninject.Tests.Unit.ConstructorInjectorTests
 		public void CallsConstructor()
 		{
 			var sword = new Sword();
+
 			var samurai = injector.Invoke(new[] { sword }) as Samurai;
-			Assert.Same(sword, samurai.Weapon);
+
+			samurai.ShouldNotBeNull();
+			samurai.Weapon.ShouldBeSameAs(sword);
 		}
 
 		[Fact]
 		public void CallsConstructorWithNullArgumentIfOneIsSpecified()
 		{
 			var samurai = injector.Invoke(new[] { (IWeapon)null }) as Samurai;
-			Assert.NotNull(samurai);
+
+			samurai.ShouldNotBeNull();
+			samurai.Weapon.ShouldBeNull();
 		}
 	}
 }

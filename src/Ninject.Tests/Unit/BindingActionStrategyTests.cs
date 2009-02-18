@@ -37,8 +37,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bindingMock.SetupGet(x => x.ActivationActions).Returns(actions);
 			strategy.Activate(contextMock.Object);
 
-			Assert.True(action1WasCalled);
-			Assert.True(action2WasCalled);
+			action1WasCalled.ShouldBeTrue();
+			action2WasCalled.ShouldBeTrue();
 		}
 	}
 
@@ -58,8 +58,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bindingMock.SetupGet(x => x.DeactivationActions).Returns(actions);
 			strategy.Deactivate(contextMock.Object);
 
-			Assert.True(action1WasCalled);
-			Assert.True(action2WasCalled);
+			action1WasCalled.ShouldBeTrue();
+			action2WasCalled.ShouldBeTrue();
 		}
 	}
 }

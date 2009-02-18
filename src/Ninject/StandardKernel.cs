@@ -19,6 +19,7 @@ using System;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
+using Ninject.Infrastructure;
 using Ninject.Injection;
 using Ninject.Injection.Linq;
 using Ninject.Modules;
@@ -53,17 +54,6 @@ namespace Ninject
 		/// </summary>
 		protected override void AddComponents()
 		{
-			Components.Add<IPipeline, Pipeline>();
-			Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
-			Components.Add<IActivationStrategy, MethodInjectionStrategy>();
-			Components.Add<IActivationStrategy, InitializableStrategy>();
-			Components.Add<IActivationStrategy, StartableStrategy>();
-			Components.Add<IActivationStrategy, BindingActionStrategy>();
-			Components.Add<IActivationStrategy, DisposableStrategy>();
-
-			Components.Add<ICache, Cache>();
-			Components.Add<ICachePruner, CachePruner>();
-
 			Components.Add<IPlanner, Planner>();
 			Components.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
 			Components.Add<IPlanningStrategy, PropertyReflectionStrategy>();
@@ -74,7 +64,16 @@ namespace Ninject
 			Components.Add<IPropertyInjectionHeuristic, StandardPropertyInjectionHeuristic>();
 			Components.Add<IMethodInjectionHeuristic, StandardMethodInjectionHeuristic>();
 
+			Components.Add<IPipeline, Pipeline>();
+			Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
+			Components.Add<IActivationStrategy, MethodInjectionStrategy>();
+			Components.Add<IActivationStrategy, InitializableStrategy>();
+			Components.Add<IActivationStrategy, StartableStrategy>();
+			Components.Add<IActivationStrategy, BindingActionStrategy>();
+			Components.Add<IActivationStrategy, DisposableStrategy>();
+
 			Components.Add<IInjectorFactory, InjectorFactory>();
+			Components.Add<ICache, Cache>();
 
 			#if !SILVERLIGHT
 			Components.Add<IModuleLoader, ModuleLoader>();

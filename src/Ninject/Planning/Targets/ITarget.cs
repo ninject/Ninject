@@ -25,7 +25,7 @@ using Ninject.Planning.Bindings;
 namespace Ninject.Planning.Targets
 {
 	/// <summary>
-	/// Represents a site on a type where a value can be injected.
+	/// Represents a site on a type where a value will be injected.
 	/// </summary>
 	public interface ITarget : ICustomAttributeProvider
 	{
@@ -48,6 +48,11 @@ namespace Ninject.Planning.Targets
 		/// Gets the constraint defined on the target.
 		/// </summary>
 		Func<IBindingMetadata, bool> Constraint { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the target represents an optional dependency.
+		/// </summary>
+		bool IsOptional { get; }
 
 		/// <summary>
 		/// Resolves a value for the target within the specified parent context.

@@ -21,29 +21,26 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		[Fact]
 		public void FirstActivatedInstanceIsReused()
 		{
-			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
+			kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
 
-			var instance1 = kernel.Get<INotifyWhenDisposed>();
-			var instance2 = kernel.Get<INotifyWhenDisposed>();
+			var instance1 = kernel.Get<IWeapon>();
+			var instance2 = kernel.Get<IWeapon>();
 
-			Assert.Same(instance1, instance2);
+			instance1.ShouldBeSameAs(instance2);
 		}
 
 		[Fact]
 		public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
 		{
-			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
+			kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
-			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
+			var instance = kernel.Get<IWeapon>();
+			var reference = new WeakReference(instance);
 
 			instance = null;
-
 			GC.Collect();
 
-			Assert.False(instanceWasDisposed);
+			reference.IsAlive.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -58,7 +55,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 
 			kernel.Dispose();
 
-			Assert.True(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -72,7 +69,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var sword1 = kernel.Get<Sword>();
 			var sword2 = kernel.Get<Sword>();
 
-			Assert.Same(sword1, sword2);
+			sword1.ShouldBeSameAs(sword2);
 		}
 
 		[Fact]
@@ -80,16 +77,13 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
+			var reference = new WeakReference(instance);
 
 			instance = null;
-
 			GC.Collect();
 
-			Assert.False(instanceWasDisposed);
+			reference.IsAlive.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -104,7 +98,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 
 			kernel.Dispose();
 
-			Assert.True(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -118,7 +112,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var instance1 = kernel.Get<INotifyWhenDisposed>();
 			var instance2 = kernel.Get<INotifyWhenDisposed>();
 
-			Assert.Same(instance1, instance2);
+			instance1.ShouldBeSameAs(instance2);
 		}
 
 		[Fact]
@@ -126,16 +120,13 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
+			var reference = new WeakReference(instance);
 
 			instance = null;
-
 			GC.Collect();
 
-			Assert.False(instanceWasDisposed);
+			reference.IsAlive.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -150,7 +141,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 
 			kernel.Dispose();
 
-			Assert.True(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -164,7 +155,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var instance1 = kernel.Get<INotifyWhenDisposed>();
 			var instance2 = kernel.Get<INotifyWhenDisposed>();
 
-			Assert.Same(instance1, instance2);
+			instance1.ShouldBeSameAs(instance2);
 		}
 
 		[Fact]
@@ -172,16 +163,13 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
+			var reference = new WeakReference(instance);
 
 			instance = null;
-
 			GC.Collect();
 
-			Assert.False(instanceWasDisposed);
+			reference.IsAlive.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -196,15 +184,15 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 
 			kernel.Dispose();
 
-			Assert.True(instanceWasDisposed);
+			instanceWasDisposed.ShouldBeTrue();
 		}
 	}
 
 	public class NotifiesWhenDisposed : DisposableObject { }
 
-	public class NotifiesWhenDisposedProvider : Provider<INotifyWhenDisposed>
+	public class NotifiesWhenDisposedProvider : Provider<NotifiesWhenDisposed>
 	{
-		protected override INotifyWhenDisposed CreateInstance(IContext context)
+		protected override NotifiesWhenDisposed CreateInstance(IContext context)
 		{
 			return new NotifiesWhenDisposed();
 		}

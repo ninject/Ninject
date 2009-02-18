@@ -40,7 +40,7 @@ namespace Ninject.Activation.Caching
 		object TryGet(IContext context);
 
 		/// <summary>
-		/// Removes instances from the cache whose scopes have been garbage collected.
+		/// Removes instances from the cache which should no longer be re-used.
 		/// </summary>
 		void Prune();
 	}

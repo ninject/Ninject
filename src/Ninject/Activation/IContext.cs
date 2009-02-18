@@ -17,7 +17,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -28,7 +27,7 @@ namespace Ninject.Activation
 	/// <summary>
 	/// Contains information about the activation of a single instance.
 	/// </summary>
-	public interface IContext : IHaveTraceInfo
+	public interface IContext
 	{
 		/// <summary>
 		/// Gets the kernel that is driving the activation.

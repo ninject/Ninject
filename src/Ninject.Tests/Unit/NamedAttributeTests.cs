@@ -23,14 +23,14 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
 		public void ReturnsTrueIfTheNameMatches()
 		{
 			metadataMock.SetupGet(x => x.Name).Returns("foo");
-			Assert.True(attribute.Matches(metadataMock.Object));
+			attribute.Matches(metadataMock.Object).ShouldBeTrue();
 		}
 
 		[Fact]
 		public void ReturnsFalseIfTheNameDoesNotMatch()
 		{
 			metadataMock.SetupGet(x => x.Name).Returns("bar");
-			Assert.False(attribute.Matches(metadataMock.Object));
+			attribute.Matches(metadataMock.Object).ShouldBeFalse();
 		}
 	}
 }

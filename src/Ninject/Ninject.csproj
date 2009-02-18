@@ -58,13 +58,14 @@
     <Compile Include="Activation\Caching\Cache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Caching\CachePruner.cs">
+    <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="Infrastructure\GarbageCollectionWatcher.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Caching\ICachePruner.cs">
+    <Compile Include="Infrastructure\IGarbageCollectionWatcher.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Context.cs">
@@ -109,8 +110,9 @@
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Activation\Hooks\ConstantHook.cs" />
     <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
+    <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
-    <Compile Include="Infrastructure\Language\ExtensionsForIList.cs" />
     <Compile Include="Injection\Linq\ExpressionHelper.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
@@ -123,7 +125,6 @@
     <Compile Include="Planning\Bindings\BindingMetadata.cs" />
     <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
     <Compile Include="Components\NinjectComponent.cs" />
-    <Compile Include="Infrastructure\Tracing\TraceInfoProvider.cs" />
     <Compile Include="INinjectSettings.cs" />
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Scope\IActivationScope.cs" />
@@ -131,8 +132,6 @@
     <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
-    <Compile Include="Infrastructure\Tracing\IHaveTraceInfo.cs" />
-    <Compile Include="Infrastructure\Tracing\TraceInfo.cs" />
     <Compile Include="Injection\Linq\MethodInjectorBase.cs" />
     <Compile Include="Injection\Linq\VoidMethodInjector.cs" />
     <Compile Include="NinjectSettings.cs" />

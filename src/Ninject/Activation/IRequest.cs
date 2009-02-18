@@ -55,10 +55,19 @@ namespace Ninject.Activation
 		ICollection<IParameter> Parameters { get; }
 
 		/// <summary>
-		/// Gets the collection of bindings which have been activated either by this request or
-		/// one of its ancestors.
+		/// Gets the stack of bindings which have been activated by either this request or its ancestors.
 		/// </summary>
-		ICollection<IBinding> ActiveBindings { get; }
+		Stack<IBinding> ActiveBindings { get; }
+
+		/// <summary>
+		/// Gets the recursive depth at which this request occurs.
+		/// </summary>
+		int Depth { get; }
+
+		/// <summary>
+		/// Gets or sets value indicating whether the request is optional.
+		/// </summary>
+		bool IsOptional { get; set; }
 
 		/// <summary>
 		/// Determines whether the specified binding satisfies the constraint defined on this request.

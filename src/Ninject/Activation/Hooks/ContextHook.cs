@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Planning;
 #endregion
 
@@ -71,9 +72,9 @@ namespace Ninject.Activation.Hooks
 			lock (Context.Binding)
 			{
 				if (Context.Request.ActiveBindings.Contains(Context.Binding))
-					throw new ActivationException();
+					throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(Context));
 
-				Context.Request.ActiveBindings.Add(Context.Binding);
+				Context.Request.ActiveBindings.Push(Context.Binding);
 
 				Context.Instance = Cache.TryGet(Context);
 
@@ -81,12 +82,14 @@ namespace Ninject.Activation.Hooks
 					return Context.Instance;
 
 				Context.Instance = Context.GetProvider().Create(Context);
-				Cache.Remember(Context);
 
-				Context.Request.ActiveBindings.Remove(Context.Binding);
+				if (Context.GetScope() != null)
+					Cache.Remember(Context);
+
+				Context.Request.ActiveBindings.Pop();
 
 				if (Context.Plan == null)
-					Planner.GetPlan(Context.Instance.GetType());
+					Context.Plan = Planner.GetPlan(Context.Instance.GetType());
 
 				Pipeline.Activate(Context);
 

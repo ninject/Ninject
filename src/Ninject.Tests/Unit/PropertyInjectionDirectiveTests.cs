@@ -15,10 +15,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 		public void CreatesTargetForProperty()
 		{
 			var method = typeof(Dummy).GetProperty("Foo");
+
 			directive = new PropertyInjectionDirective(method);
 
-			Assert.Equal(directive.Target.Name, "Foo");
-			Assert.Equal(directive.Target.Type, typeof(int));
+			directive.Target.Name.ShouldBe("Foo");
+			directive.Target.Type.ShouldBe(typeof(int));
 		}
 	}
 

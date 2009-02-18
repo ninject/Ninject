@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -29,7 +28,7 @@ namespace Ninject.Activation
 	/// <summary>
 	/// Contains information about the activation of a single instance.
 	/// </summary>
-	public class Context : TraceInfoProvider, IContext
+	public class Context : IContext
 	{
 		/// <summary>
 		/// Gets the kernel that is driving the activation.

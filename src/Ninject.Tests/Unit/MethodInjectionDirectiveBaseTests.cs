@@ -18,16 +18,17 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 		public void CreatesTargetsForMethodParameters()
 		{
 			var method = typeof(Dummy).GetMethod("MethodA");
+
 			directive = new FakeMethodInjectionDirective(method);
 			ITarget[] targets = directive.Targets;
 
-			Assert.Equal(3, targets.Length);
-			Assert.Equal(targets[0].Name, "foo");
-			Assert.Equal(targets[0].Type, typeof(int));
-			Assert.Equal(targets[1].Name, "bar");
-			Assert.Equal(targets[1].Type, typeof(string));
-			Assert.Equal(targets[2].Name, "baz");
-			Assert.Equal(targets[2].Type, typeof(IWeapon));
+			targets.Length.ShouldBe(3);
+			targets[0].Name.ShouldBe("foo");
+			targets[0].Type.ShouldBe(typeof(int));
+			targets[1].Name.ShouldBe("bar");
+			targets[1].Type.ShouldBe(typeof(string));
+			targets[2].Name.ShouldBe("baz");
+			targets[2].Type.ShouldBe(typeof(IWeapon));
 		}
 	}
 

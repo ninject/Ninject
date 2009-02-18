@@ -36,7 +36,7 @@ namespace Ninject.Selection.Heuristics
 		/// <returns><c>True</c> if the property should be injected; otherwise <c>false</c>.</returns>
 		public bool ShouldInject(PropertyInfo property)
 		{
-			return property.HasAttribute(Kernel.Settings.InjectAttribute);
+			return property.HasAttribute(Settings.InjectAttribute);
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		[Fact]
 		public void CanGetCallback()
 		{
-			Assert.NotNull(injector.Callback);
+			injector.Callback.ShouldNotBeNull();
 		}
 	}
 
@@ -33,8 +33,10 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		public void CallsMethod()
 		{
 			var samurai = new Samurai(new Sword());
+
 			injector.Invoke(samurai, new[] { "Bob" });
-			Assert.Equal("Bob", samurai.Name);
+
+			samurai.Name.ShouldBe("Bob");
 		}
 
 		[Fact]
@@ -42,8 +44,10 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		{
 			var samurai = new Samurai(new Sword());
 			samurai.Name = "Bob";
+
 			injector.Invoke(samurai, new[] { (string)null });
-			Assert.Null(samurai.Name);
+
+			samurai.Name.ShouldBeNull();
 		}
 	}
 }

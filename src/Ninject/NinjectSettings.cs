@@ -31,9 +31,9 @@ namespace Ninject
 		public Type InjectAttribute { get; set; }
 
 		/// <summary>
-		/// Gets or sets the cache prune timeout, in milliseconds.
+		/// Gets or sets the interval at which the GC should be polled, in milliseconds.
 		/// </summary>
-		public int CachePruneTimeoutMs { get; set; }
+		public int CachePruningIntervalMs { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NinjectSettings"/> class with the default values.
@@ -41,7 +41,7 @@ namespace Ninject
 		public NinjectSettings()
 		{
 			InjectAttribute = typeof(InjectAttribute);
-			CachePruneTimeoutMs = 1000;
+			CachePruningIntervalMs = 1000;
 		}
 	}
 }

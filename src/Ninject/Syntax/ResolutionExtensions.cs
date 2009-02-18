@@ -39,7 +39,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static T Get<T>(this IResolutionRoot root, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), null, parameters).Select(hook => hook.Resolve()).Cast<T>().FirstOrDefault();
+			return (T)root.Get(typeof(T), parameters);
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static T Get<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
 		{
-			return root.Get<T>(m => m.Name == name, parameters);
+			return (T)root.Get(typeof(T), m => m.Name == name, parameters);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static T Get<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return (T)root.Resolve(typeof(T), constraint, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
+			return (T)root.Get(typeof(T), constraint, parameters);
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), null, parameters).Select(hook => hook.Resolve()).Cast<T>();
+			return root.GetAll(typeof(T), parameters).Cast<T>();
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
 		{
-			return root.GetAll<T>(m => m.Name == name, parameters);
+			return root.GetAll(typeof(T), m => m.Name == name, parameters).Cast<T>();
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(typeof(T), constraint, parameters).Select(hook => hook.Resolve()).Cast<T>();
+			return root.GetAll(typeof(T), constraint, parameters).Cast<T>();
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static object Get(this IResolutionRoot root, Type service, params IParameter[] parameters)
 		{
-			return root.Resolve(service, null, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
+			return root.GetAll(service, parameters).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static object Get(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
 		{
-			return root.Get(service, m => m.Name == name, parameters);
+			return root.GetAll(service, m => m.Name == name, parameters).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace Ninject
 		/// <returns>An instance of the service.</returns>
 		public static object Get(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(service, constraint, parameters).Select(hook => hook.Resolve()).FirstOrDefault();
+			return root.GetAll(service, constraint, parameters).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -153,7 +153,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, params IParameter[] parameters)
 		{
-			return root.Resolve(service, null, parameters).Select(hook => hook.Resolve());
+			return root.Resolve(service, null, parameters, false).Select(hook => hook.Resolve());
 		}
 
 		/// <summary>
@@ -166,7 +166,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
 		{
-			return root.GetAll(service, m => m.Name == name, parameters);
+			return root.Resolve(service, m => m.Name == name, parameters, false).Select(hook => hook.Resolve());
 		}
 
 		/// <summary>
@@ -179,7 +179,7 @@ namespace Ninject
 		/// <returns>A series of instances of the service.</returns>
 		public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
-			return root.Resolve(service, constraint, parameters).Select(hook => hook.Resolve());
+			return root.Resolve(service, constraint, parameters, false).Select(hook => hook.Resolve());
 		}
 	}
 }

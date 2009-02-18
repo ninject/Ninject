@@ -32,6 +32,11 @@ namespace Ninject.Parameters
 		public string Name { get; private set; }
 
 		/// <summary>
+		/// Gets a value indicating whether the parameter should be inherited into child requests.
+		/// </summary>
+		public bool ShouldInherit { get; private set; }
+
+		/// <summary>
 		/// Gets or sets the callback that will be triggered to get the parameter's value.
 		/// </summary>
 		public Func<IContext, object> ValueCallback { get; private set; }
@@ -41,17 +46,20 @@ namespace Ninject.Parameters
 		/// </summary>
 		/// <param name="name">The name of the parameter.</param>
 		/// <param name="value">The value of the parameter.</param>
-		public Parameter(string name, object value) : this(name, ctx => value) { }
+		/// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
+		public Parameter(string name, object value, bool shouldInherit) : this(name, ctx => value, shouldInherit) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Parameter"/> class.
 		/// </summary>
 		/// <param name="name">The name of the parameter.</param>
 		/// <param name="valueCallback">The callback that will be triggered to get the parameter's value.</param>
-		public Parameter(string name, Func<IContext, object> valueCallback)
+		/// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
+		public Parameter(string name, Func<IContext, object> valueCallback, bool shouldInherit)
 		{
 			Name = name;
 			ValueCallback = valueCallback;
+			ShouldInherit = shouldInherit;
 		}
 
 		/// <summary>

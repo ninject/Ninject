@@ -23,7 +23,7 @@ namespace Ninject.Tests.Unit.PropertyInjectorTests
 		[Fact]
 		public void CanGetCallback()
 		{
-			Assert.NotNull(injector.Callback);
+			injector.Callback.ShouldNotBeNull();
 		}
 	}
 
@@ -34,16 +34,20 @@ namespace Ninject.Tests.Unit.PropertyInjectorTests
 		{
 			var samurai = new Samurai(null);
 			var sword = new Sword();
+
 			injector.Invoke(samurai, sword);
-			Assert.Same(sword, samurai.Weapon);
+
+			samurai.Weapon.ShouldBeSameAs(sword);
 		}
 
 		[Fact]
 		public void SetsPropertyValueToNullIfInvokedWithNullArgument()
 		{
 			var samurai = new Samurai(new Sword());
+
 			injector.Invoke(samurai, null);
-			Assert.Null(samurai.Weapon);
+
+			samurai.Weapon.ShouldBeNull();
 		}
 	}
 }

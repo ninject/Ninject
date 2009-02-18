@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 #endregion
 
@@ -54,21 +55,21 @@ namespace Ninject.Components
 		}
 
 		/// <summary>
-		/// Registers a service in the container.
+		/// Registers a component in the container.
 		/// </summary>
-		/// <typeparam name="TService">The component's service type.</typeparam>
+		/// <typeparam name="TComponent">The component type.</typeparam>
 		/// <typeparam name="TImplementation">The component's implementation type.</typeparam>
-		public void Add<TService, TImplementation>()
-			where TService : INinjectComponent
-			where TImplementation : TService, INinjectComponent
+		public void Add<TComponent, TImplementation>()
+			where TComponent : INinjectComponent
+			where TImplementation : TComponent, INinjectComponent
 		{
-			_mappings.Add(typeof(TService), typeof(TImplementation));
+			_mappings.Add(typeof(TComponent), typeof(TImplementation));
 		}
 
 		/// <summary>
-		/// Removes all registrations for the specified service.
+		/// Removes all registrations for the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		public void RemoveAll<T>()
 			where T : INinjectComponent
 		{
@@ -76,12 +77,12 @@ namespace Ninject.Components
 		}
 
 		/// <summary>
-		/// Removes all registrations for the specified service.
+		/// Removes all registrations for the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
-		public void RemoveAll(Type service)
+		/// <param name="component">The component type.</param>
+		public void RemoveAll(Type component)
 		{
-			foreach (Type implementation in _mappings[service])
+			foreach (Type implementation in _mappings[component])
 			{
 				if (_instances.ContainsKey(implementation))
 					_instances[implementation].Dispose();
@@ -89,13 +90,13 @@ namespace Ninject.Components
 				_instances.Remove(implementation);
 			}
 
-			_mappings.RemoveAll(service);
+			_mappings.RemoveAll(component);
 		}
 
 		/// <summary>
 		/// Gets one instance of the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		/// <returns>The instance of the component.</returns>
 		public T Get<T>()
 			where T : INinjectComponent
@@ -106,7 +107,7 @@ namespace Ninject.Components
 		/// <summary>
 		/// Gets all available instances of the specified component.
 		/// </summary>
-		/// <typeparam name="T">The component's service type.</typeparam>
+		/// <typeparam name="T">The component type.</typeparam>
 		/// <returns>A series of instances of the specified component.</returns>
 		public IEnumerable<T> GetAll<T>()
 			where T : INinjectComponent
@@ -117,58 +118,58 @@ namespace Ninject.Components
 		/// <summary>
 		/// Gets one instance of the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
+		/// <param name="component">The component type.</param>
 		/// <returns>The instance of the component.</returns>
-		public object Get(Type service)
+		public object Get(Type component)
 		{
-			if (service == typeof(IKernel))
+			if (component == typeof(IKernel))
 				return Kernel;
 
-			if (service.IsGenericType)
+			if (component.IsGenericType)
 			{
-				Type gtd = service.GetGenericTypeDefinition();
-				Type argument = service.GetGenericArguments()[0];
+				Type gtd = component.GetGenericTypeDefinition();
+				Type argument = component.GetGenericArguments()[0];
 
 				if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
 					return LinqReflection.CastSlow(GetAll(argument), argument);
 			}
 
-			Type implementation = _mappings[service].FirstOrDefault();
+			Type implementation = _mappings[component].FirstOrDefault();
 
 			if (implementation == null)
-				throw new InvalidOperationException(String.Format("No component of type {0} has been registered", service));
+				throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
 
-			return ResolveInstance(implementation);
+			return ResolveInstance(component, implementation);
 		}
 
 		/// <summary>
 		/// Gets all available instances of the specified component.
 		/// </summary>
-		/// <param name="service">The component's service type.</param>
+		/// <param name="component">The component type.</param>
 		/// <returns>A series of instances of the specified component.</returns>
-		public IEnumerable<object> GetAll(Type service)
+		public IEnumerable<object> GetAll(Type component)
 		{
-			foreach (Type implementation in _mappings[service])
-				yield return ResolveInstance(implementation);
+			foreach (Type implementation in _mappings[component])
+				yield return ResolveInstance(component, implementation);
 		}
 
-		private object ResolveInstance(Type type)
+		private object ResolveInstance(Type component, Type implementation)
 		{
-			return _instances.ContainsKey(type) ? _instances[type] : CreateNewInstance(type);
+			return _instances.ContainsKey(implementation) ? _instances[implementation] : CreateNewInstance(component, implementation);
 		}
 
-		private object CreateNewInstance(Type type)
+		private object CreateNewInstance(Type component, Type implementation)
 		{
-			ConstructorInfo constructor = SelectConstructor(type);
+			ConstructorInfo constructor = SelectConstructor(component, implementation);
 			var arguments = constructor.GetParameters().Select(parameter => Get(parameter.ParameterType)).ToArray();
 
 			try
 			{
-				var component = constructor.Invoke(arguments) as INinjectComponent;
-				component.Kernel = Kernel;
-				_instances.Add(type, component);
+				var instance = constructor.Invoke(arguments) as INinjectComponent;
+				instance.Settings = Kernel.Settings;
+				_instances.Add(implementation, instance);
 
-				return component;
+				return instance;
 			}
 			catch (TargetInvocationException ex)
 			{
@@ -177,12 +178,12 @@ namespace Ninject.Components
 			}
 		}
 
-		private ConstructorInfo SelectConstructor(Type type)
+		private ConstructorInfo SelectConstructor(Type component, Type implementation)
 		{
-			var constructor = type.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
+			var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 
 			if (constructor == null)
-				throw new NotSupportedException(String.Format("Couldn't resolve a constructor to create instance of type {0}", type));
+				throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
 
 			return constructor;
 		}

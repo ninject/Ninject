@@ -34,27 +34,38 @@ namespace Ninject.Activation.Caching
 		private readonly object _mutex = new object();
 		private readonly Multimap<IBinding, CacheEntry> _entries = new Multimap<IBinding, CacheEntry>();
 
+		private IGarbageCollectionWatcher _gcWatcher;
+		private bool _initialized;
+
 		/// <summary>
 		/// Gets or sets the pipeline component.
 		/// </summary>
 		public IPipeline Pipeline { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the cache pruner component.
+		/// Gets or sets the garbage collection watcher.
 		/// </summary>
-		public ICachePruner Pruner { get; private set; }
+		public IGarbageCollectionWatcher GCWatcher
+		{
+			get
+			{
+				if (_gcWatcher == null) _gcWatcher = new GarbageCollectionWatcher(Settings.CachePruningIntervalMs);
+				return _gcWatcher;
+			}
+			set
+			{
+				_gcWatcher = value;
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cache"/> class.
 		/// </summary>
 		/// <param name="pipeline">The pipeline component.</param>
-		/// <param name="pruner">The pruner component.</param>
-		public Cache(IPipeline pipeline, ICachePruner pruner)
+		public Cache(IPipeline pipeline)
 		{
-			_entries = new Multimap<IBinding, CacheEntry>();
 			Pipeline = pipeline;
-			Pruner = pruner;
-			Pruner.StartPruning(this);
+			_entries = new Multimap<IBinding, CacheEntry>();
 		}
 
 		/// <summary>
@@ -62,11 +73,10 @@ namespace Ninject.Activation.Caching
 		/// </summary>
 		public override void Dispose()
 		{
-			if (Pruner != null)
-			{
-				Pruner.StopPruning();
-				Pruner = null;
-			}
+			if (_initialized)
+				GCWatcher.GarbageCollected -= OnGarbageCollected;
+
+			GCWatcher.Dispose();
 
 			base.Dispose();
 		}
@@ -79,6 +89,12 @@ namespace Ninject.Activation.Caching
 		{
 			lock (_mutex)
 			{
+				if (!_initialized)
+				{
+					GCWatcher.GarbageCollected += OnGarbageCollected;
+					_initialized = true;
+				}
+
 				var entry = new CacheEntry(context);
 				_entries[context.Binding].Add(entry);
 
@@ -112,7 +128,7 @@ namespace Ninject.Activation.Caching
 						var cachedArguments = entry.Context.GenericArguments;
 						var arguments = context.GenericArguments;
 
-						if (!cachedArguments.ElementsEqual(arguments))
+						if (!cachedArguments.SequenceEqual(arguments))
 							continue;
 					}
 
@@ -142,6 +158,11 @@ namespace Ninject.Activation.Caching
 				Pipeline.Deactivate(entry.Context);
 				_entries[entry.Context.Binding].Remove(entry);
 			}
+		}
+
+		private void OnGarbageCollected(object sender, EventArgs e)
+		{
+			Prune();
 		}
 
 		private class CacheEntry

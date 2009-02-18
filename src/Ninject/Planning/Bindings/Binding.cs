@@ -17,10 +17,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Ninject.Activation;
-using Ninject.Infrastructure.Tracing;
 using Ninject.Parameters;
 #endregion
 
@@ -29,11 +26,8 @@ namespace Ninject.Planning.Bindings
 	/// <summary>
 	/// Contains information about a service registration.
 	/// </summary>
-	[DebuggerDisplay("{IntrospectionInfo} from {TraceInfo}")]
-	public class Binding : TraceInfoProvider, IBinding
+	public class Binding : IBinding
 	{
-		private IProvider _provider;
-
 		/// <summary>
 		/// Gets the service type that is controlled by the binding.
 		/// </summary>
@@ -75,11 +69,6 @@ namespace Ninject.Planning.Bindings
 		public Func<IContext, object> ScopeCallback { get; set; }
 
 		/// <summary>
-		/// Gets or sets the introspection information for the binding.
-		/// </summary>
-		public string IntrospectionInfo { get; set; }
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Binding"/> class.
 		/// </summary>
 		/// <param name="service">The service that is controlled by the binding.</param>
@@ -97,7 +86,6 @@ namespace Ninject.Planning.Bindings
 			Parameters = new List<IParameter>();
 			ActivationActions = new List<Action<IContext>>();
 			DeactivationActions = new List<Action<IContext>>();
-			IntrospectionInfo = "Binding from " + service;
 		}
 
 		/// <summary>
@@ -107,10 +95,7 @@ namespace Ninject.Planning.Bindings
 		/// <returns>The provider to use.</returns>
 		public IProvider GetProvider(IContext context)
 		{
-			if (_provider == null)
-				_provider = ProviderCallback(context);
-
-			return _provider;
+			return ProviderCallback(context);
 		}
 
 		/// <summary>

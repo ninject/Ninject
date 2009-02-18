@@ -25,8 +25,10 @@ namespace Ninject.Tests.Unit.CallbackProviderTests
 		{
 			var sword = new Sword();
 			provider = new CallbackProvider<Sword>(c => sword);
+
 			var result = provider.Create(contextMock.Object);
-			Assert.Same(sword, result);
+
+			result.ShouldBeSameAs(sword);
 		}
 	}
 }

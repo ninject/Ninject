@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
 			strategy.Activate(contextMock.Object);
 
-			Assert.True(instance.WasStarted);
+			instance.WasStarted.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -51,7 +51,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
 			strategy.Deactivate(contextMock.Object);
 
-			Assert.True(instance.WasStopped);
+			instance.WasStopped.ShouldBeTrue();
 		}
 
 		[Fact]

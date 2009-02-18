@@ -31,8 +31,8 @@ namespace Ninject
 		Type InjectAttribute { get; }
 
 		/// <summary>
-		/// Gets the cache prune timeout, in milliseconds.
+		/// Gets or sets the interval at the cache should be pruned, in milliseconds.
 		/// </summary>
-		int CachePruneTimeoutMs { get; }
+		int CachePruningIntervalMs { get; }
 	}
 }
