@@ -51,9 +51,12 @@ namespace Ninject.Infrastructure
 		/// </summary>
 		public override void Dispose()
 		{
-			_timer.Change(Timeout.Infinite, Timeout.Infinite);
-			_timer.Dispose();
-			_timer = null;
+			if (_timer != null)
+			{
+				_timer.Change(Timeout.Infinite, Timeout.Infinite);
+				_timer.Dispose();
+				_timer = null;
+			}
 
 			GarbageCollected = null;
 
