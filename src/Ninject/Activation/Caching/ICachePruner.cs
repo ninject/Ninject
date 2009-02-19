@@ -16,19 +16,20 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Components;
 #endregion
 
-namespace Ninject.Infrastructure
+namespace Ninject.Activation.Caching
 {
 	/// <summary>
-	/// Watches the garbage collector, and signals when it has been run.
+	/// Prunes instances from an <see cref="ICache"/> based on environmental information.
 	/// </summary>
-	public interface IGarbageCollectionWatcher : IDisposable
+	public interface ICachePruner : INinjectComponent
 	{
 		/// <summary>
-		/// Occurs when the garbage collector has run. Since the GC operation may be concurrent,
-		/// collection may not be complete when this event is fired.
+		/// Registers the specified cache for pruning.
 		/// </summary>
-		event EventHandler GarbageCollected;
+		/// <param name="cache">The cache that will be pruned.</param>
+		void Register(ICache cache);
 	}
 }

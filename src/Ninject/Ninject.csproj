@@ -58,14 +58,12 @@
     <Compile Include="Activation\Caching\Cache.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Activation\Caching\ICachePruner.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
-    <Compile Include="Infrastructure\GarbageCollectionWatcher.cs">
+    <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Infrastructure\IGarbageCollectionWatcher.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Context.cs">
@@ -113,7 +111,7 @@
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
-    <Compile Include="Injection\Linq\ExpressionHelper.cs" />
+    <Compile Include="Injection\Expressions\ExpressionHelper.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
     <Compile Include="Events\ModuleEventArgs.cs" />
@@ -132,8 +130,8 @@
     <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Scope\ActivationScope.cs" />
-    <Compile Include="Injection\Linq\MethodInjectorBase.cs" />
-    <Compile Include="Injection\Linq\VoidMethodInjector.cs" />
+    <Compile Include="Injection\Expressions\ExpressionMethodInjectorBase.cs" />
+    <Compile Include="Injection\Expressions\ExpressionVoidMethodInjector.cs" />
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
@@ -145,12 +143,12 @@
     <Compile Include="Components\IComponentContainer.cs" />
     <Compile Include="Syntax\IBindingRoot.cs" />
     <Compile Include="Activation\Providers\CallbackProvider.cs" />
-    <Compile Include="Injection\Linq\InjectorFactory.cs" />
+    <Compile Include="Injection\Expressions\ExpressionInjectorFactory.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
-    <Compile Include="Injection\Linq\ConstructorInjector.cs" />
-    <Compile Include="Injection\Linq\MethodInjector.cs" />
-    <Compile Include="Injection\Linq\ExpressionBasedInjector.cs" />
-    <Compile Include="Injection\Linq\PropertyInjector.cs" />
+    <Compile Include="Injection\Expressions\ExpressionConstructorInjector.cs" />
+    <Compile Include="Injection\Expressions\ExpressionMethodInjector.cs" />
+    <Compile Include="Injection\Expressions\ExpressionBasedInjector.cs" />
+    <Compile Include="Injection\Expressions\ExpressionPropertyInjector.cs" />
     <Compile Include="Injection\IConstructorInjector.cs" />
     <Compile Include="Injection\IMethodInjector.cs" />
     <Compile Include="Injection\IPropertyInjector.cs" />

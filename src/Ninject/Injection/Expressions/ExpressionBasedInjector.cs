@@ -20,7 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 #endregion
 
-namespace Ninject.Injection.Linq
+namespace Ninject.Injection.Expressions
 {
 	/// <summary>
 	/// An injector that uses a delegate generated from an expression tree to inject values.

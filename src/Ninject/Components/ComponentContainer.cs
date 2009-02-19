@@ -43,15 +43,18 @@ namespace Ninject.Components
 		/// <summary>
 		/// Releases resources held by the object.
 		/// </summary>
-		public override void Dispose()
+		public override void Dispose(bool disposing)
 		{
-			foreach (INinjectComponent instance in _instances.Values)
-				instance.Dispose();
+			if (disposing && !IsDisposed)
+			{
+				foreach (INinjectComponent instance in _instances.Values)
+					instance.Dispose();
 
-			_mappings.Clear();
-			_instances.Clear();
+				_mappings.Clear();
+				_instances.Clear();
+			}
 
-			base.Dispose();
+			base.Dispose(disposing);
 		}
 
 		/// <summary>

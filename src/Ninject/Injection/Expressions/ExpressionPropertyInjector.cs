@@ -20,18 +20,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 #endregion
 
-namespace Ninject.Injection.Linq
+namespace Ninject.Injection.Expressions
 {
 	/// <summary>
 	/// An injector that injects values into a property.
 	/// </summary>
-	public class PropertyInjector : ExpressionBasedInjector<PropertyInfo, Action<object, object>>, IPropertyInjector
+	public class ExpressionPropertyInjector : ExpressionBasedInjector<PropertyInfo, Action<object, object>>, IPropertyInjector
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertyInjector"/> class.
+		/// Initializes a new instance of the <see cref="ExpressionPropertyInjector"/> class.
 		/// </summary>
 		/// <param name="property">The property that will be injected.</param>
-		public PropertyInjector(PropertyInfo property) : base(property) { }
+		public ExpressionPropertyInjector(PropertyInfo property) : base(property) { }
 
 		/// <summary>
 		/// Injects the specified value into the property.

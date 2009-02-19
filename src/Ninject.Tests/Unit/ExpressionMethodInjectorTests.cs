@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Injection.Linq;
+using Ninject.Injection.Expressions;
 using Ninject.Tests.Fakes;
 using Xunit;
 
-namespace Ninject.Tests.Unit.MethodInjectorTests
+namespace Ninject.Tests.Unit.ExpressionMethodInjectorTests
 {
-	public class MethodInjectorContext
+	public class ExpressionMethodInjectorContext
 	{
 		protected MethodInfo method;
-		protected MethodInjector injector;
+		protected ExpressionMethodInjector injector;
 
-		public MethodInjectorContext()
+		public ExpressionMethodInjectorContext()
 		{
 			method = typeof(Samurai).GetMethod("Attack");
-			injector = new MethodInjector(method);
+			injector = new ExpressionMethodInjector(method);
 		}
 	}
 
-	public class WhenMethodInjectorIsCreated : MethodInjectorContext
+	public class WhenMethodInjectorIsCreated : ExpressionMethodInjectorContext
 	{
 		[Fact]
 		public void CanGetCallback()
@@ -27,7 +27,7 @@ namespace Ninject.Tests.Unit.MethodInjectorTests
 		}
 	}
 
-	public class WhenMethodInjectorIsInvoked : MethodInjectorContext
+	public class WhenMethodInjectorIsInvoked : ExpressionMethodInjectorContext
 	{
 		[Fact]
 		public void CallsMethod()

@@ -21,18 +21,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 #endregion
 
-namespace Ninject.Injection.Linq
+namespace Ninject.Injection.Expressions
 {
 	/// <summary>
 	/// An expression-based injector that injects values into a constructor.
 	/// </summary>
-	public class ConstructorInjector : ExpressionBasedInjector<ConstructorInfo, Func<object[], object>>, IConstructorInjector
+	public class ExpressionConstructorInjector : ExpressionBasedInjector<ConstructorInfo, Func<object[], object>>, IConstructorInjector
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConstructorInjector"/> class.
+		/// Initializes a new instance of the <see cref="ExpressionConstructorInjector"/> class.
 		/// </summary>
 		/// <param name="constructor">The constructor.</param>
-		public ConstructorInjector(ConstructorInfo constructor) : base(constructor) { }
+		public ExpressionConstructorInjector(ConstructorInfo constructor) : base(constructor) { }
 
 		/// <summary>
 		/// Calls the associated constructor, injecting the specified values.

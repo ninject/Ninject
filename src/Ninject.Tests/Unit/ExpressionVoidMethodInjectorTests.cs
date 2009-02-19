@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Injection.Linq;
+using Ninject.Injection.Expressions;
 using Ninject.Tests.Fakes;
 using Xunit;
 
-namespace Ninject.Tests.Unit.VoidMethodInjectorTests
+namespace Ninject.Tests.Unit.ExpressionVoidMethodInjectorTests
 {
-	public class VoidMethodInjectorContext
+	public class ExpressionVoidMethodInjectorContext
 	{
 		protected MethodInfo method;
-		protected VoidMethodInjector injector;
+		protected ExpressionVoidMethodInjector injector;
 
-		public VoidMethodInjectorContext()
+		public ExpressionVoidMethodInjectorContext()
 		{
 			method = typeof(Samurai).GetMethod("SetName");
-			injector = new VoidMethodInjector(method);
+			injector = new ExpressionVoidMethodInjector(method);
 		}
 	}
 
-	public class WhenVoidMethodInjectorIsCreated : VoidMethodInjectorContext
+	public class WhenVoidMethodInjectorIsCreated : ExpressionVoidMethodInjectorContext
 	{
 		[Fact]
 		public void CanGetCallback()
@@ -27,7 +27,7 @@ namespace Ninject.Tests.Unit.VoidMethodInjectorTests
 		}
 	}
 
-	public class WhenVoidMethodInjectorIsInvoked : VoidMethodInjectorContext
+	public class WhenVoidMethodInjectorIsInvoked : ExpressionVoidMethodInjectorContext
 	{
 		[Fact]
 		public void CallsMethod()

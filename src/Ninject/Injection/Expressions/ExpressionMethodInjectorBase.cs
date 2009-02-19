@@ -21,19 +21,19 @@ using System.Linq.Expressions;
 using System.Reflection;
 #endregion
 
-namespace Ninject.Injection.Linq
+namespace Ninject.Injection.Expressions
 {
 	/// <summary>
 	/// An expression-based injector that can inject values into a constructor or method.
 	/// </summary>
 	/// <typeparam name="TDelegate">The type of delegate resulting from the expression tree.</typeparam>
-	public abstract class MethodInjectorBase<TDelegate> : ExpressionBasedInjector<MethodInfo, TDelegate>, IMethodInjector
+	public abstract class ExpressionMethodInjectorBase<TDelegate> : ExpressionBasedInjector<MethodInfo, TDelegate>, IMethodInjector
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodInjectorBase&lt;TDelegate&gt;"/> class.
+		/// Initializes a new instance of the <see cref="ExpressionMethodInjectorBase{TDelegate}"/> class.
 		/// </summary>
 		/// <param name="method">The method that will be injected.</param>
-		protected MethodInjectorBase(MethodInfo method) : base(method) { }
+		protected ExpressionMethodInjectorBase(MethodInfo method) : base(method) { }
 
 		/// <summary>
 		/// Calls the associated method, injecting the specified values.

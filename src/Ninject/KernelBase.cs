@@ -118,10 +118,12 @@ namespace Ninject
 		/// <summary>
 		/// Releases resources held by the object.
 		/// </summary>
-		public override void Dispose()
+		public override void Dispose(bool disposing)
 		{
-			if (Components != null) Components.Dispose();
-			base.Dispose();
+			if (disposing && !IsDisposed && Components != null)
+				Components.Dispose();
+
+			base.Dispose(disposing);
 		}
 
 		/// <summary>

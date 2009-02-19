@@ -31,11 +31,7 @@ namespace Ninject.Activation.Caching
 	/// </summary>
 	public class Cache : NinjectComponent, ICache
 	{
-		private readonly object _mutex = new object();
 		private readonly Multimap<IBinding, CacheEntry> _entries = new Multimap<IBinding, CacheEntry>();
-
-		private IGarbageCollectionWatcher _gcWatcher;
-		private bool _initialized;
 
 		/// <summary>
 		/// Gets or sets the pipeline component.
@@ -43,42 +39,15 @@ namespace Ninject.Activation.Caching
 		public IPipeline Pipeline { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the garbage collection watcher.
-		/// </summary>
-		public IGarbageCollectionWatcher GCWatcher
-		{
-			get
-			{
-				if (_gcWatcher == null) _gcWatcher = new GarbageCollectionWatcher(Settings.CachePruningIntervalMs);
-				return _gcWatcher;
-			}
-			set
-			{
-				_gcWatcher = value;
-			}
-		}
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Cache"/> class.
 		/// </summary>
 		/// <param name="pipeline">The pipeline component.</param>
-		public Cache(IPipeline pipeline)
+		/// <param name="cachePruner">The cache pruner component.</param>
+		public Cache(IPipeline pipeline, ICachePruner cachePruner)
 		{
-			Pipeline = pipeline;
 			_entries = new Multimap<IBinding, CacheEntry>();
-		}
-
-		/// <summary>
-		/// Releases resources held by the object.
-		/// </summary>
-		public override void Dispose()
-		{
-			if (_initialized)
-				GCWatcher.GarbageCollected -= OnGarbageCollected;
-
-			GCWatcher.Dispose();
-
-			base.Dispose();
+			Pipeline = pipeline;
+			cachePruner.Register(this);
 		}
 
 		/// <summary>
@@ -87,14 +56,8 @@ namespace Ninject.Activation.Caching
 		/// <param name="context">The context to store.</param>
 		public void Remember(IContext context)
 		{
-			lock (_mutex)
+			lock (_entries)
 			{
-				if (!_initialized)
-				{
-					GCWatcher.GarbageCollected += OnGarbageCollected;
-					_initialized = true;
-				}
-
 				var entry = new CacheEntry(context);
 				_entries[context.Binding].Add(entry);
 
@@ -112,7 +75,7 @@ namespace Ninject.Activation.Caching
 		/// <returns>The instance for re-use, or <see langword="null"/> if none has been stored.</returns>
 		public object TryGet(IContext context)
 		{
-			lock (_mutex)
+			lock (_entries)
 			{
 				Prune();
 
@@ -144,7 +107,7 @@ namespace Ninject.Activation.Caching
 		/// </summary>
 		public void Prune()
 		{
-			lock (_mutex)
+			lock (_entries)
 			{
 				foreach (IBinding binding in _entries.Keys)
 					_entries[binding].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
@@ -153,16 +116,11 @@ namespace Ninject.Activation.Caching
 
 		private void Forget(CacheEntry entry)
 		{
-			lock (_mutex)
+			lock (_entries)
 			{
 				Pipeline.Deactivate(entry.Context);
 				_entries[entry.Context.Binding].Remove(entry);
 			}
-		}
-
-		private void OnGarbageCollected(object sender, EventArgs e)
-		{
-			Prune();
 		}
 
 		private class CacheEntry

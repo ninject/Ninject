@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Injection.Linq;
+using Ninject.Injection.Expressions;
 using Ninject.Tests.Fakes;
 using Xunit;
 
-namespace Ninject.Tests.Unit.PropertyInjectorTests
+namespace Ninject.Tests.Unit.ExpressionPropertyInjectorTests
 {
-	public class PropertyInjectorContext
+	public class ExpressionPropertyInjectorContext
 	{
 		protected PropertyInfo property;
-		protected PropertyInjector injector;
+		protected ExpressionPropertyInjector injector;
 
-		public PropertyInjectorContext()
+		public ExpressionPropertyInjectorContext()
 		{
 			property = typeof(Samurai).GetProperty("Weapon");
-			injector = new PropertyInjector(property);
+			injector = new ExpressionPropertyInjector(property);
 		}
 	}
 
-	public class WhenPropertyInjectorIsCreated : PropertyInjectorContext
+	public class WhenPropertyInjectorIsCreated : ExpressionPropertyInjectorContext
 	{
 		[Fact]
 		public void CanGetCallback()
@@ -27,7 +27,7 @@ namespace Ninject.Tests.Unit.PropertyInjectorTests
 		}
 	}
 
-	public class WhenPropertyInjectorIsInvoked : PropertyInjectorContext
+	public class WhenPropertyInjectorIsInvoked : ExpressionPropertyInjectorContext
 	{
 		[Fact]
 		public void SetsPropertyValue()

@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 #endregion
 
-namespace Ninject.Injection.Linq
+namespace Ninject.Injection.Expressions
 {
 	internal static class ExpressionHelper
 	{

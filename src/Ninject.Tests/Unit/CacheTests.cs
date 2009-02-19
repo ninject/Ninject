@@ -12,26 +12,16 @@ namespace Ninject.Tests.Unit.CacheTests
 	public class CacheContext
 	{
 		protected Mock<IPipeline> activatorMock;
-		protected Mock<IGarbageCollectionWatcher> gcWatcherMock;
+		protected Mock<ICachePruner> cachePrunerMock;
 		protected Mock<IBinding> bindingMock;
 		protected Cache cache;
 
 		public CacheContext()
 		{
 			activatorMock = new Mock<IPipeline>();
-			gcWatcherMock = new Mock<IGarbageCollectionWatcher>();
+			cachePrunerMock = new Mock<ICachePruner>();
 			bindingMock = new Mock<IBinding>();
-			cache = new Cache(activatorMock.Object) { GCWatcher = gcWatcherMock.Object };
-		}
-	}
-
-	public class WhenCacheIsDisposed : CacheContext
-	{
-		[Fact]
-		public void DisposesOfGCWatcher()
-		{
-			cache.Dispose();
-			gcWatcherMock.Verify(x => x.Dispose());
+			cache = new Cache(activatorMock.Object, cachePrunerMock.Object);
 		}
 	}
 

@@ -32,13 +32,21 @@ namespace Ninject.Infrastructure.Disposal
 		public bool IsDisposed { get; private set; }
 
 		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		/// <summary>
 		/// Releases resources held by the object.
 		/// </summary>
-		public virtual void Dispose()
+		public virtual void Dispose(bool disposing)
 		{
 			lock (this)
 			{
-				if (!IsDisposed)
+				if (disposing && !IsDisposed)
 				{
 					Disposed.Raise(this, EventArgs.Empty);
 					Disposed = null;
@@ -53,7 +61,7 @@ namespace Ninject.Infrastructure.Disposal
 		/// </summary>
 		~DisposableObject()
 		{
-			Dispose();
+			Dispose(false);
 		}
 
 		/// <summary>

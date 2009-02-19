@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Ninject.Injection.Linq;
+using Ninject.Injection.Expressions;
 using Ninject.Tests.Fakes;
 using Xunit;
 
-namespace Ninject.Tests.Unit.ConstructorInjectorTests
+namespace Ninject.Tests.Unit.ExpressionConstructorInjectorTests
 {
-	public class ConstructorInjectorContext
+	public class ExpressionConstructorInjectorContext
 	{
 		protected ConstructorInfo constructor;
-		protected ConstructorInjector injector;
+		protected ExpressionConstructorInjector injector;
 
-		public ConstructorInjectorContext()
+		public ExpressionConstructorInjectorContext()
 		{
 			constructor = typeof(Samurai).GetConstructor(new[] { typeof(IWeapon) });
-			injector = new ConstructorInjector(constructor);
+			injector = new ExpressionConstructorInjector(constructor);
 		}
 	}
 
-	public class WhenConstructorInjectorIsCreated : ConstructorInjectorContext
+	public class WhenConstructorInjectorIsCreated : ExpressionConstructorInjectorContext
 	{
 		[Fact]
 		public void CanGetCallback()
@@ -27,7 +27,7 @@ namespace Ninject.Tests.Unit.ConstructorInjectorTests
 		}
 	}
 
-	public class WhenConstructorInjectorIsInvoked : ConstructorInjectorContext
+	public class WhenConstructorInjectorIsInvoked : ExpressionConstructorInjectorContext
 	{
 		[Fact]
 		public void CallsConstructor()

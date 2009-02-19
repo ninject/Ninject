@@ -17,59 +17,59 @@
 #region Using Directives
 using System;
 using System.Threading;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Infrastructure.Language;
+using Ninject.Components;
 #endregion
 
-namespace Ninject.Infrastructure
+namespace Ninject.Activation.Caching
 {
 	/// <summary>
-	/// Uses a <see cref="Timer"/> to poll the garbage collector to see if it has run.
+	/// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
+	/// the garbage collector to see if it has run.
 	/// </summary>
-	public class GarbageCollectionWatcher : DisposableObject, IGarbageCollectionWatcher
+	public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
 	{
 		private readonly WeakReference _indicator = new WeakReference(new object());
 		private Timer _timer;
 
 		/// <summary>
-		/// Occurs when the garbage collector has run. Since the GC operation may be concurrent,
-		/// collection may not be complete when this event is fired.
+		/// Gets the cache that is being pruned.
 		/// </summary>
-		public event EventHandler GarbageCollected;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="GarbageCollectionWatcher"/> class.
-		/// </summary>
-		/// <param name="pollIntervalMs">The interval at which to poll the garbage collector.</param>
-		public GarbageCollectionWatcher(int pollIntervalMs)
-		{
-			_timer = new Timer(RaiseEventIfGarbageCollectorHasRun, null, pollIntervalMs, pollIntervalMs);
-		}
+		public ICache Cache { get; private set; }
 
 		/// <summary>
 		/// Releases resources held by the object.
 		/// </summary>
-		public override void Dispose()
+		public override void Dispose(bool disposing)
 		{
-			if (_timer != null)
+			if (disposing && !IsDisposed && _timer != null)
 			{
 				_timer.Change(Timeout.Infinite, Timeout.Infinite);
 				_timer.Dispose();
 				_timer = null;
 			}
 
-			GarbageCollected = null;
-
-			base.Dispose();
+			base.Dispose(disposing);
 		}
 
-		private void RaiseEventIfGarbageCollectorHasRun(object state)
+		/// <summary>
+		/// Registers the specified cache for pruning.
+		/// </summary>
+		/// <param name="cache">The cache that will be pruned.</param>
+		public void Register(ICache cache)
+		{
+			Cache = cache;
+			_timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, Settings.CachePruningIntervalMs, Timeout.Infinite);
+		}
+
+		private void PruneCacheIfGarbageCollectorHasRun(object state)
 		{
 			if (_indicator.IsAlive)
 				return;
 
-			GarbageCollected.Raise(this, EventArgs.Empty);
+			Cache.Prune();
 			_indicator.Target = new object();
+
+			_timer.Change(Settings.CachePruningIntervalMs, Timeout.Infinite);
 		}
 	}
 }

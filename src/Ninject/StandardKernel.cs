@@ -21,7 +21,7 @@ using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
 using Ninject.Infrastructure;
 using Ninject.Injection;
-using Ninject.Injection.Linq;
+using Ninject.Injection.Expressions;
 using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
@@ -72,8 +72,9 @@ namespace Ninject
 			Components.Add<IActivationStrategy, BindingActionStrategy>();
 			Components.Add<IActivationStrategy, DisposableStrategy>();
 
-			Components.Add<IInjectorFactory, InjectorFactory>();
+			Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
 			Components.Add<ICache, Cache>();
+			Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 
 			#if !SILVERLIGHT
 			Components.Add<IModuleLoader, ModuleLoader>();
