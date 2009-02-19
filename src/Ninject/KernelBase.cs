@@ -205,7 +205,19 @@ namespace Ninject
 		/// <param name="parameters">The parameters to pass to the request.</param>
 		public void Inject(object instance, params IParameter[] parameters)
 		{
-			throw new NotImplementedException();
+			Type service = instance.GetType();
+
+			var planner = Components.Get<IPlanner>();
+			var pipeline = Components.Get<IPipeline>();
+
+			var binding = new Binding(service) { ScopeCallback = null };
+			var request = CreateDirectRequest(service, null, parameters, false);
+			var context = CreateContext(request, binding);
+
+			context.Plan = planner.GetPlan(service);
+			context.Instance = instance;
+
+			pipeline.Activate(context);
 		}
 
 		/// <summary>

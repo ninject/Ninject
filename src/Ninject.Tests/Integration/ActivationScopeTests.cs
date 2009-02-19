@@ -47,14 +47,10 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-			bool instanceWasDisposed = false;
-
 			var instance = scope.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			GC.Collect();
 
-			instanceWasDisposed.ShouldBeFalse();
+			instance.IsDisposed.ShouldBeFalse();
 		}
 	}
 
@@ -65,16 +61,10 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-			bool instanceWasDisposed = false;
-
 			var instance = scope.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			scope.Dispose();
 
-			instanceWasDisposed.ShouldBeTrue();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
-
-	public class NotifiesWhenDisposed : DisposableObject { }
 }

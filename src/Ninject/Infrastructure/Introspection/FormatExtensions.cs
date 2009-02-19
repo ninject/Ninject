@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Text;
 using Ninject.Activation;
 using Ninject.Activation.Providers;
+using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
 #endregion
@@ -32,21 +33,18 @@ namespace Ninject.Infrastructure.Introspection
 	{
 		public static string FormatActivationPath(this IRequest request)
 		{
-			var stack = new Stack<IRequest>();
-			IRequest current = request;
-
-			while (current != null)
+			using (var sw = new StringWriter())
 			{
-				stack.Push(current);
-				current = current.Parent;
+				IRequest current = request;
+
+				while (current != null)
+				{
+					sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
+					current = current.Parent;
+				}
+
+				return sw.ToString();
 			}
-
-			var sb = new StringBuilder();
-
-			foreach (var req in stack)
-				sb.AppendFormat("{0,3}) {1}{2}", req.Depth + 1, req.Format(), Environment.NewLine);
-
-			return sb.ToString();
 		}
 
 		public static string Format(this IBinding binding, IContext context)

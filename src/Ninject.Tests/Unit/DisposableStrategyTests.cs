@@ -3,6 +3,7 @@ using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Ninject.Infrastructure.Disposal;
+using Ninject.Tests.Fakes;
 using Xunit;
 
 namespace Ninject.Tests.Unit.DisposableStrategyTests
@@ -41,6 +42,4 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 			strategy.Deactivate(contextMock.Object);
 		}
 	}
-
-	public class NotifiesWhenDisposed : DisposableObject { }
 }

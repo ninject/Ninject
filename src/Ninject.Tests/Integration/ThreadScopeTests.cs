@@ -91,6 +91,4 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
-
-	public class NotifiesWhenDisposed : DisposableObject { }
 }

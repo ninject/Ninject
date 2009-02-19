@@ -53,6 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\ExternalInjectionTests.cs" />
+    <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
     <Compile Include="SpecExtensions.cs" />
     <Compile Include="ExtensionsForWeakReference.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />

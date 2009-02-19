@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Linq;
 #endregion
 
 namespace Ninject.Infrastructure.Language

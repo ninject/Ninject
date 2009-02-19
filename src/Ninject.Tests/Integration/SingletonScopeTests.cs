@@ -48,14 +48,10 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			kernel.Dispose();
 
-			instanceWasDisposed.ShouldBeTrue();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -91,14 +87,10 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<NotifiesWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			kernel.Dispose();
 
-			instanceWasDisposed.ShouldBeTrue();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -134,14 +126,10 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			kernel.Dispose();
 
-			instanceWasDisposed.ShouldBeTrue();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
 
@@ -177,18 +165,12 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 		{
 			kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
 
-			bool instanceWasDisposed = false;
-
 			var instance = kernel.Get<INotifyWhenDisposed>();
-			instance.Disposed += (o, e) => instanceWasDisposed = true;
-
 			kernel.Dispose();
 
-			instanceWasDisposed.ShouldBeTrue();
+			instance.IsDisposed.ShouldBeTrue();
 		}
 	}
-
-	public class NotifiesWhenDisposed : DisposableObject { }
 
 	public class NotifiesWhenDisposedProvider : Provider<NotifiesWhenDisposed>
 	{
