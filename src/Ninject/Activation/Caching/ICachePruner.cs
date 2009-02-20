@@ -27,9 +27,14 @@ namespace Ninject.Activation.Caching
 	public interface ICachePruner : INinjectComponent
 	{
 		/// <summary>
-		/// Registers the specified cache for pruning.
+		/// Starts pruning the specified cache based on the rules of the pruner.
 		/// </summary>
 		/// <param name="cache">The cache that will be pruned.</param>
-		void Register(ICache cache);
+		void Start(ICache cache);
+
+		/// <summary>
+		/// Stops pruning.
+		/// </summary>
+		void Stop();
 	}
 }

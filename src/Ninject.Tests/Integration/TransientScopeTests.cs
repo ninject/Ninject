@@ -37,7 +37,9 @@ namespace Ninject.Tests.Integration.TransientScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeFalse();
 		}
@@ -65,7 +67,9 @@ namespace Ninject.Tests.Integration.TransientScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeFalse();
 		}
@@ -93,7 +97,9 @@ namespace Ninject.Tests.Integration.TransientScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeFalse();
 		}
@@ -121,7 +127,9 @@ namespace Ninject.Tests.Integration.TransientScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeFalse();
 		}

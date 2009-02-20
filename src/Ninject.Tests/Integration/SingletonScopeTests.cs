@@ -38,7 +38,9 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeTrue();
 		}
@@ -77,7 +79,9 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeTrue();
 		}
@@ -116,7 +120,9 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeTrue();
 		}
@@ -155,7 +161,9 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
 			var reference = new WeakReference(instance);
 
 			instance = null;
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeTrue();
 		}

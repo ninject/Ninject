@@ -75,7 +75,6 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			ThreadStart callback = () => instance = kernel.Get<NotifiesWhenDisposed>();
 
 			var thread = new Thread(callback);
-			var threadReference = new WeakReference(thread);
 
 			thread.Start();
 			thread.Join();
@@ -83,8 +82,8 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 			thread = null;
 
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
-			threadReference.WaitUntilGarbageCollected();
 			cache.Prune();
 
 			instance.ShouldNotBeNull();

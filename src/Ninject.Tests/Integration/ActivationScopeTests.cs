@@ -48,7 +48,9 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
 			var instance = scope.Get<NotifiesWhenDisposed>();
+
 			GC.Collect();
+			GC.WaitForPendingFinalizers();
 
 			instance.IsDisposed.ShouldBeFalse();
 		}

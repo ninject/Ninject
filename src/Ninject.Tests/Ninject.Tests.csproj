@@ -56,7 +56,6 @@
     <Compile Include="Integration\ExternalInjectionTests.cs" />
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
     <Compile Include="SpecExtensions.cs" />
-    <Compile Include="ExtensionsForWeakReference.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />
     <Compile Include="Integration\CircularDependenciesTests.cs" />
     <Compile Include="Integration\TransientScopeTests.cs" />

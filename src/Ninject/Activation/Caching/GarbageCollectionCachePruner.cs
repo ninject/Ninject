@@ -42,23 +42,34 @@ namespace Ninject.Activation.Caching
 		public override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed && _timer != null)
-			{
-				_timer.Change(Timeout.Infinite, Timeout.Infinite);
-				_timer.Dispose();
-				_timer = null;
-			}
+				Stop();
+				
 
 			base.Dispose(disposing);
 		}
 
 		/// <summary>
-		/// Registers the specified cache for pruning.
+		/// Starts pruning the specified cache based on the rules of the pruner.
 		/// </summary>
 		/// <param name="cache">The cache that will be pruned.</param>
-		public void Register(ICache cache)
+		public void Start(ICache cache)
 		{
+			if (_timer != null)
+				Stop();
+
 			Cache = cache;
 			_timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, Settings.CachePruningIntervalMs, Timeout.Infinite);
+		}
+
+		/// <summary>
+		/// Stops pruning.
+		/// </summary>
+		public void Stop()
+		{
+			_timer.Change(Timeout.Infinite, Timeout.Infinite);
+			_timer.Dispose();
+			_timer = null;
+			Cache = null;
 		}
 
 		private void PruneCacheIfGarbageCollectorHasRun(object state)

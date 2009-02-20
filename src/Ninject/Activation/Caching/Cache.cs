@@ -47,7 +47,7 @@ namespace Ninject.Activation.Caching
 		{
 			_entries = new Multimap<IBinding, CacheEntry>();
 			Pipeline = pipeline;
-			cachePruner.Register(this);
+			cachePruner.Start(this);
 		}
 
 		/// <summary>
