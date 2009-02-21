@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ninject.Tests.Fakes;
 using Xunit;
@@ -150,6 +151,24 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 			weapons[0].ShouldBeInstanceOf<Sword>();
 			weapons[1].ShouldBeInstanceOf<Shuriken>();
 		}
+
+		[Fact]
+		public void DoesNotActivateItemsUntilTheEnumeratorRunsOverThem()
+		{
+			kernel.Bind<IInitializable>().To<InitializableA>();
+			kernel.Bind<IInitializable>().To<InitializableB>();
+
+			IEnumerable<IInitializable> instances = kernel.GetAll<IInitializable>();
+			IEnumerator<IInitializable> enumerator = instances.GetEnumerator();
+
+			InitializableA.Count.ShouldBe(0);
+			enumerator.MoveNext();
+			InitializableA.Count.ShouldBe(1);
+			InitializableB.Count.ShouldBe(0);
+			enumerator.MoveNext();
+			InitializableA.Count.ShouldBe(1);
+			InitializableB.Count.ShouldBe(1);
+		}
 	}
 
 	public class WhenGetAllIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
@@ -196,8 +215,24 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 	}
 
-	public class WhenGetAllIsCalledWithName : StandardKernelContext
+	public class InitializableA : IInitializable
 	{
+		public static int Count = 0;
+
+		public void Initialize()
+		{
+			Count++;
+		}
+	}
+
+	public class InitializableB : IInitializable
+	{
+		public static int Count = 0;
+
+		public void Initialize()
+		{
+			Count++;
+		}
 	}
 
 	public interface IGeneric<T> { }
