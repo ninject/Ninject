@@ -136,6 +136,47 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 	}
 
+	public class WhenTryGetIsCalledForInterfaceBoundService : StandardKernelContext
+	{
+		public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
+		{
+			kernel.Bind<IWeapon>().To<Sword>();
+
+			var weapon = kernel.TryGet<IWeapon>();
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
+		}
+
+		public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
+		{
+			kernel.Bind<IWeapon>().To<Sword>();
+			kernel.Bind<IWeapon>().To<Shuriken>();
+
+			var weapon = kernel.TryGet<IWeapon>();
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
+		}
+	}
+
+	public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
+	{
+		public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
+		{
+			var weapon = kernel.TryGet<Sword>();
+
+			weapon.ShouldNotBeNull();
+			weapon.ShouldBeInstanceOf<Sword>();
+		}
+
+		public void ReturnsNullIfTypeIsNotSelfBindable()
+		{
+			var weapon = kernel.TryGet<IWeapon>();
+			weapon.ShouldBeNull();
+		}
+	}
+
 	public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
 	{
 		[Fact]
@@ -185,6 +226,26 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 			services.Length.ShouldBe(2);
 			services[0].ShouldBeInstanceOf<GenericService<int>>();
 			services[1].ShouldBeInstanceOf<GenericService2<int>>();
+		}
+	}
+
+	public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
+	{
+		public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
+		{
+			var weapons = kernel.GetAll<Sword>().ToArray();
+
+			weapons.ShouldNotBeNull();
+			weapons.Length.ShouldBe(1);
+			weapons[0].ShouldBeInstanceOf<Sword>();
+		}
+
+		public void ReturnsEmptyEnumerableIfTypeIsNotSelfBindable()
+		{
+			var weapons = kernel.GetAll<IWeapon>().ToArray();
+
+			weapons.ShouldNotBeNull();
+			weapons.Length.ShouldBe(0);
 		}
 	}
 

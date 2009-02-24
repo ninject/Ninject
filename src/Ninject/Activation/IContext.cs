@@ -80,5 +80,11 @@ namespace Ninject.Activation
 		/// </summary>
 		/// <returns>The object that acts as the scope.</returns>
 		object GetScope();
+
+		/// <summary>
+		/// Resolves this instance for this context.
+		/// </summary>
+		/// <returns>The resolved instance.</returns>
+		object Resolve();
 	}
 }

@@ -69,6 +69,44 @@ namespace Ninject
 		}
 
 		/// <summary>
+		/// Tries to get an instance of the specified service.
+		/// </summary>
+		/// <typeparam name="T">The service to resolve.</typeparam>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static T TryGet<T>(this IResolutionRoot root, params IParameter[] parameters)
+		{
+			return (T)root.TryGet(typeof(T), parameters);
+		}
+
+		/// <summary>
+		/// Tries to get an instance of the specified service by using the first binding with the specified name.
+		/// </summary>
+		/// <typeparam name="T">The service to resolve.</typeparam>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="name">The name of the binding.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static T TryGet<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
+		{
+			return (T)root.TryGet(typeof(T), m => m.Name == name, parameters);
+		}
+
+		/// <summary>
+		/// Tries to get an instance of the specified service by using the first binding that matches the specified constraint.
+		/// </summary>
+		/// <typeparam name="T">The service to resolve.</typeparam>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="constraint">The constraint to apply to the binding.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static T TryGet<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+		{
+			return (T)root.TryGet(typeof(T), constraint, parameters);
+		}
+
+		/// <summary>
 		/// Gets all available instances of the specified service.
 		/// </summary>
 		/// <typeparam name="T">The service to resolve.</typeparam>
@@ -142,6 +180,44 @@ namespace Ninject
 		public static object Get(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
 		{
 			return root.GetAll(service, constraint, parameters).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Tries to get an instance of the specified service.
+		/// </summary>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="service">The service to resolve.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static object TryGet(this IResolutionRoot root, Type service, params IParameter[] parameters)
+		{
+			return root.Resolve(service, null, parameters, true).Select(hook => hook.Resolve()).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Tries to get an instance of the specified service by using the first binding with the specified name.
+		/// </summary>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="service">The service to resolve.</param>
+		/// <param name="name">The name of the binding.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static object TryGet(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
+		{
+			return root.Resolve(service, m => m.Name == name, parameters, true).Select(hook => hook.Resolve()).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Tries to get an instance of the specified service by using the first binding that matches the specified constraint.
+		/// </summary>
+		/// <param name="root">The resolution root.</param>
+		/// <param name="service">The service to resolve.</param>
+		/// <param name="constraint">The constraint to apply to the binding.</param>
+		/// <param name="parameters">The parameters to pass to the request.</param>
+		/// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+		public static object TryGet(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+		{
+			return root.Resolve(service, constraint, parameters, true).Select(hook => hook.Resolve()).FirstOrDefault();
 		}
 
 		/// <summary>

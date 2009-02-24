@@ -54,20 +54,37 @@ namespace Ninject.Infrastructure.Introspection
 				if (binding.Condition != null)
 					sw.Write("conditional ");
 
-				if (binding.Metadata.IsImplicit)
+				if (binding.IsImplicit)
 					sw.Write("implicit ");
 
 				IProvider provider = binding.GetProvider(context);
 
-				if (binding.Service == provider.Type)
-					sw.Write("self-binding of {0}", binding.Service.Format());
-				else
-					sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
+				switch (binding.Target)
+				{
+					case BindingTarget.Self:
+						sw.Write("self-binding of {0}", binding.Service.Format());
+						break;
 
-				Type providerType = provider.GetType();
+					case BindingTarget.Type:
+						sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
+						break;
 
-				if (providerType != typeof(StandardProvider))
-					sw.Write(" (via {0})", providerType.Format());
+					case BindingTarget.Provider:
+						sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
+							provider.Type.Format(), provider.GetType().Format());
+						break;
+
+					case BindingTarget.Method:
+						sw.Write("binding from {0} to method", binding.Service.Format());
+						break;
+
+					case BindingTarget.Constant:
+						sw.Write("binding from {0} to constant value", binding.Service.Format());
+						break;
+
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
 
 				return sw.ToString();
 			}

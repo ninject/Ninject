@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
@@ -18,34 +18,37 @@
 using System;
 #endregion
 
-namespace Ninject.Activation.Hooks
+namespace Ninject.Activation
 {
 	/// <summary>
-	/// A hook that always returns a constant value.
+	/// A placeholder for an instance of a service.
 	/// </summary>
-	public class ConstantHook : IHook
+	public class Hook
 	{
-		/// <summary>
-		/// Gets the value that the hook will return.
-		/// </summary>
-		public object Value { get; private set; }
+		private readonly Func<object> _callback;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConstantHook"/> class.
+		/// Initializes a new instance of the <see cref="Hook"/> class.
 		/// </summary>
-		/// <param name="value">The value that the hook should return.</param>
-		public ConstantHook(object value)
+		/// <param name="callback">The callback that will be triggered to resolve the hook's instance.</param>
+		public Hook(Func<object> callback)
 		{
-			Value = value;
+			_callback = callback;
 		}
 
 		/// <summary>
-		/// Resolves the instance associated with this hook.
+		/// Initializes a new instance of the <see cref="Hook"/> class.
+		/// </summary>
+		/// <param name="instance">The instance value that will be returned.</param>
+		public Hook(object instance) : this(() => instance) { }
+
+		/// <summary>
+		/// Resolves the instance for the hook.
 		/// </summary>
 		/// <returns>The resolved instance.</returns>
 		public object Resolve()
 		{
-			return Value;
+			return _callback();
 		}
 	}
 }

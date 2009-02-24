@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Activation;
-using Ninject.Activation.Hooks;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 #endregion
@@ -45,13 +44,13 @@ namespace Ninject.Syntax
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional);
+		IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional);
 
 		/// <summary>
 		/// Resolves the specified request.
 		/// </summary>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<IHook> Resolve(IRequest request);
+		IEnumerable<Hook> Resolve(IRequest request);
 	}
 }

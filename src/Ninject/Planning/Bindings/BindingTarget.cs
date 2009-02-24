@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
 // 
@@ -16,19 +16,41 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
+using Ninject.Activation;
+using Ninject.Parameters;
 #endregion
 
-namespace Ninject.Activation.Hooks
+namespace Ninject.Planning.Bindings
 {
 	/// <summary>
-	/// A hook to resolve an instance via Ninject.
+	/// Describes the target of a binding.
 	/// </summary>
-	public interface IHook
+	public enum BindingTarget
 	{
 		/// <summary>
-		/// Resolves the instance associated with this hook.
+		/// Indicates that the binding is from a type to itself.
 		/// </summary>
-		/// <returns>The resolved instance.</returns>
-		object Resolve();
+		Self,
+
+		/// <summary>
+		/// Indicates that the binding is from one type to another.
+		/// </summary>
+		Type,
+
+		/// <summary>
+		/// Indicates that the binding is from a type to a provider.
+		/// </summary>
+		Provider,
+
+		/// <summary>
+		/// Indicates that the binding is from a type to a callback method.
+		/// </summary>
+		Method,
+
+		/// <summary>
+		/// Indicates that the binding is from a type to a constant value.
+		/// </summary>
+		Constant
 	}
 }

@@ -17,7 +17,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Activation.Hooks;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
@@ -64,7 +63,7 @@ namespace Ninject.Activation.Scope
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		public IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
 			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
 		}
@@ -74,7 +73,7 @@ namespace Ninject.Activation.Scope
 		/// </summary>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<IHook> Resolve(IRequest request)
+		public IEnumerable<Hook> Resolve(IRequest request)
 		{
 			return Parent.Resolve(request);
 		}

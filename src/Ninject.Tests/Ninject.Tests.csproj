@@ -62,7 +62,7 @@
     <Compile Include="Integration\RequestScopeTests.cs" />
     <Compile Include="Integration\ExternalInjectionTests.cs" />
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
-    <Compile Include="SpecExtensions.cs" />
+    <Compile Include="ShouldExtensions.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />
     <Compile Include="Integration\CircularDependenciesTests.cs" />
     <Compile Include="Integration\TransientScopeTests.cs" />

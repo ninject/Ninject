@@ -39,6 +39,16 @@ namespace Ninject.Planning.Bindings
 		IBindingMetadata Metadata { get; }
 
 		/// <summary>
+		/// Gets or sets the type of target for the binding.
+		/// </summary>
+		BindingTarget Target { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the binding was implicitly registered.
+		/// </summary>
+		bool IsImplicit { get; set; }
+
+		/// <summary>
 		/// Gets or sets the condition defined for the binding.
 		/// </summary>
 		Func<IRequest, bool> Condition { get; set; }

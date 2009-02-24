@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Activation.Hooks;
 using Ninject.Activation.Providers;
 using Ninject.Activation.Scope;
 using Ninject.Components;
@@ -246,7 +245,7 @@ namespace Ninject
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<IHook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		public virtual IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
 			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
 		}
@@ -256,15 +255,15 @@ namespace Ninject
 		/// </summary>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<IHook> Resolve(IRequest request)
+		public virtual IEnumerable<Hook> Resolve(IRequest request)
 		{
 			if (request.Service == typeof(IKernel))
-				return new[] { new ConstantHook(this) };
+				return new[] { new Hook(this) };
 
 			if (!CanResolve(request) && !TryRegisterImplicitSelfBinding(request.Service))
 			{
 				if (request.IsOptional)
-					return Enumerable.Empty<IHook>();
+					return Enumerable.Empty<Hook>();
 				else
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
@@ -317,8 +316,11 @@ namespace Ninject
 			if (service.IsInterface || service.IsAbstract || service.ContainsGenericParameters)
 				return false;
 
-			var binding = new Binding(service) { ProviderCallback = StandardProvider.GetCreationCallback(service) };
-			binding.Metadata.IsImplicit = true;
+			var binding = new Binding(service)
+			{
+				ProviderCallback = StandardProvider.GetCreationCallback(service),
+				IsImplicit = true
+			};
 
 			AddBinding(binding);
 
@@ -359,7 +361,7 @@ namespace Ninject
 		/// <returns>The created context.</returns>
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
-			return new Context(this, request, binding);
+			return new Context(this, request, binding, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
 		}
 
 		/// <summary>
@@ -367,9 +369,9 @@ namespace Ninject
 		/// </summary>
 		/// <param name="context">The context.</param>
 		/// <returns>The created hook.</returns>
-		protected virtual IHook CreateHook(IContext context)
+		protected virtual Hook CreateHook(IContext context)
 		{
-			return new ContextHook(context, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
+			return new Hook(() => context.Resolve());
 		}
 
 		object IServiceProvider.GetService(Type serviceType)

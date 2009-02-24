@@ -55,6 +55,8 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToSelf()
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(Binding.Service);
+			Binding.Target = BindingTarget.Self;
+
 			return this;
 		}
 
@@ -66,6 +68,8 @@ namespace Ninject.Planning.Bindings
 			where TImplementation : T
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
+			Binding.Target = BindingTarget.Type;
+
 			return this;
 		}
 
@@ -76,6 +80,8 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> To(Type implementation)
 		{
 			Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
+			Binding.Target = BindingTarget.Type;
+
 			return this;
 		}
 
@@ -88,6 +94,8 @@ namespace Ninject.Planning.Bindings
 			where TProvider : IProvider
 		{
 			Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
+			Binding.Target = BindingTarget.Provider;
+
 			return this;
 		}
 
@@ -98,6 +106,8 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(IProvider provider)
 		{
 			Binding.ProviderCallback = ctx => provider;
+			Binding.Target = BindingTarget.Provider;
+
 			return this;
 		}
 
@@ -108,6 +118,8 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToMethod(Func<IContext, T> method)
 		{
 			Binding.ProviderCallback = ctx => new CallbackProvider<T>(method);
+			Binding.Target = BindingTarget.Method;
+
 			return this;
 		}
 
@@ -118,6 +130,8 @@ namespace Ninject.Planning.Bindings
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value)
 		{
 			Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
+			Binding.Target = BindingTarget.Constant;
+
 			return this;
 		}
 

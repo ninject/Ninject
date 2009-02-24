@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Ninject.Tests
 {
-	public static class SpecExtensions
+	public static class ShouldExtensions
 	{
 		public static void ShouldContain(this string self, string str)
 		{

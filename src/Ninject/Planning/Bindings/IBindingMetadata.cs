@@ -32,11 +32,6 @@ namespace Ninject.Planning.Bindings
 		string Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the binding was implicitly registered.
-		/// </summary>
-		bool IsImplicit { get; set; }
-
-		/// <summary>
 		/// Determines whether a piece of metadata with the specified key has been defined.
 		/// </summary>
 		/// <param name="key">The metadata key.</param>

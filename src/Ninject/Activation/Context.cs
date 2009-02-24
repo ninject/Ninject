@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -71,17 +73,39 @@ namespace Ninject.Activation
 		public bool HasInferredGenericArguments { get; private set; }
 
 		/// <summary>
+		/// Gets or sets the cache component.
+		/// </summary>
+		public ICache Cache { get; private set; }
+
+		/// <summary>
+		/// Gets or sets the planner component.
+		/// </summary>
+		public IPlanner Planner { get; private set; }
+
+		/// <summary>
+		/// Gets or sets the pipeline component.
+		/// </summary>
+		public IPipeline Pipeline { get; private set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Context"/> class.
 		/// </summary>
-		/// <param name="kernel">The kernel.</param>
-		/// <param name="request">The request.</param>
-		/// <param name="binding">The binding.</param>
-		public Context(IKernel kernel, IRequest request, IBinding binding)
+		/// <param name="kernel">The kernel managing the resolution.</param>
+		/// <param name="request">The context's request.</param>
+		/// <param name="binding">The context's binding.</param>
+		/// <param name="cache">The cache component.</param>
+		/// <param name="planner">The planner component.</param>
+		/// <param name="pipeline">The pipeline component.</param>
+		public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
 		{
 			Kernel = kernel;
 			Request = request;
 			Binding = binding;
 			Parameters = request.Parameters.Union(binding.Parameters).ToList();
+
+			Cache = cache;
+			Planner = planner;
+			Pipeline = pipeline;
 
 			if (binding.Service.IsGenericTypeDefinition)
 			{
@@ -106,6 +130,40 @@ namespace Ninject.Activation
 		public IProvider GetProvider()
 		{
 			return Binding.GetProvider(this);
+		}
+
+		/// <summary>
+		/// Resolves the instance associated with this hook.
+		/// </summary>
+		/// <returns>The resolved instance.</returns>
+		public object Resolve()
+		{
+			lock (Binding)
+			{
+				if (Request.ActiveBindings.Contains(Binding))
+					throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+
+				Request.ActiveBindings.Push(Binding);
+
+				Instance = Cache.TryGet(this);
+
+				if (Instance != null)
+					return Instance;
+
+				Instance = GetProvider().Create(this);
+
+				if (GetScope() != null)
+					Cache.Remember(this);
+
+				Request.ActiveBindings.Pop();
+
+				if (Plan == null)
+					Plan = Planner.GetPlan(Instance.GetType());
+
+				Pipeline.Activate(this);
+
+				return Instance;
+			}
 		}
 	}
 }
