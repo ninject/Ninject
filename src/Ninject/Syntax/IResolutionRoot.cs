@@ -39,10 +39,9 @@ namespace Ninject.Syntax
 		/// <summary>
 		/// Resolves activation hooks for the specified request.
 		/// </summary>
-		/// <typeparam name="T">The type of object that will be returned by the hook (not necessarily the service).</typeparam>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<Hook<T>> Resolve<T>(IRequest request);
+		IEnumerable<Hook> Resolve(IRequest request);
 
 		/// <summary>
 		/// Creates a request for the specified service.

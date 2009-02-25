@@ -23,12 +23,12 @@ namespace Ninject.Activation
 	/// <summary>
 	/// A placeholder for an instance of a service.
 	/// </summary>
-	public class Hook<T>
+	public class Hook
 	{
 		private readonly Func<object> _callback;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Hook&lt;T&gt;"/> class.
+		/// Initializes a new instance of the <see cref="Hook"/> class.
 		/// </summary>
 		/// <param name="callback">The callback that will be triggered to resolve the hook's instance.</param>
 		public Hook(Func<object> callback)
@@ -37,7 +37,7 @@ namespace Ninject.Activation
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Hook&lt;T&gt;"/> class.
+		/// Initializes a new instance of the <see cref="Hook"/> class.
 		/// </summary>
 		/// <param name="instance">The instance value that will be returned.</param>
 		public Hook(object instance) : this(() => instance) { }
@@ -46,9 +46,9 @@ namespace Ninject.Activation
 		/// Resolves the instance for the hook.
 		/// </summary>
 		/// <returns>The resolved instance.</returns>
-		public T Resolve()
+		public object Resolve()
 		{
-			return (T)_callback();
+			return _callback();
 		}
 	}
 }

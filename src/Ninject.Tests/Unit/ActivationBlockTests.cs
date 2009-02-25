@@ -38,8 +38,8 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
 		public void DelegatesCallToParent()
 		{
 			IRequest request = requestMock.Object;
-			block.Resolve<object>(request);
-			parentMock.Verify(x => x.Resolve<object>(request));
+			block.Resolve(request);
+			parentMock.Verify(x => x.Resolve(request));
 		}
 	}
 }

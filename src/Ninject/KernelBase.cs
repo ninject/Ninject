@@ -240,18 +240,17 @@ namespace Ninject
 		/// <summary>
 		/// Resolves activation hooks for the specified request.
 		/// </summary>
-		/// <typeparam name="T">The type of object that will be returned by the hook (not necessarily the service).</typeparam>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<Hook<T>> Resolve<T>(IRequest request)
+		public virtual IEnumerable<Hook> Resolve(IRequest request)
 		{
 			if (request.Service == typeof(IKernel))
-				return new[] { new Hook<T>(this) };
+				return new[] { new Hook(this) };
 
 			if (!CanResolve(request) && !TryRegisterImplicitSelfBinding(request.Service))
 			{
 				if (request.IsOptional)
-					return Enumerable.Empty<Hook<T>>();
+					return Enumerable.Empty<Hook>();
 				else
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
@@ -259,7 +258,7 @@ namespace Ninject
 			return GetBindings(request)
 				.Where(binding => binding.Matches(request) && request.Matches(binding))
 				.Select(binding => CreateContext(request, binding))
-				.Select(context => CreateHook<T>(context));
+				.Select(context => CreateHook(context));
 		}
 
 		/// <summary>
@@ -358,9 +357,9 @@ namespace Ninject
 		/// </summary>
 		/// <param name="context">The context.</param>
 		/// <returns>The created hook.</returns>
-		protected virtual Hook<T> CreateHook<T>(IContext context)
+		protected virtual Hook CreateHook(IContext context)
 		{
-			return new Hook<T>(context.Resolve);
+			return new Hook(context.Resolve);
 		}
 	}
 }
