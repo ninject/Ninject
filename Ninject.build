@@ -182,6 +182,7 @@
 		<copy todir="${current.path.test}">
 			<fileset basedir="${path.tools.xunit}">
 				<include name="xunit.dll"/>
+				<include name="xunit.should.dll"/>
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}">
@@ -201,6 +202,7 @@
 				<include name="System.Web.dll"/>
 				<include name="Moq.dll"/>
 				<include name="xunit.dll"/>
+				<include name="xunit.should.dll"/>
 				<include name="Ninject.dll"/>
 			</references>
 			<nowarn>
@@ -223,6 +225,7 @@
 		</zip>
 		<zip zipfile="${path.dist}\Ninject-${build.version}-source.zip" ziplevel="9">
 			<fileset basedir="${path.base}">
+				<include name="lib/*.*"/>
 				<include name="**/*.cs"/>
 				<include name="**/*.csproj"/>
 				<include name="**/*.sln"/>

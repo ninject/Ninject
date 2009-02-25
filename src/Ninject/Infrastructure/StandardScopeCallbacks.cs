@@ -16,7 +16,9 @@
 #endregion
 #region Using Directives
 using System;
+#if !NO_WEB
 using System.Web;
+#endif
 using Ninject.Activation;
 #endregion
 
@@ -27,6 +29,8 @@ namespace Ninject.Infrastructure
 		public static readonly Func<IContext, object> Transient = ctx => null;
 		public static readonly Func<IContext, object> Singleton = ctx => ctx.Kernel;
 		public static readonly Func<IContext, object> Thread = ctx => System.Threading.Thread.CurrentThread;
+		#if !NO_WEB
 		public static readonly Func<IContext, object> Request = ctx => HttpContext.Current;
+		#endif
 	}
 }
