@@ -20,11 +20,11 @@ using Ninject.Infrastructure.Disposal;
 using Ninject.Syntax;
 #endregion
 
-namespace Ninject.Activation.Scope
+namespace Ninject.Activation.Blocks
 {
 	/// <summary>
-	/// A scope used for deterministic disposal of activated instances. When the scope is
+	/// A block used for deterministic disposal of activated instances. When the block is
 	/// disposed, all instances activated via it will be deactivated.
 	/// </summary>
-	public interface IActivationScope : IResolutionRoot, INotifyWhenDisposed { }
+	public interface IActivationBlock : IResolutionRoot, INotifyWhenDisposed { }
 }

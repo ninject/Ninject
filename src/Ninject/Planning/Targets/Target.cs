@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
-using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 #endregion
@@ -129,7 +128,7 @@ namespace Ninject.Planning.Targets
 			if (Type.IsArray)
 			{
 				Type service = Type.GetElementType();
-				return LinqReflection.ToArraySlow(ResolveInstances(service, parent), service);
+				return ResolveInstances(service, parent).ToArraySlow(service);
 			}
 
 			if (Type.IsGenericType)
@@ -138,10 +137,10 @@ namespace Ninject.Planning.Targets
 				Type service = Type.GetGenericArguments()[0];
 
 				if (typeof(ICollection<>).IsAssignableFrom(gtd))
-					return LinqReflection.ToListSlow(ResolveInstances(service, parent), service);
+					return ResolveInstances(service, parent).ToListSlow(service);
 
 				if (typeof(IEnumerable<>).IsAssignableFrom(gtd))
-					return LinqReflection.CastSlow(ResolveInstances(service, parent), service);
+					return ResolveInstances(service, parent).CastSlow(service);
 			}
 
 			return ResolveInstances(Type, parent).FirstOrDefault();
@@ -150,7 +149,7 @@ namespace Ninject.Planning.Targets
 		private IEnumerable<object> ResolveInstances(Type service, IContext parent)
 		{
 			var request = parent.Request.CreateChild(service, this);
-			return parent.Kernel.Resolve(request).Select(hook => hook.Resolve());
+			return parent.Kernel.Resolve<object>(request).Select(hook => hook.Resolve());
 		}
 
 		private Func<IBindingMetadata, bool> ReadConstraintFromAttributes()

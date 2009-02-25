@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Activation;
+using Ninject.Activation.Blocks;
 using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure.Disposal;
@@ -88,9 +89,9 @@ namespace Ninject
 		IEnumerable<IBinding> GetBindings(IRequest request);
 
 		/// <summary>
-		/// Begins a new activation scope, which can be used to deterministically dispose resolved instances.
+		/// Begins a new activation block, which can be used to deterministically dispose resolved instances.
 		/// </summary>
-		/// <returns>The new activation scope.</returns>
-		IResolutionRoot BeginScope();
+		/// <returns>The new activation block.</returns>
+		IActivationBlock BeginBlock();
 	}
 }

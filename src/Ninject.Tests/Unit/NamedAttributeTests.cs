@@ -2,6 +2,7 @@
 using Moq;
 using Ninject.Planning.Bindings;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.NamedAttributeTests
 {

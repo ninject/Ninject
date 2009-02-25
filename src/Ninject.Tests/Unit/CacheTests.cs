@@ -6,6 +6,7 @@ using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.CacheTests
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.SpecialResolutionTests
 {

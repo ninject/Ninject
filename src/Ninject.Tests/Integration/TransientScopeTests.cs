@@ -2,6 +2,7 @@
 using Ninject.Activation;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.TransientScopeTests
 {

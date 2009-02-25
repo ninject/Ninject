@@ -59,6 +59,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Activation\Hook.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
     <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs">
       <SubType>Code</SubType>
@@ -69,7 +70,6 @@
     <Compile Include="Activation\Context.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Hook.cs" />
     <Compile Include="Activation\Request.cs" />
     <Compile Include="Activation\IContext.cs">
       <SubType>Code</SubType>
@@ -106,6 +106,7 @@
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
@@ -124,11 +125,11 @@
     <Compile Include="Components\NinjectComponent.cs" />
     <Compile Include="INinjectSettings.cs" />
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
-    <Compile Include="Activation\Scope\IActivationScope.cs" />
+    <Compile Include="Activation\Blocks\IActivationBlock.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
-    <Compile Include="Activation\Scope\ActivationScope.cs" />
+    <Compile Include="Activation\Blocks\ActivationBlock.cs" />
     <Compile Include="Injection\Expressions\ExpressionMethodInjectorBase.cs" />
     <Compile Include="Injection\Expressions\ExpressionVoidMethodInjector.cs" />
     <Compile Include="NinjectSettings.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Activation\Provider.cs" />
     <Compile Include="Syntax\ResolutionExtensions.cs" />
     <Compile Include="Activation\Providers\ConstantProvider.cs" />
-    <Compile Include="Infrastructure\LinqReflection.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
     <Compile Include="Components\INinjectComponent.cs" />
     <Compile Include="Components\ComponentContainer.cs" />
     <Compile Include="Components\IComponentContainer.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Infrastructure\Language\ExtensionsForICollection.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
-    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
     <Compile Include="Syntax\BindingSyntax.cs" />
     <Compile Include="Planning\Bindings\IBinding.cs" />
     <Compile Include="IKernel.cs" />

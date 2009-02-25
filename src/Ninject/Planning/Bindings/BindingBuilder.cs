@@ -22,6 +22,7 @@ using System.Web;
 #endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Parameters;
@@ -257,7 +258,7 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBindingNamedWithOrOnSyntax<T> InSingletonScope()
 		{
-			Binding.ScopeCallback = ctx => ctx.Kernel;
+			Binding.ScopeCallback = StandardScopeCallbacks.Singleton;
 			return this;
 		}
 
@@ -267,7 +268,7 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBindingNamedWithOrOnSyntax<T> InTransientScope()
 		{
-			Binding.ScopeCallback = null;
+			Binding.ScopeCallback = StandardScopeCallbacks.Transient;
 			return this;
 		}
 
@@ -276,7 +277,7 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBindingNamedWithOrOnSyntax<T> InThreadScope()
 		{
-			Binding.ScopeCallback = ctx => Thread.CurrentThread;
+			Binding.ScopeCallback = StandardScopeCallbacks.Thread;
 			return this;
 		}
 
@@ -287,7 +288,7 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBindingNamedWithOrOnSyntax<T> InRequestScope()
 		{
-			Binding.ScopeCallback = ctx => HttpContext.Current;
+			Binding.ScopeCallback = StandardScopeCallbacks.Request;
 			return this;
 		}
 		#endif

@@ -4,6 +4,7 @@ using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.ConstantProviderTests
 {

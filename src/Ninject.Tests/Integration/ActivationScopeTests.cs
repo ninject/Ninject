@@ -1,53 +1,53 @@
 ﻿using System;
-using Ninject.Activation.Scope;
-using Ninject.Infrastructure.Disposal;
+using Ninject.Activation.Blocks;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
-namespace Ninject.Tests.Integration.ActivationScopeTests
+namespace Ninject.Tests.Integration.ActivationBlockTests
 {
-	public class ActivationScopeContext
+	public class ActivationBlockContext
 	{
 		protected readonly StandardKernel kernel;
-		protected readonly ActivationScope scope;
+		protected readonly ActivationBlock block;
 
-		public ActivationScopeContext()
+		public ActivationBlockContext()
 		{
 			kernel = new StandardKernel();
-			scope = new ActivationScope(kernel);
+			block = new ActivationBlock(kernel);
 		}
 	}
 
-	public class WhenScopeIsCreated : ActivationScopeContext
+	public class WhenBlockIsCreated : ActivationBlockContext
 	{
 		[Fact]
-		public void FirstActivatedInstanceIsReusedWithinScope()
+		public void FirstActivatedInstanceIsReusedWithinBlock()
 		{
 			kernel.Bind<IWeapon>().To<Sword>();
 
-			var weapon1 = scope.Get<IWeapon>();
-			var weapon2 = scope.Get<IWeapon>();
+			var weapon1 = block.Get<IWeapon>();
+			var weapon2 = block.Get<IWeapon>();
 
 			weapon1.ShouldBeSameAs(weapon2);
 		}
 
 		[Fact]
-		public void ScopeDoesNotInterfereWithExternalResolution()
+		public void BlockDoesNotInterfereWithExternalResolution()
 		{
 			kernel.Bind<IWeapon>().To<Sword>();
 
-			var weapon1 = scope.Get<IWeapon>();
+			var weapon1 = block.Get<IWeapon>();
 			var weapon2 = kernel.Get<IWeapon>();
 
 			weapon1.ShouldNotBeSameAs(weapon2);
 		}
 
 		[Fact]
-		public void InstancesAreNotGarbageCollectedAsLongAsScopeRemainsAlive()
+		public void InstancesAreNotGarbageCollectedAsLongAsBlockRemainsAlive()
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-			var instance = scope.Get<NotifiesWhenDisposed>();
+			var instance = block.Get<NotifiesWhenDisposed>();
 
 			GC.Collect();
 			GC.WaitForPendingFinalizers();
@@ -56,15 +56,15 @@ namespace Ninject.Tests.Integration.ActivationScopeTests
 		}
 	}
 
-	public class WhenScopeIsDisposed : ActivationScopeContext
+	public class WhenBlockIsDisposed : ActivationBlockContext
 	{
 		[Fact]
-		public void InstancesActivatedWithinScopeAreDeactivated()
+		public void InstancesActivatedWithinBlockAreDeactivated()
 		{
 			kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-			var instance = scope.Get<NotifiesWhenDisposed>();
-			scope.Dispose();
+			var instance = block.Get<NotifiesWhenDisposed>();
+			block.Dispose();
 
 			instance.IsDisposed.ShouldBeTrue();
 		}

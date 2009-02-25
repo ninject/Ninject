@@ -27,7 +27,7 @@ namespace Ninject.Syntax
 	/// <summary>
 	/// Provides a path to resolve instances.
 	/// </summary>
-	public interface IResolutionRoot : IServiceProvider
+	public interface IResolutionRoot
 	{
 		/// <summary>
 		/// Determines whether the specified request can be resolved.
@@ -37,20 +37,21 @@ namespace Ninject.Syntax
 		bool CanResolve(IRequest request);
 
 		/// <summary>
-		/// Resolves the specified request.
+		/// Resolves activation hooks for the specified request.
 		/// </summary>
-		/// <param name="service">The service to resolve.</param>
+		/// <typeparam name="T">The type of object that will be returned by the hook (not necessarily the service).</typeparam>
+		/// <param name="request">The request to resolve.</param>
+		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
+		IEnumerable<Hook<T>> Resolve<T>(IRequest request);
+
+		/// <summary>
+		/// Creates a request for the specified service.
+		/// </summary>
+		/// <param name="service">The service that is being requested.</param>
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional);
-
-		/// <summary>
-		/// Resolves the specified request.
-		/// </summary>
-		/// <param name="request">The request to resolve.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<Hook> Resolve(IRequest request);
+		/// <returns>The created request.</returns>
+		IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional);
 	}
 }

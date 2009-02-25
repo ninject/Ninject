@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.ThreadScopeTests
 {

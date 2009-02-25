@@ -5,6 +5,7 @@ using Moq;
 using Ninject.Components;
 using Ninject.Infrastructure.Disposal;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.ComponentContainerTests
 {

@@ -16,30 +16,18 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace Ninject.Infrastructure
+namespace Ninject.Infrastructure.Language
 {
-	internal static class LinqReflection
+	internal static class ExtensionsForIEnumerableOfT
 	{
-		public static object CastSlow(IEnumerable series, Type elementType)
+		public static void Map<T>(this IEnumerable<T> series, Action<T> action)
 		{
-			var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(elementType);
-			return method.Invoke(null, new[] { series });
-		}
-
-		public static Array ToArraySlow(IEnumerable series, Type elementType)
-		{
-			var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(elementType);
-			return method.Invoke(null, new[] { series }) as Array;
-		}
-
-		public static IList ToListSlow(IEnumerable series, Type elementType)
-		{
-			var method = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(elementType);
-			return method.Invoke(null, new[] { series }) as IList;
+			foreach (T item in series)
+				action(item);
 		}
 	}
 }

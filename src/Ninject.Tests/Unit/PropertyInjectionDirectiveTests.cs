@@ -1,6 +1,7 @@
 ﻿using System;
 using Ninject.Planning.Directives;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 {

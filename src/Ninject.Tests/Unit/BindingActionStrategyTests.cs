@@ -4,6 +4,7 @@ using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Ninject.Planning.Bindings;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.BindingActionStrategyTests
 {

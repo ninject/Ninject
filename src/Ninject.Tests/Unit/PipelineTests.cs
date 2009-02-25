@@ -5,6 +5,7 @@ using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.PipelineTests
 {

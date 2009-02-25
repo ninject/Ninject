@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
+using Ninject.Activation.Blocks;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
-using Ninject.Activation.Scope;
 using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure;
@@ -211,8 +211,8 @@ namespace Ninject
 			var planner = Components.Get<IPlanner>();
 			var pipeline = Components.Get<IPipeline>();
 
-			var binding = new Binding(service) { ScopeCallback = null };
-			var request = CreateDirectRequest(service, null, parameters, false);
+			var binding = new Binding(service) { ScopeCallback = StandardScopeCallbacks.Transient };
+			var request = CreateRequest(service, null, parameters, false);
 			var context = CreateContext(request, binding);
 
 			context.Plan = planner.GetPlan(service);
@@ -238,39 +238,41 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Resolves the specified request.
+		/// Resolves activation hooks for the specified request.
 		/// </summary>
-		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
-		/// <param name="parameters">The parameters to pass to the resolution.</param>
-		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
-		{
-			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
-		}
-
-		/// <summary>
-		/// Resolves the specified request.
-		/// </summary>
+		/// <typeparam name="T">The type of object that will be returned by the hook (not necessarily the service).</typeparam>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<Hook> Resolve(IRequest request)
+		public virtual IEnumerable<Hook<T>> Resolve<T>(IRequest request)
 		{
 			if (request.Service == typeof(IKernel))
-				return new[] { new Hook(this) };
+				return new[] { new Hook<T>(this) };
 
 			if (!CanResolve(request) && !TryRegisterImplicitSelfBinding(request.Service))
 			{
 				if (request.IsOptional)
-					return Enumerable.Empty<Hook>();
+					return Enumerable.Empty<Hook<T>>();
 				else
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
 			return GetBindings(request)
 				.Where(binding => binding.Matches(request) && request.Matches(binding))
-				.Select(binding => CreateHook(CreateContext(request, binding)));
+				.Select(binding => CreateContext(request, binding))
+				.Select(context => CreateHook<T>(context));
+		}
+
+		/// <summary>
+		/// Creates a request for the specified service.
+		/// </summary>
+		/// <param name="service">The service that is being requested.</param>
+		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
+		/// <param name="parameters">The parameters to pass to the resolution.</param>
+		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
+		/// <returns>The created request.</returns>
+		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		{
+			return new Request(service, constraint, parameters, null, isOptional);
 		}
 
 		/// <summary>
@@ -293,12 +295,12 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Begins a new activation scope, which can be used to deterministically dispose resolved instances.
+		/// Begins a new activation block, which can be used to deterministically dispose resolved instances.
 		/// </summary>
-		/// <returns>The new activation scope.</returns>
-		public IResolutionRoot BeginScope()
+		/// <returns>The new activation block.</returns>
+		public IActivationBlock BeginBlock()
 		{
-			return new ActivationScope(this);
+			return new ActivationBlock(this);
 		}
 
 		/// <summary>
@@ -341,19 +343,6 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Creates a request for the specified service.
-		/// </summary>
-		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
-		/// <param name="parameters">The parameters to pass to the resolution.</param>
-		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		/// <returns>The created request.</returns>
-		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
-		{
-			return new Request(service, constraint, parameters, null, isOptional);
-		}
-
-		/// <summary>
 		/// Creates a context for the specified request and binding.
 		/// </summary>
 		/// <param name="request">The request.</param>
@@ -369,14 +358,9 @@ namespace Ninject
 		/// </summary>
 		/// <param name="context">The context.</param>
 		/// <returns>The created hook.</returns>
-		protected virtual Hook CreateHook(IContext context)
+		protected virtual Hook<T> CreateHook<T>(IContext context)
 		{
-			return new Hook(() => context.Resolve());
-		}
-
-		object IServiceProvider.GetService(Type serviceType)
-		{
-			return this.Get(serviceType);
+			return new Hook<T>(context.Resolve);
 		}
 	}
 }

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
+using Ninject.Syntax;
 #endregion
 
 namespace Ninject.Activation

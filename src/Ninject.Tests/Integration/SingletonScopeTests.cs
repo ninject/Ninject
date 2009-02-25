@@ -3,6 +3,7 @@ using Ninject.Activation;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.SingletonScopeTests
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.StandardKernelTests
 {

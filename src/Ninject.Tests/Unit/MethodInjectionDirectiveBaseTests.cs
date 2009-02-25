@@ -4,6 +4,7 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 {

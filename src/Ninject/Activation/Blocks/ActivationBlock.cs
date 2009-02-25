@@ -23,13 +23,13 @@ using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 #endregion
 
-namespace Ninject.Activation.Scope
+namespace Ninject.Activation.Blocks
 {
 	/// <summary>
-	/// A scope used for deterministic disposal of activated instances. When the scope is
+	/// A block used for deterministic disposal of activated instances. When the block is
 	/// disposed, all instances activated via it will be deactivated.
 	/// </summary>
-	public class ActivationScope : DisposableObject, IActivationScope
+	public class ActivationBlock : DisposableObject, IActivationBlock
 	{
 		/// <summary>
 		/// Gets or sets the parent resolution root (usually the kernel).
@@ -37,10 +37,10 @@ namespace Ninject.Activation.Scope
 		public IResolutionRoot Parent { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ActivationScope"/> class.
+		/// Initializes a new instance of the <see cref="ActivationBlock"/> class.
 		/// </summary>
 		/// <param name="parent">The parent resolution root.</param>
-		public ActivationScope(IResolutionRoot parent)
+		public ActivationBlock(IResolutionRoot parent)
 		{
 			Parent = parent;
 		}
@@ -56,44 +56,27 @@ namespace Ninject.Activation.Scope
 		}
 
 		/// <summary>
-		/// Resolves the specified request.
+		/// Resolves activation hooks for the specified request.
 		/// </summary>
-		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
-		/// <param name="parameters">The parameters to pass to the resolution.</param>
-		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<Hook> Resolve(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
-		{
-			return Resolve(CreateDirectRequest(service, constraint, parameters, isOptional));
-		}
-
-		/// <summary>
-		/// Resolves the specified request.
-		/// </summary>
+		/// <typeparam name="T">The type of object that will be returned by the hook (not necessarily the service).</typeparam>
 		/// <param name="request">The request to resolve.</param>
 		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public IEnumerable<Hook> Resolve(IRequest request)
+		public IEnumerable<Hook<T>> Resolve<T>(IRequest request)
 		{
-			return Parent.Resolve(request);
+			return Parent.Resolve<T>(request);
 		}
 
 		/// <summary>
 		/// Creates a request for the specified service.
 		/// </summary>
-		/// <param name="service">The service to resolve.</param>
-		/// <param name="constraint">The constraints to apply to the bindings to determine if they match the request.</param>
+		/// <param name="service">The service that is being requested.</param>
+		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		/// <returns>The created request.</returns>
-		protected virtual IRequest CreateDirectRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
 			return new Request(service, constraint, parameters, () => this, isOptional);
-		}
-
-		object IServiceProvider.GetService(Type serviceType)
-		{
-			return this.Get(serviceType);
 		}
 	}
 }

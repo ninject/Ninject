@@ -3,6 +3,7 @@ using System.Linq;
 using Ninject.Activation;
 using Ninject.Parameters;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Integration.CircularDependenciesTests
 {
@@ -28,7 +29,7 @@ namespace Ninject.Tests.Integration.CircularDependenciesTests
 		public void DoesNotThrowExceptionIfHookIsCreated()
 		{
 			var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false);
-			Assert.DoesNotThrow(() => kernel.Resolve(request));
+			Assert.DoesNotThrow(() => kernel.Resolve<TwoWayConstructorFoo>(request));
 		}
 
 		[Fact]
@@ -76,7 +77,7 @@ namespace Ninject.Tests.Integration.CircularDependenciesTests
 		public void DoesNotThrowExceptionIfHookIsCreated()
 		{
 			var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false);
-			Assert.DoesNotThrow(() => kernel.Resolve(request));
+			Assert.DoesNotThrow(() => kernel.Resolve<ThreeWayConstructorFoo>(request));
 		}
 
 		[Fact]

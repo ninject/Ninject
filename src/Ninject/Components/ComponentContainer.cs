@@ -134,7 +134,7 @@ namespace Ninject.Components
 				Type argument = component.GetGenericArguments()[0];
 
 				if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
-					return LinqReflection.CastSlow(GetAll(argument), argument);
+					return GetAll(argument).CastSlow(argument);
 			}
 
 			Type implementation = _mappings[component].FirstOrDefault();

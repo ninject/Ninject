@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 using Ninject.Parameters;
 #endregion
 
@@ -96,6 +97,7 @@ namespace Ninject.Planning.Bindings
 			Parameters = new List<IParameter>();
 			ActivationActions = new List<Action<IContext>>();
 			DeactivationActions = new List<Action<IContext>>();
+			ScopeCallback = StandardScopeCallbacks.Singleton;
 		}
 
 		/// <summary>
@@ -115,7 +117,7 @@ namespace Ninject.Planning.Bindings
 		/// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
 		public object GetScope(IContext context)
 		{
-			return ScopeCallback == null ? null : ScopeCallback(context);
+			return ScopeCallback(context);
 		}
 
 		/// <summary>
