@@ -128,7 +128,7 @@ namespace Ninject.Planning.Targets
 			if (Type.IsArray)
 			{
 				Type service = Type.GetElementType();
-				return ResolveInstances(service, parent).ToArraySlow(service);
+				return ResolveInstances(service, parent).CastSlow(service).ToArraySlow(service);
 			}
 
 			if (Type.IsGenericType)
@@ -136,8 +136,8 @@ namespace Ninject.Planning.Targets
 				Type gtd = Type.GetGenericTypeDefinition();
 				Type service = Type.GetGenericArguments()[0];
 
-				if (typeof(ICollection<>).IsAssignableFrom(gtd))
-					return ResolveInstances(service, parent).ToListSlow(service);
+				if (gtd == typeof(List<>) || gtd == typeof(IList<>))
+					return ResolveInstances(service, parent).CastSlow(service).ToListSlow(service);
 
 				if (typeof(IEnumerable<>).IsAssignableFrom(gtd))
 					return ResolveInstances(service, parent).CastSlow(service);

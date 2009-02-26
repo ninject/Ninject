@@ -6,20 +6,45 @@ using Xunit.Should;
 
 namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
-	public class EnumerableDependenciesContext
+	public abstract class EnumerableDependenciesContext
 	{
 		protected readonly StandardKernel kernel;
 
-		public EnumerableDependenciesContext()
+		protected EnumerableDependenciesContext()
 		{
 			kernel = new StandardKernel();
 		}
+
+		protected abstract void VerifyInjection(IParent parent);
 	}
 
-	public class WhenServiceRequestsUnconstrainedEnumerableOfDependencies : EnumerableDependenciesContext
+	public class UnconstrainedDependenciesContext : EnumerableDependenciesContext
+	{
+		protected override void VerifyInjection(IParent parent)
+		{
+			parent.ShouldNotBeNull();
+			parent.Children.ShouldNotBeNull();
+			parent.Children.Count.ShouldBe(2);
+			parent.Children[0].ShouldBeInstanceOf<ChildA>();
+			parent.Children[1].ShouldBeInstanceOf<ChildB>();
+		}
+	}
+
+	public class ConstrainedDependenciesContext : EnumerableDependenciesContext
+	{
+		protected override void VerifyInjection(IParent parent)
+		{
+			parent.ShouldNotBeNull();
+			parent.Children.ShouldNotBeNull();
+			parent.Children.Count.ShouldBe(1);
+			parent.Children[0].ShouldBeInstanceOf<ChildB>();
+		}
+	}
+
+	public class WhenServiceRequestsUnconstrainedEnumerableOfDependencies : UnconstrainedDependenciesContext
 	{
 		[Fact]
-		public void ServiceIsInjectedWithAllAvailableDependencies()
+		public void ServiceIsInjectedWithEnumeratorOfAllAvailableDependencies()
 		{
 			kernel.Bind<IParent>().To<RequestsEnumerable>();
 			kernel.Bind<IChild>().To<ChildA>();
@@ -27,15 +52,41 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 			var parent = kernel.Get<IParent>();
 
-			parent.ShouldNotBeNull();
-			parent.Children.ShouldNotBeNull();
-			parent.Children.Length.ShouldBe(2);
-			parent.Children[0].ShouldBeInstanceOf<ChildA>();
-			parent.Children[1].ShouldBeInstanceOf<ChildB>();
+			VerifyInjection(parent);
 		}
 	}
 
-	public class WhenServiceRequestsConstrainedEnumerableOfDependencies : EnumerableDependenciesContext
+	public class WhenServiceRequestsUnconstrainedListOfDependencies : UnconstrainedDependenciesContext
+	{
+		[Fact]
+		public void ServiceIsInjectedWithListOfAllAvailableDependencies()
+		{
+			kernel.Bind<IParent>().To<RequestsList>();
+			kernel.Bind<IChild>().To<ChildA>();
+			kernel.Bind<IChild>().To<ChildB>();
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
+		}
+	}
+
+	public class WhenServiceRequestsUnconstrainedArrayOfDependencies : UnconstrainedDependenciesContext
+	{
+		[Fact]
+		public void ServiceIsInjectedWithArrayOfAllAvailableDependencies()
+		{
+			kernel.Bind<IParent>().To<RequestsArray>();
+			kernel.Bind<IChild>().To<ChildA>();
+			kernel.Bind<IChild>().To<ChildB>();
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
+		}
+	}
+
+	public class WhenServiceRequestsConstrainedEnumerableOfDependencies : ConstrainedDependenciesContext
 	{
 		[Fact]
 		public void ServiceIsInjectedWithAllDependenciesThatMatchTheConstraint()
@@ -46,10 +97,37 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 			var parent = kernel.Get<IParent>();
 
-			parent.ShouldNotBeNull();
-			parent.Children.ShouldNotBeNull();
-			parent.Children.Length.ShouldBe(1);
-			parent.Children[0].ShouldBeInstanceOf<ChildB>();
+			VerifyInjection(parent);
+		}
+	}
+
+	public class WhenServiceRequestsConstrainedListOfDependencies : ConstrainedDependenciesContext
+	{
+		[Fact]
+		public void ServiceIsInjectedWithAllDependenciesThatMatchTheConstraint()
+		{
+			kernel.Bind<IParent>().To<RequestsConstrainedList>();
+			kernel.Bind<IChild>().To<ChildA>().Named("joe");
+			kernel.Bind<IChild>().To<ChildB>().Named("bob");
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
+		}
+	}
+
+	public class WhenServiceRequestsConstrainedArrayOfDependencies : ConstrainedDependenciesContext
+	{
+		[Fact]
+		public void ServiceIsInjectedWithAllDependenciesThatMatchTheConstraint()
+		{
+			kernel.Bind<IParent>().To<RequestsConstrainedArray>();
+			kernel.Bind<IChild>().To<ChildA>().Named("joe");
+			kernel.Bind<IChild>().To<ChildB>().Named("bob");
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
 		}
 	}
 
@@ -60,26 +138,66 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 	public interface IParent
 	{
-		IChild[] Children { get; }
+		IList<IChild> Children { get; }
 	}
 
 	public class RequestsEnumerable : IParent
 	{
-		public IChild[] Children { get; private set; }
+		public IList<IChild> Children { get; private set; }
 
 		public RequestsEnumerable(IEnumerable<IChild> children)
 		{
-			Children = children.ToArray();
+			Children = children.ToList();
+		}
+	}
+
+	public class RequestsList : IParent
+	{
+		public IList<IChild> Children { get; private set; }
+
+		public RequestsList(List<IChild> children)
+		{
+			Children = children;
+		}
+	}
+
+	public class RequestsArray : IParent
+	{
+		public IList<IChild> Children { get; private set; }
+
+		public RequestsArray(IChild[] children)
+		{
+			Children = children;
 		}
 	}
 
 	public class RequestsConstrainedEnumerable : IParent
 	{
-		public IChild[] Children { get; private set; }
+		public IList<IChild> Children { get; private set; }
 
 		public RequestsConstrainedEnumerable([Named("bob")] IEnumerable<IChild> children)
 		{
-			Children = children.ToArray();
+			Children = children.ToList();
+		}
+	}
+
+	public class RequestsConstrainedList : IParent
+	{
+		public IList<IChild> Children { get; private set; }
+
+		public RequestsConstrainedList([Named("bob")] List<IChild> children)
+		{
+			Children = children;
+		}
+	}
+
+	public class RequestsConstrainedArray : IParent
+	{
+		public IList<IChild> Children { get; private set; }
+
+		public RequestsConstrainedArray([Named("bob")] IChild[] children)
+		{
+			Children = children;
 		}
 	}
 }

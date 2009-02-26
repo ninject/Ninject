@@ -138,7 +138,7 @@ namespace Ninject.Infrastructure.Introspection
 				var sb = new StringBuilder();
 
 				sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
-				sb.Append("[");
+				sb.Append("{");
 
 				foreach (Type genericArgument in type.GetGenericArguments())
 				{
@@ -147,7 +147,7 @@ namespace Ninject.Infrastructure.Introspection
 				}
 
 				sb.Remove(sb.Length - 2, 2);
-				sb.Append("]");
+				sb.Append("}");
 
 				return sb.ToString();
 			}
