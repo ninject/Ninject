@@ -262,7 +262,7 @@ namespace Ninject
 		private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
 			IRequest request = root.CreateRequest(service, constraint, parameters, isOptional);
-			return root.Resolve(request).Select(hook => hook.Resolve());
+			return root.Resolve(request);
 		}
 	}
 }

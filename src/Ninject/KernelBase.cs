@@ -25,7 +25,6 @@ using Ninject.Activation.Providers;
 using Ninject.Components;
 using Ninject.Events;
 using Ninject.Infrastructure;
-using Ninject.Infrastructure.Disposal;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Modules;
@@ -40,7 +39,7 @@ namespace Ninject
 	/// <summary>
 	/// The base implementation of an <see cref="IKernel"/>.
 	/// </summary>
-	public abstract class KernelBase : DisposableObject, IKernel
+	public abstract class KernelBase : BindingRoot, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Dictionary<Type, IModule> _modules = new Dictionary<Type, IModule>();
@@ -162,28 +161,10 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Declares a binding for the specified service using the fluent syntax.
-		/// </summary>
-		/// <typeparam name="T">The service to bind.</typeparam>
-		public IBindingToSyntax<T> Bind<T>()
-		{
-			return RegisterBindingAndCreateBuilder<T>(typeof(T));
-		}
-
-		/// <summary>
-		/// Declares a binding for the specified service using the fluent syntax.
-		/// </summary>
-		/// <param name="service">The service to bind.</param>
-		public IBindingToSyntax<object> Bind(Type service)
-		{
-			return RegisterBindingAndCreateBuilder<object>(service);
-		}
-
-		/// <summary>
 		/// Registers the specified binding.
 		/// </summary>
 		/// <param name="binding">The binding to add.</param>
-		public void AddBinding(IBinding binding)
+		public override void AddBinding(IBinding binding)
 		{
 			_bindings.Add(binding.Service, binding);
 			BindingAdded.Raise(this, new BindingEventArgs(binding));
@@ -193,7 +174,7 @@ namespace Ninject
 		/// Unregisters the specified binding.
 		/// </summary>
 		/// <param name="binding">The binding to remove.</param>
-		public void RemoveBinding(IBinding binding)
+		public override void RemoveBinding(IBinding binding)
 		{
 			_bindings.Remove(binding.Service, binding);
 			BindingRemoved.Raise(this, new BindingEventArgs(binding));
@@ -238,19 +219,20 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Resolves activation hooks for the specified request.
+		/// Resolves instances for the specified request. The instances are not actually resolved
+		/// until a consumer iterates over the enumerator.
 		/// </summary>
 		/// <param name="request">The request to resolve.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		public virtual IEnumerable<Hook> Resolve(IRequest request)
+		/// <returns>An enumerator of instances that match the request.</returns>
+		public virtual IEnumerable<object> Resolve(IRequest request)
 		{
 			if (request.Service == typeof(IKernel))
-				return new[] { new Hook(this) };
+				return new[] { this };
 
-			if (!CanResolve(request) && !TryRegisterImplicitSelfBinding(request.Service))
+			if (!CanResolve(request) && !HandleMissingBinding(request.Service))
 			{
 				if (request.IsOptional)
-					return Enumerable.Empty<Hook>();
+					return Enumerable.Empty<object>();
 				else
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
@@ -258,7 +240,7 @@ namespace Ninject
 			return GetBindings(request)
 				.Where(binding => binding.Matches(request) && request.Matches(binding))
 				.Select(binding => CreateContext(request, binding))
-				.Select(context => CreateHook(context));
+				.Select(context => context.Resolve());
 		}
 
 		/// <summary>
@@ -308,11 +290,12 @@ namespace Ninject
 		protected abstract void AddComponents();
 
 		/// <summary>
-		/// Tries to register an implicit self-binding for the specified service.
+		/// Tries to handle a missing binding by registering an implicit self-binding for the
+		/// specified service.
 		/// </summary>
 		/// <param name="service">The service.</param>
 		/// <returns><c>True</c> if the type is self-bindable; otherwise <c>false</c>.</returns>
-		protected virtual bool TryRegisterImplicitSelfBinding(Type service)
+		protected virtual bool HandleMissingBinding(Type service)
 		{
 			if (service.IsInterface || service.IsAbstract || service.ContainsGenericParameters)
 				return false;
@@ -329,19 +312,6 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Registers the specified binding and creates a builder to complete it.
-		/// </summary>
-		/// <typeparam name="T">The service being bound, or <see cref="object"/> if the non-generic version was used.</typeparam>
-		/// <param name="service">The service being bound.</param>
-		/// <returns>The builder that can be used to complete the binding.</returns>
-		protected virtual BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)
-		{
-			var binding = new Binding(service);
-			AddBinding(binding);
-			return new BindingBuilder<T>(binding);
-		}
-
-		/// <summary>
 		/// Creates a context for the specified request and binding.
 		/// </summary>
 		/// <param name="request">The request.</param>
@@ -350,16 +320,6 @@ namespace Ninject
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
 			return new Context(this, request, binding, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
-		}
-
-		/// <summary>
-		/// Creates a hook that can resolve the specified context.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		/// <returns>The created hook.</returns>
-		protected virtual Hook CreateHook(IContext context)
-		{
-			return new Hook(context.Resolve);
 		}
 	}
 }

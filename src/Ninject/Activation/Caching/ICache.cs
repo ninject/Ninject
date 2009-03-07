@@ -43,5 +43,10 @@ namespace Ninject.Activation.Caching
 		/// Removes instances from the cache which should no longer be re-used.
 		/// </summary>
 		void Prune();
+
+		/// <summary>
+		/// Immediately deactivates and removes all instances in the cache, regardless of scope.
+		/// </summary>
+		void Clear();
 	}
 }

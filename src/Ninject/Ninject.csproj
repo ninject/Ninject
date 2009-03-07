@@ -59,7 +59,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICachePruner.cs" />
-    <Compile Include="Activation\Hook.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
     <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs">
       <SubType>Code</SubType>
@@ -112,6 +111,7 @@
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
     <Compile Include="Injection\Expressions\ExpressionHelper.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
+    <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
     <Compile Include="Events\ModuleEventArgs.cs" />

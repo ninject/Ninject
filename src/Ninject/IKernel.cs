@@ -46,6 +46,16 @@ namespace Ninject
 		IComponentContainer Components { get; }
 
 		/// <summary>
+		/// Occurs when a binding is added.
+		/// </summary>
+		event EventHandler<BindingEventArgs> BindingAdded;
+
+		/// <summary>
+		/// Occurs when a binding is removed.
+		/// </summary>
+		event EventHandler<BindingEventArgs> BindingRemoved;
+
+		/// <summary>
 		/// Occurs when a module is loaded.
 		/// </summary>
 		event EventHandler<ModuleEventArgs> ModuleLoaded;

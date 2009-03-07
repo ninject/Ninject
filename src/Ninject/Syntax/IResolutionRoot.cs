@@ -37,11 +37,12 @@ namespace Ninject.Syntax
 		bool CanResolve(IRequest request);
 
 		/// <summary>
-		/// Resolves activation hooks for the specified request.
+		/// Resolves instances for the specified request. The instances are not actually resolved
+		/// until a consumer iterates over the enumerator.
 		/// </summary>
 		/// <param name="request">The request to resolve.</param>
-		/// <returns>A series of hooks that can be used to resolve instances that match the request.</returns>
-		IEnumerable<Hook> Resolve(IRequest request);
+		/// <returns>An enumerator of instances that match the request.</returns>
+		IEnumerable<object> Resolve(IRequest request);
 
 		/// <summary>
 		/// Creates a request for the specified service.

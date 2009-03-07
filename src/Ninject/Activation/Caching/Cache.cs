@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ninject.Components;
 using Ninject.Infrastructure;
@@ -48,6 +49,17 @@ namespace Ninject.Activation.Caching
 			_entries = new Multimap<IBinding, CacheEntry>();
 			Pipeline = pipeline;
 			cachePruner.Start(this);
+		}
+
+		/// <summary>
+		/// Releases resources held by the object.
+		/// </summary>
+		public override void Dispose(bool disposing)
+		{
+			if (disposing && !IsDisposed)
+				Clear();
+
+			base.Dispose(disposing);
 		}
 
 		/// <summary>
@@ -103,24 +115,31 @@ namespace Ninject.Activation.Caching
 		}
 
 		/// <summary>
-		/// Removes instances from the cache whose scopes have been garbage collected.
+		/// Removes instances from the cache which should no longer be re-used.
 		/// </summary>
 		public void Prune()
 		{
 			lock (_entries)
 			{
-				foreach (IBinding binding in _entries.Keys)
-					_entries[binding].Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
+				_entries.SelectMany(e => e.Value).Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
+			}
+		}
+
+		/// <summary>
+		/// Immediately deactivates and removes all instances in the cache, regardless of scope.
+		/// </summary>
+		public void Clear()
+		{
+			lock (_entries)
+			{
+				_entries.SelectMany(e => e.Value).ToArray().Map(Forget);
 			}
 		}
 
 		private void Forget(CacheEntry entry)
 		{
-			lock (_entries)
-			{
-				Pipeline.Deactivate(entry.Context);
-				_entries[entry.Context.Binding].Remove(entry);
-			}
+			Pipeline.Deactivate(entry.Context);
+			_entries[entry.Context.Binding].Remove(entry);
 		}
 
 		private class CacheEntry
