@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Web.Mvc", "src\Ninject.Web.Mvc\Ninject.Web.Mvc.csproj", "{5C02730F-60D7-454E-88C7-B0C257B01C77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Dynamic", "Ninject.Dynamic\Ninject.Dynamic.csproj", "{97CB9925-DF95-4772-965B-7E2034109B6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{5C02730F-60D7-454E-88C7-B0C257B01C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C02730F-60D7-454E-88C7-B0C257B01C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C02730F-60D7-454E-88C7-B0C257B01C77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97CB9925-DF95-4772-965B-7E2034109B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97CB9925-DF95-4772-965B-7E2034109B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97CB9925-DF95-4772-965B-7E2034109B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97CB9925-DF95-4772-965B-7E2034109B6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
