@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Events;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
@@ -54,6 +55,8 @@ namespace Ninject.Modules
 		/// <param name="kernel">The kernel that is loading the module.</param>
 		public void OnLoad(IKernel kernel)
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
+
 			Kernel = kernel;
 			Load();
 		}
@@ -64,6 +67,8 @@ namespace Ninject.Modules
 		/// <param name="kernel">The kernel that is unloading the module.</param>
 		public void OnUnload(IKernel kernel)
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
+
 			Unload();
 			Bindings.Map(Kernel.RemoveBinding);
 			Kernel = null;
@@ -85,6 +90,8 @@ namespace Ninject.Modules
 		/// <param name="binding">The binding to add.</param>
 		public override void AddBinding(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			Kernel.AddBinding(binding);
 			Bindings.Add(binding);
 		}
@@ -95,6 +102,8 @@ namespace Ninject.Modules
 		/// <param name="binding">The binding to remove.</param>
 		public override void RemoveBinding(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			Kernel.RemoveBinding(binding);
 			Bindings.Remove(binding);
 		}

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Selection.Heuristics;
 #endregion
 
@@ -40,25 +41,20 @@ namespace Ninject.Selection
 		/// <summary>
 		/// Gets the property injection heuristics.
 		/// </summary>
-		public ICollection<IPropertyInjectionHeuristic> PropertyInjectionHeuristics { get; private set; }
-
-		/// <summary>
-		/// Gets the method injection heuristics.
-		/// </summary>
-		public ICollection<IMethodInjectionHeuristic> MethodInjectionHeuristics { get; private set; }
+		public ICollection<IInjectionHeuristic> InjectionHeuristics { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Selector"/> class.
 		/// </summary>
 		/// <param name="constructorScorer">The constructor scorer.</param>
-		/// <param name="propertyInjectionHeuristics">The property injection heuristics.</param>
-		/// <param name="methodInjectionHeuristics">The method injection heuristics.</param>
-		public Selector(IConstructorScorer constructorScorer, IEnumerable<IPropertyInjectionHeuristic> propertyInjectionHeuristics,
-			IEnumerable<IMethodInjectionHeuristic> methodInjectionHeuristics)
+		/// <param name="injectionHeuristics">The injection heuristics.</param>
+		public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
 		{
+			Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
+			Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
+
 			ConstructorScorer = constructorScorer;
-			PropertyInjectionHeuristics = propertyInjectionHeuristics.ToList();
-			MethodInjectionHeuristics = methodInjectionHeuristics.ToList();
+			InjectionHeuristics = injectionHeuristics.ToList();
 		}
 
 		/// <summary>
@@ -68,6 +64,8 @@ namespace Ninject.Selection
 		/// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
 		public ConstructorInfo SelectConstructor(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+
 			ConstructorInfo constructor = type.GetConstructors(Flags).OrderByDescending(c => ConstructorScorer.Score(c)).FirstOrDefault();
 
 			if (constructor == null)
@@ -77,23 +75,25 @@ namespace Ninject.Selection
 		}
 
 		/// <summary>
-		/// Selects properties that should be injected, by using the property injection heuristics.
+		/// Selects properties that should be injected.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>A series of the selected properties.</returns>
 		public IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
 		{
-			return type.GetProperties(Flags).Where(p => PropertyInjectionHeuristics.Any(h => h.ShouldInject(p)));
+			Ensure.ArgumentNotNull(type, "type");
+			return type.GetProperties(Flags).Where(p => InjectionHeuristics.Any(h => h.ShouldInject(p)));
 		}
 
 		/// <summary>
-		/// Selects methods that should be injected, by using the method injection heuristics.
+		/// Selects methods that should be injected.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>A series of the selected methods.</returns>
 		public IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
 		{
-			return type.GetMethods(Flags).Where(m => MethodInjectionHeuristics.Any(h => h.ShouldInject(m)));
+			Ensure.ArgumentNotNull(type, "type");
+			return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 		}
 	}
 }

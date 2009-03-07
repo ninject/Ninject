@@ -61,8 +61,7 @@ namespace Ninject
 
 			Components.Add<ISelector, Selector>();
 			Components.Add<IConstructorScorer, StandardConstructorScorer>();
-			Components.Add<IPropertyInjectionHeuristic, StandardPropertyInjectionHeuristic>();
-			Components.Add<IMethodInjectionHeuristic, StandardMethodInjectionHeuristic>();
+			Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
 
 			Components.Add<IPipeline, Pipeline>();
 			Components.Add<IActivationStrategy, PropertyInjectionStrategy>();

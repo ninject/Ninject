@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Injection.Expressions;
 #endregion
@@ -41,6 +42,7 @@ namespace Ninject.Injection.Expressions
 		/// <returns>The created injector.</returns>
 		public IConstructorInjector GetConstructorInjector(ConstructorInfo constructor)
 		{
+			Ensure.ArgumentNotNull(constructor, "constructor");
 			return _constructorInjectors.GetOrAddNew(constructor, c => new ExpressionConstructorInjector(c));
 		}
 
@@ -51,6 +53,7 @@ namespace Ninject.Injection.Expressions
 		/// <returns>The created injector.</returns>
 		public IMethodInjector GetMethodInjector(MethodInfo method)
 		{
+			Ensure.ArgumentNotNull(method, "method");
 			return _methodInjectors.GetOrAddNew(method, m => method.ReturnType == typeof(void) ? (IMethodInjector)new ExpressionVoidMethodInjector(m) : (IMethodInjector)new ExpressionMethodInjector(m));
 		}
 
@@ -61,6 +64,7 @@ namespace Ninject.Injection.Expressions
 		/// <returns>The created injector.</returns>
 		public IPropertyInjector GetPropertyInjector(PropertyInfo property)
 		{
+			Ensure.ArgumentNotNull(property, "property");
 			return _propertyInjectors.GetOrAddNew(property, p => new ExpressionPropertyInjector(p));
 		}
 	}

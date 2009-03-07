@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Activation.Providers

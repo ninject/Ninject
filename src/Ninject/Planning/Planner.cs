@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Strategies;
 #endregion
@@ -43,6 +44,7 @@ namespace Ninject.Planning
 		/// <param name="strategies">The strategies to execute during planning.</param>
 		public Planner(IEnumerable<IPlanningStrategy> strategies)
 		{
+			Ensure.ArgumentNotNull(strategies, "strategies");
 			Strategies = strategies.ToList();
 		}
 
@@ -53,6 +55,8 @@ namespace Ninject.Planning
 		/// <returns>The type's activation plan.</returns>
 		public IPlan GetPlan(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+
 			if (_plans.ContainsKey(type))
 				return _plans[type];
 
@@ -71,6 +75,7 @@ namespace Ninject.Planning
 		/// <returns>The created plan.</returns>
 		protected virtual IPlan CreateEmptyPlan(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
 			return new Plan(type);
 		}
 	}

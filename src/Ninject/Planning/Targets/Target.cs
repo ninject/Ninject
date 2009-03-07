@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 #endregion
@@ -62,7 +63,7 @@ namespace Ninject.Planning.Targets
 		{
 			get
 			{
-				if (_constraint == null) _constraint = ReadConstraintFromAttributes();
+				if (_constraint == null) _constraint = ReadConstraintFromTarget();
 				return _constraint;
 			}
 		}
@@ -82,6 +83,9 @@ namespace Ninject.Planning.Targets
 		/// <param name="site">The site represented by the target.</param>
 		protected Target(MemberInfo member, T site)
 		{
+			Ensure.ArgumentNotNull(member, "member");
+			Ensure.ArgumentNotNull(site, "site");
+
 			Member = member;
 			Site = site;
 		}
@@ -94,6 +98,7 @@ namespace Ninject.Planning.Targets
 		/// <returns>An array of custom attributes of the specified type.</returns>
 		public object[] GetCustomAttributes(Type attributeType, bool inherit)
 		{
+			Ensure.ArgumentNotNull(attributeType, "attributeType");
 			return Site.GetCustomAttributes(attributeType, inherit);
 		}
 
@@ -115,6 +120,7 @@ namespace Ninject.Planning.Targets
 		/// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
 		public bool IsDefined(Type attributeType, bool inherit)
 		{
+			Ensure.ArgumentNotNull(attributeType, "attributeType");
 			return Site.IsDefined(attributeType, inherit);
 		}
 
@@ -125,10 +131,12 @@ namespace Ninject.Planning.Targets
 		/// <returns>The resolved value.</returns>
 		public object ResolveWithin(IContext parent)
 		{
+			Ensure.ArgumentNotNull(parent, "parent");
+
 			if (Type.IsArray)
 			{
 				Type service = Type.GetElementType();
-				return ResolveInstances(service, parent).CastSlow(service).ToArraySlow(service);
+				return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
 			}
 
 			if (Type.IsGenericType)
@@ -137,22 +145,35 @@ namespace Ninject.Planning.Targets
 				Type service = Type.GetGenericArguments()[0];
 
 				if (gtd == typeof(List<>) || gtd == typeof(IList<>))
-					return ResolveInstances(service, parent).CastSlow(service).ToListSlow(service);
+					return GetValues(service, parent).CastSlow(service).ToListSlow(service);
 
 				if (typeof(IEnumerable<>).IsAssignableFrom(gtd))
-					return ResolveInstances(service, parent).CastSlow(service);
+					return GetValues(service, parent).CastSlow(service);
 			}
 
-			return ResolveInstances(Type, parent).FirstOrDefault();
+			return GetValues(Type, parent).FirstOrDefault();
 		}
 
-		private IEnumerable<object> ResolveInstances(Type service, IContext parent)
+		/// <summary>
+		/// Gets the value(s) that should be injected into the target.
+		/// </summary>
+		/// <param name="service">The service that the target is requesting.</param>
+		/// <param name="parent">The parent context in which the target is being injected.</param>
+		/// <returns>A series of values that are available for injection.</returns>
+		protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
 		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(parent, "parent");
+
 			var request = parent.Request.CreateChild(service, this);
 			return parent.Kernel.Resolve(request);
 		}
 
-		private Func<IBindingMetadata, bool> ReadConstraintFromAttributes()
+		/// <summary>
+		/// Reads the resolution constraint from target.
+		/// </summary>
+		/// <returns>The resolution constraint.</returns>
+		protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
 		{
 			ConstraintAttribute[] attributes = Site.GetAttributes<ConstraintAttribute>().ToArray();
 

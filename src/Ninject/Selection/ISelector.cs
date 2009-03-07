@@ -35,14 +35,9 @@ namespace Ninject.Selection
 		IConstructorScorer ConstructorScorer { get; set; }
 
 		/// <summary>
-		/// Gets the property injection heuristics.
+		/// Gets the heuristics used to determine which members should be injected.
 		/// </summary>
-		ICollection<IPropertyInjectionHeuristic> PropertyInjectionHeuristics { get; }
-
-		/// <summary>
-		/// Gets the method injection heuristics.
-		/// </summary>
-		ICollection<IMethodInjectionHeuristic> MethodInjectionHeuristics { get; }
+		ICollection<IInjectionHeuristic> InjectionHeuristics { get; }
 
 		/// <summary>
 		/// Selects the constructor to call on the specified type, by using the constructor scorer.
@@ -52,14 +47,14 @@ namespace Ninject.Selection
 		ConstructorInfo SelectConstructor(Type type);
 
 		/// <summary>
-		/// Selects properties that should be injected, by using the property injection heuristics.
+		/// Selects properties that should be injected.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>A series of the selected properties.</returns>
 		IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type);
 
 		/// <summary>
-		/// Selects methods that should be injected, by using the method injection heuristics.
+		/// Selects methods that should be injected.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>A series of the selected methods.</returns>

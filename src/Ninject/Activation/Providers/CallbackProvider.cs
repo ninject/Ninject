@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Activation.Providers
@@ -37,6 +38,7 @@ namespace Ninject.Activation.Providers
 		/// <param name="method">The callback method that will be called to create instances.</param>
 		public CallbackProvider(Func<IContext, T> method)
 		{
+			Ensure.ArgumentNotNull(method, "method");
 			Method = method;
 		}
 

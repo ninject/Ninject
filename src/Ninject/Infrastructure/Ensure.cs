@@ -16,22 +16,20 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
-using Ninject.Components;
 #endregion
 
-namespace Ninject.Selection.Heuristics
+namespace Ninject.Infrastructure
 {
-	/// <summary>
-	/// Determines whether properties should be injected during activation.
-	/// </summary>
-	public interface IPropertyInjectionHeuristic : INinjectComponent
+	internal static class Ensure
 	{
-		/// <summary>
-		/// Returns a value indicating whether the specified property should be injected.
-		/// </summary>
-		/// <param name="property">The property.</param>
-		/// <returns><c>True</c> if the property should be injected; otherwise <c>false</c>.</returns>
-		bool ShouldInject(PropertyInfo property);
+		public static void ArgumentNotNull(object argument, string name)
+		{
+			if (argument == null) throw new ArgumentNullException(name, "Cannot be null");
+		}
+
+		public static void ArgumentNotNullOrEmpty(string argument, string name)
+		{
+			if (String.IsNullOrEmpty(argument)) throw new ArgumentException("Cannot be null or empty", name);
+		}
 	}
 }

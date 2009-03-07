@@ -47,6 +47,7 @@ namespace Ninject.Planning.Bindings
 		/// <param name="binding">The binding to build.</param>
 		public BindingBuilder(Binding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
 			Binding = binding;
 		}
 

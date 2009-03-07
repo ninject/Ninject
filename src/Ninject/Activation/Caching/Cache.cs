@@ -46,6 +46,9 @@ namespace Ninject.Activation.Caching
 		/// <param name="cachePruner">The cache pruner component.</param>
 		public Cache(IPipeline pipeline, ICachePruner cachePruner)
 		{
+			Ensure.ArgumentNotNull(pipeline, "pipeline");
+			Ensure.ArgumentNotNull(cachePruner, "cachePruner");
+
 			_entries = new Multimap<IBinding, CacheEntry>();
 			Pipeline = pipeline;
 			cachePruner.Start(this);
@@ -68,6 +71,8 @@ namespace Ninject.Activation.Caching
 		/// <param name="context">The context to store.</param>
 		public void Remember(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			lock (_entries)
 			{
 				var entry = new CacheEntry(context);
@@ -87,6 +92,8 @@ namespace Ninject.Activation.Caching
 		/// <returns>The instance for re-use, or <see langword="null"/> if none has been stored.</returns>
 		public object TryGet(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			lock (_entries)
 			{
 				Prune();

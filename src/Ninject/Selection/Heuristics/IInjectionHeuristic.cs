@@ -18,25 +18,20 @@
 using System;
 using System.Reflection;
 using Ninject.Components;
-using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Selection.Heuristics
 {
 	/// <summary>
-	/// Determines whether properties should be injected during activation by checking
-	/// if they are decorated with an injection marker attribute.
+	/// Determines whether members should be injected during activation.
 	/// </summary>
-	public class StandardPropertyInjectionHeuristic : NinjectComponent, IPropertyInjectionHeuristic
+	public interface IInjectionHeuristic : INinjectComponent
 	{
 		/// <summary>
-		/// Returns a value indicating whether the specified property should be injected.
+		/// Returns a value indicating whether the specified member should be injected.
 		/// </summary>
-		/// <param name="property">The property.</param>
-		/// <returns><c>True</c> if the property should be injected; otherwise <c>false</c>.</returns>
-		public bool ShouldInject(PropertyInfo property)
-		{
-			return property.HasAttribute(Settings.InjectAttribute);
-		}
+		/// <param name="member">The member in question.</param>
+		/// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
+		bool ShouldInject(MemberInfo member);
 	}
 }

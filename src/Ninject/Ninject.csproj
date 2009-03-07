@@ -105,12 +105,14 @@
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
     <Compile Include="Injection\Expressions\ExpressionHelper.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
+    <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Events\BindingEventArgs.cs" />
@@ -161,11 +163,8 @@
     <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
     <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
     <Compile Include="Planning\Targets\Target.cs" />
-    <Compile Include="Selection\Heuristics\StandardPropertyInjectionHeuristic.cs" />
-    <Compile Include="Selection\Heuristics\IMethodInjectionHeuristic.cs" />
-    <Compile Include="Selection\Heuristics\StandardMethodInjectionHeuristic.cs" />
+    <Compile Include="Selection\Heuristics\StandardInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\StandardConstructorScorer.cs" />
-    <Compile Include="Selection\Heuristics\IPropertyInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\IConstructorScorer.cs" />
     <Compile Include="StandardKernel.cs" />
     <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />

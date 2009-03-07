@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Injection.Expressions
@@ -52,6 +53,8 @@ namespace Ninject.Injection.Expressions
 		/// <returns>The constructed expression tree.</returns>
 		protected override Expression<Func<object[], object>> BuildExpression(ConstructorInfo member)
 		{
+			Ensure.ArgumentNotNull(member, "member");
+
 			ParameterExpression argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
 			var arguments = ExpressionHelper.CreateParameterExpressions(member, argumentsParameter);
 

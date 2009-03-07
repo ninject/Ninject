@@ -18,6 +18,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Injection.Expressions
@@ -51,6 +52,8 @@ namespace Ninject.Injection.Expressions
 		/// <returns>The constructed expression tree.</returns>
 		protected override Expression<Action<object, object>> BuildExpression(PropertyInfo member)
 		{
+			Ensure.ArgumentNotNull(member, "member");
+
 			ParameterExpression instanceParameter = Expression.Parameter(typeof(object), "instance");
 			Expression instance = Expression.Convert(instanceParameter, member.DeclaringType);
 

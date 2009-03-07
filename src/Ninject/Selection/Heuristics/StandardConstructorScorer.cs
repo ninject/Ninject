@@ -18,6 +18,7 @@
 using System;
 using System.Reflection;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 #endregion
 
@@ -36,6 +37,7 @@ namespace Ninject.Selection.Heuristics
 		/// <returns>The constructor's score.</returns>
 		public int Score(ConstructorInfo constructor)
 		{
+			Ensure.ArgumentNotNull(constructor, "constructor");
 			return constructor.HasAttribute(Settings.InjectAttribute) ? Int32.MaxValue : constructor.GetParameters().Length;
 		}
 	}

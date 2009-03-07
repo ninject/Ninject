@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Infrastructure;
 using Ninject.Modules;
 #endregion
 
@@ -37,6 +38,7 @@ namespace Ninject
 		public static bool HasModule<TModule>(this IKernel kernel)
 			where TModule : IModule
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			return kernel.HasModule(typeof(TModule));
 		}
 
@@ -47,6 +49,7 @@ namespace Ninject
 		public static void LoadModule<TModule>(this IKernel kernel)
 			where TModule : IModule, new()
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			kernel.LoadModule(new TModule());
 		}
 
@@ -57,6 +60,7 @@ namespace Ninject
 		public static void UnloadModule<TModule>(this IKernel kernel)
 			where TModule : IModule
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			kernel.UnloadModule(typeof(TModule));
 		}
 
@@ -146,6 +150,7 @@ namespace Ninject
 
 		private static IModuleLoader GetModuleLoader(IKernel kernel)
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			return kernel.Components.Get<IModuleLoader>();
 		}
 		#endif //!SILVERLIGHT

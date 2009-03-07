@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 #endregion
 
@@ -37,6 +38,7 @@ namespace Ninject.Events
 		/// <param name="binding">The binding.</param>
 		public BindingEventArgs(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
 			Binding = binding;
 		}
 	}

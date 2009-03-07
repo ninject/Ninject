@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using Ninject.Components;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Modules
@@ -43,6 +44,7 @@ namespace Ninject.Modules
 		/// <param name="kernel">The kernel into which modules will be loaded.</param>
 		public ModuleLoader(IKernel kernel)
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			Kernel = kernel;
 		}
 
@@ -52,6 +54,8 @@ namespace Ninject.Modules
 		/// <param name="assembly">The assembly.</param>
 		public void LoadModules(Assembly assembly)
 		{
+			Ensure.ArgumentNotNull(assembly, "assembly");
+
 			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
 			{
 				if (Kernel.HasModule(type))
@@ -68,6 +72,8 @@ namespace Ninject.Modules
 		/// <param name="assemblyOrFileName">Name of the assembly or file.</param>
 		public void LoadModules(string assemblyOrFileName)
 		{
+			Ensure.ArgumentNotNullOrEmpty(assemblyOrFileName, "assemblyOrFileName");
+
 			AssemblyName name;
 
 			try
@@ -91,6 +97,9 @@ namespace Ninject.Modules
 		/// <param name="recursive">If <c>true</c>, scan all subdirectories of the path as well.</param>
 		public void ScanAndLoadModules(string path, IEnumerable<string> patterns, bool recursive)
 		{
+			Ensure.ArgumentNotNullOrEmpty(path, "path");
+			Ensure.ArgumentNotNull(patterns, "patterns");
+
 			var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 			var normalizedPath = NormalizePath(path);
 			var files = patterns.SelectMany(pattern => Directory.GetFiles(normalizedPath, pattern, searchOption));
@@ -111,6 +120,9 @@ namespace Ninject.Modules
 		/// <returns>The names of the assemblies that contain loadable modules.</returns>
 		protected virtual IEnumerable<AssemblyName> FindAssembliesWithModules(AppDomain temporaryDomain, IEnumerable<string> files)
 		{
+			Ensure.ArgumentNotNull(temporaryDomain, "temporaryDomain");
+			Ensure.ArgumentNotNull(files, "files");
+
 			foreach (string file in files)
 			{
 				var assemblyName = new AssemblyName { CodeBase = file };
@@ -139,6 +151,8 @@ namespace Ninject.Modules
 		/// <returns><c>True</c> if the type represents a loadable module; otherwise <c>false</c>.</returns>
 		protected virtual bool IsLoadableModule(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+
 			if (!typeof(IModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
 				return false;
 
@@ -152,6 +166,8 @@ namespace Ninject.Modules
 		/// <returns>The normalized path.</returns>
 		protected virtual string NormalizePath(string path)
 		{
+			Ensure.ArgumentNotNullOrEmpty(path, "path");
+
 			if (path.StartsWith("~"))
 				path = GetBaseDirectory() + path.Substring(1);
 

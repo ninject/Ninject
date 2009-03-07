@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Activation
@@ -41,6 +42,7 @@ namespace Ninject.Activation
 		/// <returns>The created instance.</returns>
 		public object Create(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			return CreateInstance(context);
 		}
 

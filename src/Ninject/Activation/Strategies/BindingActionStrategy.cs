@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 #endregion
 
@@ -32,6 +33,7 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public override void Activate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			context.Binding.ActivationActions.Map(action => action(context));
 		}
 
@@ -41,6 +43,7 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public override void Deactivate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			context.Binding.DeactivationActions.Map(action => action(context));
 		}
 	}

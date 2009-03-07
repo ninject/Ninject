@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Planning.Bindings
@@ -41,6 +42,7 @@ namespace Ninject.Planning.Bindings
 		/// <returns><c>True</c> if such a piece of metadata exists; otherwise, <c>false</c>.</returns>
 		public bool Has(string key)
 		{
+			Ensure.ArgumentNotNullOrEmpty(key, "key");
 			return _values.ContainsKey(key);
 		}
 
@@ -52,6 +54,7 @@ namespace Ninject.Planning.Bindings
 		/// <returns>The metadata value.</returns>
 		public T Get<T>(string key)
 		{
+			Ensure.ArgumentNotNullOrEmpty(key, "key");
 			return (T)Get(key);
 		}
 
@@ -62,6 +65,7 @@ namespace Ninject.Planning.Bindings
 		/// <returns>The metadata value.</returns>
 		public object Get(string key)
 		{
+			Ensure.ArgumentNotNullOrEmpty(key, "key");
 			return _values.ContainsKey(key) ? _values[key] : null;
 		}
 
@@ -72,6 +76,7 @@ namespace Ninject.Planning.Bindings
 		/// <param name="value">The metadata value.</param>
 		public void Set(string key, object value)
 		{
+			Ensure.ArgumentNotNullOrEmpty(key, "key");
 			_values[key] = value;
 		}
 	}

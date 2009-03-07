@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Injection;
 using Ninject.Planning.Directives;
 #endregion
@@ -39,6 +40,7 @@ namespace Ninject.Activation.Strategies
 		/// <param name="injectorFactory">The injector factory component.</param>
 		public MethodInjectionStrategy(IInjectorFactory injectorFactory)
 		{
+			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
 			InjectorFactory = injectorFactory;
 		}
 
@@ -49,6 +51,8 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public override void Activate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
 			{
 				var injector = InjectorFactory.GetMethodInjector(directive.Member);

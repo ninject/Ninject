@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;
@@ -55,6 +56,10 @@ namespace Ninject.Activation.Providers
 		/// <param name="planner">The planner component.</param>
 		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+			Ensure.ArgumentNotNull(planner, "planner");
+
 			Type = type;
 			InjectorFactory = injectorFactory;
 			Planner = planner;
@@ -67,6 +72,8 @@ namespace Ninject.Activation.Providers
 		/// <returns>The created instance.</returns>
 		public virtual object Create(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			if (context.Plan == null)
 				context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
 
@@ -91,6 +98,9 @@ namespace Ninject.Activation.Providers
 		/// <returns>The value to inject into the specified target.</returns>
 		public object GetValue(IContext context, ITarget target)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(target, "target");
+
 			var parameter = context.Parameters.OfType<ConstructorArgument>().Where(p => p.Name == target.Name).SingleOrDefault();
 			return parameter != null ? parameter.GetValue(context) : target.ResolveWithin(context);
 		}
@@ -103,6 +113,7 @@ namespace Ninject.Activation.Providers
 		/// <returns>The implementation type that will be activated.</returns>
 		public Type GetImplementationType(Type service)
 		{
+			Ensure.ArgumentNotNull(service, "service");
 			return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
 		}
 
@@ -114,6 +125,8 @@ namespace Ninject.Activation.Providers
 		/// <returns>The created callback.</returns>
 		public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
 		{
+			Ensure.ArgumentNotNull(prototype, "prototype");
+
 			return ctx => new StandardProvider(prototype,
 				ctx.Kernel.Components.Get<IInjectorFactory>(),
 				ctx.Kernel.Components.Get<IPlanner>());

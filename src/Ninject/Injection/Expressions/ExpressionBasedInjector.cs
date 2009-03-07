@@ -18,6 +18,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Injection.Expressions
@@ -56,6 +57,7 @@ namespace Ninject.Injection.Expressions
 		/// <param name="member">The member that will be injected.</param>
 		protected ExpressionBasedInjector(TMember member)
 		{
+			Ensure.ArgumentNotNull(member, "member");
 			_expression = BuildExpression(member);
 		}
 

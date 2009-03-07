@@ -18,25 +18,27 @@
 using System;
 using System.Reflection;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Selection.Heuristics
 {
 	/// <summary>
-	/// Determines whether methods should be injected during activation by checking
+	/// Determines whether members should be injected during activation by checking
 	/// if they are decorated with an injection marker attribute.
 	/// </summary>
-	public class StandardMethodInjectionHeuristic : NinjectComponent, IMethodInjectionHeuristic
+	public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
 	{
 		/// <summary>
-		/// Returns a value indicating whether the specified method should be injected.
+		/// Returns a value indicating whether the specified member should be injected.
 		/// </summary>
-		/// <param name="method">The method.</param>
-		/// <returns><c>True</c> if the method should be injected; otherwise <c>false</c>.</returns>
-		public bool ShouldInject(MethodInfo method)
+		/// <param name="member">The member in question.</param>
+		/// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
+		public bool ShouldInject(MemberInfo member)
 		{
-			return method.HasAttribute(Settings.InjectAttribute);
+			Ensure.ArgumentNotNull(member, "member");
+			return member.HasAttribute(Settings.InjectAttribute);
 		}
 	}
 }

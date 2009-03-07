@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation.Strategies;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 #endregion
 
@@ -41,6 +42,7 @@ namespace Ninject.Activation
 		/// <param name="strategies">The strategies to execute during activation and deactivation.</param>
 		public Pipeline(IEnumerable<IActivationStrategy> strategies)
 		{
+			Ensure.ArgumentNotNull(strategies, "strategies");
 			Strategies = strategies.ToList();
 		}
 
@@ -50,6 +52,7 @@ namespace Ninject.Activation
 		/// <param name="context">The context.</param>
 		public void Activate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			Strategies.Map(s => s.Activate(context));
 		}
 
@@ -59,6 +62,7 @@ namespace Ninject.Activation
 		/// <param name="context">The context.</param>
 		public void Deactivate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			Strategies.Map(s => s.Deactivate(context));
 		}
 	}

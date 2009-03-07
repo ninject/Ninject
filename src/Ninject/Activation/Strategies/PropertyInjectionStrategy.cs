@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning.Directives;
@@ -41,6 +42,7 @@ namespace Ninject.Activation.Strategies
 		/// <param name="injectorFactory">The injector factory component.</param>
 		public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
 		{
+			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
 			InjectorFactory = injectorFactory;
 		}
 
@@ -51,6 +53,8 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public override void Activate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
 			{
 				var injector = InjectorFactory.GetPropertyInjector(directive.Member);
@@ -66,6 +70,9 @@ namespace Ninject.Activation.Strategies
 		/// <returns>The value to inject into the specified target.</returns>
 		public object GetValue(IContext context, ITarget target)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(target, "target");
+
 			var parameter = context.Parameters.OfType<PropertyValue>().Where(p => p.Name == target.Name).SingleOrDefault();
 			return parameter != null ? parameter.GetValue(context) : target.ResolveWithin(context);
 		}

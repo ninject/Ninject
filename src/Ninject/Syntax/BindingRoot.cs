@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Planning.Bindings;
 #endregion
@@ -42,6 +43,7 @@ namespace Ninject.Syntax
 		/// <param name="service">The service to bind.</param>
 		public IBindingToSyntax<object> Bind(Type service)
 		{
+			Ensure.ArgumentNotNull(service, "service");
 			return RegisterBindingAndCreateBuilder<object>(service);
 		}
 

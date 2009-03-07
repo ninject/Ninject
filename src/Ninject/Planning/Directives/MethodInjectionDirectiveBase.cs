@@ -18,6 +18,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Ninject.Infrastructure;
 using Ninject.Planning.Targets;
 #endregion
 
@@ -55,6 +56,7 @@ namespace Ninject.Planning.Directives
 		/// <param name="method">The method described by the directive.</param>
 		protected MethodInjectionDirectiveBase(T method)
 		{
+			Ensure.ArgumentNotNull(method, "method");
 			Member = method;
 		}
 
@@ -65,6 +67,7 @@ namespace Ninject.Planning.Directives
 		/// <returns>The targets for the method's parameters.</returns>
 		protected virtual ITarget[] CreateTargetsFromParameters(T method)
 		{
+			Ensure.ArgumentNotNull(method, "method");
 			return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
 		}
 	}

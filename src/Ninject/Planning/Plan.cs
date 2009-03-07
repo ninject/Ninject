@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Planning.Directives;
 #endregion
 
@@ -44,6 +45,8 @@ namespace Ninject.Planning
 		/// <param name="type">The type the plan describes.</param>
 		public Plan(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+
 			Type = type;
 			Directives = new List<IDirective>();
 		}
@@ -54,6 +57,7 @@ namespace Ninject.Planning
 		/// <param name="directive">The directive.</param>
 		public void Add(IDirective directive)
 		{
+			Ensure.ArgumentNotNull(directive, "directive");
 			Directives.Add(directive);
 		}
 

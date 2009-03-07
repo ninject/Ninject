@@ -18,6 +18,7 @@
 using System;
 using System.Threading;
 using Ninject.Components;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Activation.Caching
@@ -54,6 +55,8 @@ namespace Ninject.Activation.Caching
 		/// <param name="cache">The cache that will be pruned.</param>
 		public void Start(ICache cache)
 		{
+			Ensure.ArgumentNotNull(cache, "cache");
+
 			if (_timer != null)
 				Stop();
 

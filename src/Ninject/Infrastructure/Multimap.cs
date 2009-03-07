@@ -39,6 +39,8 @@ namespace Ninject.Infrastructure
 		{
 			get
 			{
+				Ensure.ArgumentNotNull(key, "key");
+
 				if (!_items.ContainsKey(key))
 					_items[key] = new List<V>();
 
@@ -69,6 +71,9 @@ namespace Ninject.Infrastructure
 		/// <param name="value">The value.</param>
 		public void Add(K key, V value)
 		{
+			Ensure.ArgumentNotNull(key, "key");
+			Ensure.ArgumentNotNull(value, "value");
+
 			this[key].Add(value);
 		}
 
@@ -80,6 +85,9 @@ namespace Ninject.Infrastructure
 		/// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
 		public bool Remove(K key, V value)
 		{
+			Ensure.ArgumentNotNull(key, "key");
+			Ensure.ArgumentNotNull(value, "value");
+
 			if (!_items.ContainsKey(key))
 				return false;
 
@@ -93,6 +101,7 @@ namespace Ninject.Infrastructure
 		/// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
 		public bool RemoveAll(K key)
 		{
+			Ensure.ArgumentNotNull(key, "key");
 			return _items.Remove(key);
 		}
 
@@ -111,6 +120,7 @@ namespace Ninject.Infrastructure
 		/// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
 		public bool ContainsKey(K key)
 		{
+			Ensure.ArgumentNotNull(key, "key");
 			return _items.ContainsKey(key);
 		}
 
@@ -122,6 +132,9 @@ namespace Ninject.Infrastructure
 		/// <returns><c>True</c> if the multimap contains such a value; otherwise, <c>false</c>.</returns>
 		public bool ContainsValue(K key, V value)
 		{
+			Ensure.ArgumentNotNull(key, "key");
+			Ensure.ArgumentNotNull(value, "value");
+
 			return _items.ContainsKey(key) && _items[key].Contains(value);
 		}
 

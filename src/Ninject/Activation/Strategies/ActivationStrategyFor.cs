@@ -16,6 +16,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Activation.Strategies
@@ -33,6 +34,8 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public sealed override void Activate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			if (context.Instance is T)
 				Activate(context, (T)context.Instance);
 		}
@@ -43,6 +46,8 @@ namespace Ninject.Activation.Strategies
 		/// <param name="context">The context.</param>
 		public sealed override void Deactivate(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
+
 			if (context.Instance is T)
 				Deactivate(context, (T)context.Instance);
 		}

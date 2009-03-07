@@ -18,6 +18,7 @@
 using System;
 using System.Reflection;
 using Ninject.Components;
+using Ninject.Infrastructure;
 using Ninject.Planning.Directives;
 using Ninject.Selection;
 #endregion
@@ -40,6 +41,7 @@ namespace Ninject.Planning.Strategies
 		/// <param name="selector">The selector component.</param>
 		public MethodReflectionStrategy(ISelector selector)
 		{
+			Ensure.ArgumentNotNull(selector, "selector");
 			Selector = selector;
 		}
 
@@ -50,6 +52,8 @@ namespace Ninject.Planning.Strategies
 		/// <param name="plan">The plan that is being generated.</param>
 		public void Execute(IPlan plan)
 		{
+			Ensure.ArgumentNotNull(plan, "plan");
+
 			foreach (MethodInfo method in Selector.SelectMethodsForInjection(plan.Type))
 				plan.Add(new MethodInjectionDirective(method));
 		}

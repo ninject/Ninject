@@ -103,6 +103,10 @@ namespace Ninject
 		/// <param name="modules">The modules to load into the kernel.</param>
 		protected KernelBase(IComponentContainer components, INinjectSettings settings, IEnumerable<IModule> modules)
 		{
+			Ensure.ArgumentNotNull(components, "components");
+			Ensure.ArgumentNotNull(settings, "settings");
+			Ensure.ArgumentNotNull(modules, "modules");
+
 			Settings = settings;
 
 			Components = components;
@@ -131,6 +135,7 @@ namespace Ninject
 		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
 		public virtual bool HasModule(Type moduleType)
 		{
+			Ensure.ArgumentNotNull(moduleType, "moduleType");
 			return _modules.ContainsKey(moduleType);
 		}
 
@@ -140,6 +145,8 @@ namespace Ninject
 		/// <param name="module">The module to load.</param>
 		public virtual void LoadModule(IModule module)
 		{
+			Ensure.ArgumentNotNull(module, "module");
+
 			_modules.Add(module.GetType(), module);
 			module.OnLoad(this);
 
@@ -152,6 +159,8 @@ namespace Ninject
 		/// <param name="moduleType">The type of the module.</param>
 		public virtual void UnloadModule(Type moduleType)
 		{
+			Ensure.ArgumentNotNull(moduleType, "moduleType");
+
 			IModule module = _modules[moduleType];
 
 			module.OnUnload(this);
@@ -166,6 +175,8 @@ namespace Ninject
 		/// <param name="binding">The binding to add.</param>
 		public override void AddBinding(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			_bindings.Add(binding.Service, binding);
 			BindingAdded.Raise(this, new BindingEventArgs(binding));
 		}
@@ -176,6 +187,8 @@ namespace Ninject
 		/// <param name="binding">The binding to remove.</param>
 		public override void RemoveBinding(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			_bindings.Remove(binding.Service, binding);
 			BindingRemoved.Raise(this, new BindingEventArgs(binding));
 		}
@@ -187,6 +200,9 @@ namespace Ninject
 		/// <param name="parameters">The parameters to pass to the request.</param>
 		public void Inject(object instance, params IParameter[] parameters)
 		{
+			Ensure.ArgumentNotNull(instance, "instance");
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
 			Type service = instance.GetType();
 
 			var planner = Components.Get<IPlanner>();
@@ -209,6 +225,8 @@ namespace Ninject
 		/// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
 		public virtual bool CanResolve(IRequest request)
 		{
+			Ensure.ArgumentNotNull(request, "request");
+
 			if (_bindings.ContainsKey(request.Service))
 				return true;
 
@@ -226,6 +244,8 @@ namespace Ninject
 		/// <returns>An enumerator of instances that match the request.</returns>
 		public virtual IEnumerable<object> Resolve(IRequest request)
 		{
+			Ensure.ArgumentNotNull(request, "request");
+
 			if (request.Service == typeof(IKernel))
 				return new[] { this };
 
@@ -253,6 +273,9 @@ namespace Ninject
 		/// <returns>The created request.</returns>
 		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
 			return new Request(service, constraint, parameters, null, isOptional);
 		}
 
@@ -263,6 +286,8 @@ namespace Ninject
 		/// <returns>A series of bindings that match the request.</returns>
 		public virtual IEnumerable<IBinding> GetBindings(IRequest request)
 		{
+			Ensure.ArgumentNotNull(request, "request");
+
 			foreach (IBinding binding in _bindings[request.Service])
 				yield return binding;
 
@@ -297,6 +322,8 @@ namespace Ninject
 		/// <returns><c>True</c> if the type is self-bindable; otherwise <c>false</c>.</returns>
 		protected virtual bool HandleMissingBinding(Type service)
 		{
+			Ensure.ArgumentNotNull(service, "service");
+
 			if (service.IsInterface || service.IsAbstract || service.ContainsGenericParameters)
 				return false;
 
@@ -319,6 +346,9 @@ namespace Ninject
 		/// <returns>The created context.</returns>
 		protected virtual IContext CreateContext(IRequest request, IBinding binding)
 		{
+			Ensure.ArgumentNotNull(request, "request");
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			return new Context(this, request, binding, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
 		}
 	}

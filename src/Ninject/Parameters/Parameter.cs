@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 #endregion
 
 namespace Ninject.Parameters
@@ -57,6 +58,9 @@ namespace Ninject.Parameters
 		/// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
 		public Parameter(string name, Func<IContext, object> valueCallback, bool shouldInherit)
 		{
+			Ensure.ArgumentNotNullOrEmpty(name, "name");
+			Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+
 			Name = name;
 			ValueCallback = valueCallback;
 			ShouldInherit = shouldInherit;
@@ -69,6 +73,7 @@ namespace Ninject.Parameters
 		/// <returns>The value for the parameter.</returns>
 		public object GetValue(IContext context)
 		{
+			Ensure.ArgumentNotNull(context, "context");
 			return ValueCallback(context);
 		}
 

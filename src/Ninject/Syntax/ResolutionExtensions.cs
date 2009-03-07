@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Syntax;
@@ -261,6 +262,10 @@ namespace Ninject
 
 		private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
 		{
+			Ensure.ArgumentNotNull(root, "root");
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
 			IRequest request = root.CreateRequest(service, constraint, parameters, isOptional);
 			return root.Resolve(request);
 		}

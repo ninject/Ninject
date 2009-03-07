@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ninject.Infrastructure;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
@@ -85,9 +86,12 @@ namespace Ninject.Activation
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
 		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional)
 		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
 			Service = service;
 			Constraint = constraint;
-			Parameters = parameters == null ? new List<IParameter>() : parameters.ToList();
+			Parameters = parameters.ToList();
 			ScopeCallback = scopeCallback;
 			ActiveBindings = new Stack<IBinding>();
 			Depth = 0;
@@ -103,6 +107,10 @@ namespace Ninject.Activation
 		/// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
 		public Request(IRequest parent, Type service, ITarget target, Func<object> scopeCallback)
 		{
+			Ensure.ArgumentNotNull(parent, "parent");
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(target, "target");
+
 			Parent = parent;
 			Service = service;
 			Target = target;
