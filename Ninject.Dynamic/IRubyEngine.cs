@@ -3,12 +3,13 @@
 using System;
 using System.Reflection;
 using IronRuby.Builtins;
+using Ninject.Components;
 
 #endregion
 
 namespace Ninject.Dynamic
 {
-    public interface IRubyEngine
+    public interface IRubyEngine : INinjectComponent
     {
         /// <summary>
         /// Calls the method.

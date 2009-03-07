@@ -60,12 +60,14 @@
       <HintPath>..\lib\ironruby\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyStreamContentProvider.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\IKernelExtensions.cs" />
     <Compile Include="Extensions\Inflector.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ScriptRuntimeExtensions.cs" />
@@ -74,6 +76,9 @@
     <Compile Include="IRubyEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubyEngine.cs" />
+    <Compile Include="RubyModule.cs" />
+    <Compile Include="RubyModuleLoader.cs" />
+    <Compile Include="IronRubyKernel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Ninject\Ninject.csproj">

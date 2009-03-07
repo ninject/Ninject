@@ -8,6 +8,7 @@ using IronRuby;
 using IronRuby.Builtins;
 using IronRuby.Runtime;
 using Microsoft.Scripting.Hosting;
+using Ninject.Components;
 using Ninject.Dynamic.Extensions;
 
 #endregion
@@ -18,15 +19,17 @@ namespace Ninject.Dynamic
     /// A wrapper for ScriptEngine, Runtime and Context
     /// This class handles all the interaction with IronRuby
     /// </summary>
-    public class RubyEngine : IRubyEngine
+    public class RubyEngine : NinjectComponent, IRubyEngine
     {
+
+        private static ScriptRuntime _scriptRuntime;
         /// <summary>
         /// Initializes a new instance of the <see cref="RubyEngine"/> class.
         /// </summary>
         /// <param name="runtime">The runtime.</param>
         public RubyEngine(ScriptRuntime runtime)
         {
-            Runtime = runtime;
+            if (_scriptRuntime.IsNull()) _scriptRuntime = InitializeIronRuby();
 
             Initialize();
         }
@@ -35,7 +38,7 @@ namespace Ninject.Dynamic
         /// Gets the runtime.
         /// </summary>
         /// <value>The runtime.</value>
-        internal ScriptRuntime Runtime { get; set; }
+        internal ScriptRuntime Runtime { get { return _scriptRuntime;  } }
 
         /// <summary>
         /// Gets the context.
@@ -164,27 +167,26 @@ namespace Ninject.Dynamic
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="readerType">Type of the reader.</param>
-        internal void RequireRubyFile(string path, ReaderType readerType)
+        internal object RequireRubyFile(string path, ReaderType readerType)
         {
             if (readerType == ReaderType.Assembly)
-                Engine.CreateScriptSource(new AssemblyStreamContentProvider(path, typeof (IRubyEngine).Assembly), null, Encoding.Unicode).Execute();
-            else
-            {
-                Engine.CreateScriptSourceFromFile(path, Encoding.Unicode).Execute();
-            }
+                return Engine.CreateScriptSource(new AssemblyStreamContentProvider(path, typeof (IRubyEngine).Assembly), null, Encoding.Unicode).Execute();
+            
+            return Engine.CreateScriptSourceFromFile(path, Encoding.Unicode).Execute();
         }
 
-
-        /// <summary>
-        /// Initializes the iron ruby MVC.
-        /// </summary>
-        public static RubyEngine InitializeIronRubyMvc()
+        internal object ExecuteFile(string path)
         {
-            var engine = InitializeIronRuby();
-            return engine;
+            return Engine.CreateScriptSourceFromFile(path, Encoding.UTF8).Execute(CurrentScope);
         }
 
-        private static RubyEngine InitializeIronRuby()
+        internal T ExecuteFile<T>(string path)
+        {
+            return (T) ExecuteFile(path);
+        }
+
+
+        private static ScriptRuntime InitializeIronRuby()
         {
             var rubySetup = Ruby.CreateRubySetup();
 
@@ -192,8 +194,7 @@ namespace Ninject.Dynamic
             runtimeSetup.LanguageSetups.Add(rubySetup);
             runtimeSetup.DebugMode = true;
 
-            var runtime = Ruby.CreateRuntime(runtimeSetup);
-            return new RubyEngine(runtime);
+            return Ruby.CreateRuntime(runtimeSetup);
         }
     }
 }

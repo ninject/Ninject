@@ -88,6 +88,15 @@ namespace Ninject.Dynamic.Extensions
             }
         }
 
+        public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<TSource> collection, Func<TSource, IEnumerable<TSource>> action)
+        {
+            foreach (TSource source in collection)
+            {
+                foreach(TSource result in action(source))
+                    yield return result;
+            }
+        }
+
         internal static IEnumerable<TTarget> Cast<TTarget>(this IEnumerable collection) where TTarget : class
         {
             var result = new List<TTarget>();

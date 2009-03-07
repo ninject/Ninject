@@ -1,5 +1,6 @@
 #region Usings
 
+using System;
 using System.Globalization;
 
 #endregion
@@ -44,6 +45,16 @@ namespace Ninject.Dynamic.Extensions
         public static string FormattedWith(this string value, params object[] parameters)
         {
             return string.Format(CultureInfo.CurrentUICulture, value, parameters);
+        }
+
+        /// <summary>
+        /// Ensures that the argument not null.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="argumentName">Name of the argument.</param>
+        public static void EnsureArgumentNotNullOrBlank(this string value, string argumentName)
+        {
+            if (value.IsNullOrBlank()) throw new ArgumentNullException(argumentName, "Cannot be null or empty");
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Ninject.Dynamic.Extensions
 {
     /// <summary>
@@ -27,6 +29,16 @@ namespace Ninject.Dynamic.Extensions
         public static bool IsNull(this object value)
         {
             return value == null;
+        }
+
+        /// <summary>
+        /// Ensures that the argument not null.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="argumentName">Name of the argument.</param>
+        public static void EnsureArgumentNotNull(this object value, string argumentName)
+        {
+            if (value.IsNull()) throw new ArgumentNullException(argumentName, "Cannot be null");
         }
     }
 }
