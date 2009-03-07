@@ -1,3 +1,5 @@
+include Ninject::Activation::Providers
+
 module Ninject
   
   module Planning
@@ -6,10 +8,13 @@ module Ninject
       
       class Binding
         
-        def self.from_hash(service_type, config)
-          binding = Binding.new service_type.to_clr_type
-          binding.provider_callback = Ninject::Activation::Providers::StandardProvider.get_creation_callback(config[:to].to_clr_type) if config.respond_to? :to
-          binding.target = BindingTarget.type;
+        def self.from_hash(service, config)
+          binding = Binding.new config[:service].to_clr_type
+          if config.respond_to? :to
+            binding.provider_callback = StandardProvider.get_creation_callback(config[:to].to_clr_type)
+            binding.target = BindingTarget.type
+          end
+          binding
         end
         
       end
@@ -29,7 +34,8 @@ class Initializer
   end
   
   def bind(service_type, config={})
-    
+    config[:service] ||= service_type
+    @bindings << Binding.from_hash(config)
   end
   
 end
