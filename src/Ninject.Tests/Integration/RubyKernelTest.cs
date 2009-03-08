@@ -142,13 +142,12 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBouondWithConstraints : RubyKernelContext
+    public class WhenBoundWithConstraints : RubyKernelContext
     {
         [Fact]
         public void ReturnsServiceRegisteredViaBindingWithSpecifiedName()
         {
-            kernel.Bind<IWeapon>().To<Shuriken>();
-            kernel.Bind<IWeapon>().To<Sword>().Named("sword");
+            kernel.AutoLoadModulesRecursively("~", "config_named.rb");
 
             var weapon = kernel.Get<IWeapon>("sword");
 
@@ -159,8 +158,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void ReturnsServiceRegisteredViaBindingThatMatchesPredicate()
         {
-            kernel.Bind<IWeapon>().To<Shuriken>().WithMetadata("type", "range");
-            kernel.Bind<IWeapon>().To<Sword>().WithMetadata("type", "melee");
+            kernel.AutoLoadModulesRecursively("~", "config_metadata.rb");
 
             var weapon = kernel.Get<IWeapon>(x => x.Get<string>("type") == "melee");
 
