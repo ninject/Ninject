@@ -23,26 +23,19 @@ using Ninject.Components;
 namespace Ninject.Modules
 {
 	/// <summary>
-	/// Finds modules defined in external files.
+	/// Loads modules at runtime by searching external files.
 	/// </summary>
-	public interface IModuleLoader : INinjectComponent
+	public interface IModuleLoaderPlugin : INinjectComponent
 	{
 		/// <summary>
-		/// Gets the plugins that will be used to load modules.
+		/// Gets the file patterns (*.dll, etc.) supported by the plugin.
 		/// </summary>
-		ICollection<IModuleLoaderPlugin> Plugins { get; }
+		ICollection<string> SupportedPatterns { get; }
 
 		/// <summary>
-		/// Loads any modules found in files in the specified path.
+		/// Loads modules from the specified files.
 		/// </summary>
-		/// <param name="path">The path to search.</param>
-		void LoadModules(string path);
-
-		/// <summary>
-		/// Loads any modules found in files in the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
-		void LoadModules(string path, bool recursive);
+		/// <param name="files">The names of the files to load modules from.</param>
+		void LoadModules(IEnumerable<string> files);
 	}
 }

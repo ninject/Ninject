@@ -76,6 +76,7 @@ namespace Ninject
 
 			#if !SILVERLIGHT
 			Components.Add<IModuleLoader, ModuleLoader>();
+			Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
 			#endif
 		}
 	}
