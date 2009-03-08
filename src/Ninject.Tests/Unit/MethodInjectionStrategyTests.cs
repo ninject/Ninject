@@ -10,6 +10,7 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
@@ -32,21 +33,23 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		protected MethodInfo method2 = typeof(Dummy).GetMethod("Bar");
 		protected Mock<IContext> contextMock;
 		protected Mock<IPlan> planMock;
-		protected Mock<IMethodInjector> methodInjectorMock1;
-		protected Mock<IMethodInjector> methodInjectorMock2;
 		protected FakeMethodInjectionDirective[] directives;
+		protected MethodInjector injector1;
+		protected MethodInjector injector2;
+		protected bool injector1WasCalled;
+		protected bool injector2WasCalled;
 
 		public WhenActivateIsCalled()
 		{
 			contextMock = new Mock<IContext>();
 			planMock = new Mock<IPlan>();
-			methodInjectorMock1 = new Mock<IMethodInjector>();
-			methodInjectorMock2 = new Mock<IMethodInjector>();
+			injector1 = (x, args) => { injector1WasCalled = true; };
+			injector2 = (x, args) => { injector2WasCalled = true; };
 
 			directives = new[] { new FakeMethodInjectionDirective(method1), new FakeMethodInjectionDirective(method2) };
 
-			injectorFactoryMock.Setup(x => x.GetMethodInjector(method1)).Returns(methodInjectorMock1.Object).AtMostOnce();
-			injectorFactoryMock.Setup(x => x.GetMethodInjector(method2)).Returns(methodInjectorMock2.Object).AtMostOnce();
+			injectorFactoryMock.Setup(x => x.GetInjector(method1)).Returns(injector1).AtMostOnce();
+			injectorFactoryMock.Setup(x => x.GetInjector(method2)).Returns(injector2).AtMostOnce();
 
 			contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
@@ -67,8 +70,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		{
 			strategy.Activate(contextMock.Object);
 
-			injectorFactoryMock.Verify(x => x.GetMethodInjector(method1));
-			injectorFactoryMock.Verify(x => x.GetMethodInjector(method2));
+			injectorFactoryMock.Verify(x => x.GetInjector(method1));
+			injectorFactoryMock.Verify(x => x.GetInjector(method2));
 		}
 
 		[Fact]
@@ -83,9 +86,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		public void InvokesInjectorsForEachDirective()
 		{
 			strategy.Activate(contextMock.Object);
-
-			methodInjectorMock1.Verify(x => x.Invoke(instance, It.Is<object[]>(a => a.Length == 2)));
-			methodInjectorMock2.Verify(x => x.Invoke(instance, It.Is<object[]>(a => a.Length == 1)));
+			injector1WasCalled.ShouldBeTrue();
+			injector2WasCalled.ShouldBeTrue();
 		}
 	}
 

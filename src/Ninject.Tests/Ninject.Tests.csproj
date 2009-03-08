@@ -71,7 +71,7 @@
     <Compile Include="Integration\TransientScopeTests.cs" />
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
-    <Compile Include="Unit\ExpressionConstructorInjectorTests.cs" />
+    <Compile Include="Unit\ExpressionInjectorFactoryTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
@@ -88,14 +88,11 @@
     <Compile Include="Unit\DisposableStrategyTests.cs" />
     <Compile Include="Unit\MethodInjectionStrategyTests.cs" />
     <Compile Include="Unit\PipelineTests.cs" />
-    <Compile Include="Unit\ExpressionMethodInjectorTests.cs" />
     <Compile Include="Fakes\AbstractWeapon.cs" />
     <Compile Include="Fakes\Shuriken.cs" />
     <Compile Include="Unit\CacheTests.cs" />
     <Compile Include="Integration\StandardKernelTests.cs" />
     <Compile Include="Unit\ComponentContainerTests.cs" />
-    <Compile Include="Unit\ExpressionVoidMethodInjectorTests.cs" />
-    <Compile Include="Unit\ExpressionPropertyInjectorTests.cs" />
     <Compile Include="Fakes\IWarrior.cs" />
     <Compile Include="Fakes\Samurai.cs" />
     <Compile Include="Fakes\Sword.cs" />

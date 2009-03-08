@@ -57,7 +57,7 @@ namespace Ninject.Activation.Strategies
 
 			foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
 			{
-				var injector = InjectorFactory.GetPropertyInjector(directive.Member);
+				var injector = InjectorFactory.GetInjector(directive.Member);
 				injector.Invoke(context.Instance, GetValue(context, directive.Target));
 			}
 		}

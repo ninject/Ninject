@@ -1,6 +1,6 @@
-_ReSharper.Ninject
-obj
 bin
+obj
 build
-*.user
+dist
 *.suo
+*resharper*

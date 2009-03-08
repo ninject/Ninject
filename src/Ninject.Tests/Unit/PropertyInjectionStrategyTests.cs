@@ -9,6 +9,7 @@ using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Xunit;
+using Xunit.Should;
 
 namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
@@ -31,21 +32,23 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 		protected PropertyInfo property2 = typeof(Dummy).GetProperty("Bar");
 		protected Mock<IContext> contextMock;
 		protected Mock<IPlan> planMock;
-		protected Mock<IPropertyInjector> propertyInjectorMock1;
-		protected Mock<IPropertyInjector> propertyInjectorMock2;
 		protected FakePropertyInjectionDirective[] directives;
+		protected PropertyInjector injector1;
+		protected PropertyInjector injector2;
+		protected bool injector1WasCalled;
+		protected bool injector2WasCalled;
 
 		public WhenActivateIsCalled()
 		{
 			contextMock = new Mock<IContext>();
 			planMock = new Mock<IPlan>();
-			propertyInjectorMock1 = new Mock<IPropertyInjector>();
-			propertyInjectorMock2 = new Mock<IPropertyInjector>();
+			injector1 = (x, y) => { injector1WasCalled = true; };
+			injector2 = (x, y) => { injector2WasCalled = true; };
 
 			directives = new[] { new FakePropertyInjectionDirective(property1), new FakePropertyInjectionDirective(property2) };
 
-			injectorFactoryMock.Setup(x => x.GetPropertyInjector(property1)).Returns(propertyInjectorMock1.Object).AtMostOnce();
-			injectorFactoryMock.Setup(x => x.GetPropertyInjector(property2)).Returns(propertyInjectorMock2.Object).AtMostOnce();
+			injectorFactoryMock.Setup(x => x.GetInjector(property1)).Returns(injector1).AtMostOnce();
+			injectorFactoryMock.Setup(x => x.GetInjector(property2)).Returns(injector2).AtMostOnce();
 
 			contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
@@ -67,8 +70,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 		{
 			strategy.Activate(contextMock.Object);
 
-			injectorFactoryMock.Verify(x => x.GetPropertyInjector(property1));
-			injectorFactoryMock.Verify(x => x.GetPropertyInjector(property2));
+			injectorFactoryMock.Verify(x => x.GetInjector(property1));
+			injectorFactoryMock.Verify(x => x.GetInjector(property2));
 		}
 
 		[Fact]
@@ -83,9 +86,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 		public void InvokesInjectorsForEachDirective()
 		{
 			strategy.Activate(contextMock.Object);
-
-			propertyInjectorMock1.Verify(x => x.Invoke(instance, null));
-			propertyInjectorMock2.Verify(x => x.Invoke(instance, null));
+			injector1WasCalled.ShouldBeTrue();
+			injector2WasCalled.ShouldBeTrue();
 		}
 	}
 
