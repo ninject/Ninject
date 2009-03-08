@@ -163,7 +163,7 @@ namespace Ninject.Dynamic
             Context = Ruby.GetExecutionContext(Engine);
             CurrentScope = Engine.CreateScope();
             Operations = Engine.CreateOperations();
-            LoadAssemblies(typeof (object), typeof (Uri), typeof (StandardKernel), typeof (IRubyEngine));
+            LoadAssemblies(typeof (object), typeof (Uri), typeof(Func<object>), typeof (StandardKernel), typeof (IRubyEngine));
             RequireRubyFile("Ninject.Dynamic.initializer.rb", ReaderType.Assembly);
         }
 

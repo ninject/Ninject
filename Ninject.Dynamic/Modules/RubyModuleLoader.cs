@@ -6,11 +6,12 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 using Ninject.Dynamic.Extensions;
+using Ninject.Dynamic.Modules;
 using Ninject.Modules;
 
 #endregion
 
-namespace Ninject.Dynamic
+namespace Ninject.Dynamic.Modules
 {
     public class RubyModuleLoader : IModuleLoader
     {

@@ -6,7 +6,7 @@ using Ninject.Planning.Bindings;
 
 #endregion
 
-namespace Ninject.Dynamic
+namespace Ninject.Dynamic.Modules
 {
     public class RubyModule : Module
     {

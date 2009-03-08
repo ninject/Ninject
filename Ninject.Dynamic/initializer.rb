@@ -1,23 +1,19 @@
+include Ninject::Activation
 include Ninject::Activation::Providers
+include Ninject::Dynamic::Activation::Providers
 BindingTarget = Ninject::Planning::Bindings::BindingTarget
 
 class Symbol
   
   def to_binding_target
-    case self
-    when :type
-      return BindingTarget.type
-    when :self
-      return BindingTarget.self
-		when :provider
-      return BindingTarget.provider
-    when :method 
-      return BindingTarget.method
-    when :constant
-      return BindingTarget.constant
-    else
-      return nil
-    end
+    @@binding_target_mappings ||= {
+      :type => BindingTarget.type,
+      :self => BindingTarget.self,
+      :provider => BindingTarget.provider,
+      :method => BindingTarget.method,
+      :constant => BindingTarget.constant      
+    }
+    @@binding_target_mappings[self]
   end
   
 end
@@ -28,9 +24,42 @@ module System
       StandardProvider.get_creation_callback self
     end
     
-    def to_provider
-      
+    def to_provider_callback
+      System::Func.of(IContext, IProvider).new do |context|
+        Ninject::ResolutionExtensions.get(context, self)
+      end
     end
+    
+  end
+  
+  class Object
+    def to_provider_callback      
+      System.Func.of(IContext, IProvider).new { |context| self }
+    end
+    
+    def to_constant_callback
+      System::Func.of(IContext, IProvider).new do |context|
+        ConstantProvider.new self
+      end
+    end
+  end
+end
+
+class Proc
+  def to_ruby_proc_callback
+    System::Func.of(IContext, IProvider).new do |context|
+      RubyProcProvider.new self
+    end
+  end
+end
+
+class Class
+  def to_provider_callback
+    self.to_clr_type.to_provider_callback
+  end
+  
+  def to_creation_callback
+    self.to_clr_type.to_creation_callback
   end
 end
 
@@ -59,12 +88,17 @@ module Ninject
                 config[:target] = :self
                 binding.provider_callback = binding.service.to_creation_callback
               when config[:to].is_a?(Class)
-                binding.provider_callback = config[:to].to_clr_type.to_creation_callback
+                binding.provider_callback = config[:to].to_creation_callback
                 config[:target] = :type
-#              when config[:to] == :provider || config[:provider]
-#                binding.provider_callback = config[:provider].to_clr_type
-#                config[:target] = :provider
-              #when 
+              when config[:provider]
+                binding.provider_callback = config[:provider].to_provider_callback
+                config[:target] = :provider
+              when config[:method]
+                binding.provider_callback = config[:method].to_ruby_proc_callback
+                config[:target] = :method
+              when config[:constant]
+                binding.provider_callback = config[:constant].to_constant_callback
+                config[:target] = :constant
               end
             end
         end

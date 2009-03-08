@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Dynamic.Extensions;
+using Ninject.Dynamic.Modules;
 using Ninject.Events;
 using Ninject.Infrastructure.Language;
 using Ninject.Modules;
