@@ -8,9 +8,9 @@ module Ninject
       
       class Binding
         
-        def self.from_hash(service, config)
+        def self.from_hash(config)
           binding = Binding.new config[:service].to_clr_type
-          if config.respond_to? :to
+          unless config[:to].nil?
             binding.provider_callback = StandardProvider.get_creation_callback(config[:to].to_clr_type)
             binding.target = BindingTarget.type
           end
@@ -25,7 +25,7 @@ module Ninject
   
 end
 
-class Initializer
+class NinjectInitializer
   
   attr_accessor :bindings
   
@@ -35,14 +35,18 @@ class Initializer
   
   def bind(service_type, config={})
     config[:service] ||= service_type
-    @bindings << Binding.from_hash(config)
+    @bindings << Ninject::Planning::Bindings::Binding.from_hash(config)
   end
   
 end
 
 def to_configure_ninject(&b)
   raise ArgumentError.new("You need to provide a block for the initializer to work") if b.nil?
-  initializer = Initializer.new
+  initializer = NinjectInitializer.new
   b.call(initializer)
-  initializer
+  initializer.bindings
 end
+
+#to_configure_ninject do |ninject|
+#  ninject.bind IServiceA, :to => ServiceA, :scope => :singleton
+#end

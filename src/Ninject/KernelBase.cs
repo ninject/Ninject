@@ -150,8 +150,17 @@ namespace Ninject
 			_modules.Add(module.GetType(), module);
 			module.OnLoad(this);
 
-			ModuleLoaded.Raise(this, new ModuleEventArgs(module));
+			OnModuleLoaded(module);
 		}
+
+        /// <summary>
+        /// Called when a module has been loaded.
+        /// </summary>
+        /// <param name="module">The module.</param>
+        protected void OnModuleLoaded(IModule module)
+        {
+            ModuleLoaded.Raise(this, new ModuleEventArgs(module));
+        }
 
 		/// <summary>
 		/// Unloads the module with the specified type.

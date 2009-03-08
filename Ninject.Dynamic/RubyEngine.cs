@@ -19,17 +19,22 @@ namespace Ninject.Dynamic
     /// A wrapper for ScriptEngine, Runtime and Context
     /// This class handles all the interaction with IronRuby
     /// </summary>
-    public class RubyEngine : NinjectComponent, IRubyEngine
+    public class RubyEngine : IRubyEngine
     {
 
         private static ScriptRuntime _scriptRuntime;
+        private readonly bool _shouldShutdown;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RubyEngine"/> class.
         /// </summary>
-        /// <param name="runtime">The runtime.</param>
-        public RubyEngine(ScriptRuntime runtime)
+        public RubyEngine()
         {
-            if (_scriptRuntime.IsNull()) _scriptRuntime = InitializeIronRuby();
+            if (_scriptRuntime.IsNull())
+            {
+                _scriptRuntime = InitializeIronRuby();
+                _shouldShutdown = true;
+            }
 
             Initialize();
         }
@@ -38,7 +43,7 @@ namespace Ninject.Dynamic
         /// Gets the runtime.
         /// </summary>
         /// <value>The runtime.</value>
-        internal ScriptRuntime Runtime { get { return _scriptRuntime;  } }
+        internal static ScriptRuntime Runtime { get { return _scriptRuntime;  } }
 
         /// <summary>
         /// Gets the context.
@@ -159,6 +164,7 @@ namespace Ninject.Dynamic
             CurrentScope = Engine.CreateScope();
             Operations = Engine.CreateOperations();
             LoadAssemblies(typeof (object), typeof (Uri), typeof (StandardKernel), typeof (IRubyEngine));
+            RequireRubyFile("Ninject.Dynamic.initializer.rb", ReaderType.Assembly);
         }
 
 
@@ -170,9 +176,9 @@ namespace Ninject.Dynamic
         internal object RequireRubyFile(string path, ReaderType readerType)
         {
             if (readerType == ReaderType.Assembly)
-                return Engine.CreateScriptSource(new AssemblyStreamContentProvider(path, typeof (IRubyEngine).Assembly), null, Encoding.Unicode).Execute();
+                return Engine.CreateScriptSource(new AssemblyStreamContentProvider(path, typeof (IRubyEngine).Assembly), null, Encoding.UTF8).Execute();
             
-            return Engine.CreateScriptSourceFromFile(path, Encoding.Unicode).Execute();
+            return Engine.CreateScriptSourceFromFile(path, Encoding.UTF8).Execute();
         }
 
         internal object ExecuteFile(string path)
@@ -196,5 +202,27 @@ namespace Ninject.Dynamic
 
             return Ruby.CreateRuntime(runtimeSetup);
         }
+
+        #region Implementation of IDisposable
+
+        /// <summary>
+        ///  Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public void Dispose()
+        {
+            if(_shouldShutdown) Runtime.Shutdown();
+        }
+
+        #endregion
+
+        #region Implementation of INinjectComponent
+
+        /// <summary>
+        /// Gets or sets the settings that are being used.
+        /// </summary>
+        public INinjectSettings Settings { get; set; }
+
+        #endregion
     }
 }

@@ -1,9 +1,10 @@
-using System;
+#region Usings
+
 using IronRuby.Builtins;
-using Ninject.Dynamic.Extensions;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
-using Ninject.Syntax;
+
+#endregion
 
 namespace Ninject.Dynamic
 {
@@ -12,6 +13,10 @@ namespace Ninject.Dynamic
         private readonly IRubyEngine _engine;
         private readonly string _scriptPath;
 
+        public string ScriptPath
+        {
+            get { return _scriptPath; }
+        }
 
 
         public RubyModule(IRubyEngine engine, string scriptPath)
@@ -27,9 +32,9 @@ namespace Ninject.Dynamic
         /// </summary>
         public override void Load()
         {
-            var bindings = ((RubyEngine)_engine).ExecuteFile<RubyArray>(_scriptPath);
+            var bindings = ((RubyEngine) _engine).ExecuteFile<RubyArray>(_scriptPath);
 
-            bindings.ForEach(item => AddBinding((IBinding)item));
+            bindings.ForEach(item => AddBinding((IBinding) item));
         }
 
         #endregion

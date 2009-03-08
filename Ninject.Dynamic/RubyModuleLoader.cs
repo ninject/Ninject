@@ -14,21 +14,17 @@ namespace Ninject.Dynamic
 {
     public class RubyModuleLoader : IModuleLoader
     {
+        private readonly IDecoratableModuleLoader _defaultModuleLoader;
         private readonly IRubyEngine _engine;
-        private IModuleLoader _defaultModuleLoader;
 
-        public RubyModuleLoader(IKernel kernel, IRubyEngine engine)
+        public RubyModuleLoader(IKernel kernel, IRubyEngine engine, IDecoratableModuleLoader decoratableModuleLoader)
         {
             _engine = engine;
             Kernel = kernel;
+            _defaultModuleLoader = decoratableModuleLoader;
         }
 
         public IKernel Kernel { get; set; }
-
-        public void Initialize(IModuleLoader defaultModuleLoader)
-        {
-            _defaultModuleLoader = defaultModuleLoader;
-        }
 
         /// <summary>
         /// Normalizes the provided path.

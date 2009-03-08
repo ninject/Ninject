@@ -24,6 +24,14 @@ using Ninject.Components;
 
 namespace Ninject.Modules
 {
+    /// <summary>
+    /// A marker for registering a decoratable module loader
+    /// </summary>
+    public interface IDecoratableModuleLoader : IModuleLoader
+    {
+        
+    }
+
 	/// <summary>
 	/// Automatically finds and loads modules from assemblies.
 	/// </summary>
