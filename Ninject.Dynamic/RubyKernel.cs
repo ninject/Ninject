@@ -43,6 +43,7 @@ namespace Ninject.Dynamic
         public override void LoadModule(IModule module)
         {
             module.EnsureArgumentNotNull("module");
+
             if(module is RubyModule)
             {
                 _rubyModules.Add(((RubyModule)module).ScriptPath, module);

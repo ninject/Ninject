@@ -1,0 +1,5 @@
+This repository contains the ruby branch of Ninject.
+The aim is to integrate the DLR as nicely as possible in a DI container.
+
+If you're using Resharper for running unit tests you'll have to uncheck the box next to
+Shadow-copies being tested in the unit testing section of the resharper options.
