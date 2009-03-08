@@ -14,23 +14,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-#region Using Directives
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-#endregion
 
-namespace Ninject.Injection.Expressions
+
+namespace Ninject.Injection
 {
-	internal static class ExpressionHelper
-	{
-		public static Expression[] CreateParameterExpressions(MethodBase method, Expression argumentArrayExpression)
-		{
-			return method.GetParameters().Select((parameter, index) =>
-				Expression.Convert(
-					Expression.ArrayIndex(argumentArrayExpression, Expression.Constant(index)),
-					parameter.ParameterType)).ToArray();
-		}
-	}
+	/// <summary>
+	/// A delegate that can inject values into a constructor.
+	/// </summary>
+	public delegate object ConstructorInjector(object[] arguments);
 }

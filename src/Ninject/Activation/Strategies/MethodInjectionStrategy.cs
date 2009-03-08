@@ -55,7 +55,7 @@ namespace Ninject.Activation.Strategies
 
 			foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
 			{
-				var injector = InjectorFactory.GetMethodInjector(directive.Member);
+				var injector = InjectorFactory.GetInjector(directive.Member);
 				var arguments = directive.Targets.Select(target => target.ResolveWithin(context));
 				injector.Invoke(context.Instance, arguments.ToArray());
 			}

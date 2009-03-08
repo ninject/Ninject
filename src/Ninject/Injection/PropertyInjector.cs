@@ -14,22 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-#region Using Directives
-using System;
-#endregion
 
 namespace Ninject.Injection
 {
 	/// <summary>
-	/// Injects values into a constructor.
+	/// A delegate that can inject values into a property.
 	/// </summary>
-	public interface IConstructorInjector
-	{
-		/// <summary>
-		/// Calls the associated constructor, injecting the specified values.
-		/// </summary>
-		/// <param name="values">The values to inject.</param>
-		/// <returns>The object created by the constructor.</returns>
-		object Invoke(object[] values);
-	}
+	public delegate void PropertyInjector(object target, object value);
 }

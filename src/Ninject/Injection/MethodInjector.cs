@@ -14,22 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
-#region Using Directives
-using System;
-#endregion
 
 namespace Ninject.Injection
 {
 	/// <summary>
-	/// Injects values into a property.
+	/// A delegate that can inject values into a method.
 	/// </summary>
-	public interface IPropertyInjector
-	{
-		/// <summary>
-		/// Injects the specified value into the property.
-		/// </summary>
-		/// <param name="target">The target object to inject.</param>
-		/// <param name="value">The value to inject.</param>
-		void Invoke(object target, object value);
-	}
+	public delegate void MethodInjector(object target, object[] arguments);
 }

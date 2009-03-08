@@ -21,7 +21,6 @@ using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
 using Ninject.Infrastructure;
 using Ninject.Injection;
-using Ninject.Injection.Expressions;
 using Ninject.Modules;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;

@@ -82,7 +82,7 @@ namespace Ninject.Activation.Providers
 			if (directive == null)
 				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
 
-			var injector = InjectorFactory.GetConstructorInjector(directive.Member);
+			var injector = InjectorFactory.GetInjector(directive.Member);
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
 
 			context.Instance = injector.Invoke(arguments);

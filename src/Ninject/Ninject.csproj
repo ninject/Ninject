@@ -110,7 +110,10 @@
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
-    <Compile Include="Injection\Expressions\ExpressionHelper.cs" />
+    <Compile Include="Infrastructure\MemberKey.cs" />
+    <Compile Include="Injection\ConstructorInjector.cs" />
+    <Compile Include="Injection\PropertyInjector.cs" />
+    <Compile Include="Injection\MethodInjector.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
@@ -132,8 +135,6 @@
     <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Blocks\ActivationBlock.cs" />
-    <Compile Include="Injection\Expressions\ExpressionMethodInjectorBase.cs" />
-    <Compile Include="Injection\Expressions\ExpressionVoidMethodInjector.cs" />
     <Compile Include="NinjectSettings.cs" />
     <Compile Include="Activation\Providers\StandardProvider.cs" />
     <Compile Include="Activation\Provider.cs" />
@@ -145,15 +146,8 @@
     <Compile Include="Components\IComponentContainer.cs" />
     <Compile Include="Syntax\IBindingRoot.cs" />
     <Compile Include="Activation\Providers\CallbackProvider.cs" />
-    <Compile Include="Injection\Expressions\ExpressionInjectorFactory.cs" />
+    <Compile Include="Injection\ExpressionInjectorFactory.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
-    <Compile Include="Injection\Expressions\ExpressionConstructorInjector.cs" />
-    <Compile Include="Injection\Expressions\ExpressionMethodInjector.cs" />
-    <Compile Include="Injection\Expressions\ExpressionBasedInjector.cs" />
-    <Compile Include="Injection\Expressions\ExpressionPropertyInjector.cs" />
-    <Compile Include="Injection\IConstructorInjector.cs" />
-    <Compile Include="Injection\IMethodInjector.cs" />
-    <Compile Include="Injection\IPropertyInjector.cs" />
     <Compile Include="Modules\Module.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
