@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Ninject.Dynamic;
 using Ninject.Tests.Fakes;
+using Ninject.Tests.Integration.StandardKernelTests;
 using Xunit;
 using Xunit.Should;
 
-namespace Ninject.Tests.Integration
+namespace Ninject.Tests.Integration.RubyKernelTests
 {
 
     public class RubyKernelContext
@@ -118,6 +122,50 @@ namespace Ninject.Tests.Integration
             samurai.ShouldNotBeNull();
             samurai.Weapon.ShouldNotBeNull();
             samurai.Weapon.ShouldBeInstanceOf<Sword>();
+        }
+    }
+
+
+    public class WhenBoundToGenericServiceRegisteredViaOpenGenericType : RubyKernelContext
+    {
+        [Fact]
+        public void GenericParametersAreInferred()
+        {
+            kernel.AutoLoadModulesRecursively("~", "config_open_generics.rb");
+
+            var services = kernel.GetAll<IGeneric<int>>().ToArray();
+
+            services.ShouldNotBeNull();
+            services.Length.ShouldBe(2);
+            services[0].ShouldBeInstanceOf<GenericService<int>>();
+            services[1].ShouldBeInstanceOf<GenericService2<int>>();
+        }
+    }
+
+    public class WhenBouondWithConstraints : RubyKernelContext
+    {
+        [Fact]
+        public void ReturnsServiceRegisteredViaBindingWithSpecifiedName()
+        {
+            kernel.Bind<IWeapon>().To<Shuriken>();
+            kernel.Bind<IWeapon>().To<Sword>().Named("sword");
+
+            var weapon = kernel.Get<IWeapon>("sword");
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+        }
+
+        [Fact]
+        public void ReturnsServiceRegisteredViaBindingThatMatchesPredicate()
+        {
+            kernel.Bind<IWeapon>().To<Shuriken>().WithMetadata("type", "range");
+            kernel.Bind<IWeapon>().To<Sword>().WithMetadata("type", "melee");
+
+            var weapon = kernel.Get<IWeapon>(x => x.Get<string>("type") == "melee");
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
         }
     }
 }

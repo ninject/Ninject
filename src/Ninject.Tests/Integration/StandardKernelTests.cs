@@ -297,9 +297,20 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 	}
 
-	public interface IGeneric<T> { }
-	public class GenericService<T> : IGeneric<T> { }
-	public class GenericService2<T> : IGeneric<T> { }
+	public interface IGeneric<T>
+	{
+	    void Dummy();
+	}
+	public class GenericService<T> : IGeneric<T>
+	{
+	    public GenericService(){}
+
+        public void Dummy(){}
+	}
+	public class GenericService2<T> : IGeneric<T>
+	{
+        public void Dummy() { }
+	}
 	public interface IGenericWithConstraints<T> where T : class { }
 	public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
 }

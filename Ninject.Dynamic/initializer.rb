@@ -124,6 +124,10 @@ class NinjectInitializer
     @bindings << Ninject::Planning::Bindings::Binding.from_hash(config)
   end
   
+  def clear_bindings
+    @bindings=[]
+  end
+  
 end
 
 def to_configure_ninject(&b)
