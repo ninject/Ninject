@@ -94,5 +94,31 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.ShouldBeInstanceOf<Sword>();
         }
     }
+
+    public class WhenBoundToSelf : RubyKernelContext
+    {
+        [Fact]
+        public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
+        {
+            kernel.AutoLoadModulesRecursively("~", "config_to_self.rb");
+
+            var weapon = kernel.Get<Sword>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+        }
+
+        [Fact]
+        public void DependenciesAreInjectedViaConstructor()
+        {
+            kernel.AutoLoadModulesRecursively("~", "config_two_types_to_self.rb");
+
+            var samurai = kernel.Get<Samurai>();
+
+            samurai.ShouldNotBeNull();
+            samurai.Weapon.ShouldNotBeNull();
+            samurai.Weapon.ShouldBeInstanceOf<Sword>();
+        }
+    }
 }
 
