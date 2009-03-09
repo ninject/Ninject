@@ -55,6 +55,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Activation\Providers\RubyProcProvider.cs" />
     <Compile Include="AssemblyStreamContentProvider.cs" />
     <Compile Include="Enums.cs" />
