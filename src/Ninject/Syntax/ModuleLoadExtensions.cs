@@ -28,8 +28,6 @@ namespace Ninject
 	/// </summary>
 	public static class ModuleLoadExtensions
 	{
-		private static readonly string[] DefaultPatterns = new[] { "*.dll", "*.exe" };
-
 		/// <summary>
 		/// Determines whether a module of the specified type has been loaded in the kernel.
 		/// </summary>
@@ -64,13 +62,12 @@ namespace Ninject
 			kernel.UnloadModule(typeof(TModule));
 		}
 
-		#if !SILVERLIGHT
 		/// <summary>
 		/// Scans the application's base directory for assemblies, and if they have loadable modules, loads them.
 		/// </summary>
 		public static void AutoLoadModules(this IKernel kernel)
 		{
-			GetModuleLoader(kernel).ScanAndLoadModules("~", DefaultPatterns, false);
+			GetModuleLoader(kernel).LoadModules("~");
 		}
 
 		/// <summary>
@@ -80,19 +77,7 @@ namespace Ninject
 		/// <param name="path">The path to search.</param>
 		public static void AutoLoadModules(this IKernel kernel, string path)
 		{
-			GetModuleLoader(kernel).ScanAndLoadModules(path, DefaultPatterns, false);
-		}
-
-		/// <summary>
-		/// Scans the specified path for assemblies that match the specified search pattern(s), and
-		/// if they have loadable modules, loads them.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="path">The path to search.</param>
-		/// <param name="patterns">The file search patterns to match.</param>
-		public static void AutoLoadModules(this IKernel kernel, string path, params string[] patterns)
-		{
-			GetModuleLoader(kernel).ScanAndLoadModules(path, patterns, false);
+			GetModuleLoader(kernel).LoadModules(path);
 		}
 
 		/// <summary>
@@ -102,7 +87,7 @@ namespace Ninject
 		/// <param name="kernel">The kernel to load the modules into.</param>
 		public static void AutoLoadModulesRecursively(this IKernel kernel)
 		{
-			GetModuleLoader(kernel).ScanAndLoadModules("~", DefaultPatterns, true);
+			GetModuleLoader(kernel).LoadModules("~", true);
 		}
 
 		/// <summary>
@@ -113,39 +98,7 @@ namespace Ninject
 		/// <param name="path">The path to search.</param>
 		public static void AutoLoadModulesRecursively(this IKernel kernel, string path)
 		{
-			GetModuleLoader(kernel).ScanAndLoadModules(path, DefaultPatterns, true);
-		}
-
-		/// <summary>
-		/// Scans the specified path and all subdirectories for assemblies that match the specified
-		/// search pattern(s), and if they have loadable modules, loads them.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="path">The path to search.</param>
-		/// <param name="patterns">The file search patterns to match.</param>
-		public static void AutoLoadModulesRecursively(this IKernel kernel, string path, params string[] patterns)
-		{
-			GetModuleLoader(kernel).ScanAndLoadModules(path, patterns, true);
-		}
-
-		/// <summary>
-		/// Loads any loadable modules from the assembly.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="assembly">The assembly to scan for modules.</param>
-		public static void LoadModulesFromAssembly(this IKernel kernel, Assembly assembly)
-		{
-			GetModuleLoader(kernel).LoadModules(assembly);
-		}
-
-		/// <summary>
-		/// Loads any loadable modules from the assembly.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="assemblyOrFileName">The assembly name or filename of the assembly to load modules from.</param>
-		public static void LoadModulesFromAssembly(this IKernel kernel, string assemblyOrFileName)
-		{
-			GetModuleLoader(kernel).LoadModules(assemblyOrFileName);
+			GetModuleLoader(kernel).LoadModules(path, true);
 		}
 
 		private static IModuleLoader GetModuleLoader(IKernel kernel)
@@ -153,6 +106,5 @@ namespace Ninject
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			return kernel.Components.Get<IModuleLoader>();
 		}
-		#endif //!SILVERLIGHT
 	}
 }

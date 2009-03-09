@@ -114,6 +114,8 @@
     <Compile Include="Injection\ConstructorInjector.cs" />
     <Compile Include="Injection\PropertyInjector.cs" />
     <Compile Include="Injection\MethodInjector.cs" />
+    <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\IModuleLoaderPlugin.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />

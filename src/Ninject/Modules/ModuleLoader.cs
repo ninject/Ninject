@@ -20,8 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+#if !NO_WEB
 using System.Web;
+#endif
 using Ninject.Components;
 using Ninject.Infrastructure;
 #endregion
@@ -39,124 +40,65 @@ namespace Ninject.Modules
 		public IKernel Kernel { get; private set; }
 
 		/// <summary>
+		/// Gets or sets the plugins.
+		/// </summary>
+		public ICollection<IModuleLoaderPlugin> Plugins { get; private set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="ModuleLoader"/> class.
 		/// </summary>
 		/// <param name="kernel">The kernel into which modules will be loaded.</param>
-		public ModuleLoader(IKernel kernel)
+		/// <param name="plugins">The plugins that will be used to load modules from files.</param>
+		public ModuleLoader(IKernel kernel, IEnumerable<IModuleLoaderPlugin> plugins)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
+			Ensure.ArgumentNotNull(plugins, "plugins");
+
 			Kernel = kernel;
+			Plugins = plugins.ToList();
 		}
 
 		/// <summary>
-		/// Loads all loadable modules defined in the specified assembly.
+		/// Loads any modules found in files in the specified path.
 		/// </summary>
-		/// <param name="assembly">The assembly.</param>
-		public void LoadModules(Assembly assembly)
+		/// <param name="path">The path to search.</param>
+		public void LoadModules(string path)
 		{
-			Ensure.ArgumentNotNull(assembly, "assembly");
-
-			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
-			{
-				if (Kernel.HasModule(type))
-					continue;
-
-				var module = Activator.CreateInstance(type) as IModule;
-				Kernel.LoadModule(module);
-			}
+			LoadModules(path, false);
 		}
 
 		/// <summary>
-		/// Loads all loadable modules defined in the assembly with the specified assembly name or filename.
+		/// Loads any modules found in files in the specified path.
 		/// </summary>
-		/// <param name="assemblyOrFileName">Name of the assembly or file.</param>
-		public void LoadModules(string assemblyOrFileName)
+		/// <param name="path">The path to search.</param>
+		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
+		public void LoadModules(string path, bool recursive)
 		{
-			Ensure.ArgumentNotNullOrEmpty(assemblyOrFileName, "assemblyOrFileName");
+			Ensure.ArgumentNotNull(path, "path");
 
-			AssemblyName name;
-
-			try
+			foreach (IModuleLoaderPlugin plugin in Plugins)
 			{
-				name = new AssemblyName(assemblyOrFileName);
+				var files = FindFiles(path, plugin.SupportedPatterns, recursive);
+				plugin.LoadModules(files);
 			}
-			catch (ArgumentException)
-			{
-				name = new AssemblyName { CodeBase = assemblyOrFileName };
-			}
-
-			LoadModules(Assembly.Load(name));
 		}
 
 		/// <summary>
-		/// Scans specified path for assemblies that match the specified pattern(s),
-		/// and loads any modules defined therein into the kernel.
+		/// Finds files in the specified path, matching the specified patterns.
 		/// </summary>
-		/// <param name="path">The path to scan.</param>
+		/// <param name="path">The path to search.</param>
 		/// <param name="patterns">The patterns to match.</param>
-		/// <param name="recursive">If <c>true</c>, scan all subdirectories of the path as well.</param>
-		public void ScanAndLoadModules(string path, IEnumerable<string> patterns, bool recursive)
+		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
+		/// <returns>A series of filenames that match the criteria.</returns>
+		protected virtual IEnumerable<string> FindFiles(string path, IEnumerable<string> patterns, bool recursive)
 		{
 			Ensure.ArgumentNotNullOrEmpty(path, "path");
 			Ensure.ArgumentNotNull(patterns, "patterns");
 
 			var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-			var normalizedPath = NormalizePath(path);
-			var files = patterns.SelectMany(pattern => Directory.GetFiles(normalizedPath, pattern, searchOption));
+			var directory = new DirectoryInfo(NormalizePath(path));
 
-			AppDomain temporaryDomain = CreateTemporaryAppDomain();
-
-			foreach (AssemblyName assemblyName in FindAssembliesWithModules(temporaryDomain, files))
-				LoadModules(Assembly.Load(assemblyName));
-
-			AppDomain.Unload(temporaryDomain);
-		}
-
-		/// <summary>
-		/// Scans the specified series of files for assemblies that contain loadable modules.
-		/// </summary>
-		/// <param name="temporaryDomain">The temporary <see cref="AppDomain"/> to load assemblies in to check them.</param>
-		/// <param name="files">The files to check.</param>
-		/// <returns>The names of the assemblies that contain loadable modules.</returns>
-		protected virtual IEnumerable<AssemblyName> FindAssembliesWithModules(AppDomain temporaryDomain, IEnumerable<string> files)
-		{
-			Ensure.ArgumentNotNull(temporaryDomain, "temporaryDomain");
-			Ensure.ArgumentNotNull(files, "files");
-
-			foreach (string file in files)
-			{
-				var assemblyName = new AssemblyName { CodeBase = file };
-
-				Assembly assembly;
-
-				try
-				{
-					assembly = temporaryDomain.Load(assemblyName);
-				}
-				catch (BadImageFormatException)
-				{
-					// Ignore native assemblies
-					continue;
-				}
-
-				if (assembly.GetExportedTypes().Any(IsLoadableModule))
-					yield return assemblyName;
-			}
-		}
-
-		/// <summary>
-		/// Determines whether the specified type represents a loadable module.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns><c>True</c> if the type represents a loadable module; otherwise <c>false</c>.</returns>
-		protected virtual bool IsLoadableModule(Type type)
-		{
-			Ensure.ArgumentNotNull(type, "type");
-
-			if (!typeof(IModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
-				return false;
-
-			return type.GetConstructor(Type.EmptyTypes) != null;
+			return patterns.SelectMany(pattern => directory.GetFiles(pattern, searchOption).Select(fi => fi.FullName));
 		}
 
 		/// <summary>
@@ -176,17 +118,11 @@ namespace Ninject.Modules
 
 		private static string GetBaseDirectory()
 		{
+			#if NO_WEB
+			return AppDomain.CurrentDomain.BaseDirectory;
+			#else
 			return HttpContext.Current != null ? HttpContext.Current.Server.MapPath("~") : AppDomain.CurrentDomain.BaseDirectory;
-		}
-
-		private static AppDomain CreateTemporaryAppDomain()
-		{
-			return AppDomain.CreateDomain(
-				"NinjectModuleLoader",
-				AppDomain.CurrentDomain.Evidence,
-				AppDomain.CurrentDomain.BaseDirectory,
-				AppDomain.CurrentDomain.RelativeSearchPath,
-				false);
+			#endif
 		}
 	}
 }
