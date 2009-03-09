@@ -144,10 +144,10 @@ namespace Ninject.Planning.Targets
 				Type gtd = Type.GetGenericTypeDefinition();
 				Type service = Type.GetGenericArguments()[0];
 
-				if (gtd == typeof(List<>) || gtd == typeof(IList<>))
+				if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
 					return GetValues(service, parent).CastSlow(service).ToListSlow(service);
 
-				if (typeof(IEnumerable<>).IsAssignableFrom(gtd))
+				if (gtd == typeof(IEnumerable<>))
 					return GetValues(service, parent).CastSlow(service);
 			}
 
