@@ -14,7 +14,7 @@ namespace Ninject.Dynamic.Extensions
         {
             foreach (var t in collection)
             {
-                action(t);
+                action(t);   
             }
         }
 

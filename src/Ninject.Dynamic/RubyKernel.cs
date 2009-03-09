@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Dynamic.Extensions;
+using Ninject.Dynamic.Modules;
 using Ninject.Events;
 using Ninject.Infrastructure.Language;
 using Ninject.Modules;
@@ -29,9 +30,7 @@ namespace Ninject.Dynamic
         {
             base.AddComponents();
             Components.Add<IRubyEngine, RubyEngine>();
-            Components.RemoveAll<IModuleLoader>();
-            Components.Add<IModuleLoader, RubyModuleLoader>();
-            Components.Add<IDecoratableModuleLoader, ModuleLoader>();
+            Components.Add<IModuleLoaderPlugin, RubyModuleLoaderPlugin>();
         }
 
         public void LoadAssemblies(params Type[] types)
@@ -43,6 +42,7 @@ namespace Ninject.Dynamic
         public override void LoadModule(IModule module)
         {
             module.EnsureArgumentNotNull("module");
+
             if(module is RubyModule)
             {
                 _rubyModules.Add(((RubyModule)module).ScriptPath, module);

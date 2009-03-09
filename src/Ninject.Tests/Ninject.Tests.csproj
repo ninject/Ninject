@@ -112,7 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Ninject.Dynamic\Ninject.Dynamic.csproj">
+    <ProjectReference Include="..\Ninject.Dynamic\Ninject.Dynamic.csproj">
       <Project>{97CB9925-DF95-4772-965B-7E2034109B6E}</Project>
       <Name>Ninject.Dynamic</Name>
     </ProjectReference>

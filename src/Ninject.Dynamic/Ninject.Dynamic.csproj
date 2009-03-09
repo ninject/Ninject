@@ -33,36 +33,29 @@
   <ItemGroup>
     <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.dll</HintPath>
+      <HintPath>..\lib\ironruby\IronRuby.dll</HintPath>
     </Reference>
     <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries.Yaml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.Libraries.Yaml.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\Microsoft.Dynamic.dll</HintPath>
+      <HintPath>..\lib\ironruby\IronRuby.Libraries.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\Microsoft.Scripting.dll</HintPath>
+      <HintPath>..\lib\ironruby\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting.Core, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\Microsoft.Scripting.Core.dll</HintPath>
+      <HintPath>..\lib\ironruby\Microsoft.Scripting.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting.ExtensionAttribute, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
+      <HintPath>..\lib\ironruby\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activation\Providers\RubyProcProvider.cs" />
     <Compile Include="AssemblyStreamContentProvider.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
@@ -74,8 +67,8 @@
     <Compile Include="IRubyEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubyEngine.cs" />
-    <Compile Include="RubyModule.cs" />
-    <Compile Include="RubyModuleLoader.cs" />
+    <Compile Include="Modules\RubyModule.cs" />
+    <Compile Include="Modules\RubyModuleLoaderPlugin.cs" />
     <Compile Include="RubyKernel.cs" />
   </ItemGroup>
   <ItemGroup>

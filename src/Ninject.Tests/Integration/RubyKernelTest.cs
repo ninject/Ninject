@@ -1,15 +1,20 @@
-using System;
-using System.Collections.Generic;
+#region Usings
+
+using System.Collections;
 using System.Linq;
 using Ninject.Dynamic;
+using Ninject.Dynamic.Extensions;
+using Ninject.Dynamic.Modules;
+using Ninject.Modules;
 using Ninject.Tests.Fakes;
 using Ninject.Tests.Integration.StandardKernelTests;
 using Xunit;
 using Xunit.Should;
 
+#endregion
+
 namespace Ninject.Tests.Integration.RubyKernelTests
 {
-
     public class RubyKernelContext
     {
         protected readonly RubyKernel kernel;
@@ -18,66 +23,35 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         {
             kernel = new RubyKernel();
         }
+
+        protected void SetPath(string path)
+        {
+            IEnumerableExtensions.ForEach((IEnumerable)kernel.Components.GetAll<IModuleLoaderPlugin>(), mod =>
+            {
+                if (mod is RubyModuleLoaderPlugin)
+                    ((RubyModuleLoaderPlugin)mod).SupportedPatterns = new[] { "config_to_self.rb" };
+            });
+        }
     }
 
     public class WhenConfiguredFromCSharp : RubyKernelContext
     {
         [Fact]
-		public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
-		{
-			kernel.Bind<IWeapon>().To<Sword>();
+        public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
 
-			var weapon = kernel.Get<IWeapon>();
+            var weapon = kernel.Get<IWeapon>();
 
-			weapon.ShouldNotBeNull();
-			weapon.ShouldBeInstanceOf<Sword>();
-		}
-
-		[Fact]
-		public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
-		{
-			kernel.Bind<IWeapon>().To<Sword>();
-			kernel.Bind<IWeapon>().To<Shuriken>();
-
-			var weapon = kernel.Get<IWeapon>();
-
-			weapon.ShouldNotBeNull();
-			weapon.ShouldBeInstanceOf<Sword>();
-		}
-
-		[Fact]
-		public void DependenciesAreInjectedViaConstructor()
-		{
-			kernel.Bind<IWeapon>().To<Sword>();
-			kernel.Bind<IWarrior>().To<Samurai>();
-
-			var warrior = kernel.Get<IWarrior>();
-
-			warrior.ShouldNotBeNull();
-			warrior.ShouldBeInstanceOf<Samurai>();
-			warrior.Weapon.ShouldNotBeNull();
-			warrior.Weapon.ShouldBeInstanceOf<Sword>();
-		}
-    }
-
-
-    public class WhenConfiguredFromRuby : RubyKernelContext
-    {
-        [Fact]
-		public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
-		{
-            kernel.AutoLoadModulesRecursively("~", "config_single.rb");
-
-			var weapon = kernel.Get<IWeapon>();
-
-			weapon.ShouldNotBeNull();
-			weapon.ShouldBeInstanceOf<Sword>();
-		}
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+        }
 
         [Fact]
         public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_double.rb");
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>();
 
             var weapon = kernel.Get<IWeapon>();
 
@@ -88,7 +62,50 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void DependenciesAreInjectedViaConstructor()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_two_types.rb");
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWarrior>().To<Samurai>();
+
+            var warrior = kernel.Get<IWarrior>();
+
+            warrior.ShouldNotBeNull();
+            warrior.ShouldBeInstanceOf<Samurai>();
+            warrior.Weapon.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeInstanceOf<Sword>();
+        }
+    }
+
+
+    public class WhenConfiguredFromRuby : RubyKernelContext
+    {
+        [Fact]
+        public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
+        {
+            SetPath("config_single.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+        }
+
+        [Fact]
+        public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
+        {
+            SetPath("config_double.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+        }
+
+        [Fact]
+        public void DependenciesAreInjectedViaConstructor()
+        {
+            SetPath("config_two_types.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var warrior = kernel.Get<IWarrior>();
 
@@ -104,7 +121,8 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_to_self.rb");
+            SetPath("config_to_self.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var weapon = kernel.Get<Sword>();
 
@@ -112,10 +130,13 @@ namespace Ninject.Tests.Integration.RubyKernelTests
             weapon.ShouldBeInstanceOf<Sword>();
         }
 
+        
+
         [Fact]
         public void DependenciesAreInjectedViaConstructor()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_two_types_to_self.rb");
+            SetPath("config_two_types_to_self.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var samurai = kernel.Get<Samurai>();
 
@@ -131,7 +152,8 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void GenericParametersAreInferred()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_open_generics.rb");
+            SetPath("config_open_generics.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var services = kernel.GetAll<IGeneric<int>>().ToArray();
 
@@ -147,7 +169,8 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void ReturnsServiceRegisteredViaBindingWithSpecifiedName()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_named.rb");
+            SetPath("config_named.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var weapon = kernel.Get<IWeapon>("sword");
 
@@ -158,7 +181,8 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         [Fact]
         public void ReturnsServiceRegisteredViaBindingThatMatchesPredicate()
         {
-            kernel.AutoLoadModulesRecursively("~", "config_metadata.rb");
+            SetPath("config_metadata.rb");
+            kernel.AutoLoadModulesRecursively("~");
 
             var weapon = kernel.Get<IWeapon>(x => x.Get<string>("type") == "melee");
 
@@ -167,4 +191,3 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 }
-
