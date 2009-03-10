@@ -33,12 +33,20 @@ namespace Ninject.Dynamic
             Components.Add<IModuleLoaderPlugin, RubyModuleLoaderPlugin>();
         }
 
+        /// <summary>
+        /// Loads the assemblies the provide types are defined in into the ruby engines.
+        /// </summary>
+        /// <param name="types">The types.</param>
         public void LoadAssemblies(params Type[] types)
         {
             var engine = Components.Get<IRubyEngine>();
             engine.LoadAssemblies(types);
         }
 
+        /// <summary>
+        /// Loads the module into the kernel.
+        /// </summary>
+        /// <param name="module">The module to load.</param>
         public override void LoadModule(IModule module)
         {
             module.EnsureArgumentNotNull("module");
