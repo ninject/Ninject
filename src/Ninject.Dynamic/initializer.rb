@@ -1,8 +1,3 @@
-# Note that in the code below I intentionally chose not to use metaprogramming
-# I may change my mind later but at the moment I don't see the need for it
-# and metaprogramming just for the sake of it .. I have my doubts about that :)
-# I also tried to avoid/limit the use of instance_eval as much as possible,
-# when it has been used it has to do with the DSL to make it more human readable.
 
 include Ninject::Activation
 include Ninject::Activation::Providers
@@ -49,6 +44,21 @@ module System
       end
     end
     
+    def to_injected_into_condition
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.reflected_type == self }
+    end
+    
+    def to_class_has_condition
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.reflected_type.is_defined(self) }
+    end
+    
+    def to_member_has_condition
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.is_defined(self) }
+    end
+    
+    def to_target_has_condition
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.is_defined(self) }
+    end
   end
   
   class Object
@@ -63,15 +73,15 @@ module System
     end
     
     def to_binding_parameter(name)
-      Ninject::Parameters::Parameter.new name, self, true
+      Ninject::Parameters::Parameter.new name.to_s.to_clr_string, self, true
     end
     
     def to_property_value(name)
-      Ninject::Parameters::PropertyValue.new name, self, true
+      Ninject::Parameters::PropertyValue.new name.to_s.to_clr_string, self, true
     end
     
     def to_constructor_argument(name)
-      Ninject::Parameters::ConstructorArgument.new name, self, true
+      Ninject::Parameters::ConstructorArgument.new name.to_s.to_clr_string, self, true
     end
   end
   
@@ -90,8 +100,9 @@ end
 
 class Proc
   def to_ruby_proc_callback
+    b = self
     System::Func.of(IContext, IProvider).new do |context|
-      RubyProcProvider.new self
+      RubyProcProvider.new b
     end
   end
   
@@ -101,21 +112,31 @@ class Proc
   end
   
   def to_binding_parameter(name)
-    b = self
-    callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
-    Ninject::Parameters::Parameter.new name, callback, true
+    to_parameter(name, Ninject::Parameters::Parameter)
   end
   
   def to_property_value(name)
-    b = self
-    callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
-    Ninject::Parameters::PropertyValue.new name, callback, true
+    to_parameter(name, Ninject::Parameters::PropertyValue)
   end
   
   def to_constructor_argument(name)
+    to_parameter(name, Ninject::Parameters::ConstructorArgument)
+  end
+  
+  def to_parameter(name, klass)
     b = self
     callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
-    Ninject::Parameters::ConstructorArgument.new name, callback, true
+    klass.new name.to_s.to_clr_string, callback, true
+  end
+  
+  def to_dotnet_action
+    b = self
+    System::Action.of(IContext).new { |context| b.call(context.instance) }
+  end
+  
+  def to_provider_condition
+    b=self
+    System::Func.of(IRequest, System::Boolean).new { |request| b.call(request) }
   end
 end
 
@@ -213,6 +234,25 @@ module Ninject
           end
         end 
         
+        def add_on_activation
+          handler = config[:on_activation]||config[:activation!]
+          handler.each { |h| binding.activation_actions.add h.to_dotnet_action unless h.nil? } if handler.respond_to? :each
+          binding.activation_actions.add handler.to_dotnet_action unless handler.nil? && !handler.respond_to? :each
+        end 
+        
+        def add_on_deactivation
+          handler = config[:on_deactivation]||config[:deactivation!]
+          handler.each { |h| binding.deactivation_action.add h.to_dotnet_action unless h.nil? } if handler.respond_to? :each
+          binding.deactivation_actions.add handler.to_dotnet_action unless handler.nil? && !handler.respond_to? :each          
+        end
+        
+        def add_when_constraints
+          wh = config[:when]             
+          wh.each do |key, value|
+            binding.condition = value.send("to_#{key}_condition".to_sym)
+          end unless wh.nil?          
+        end
+        
         def build
           to_create_a_binding do 
             add_provider_callback 
@@ -221,6 +261,9 @@ module Ninject
             add_parameters
             add_constructor_arguments
             add_property_values
+            add_on_activation
+            add_on_deactivation
+            add_when_constraints
             set_target 
           end 
         end
@@ -259,6 +302,8 @@ def to_configure_ninject(&b)
   initializer.bindings
 end
 
+
+# Step 1: create a builder
 #to_configure_ninject do |ninject|
 #  ninject.bind IServiceA,
 #  :to => ServiceA,
@@ -279,6 +324,7 @@ end
 #  ]
 #end
 
+# Step 2: Sprinkle sugar :)
 #to_configure_ninject do |ninject|
 #  ninject.bind IServiceA, :to => ServiceA, :as => :singleton do
 #    meta { :type => "superservice" },
