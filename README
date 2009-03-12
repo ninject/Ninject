@@ -9,4 +9,30 @@ to_configure_ninject do |ninject|
   ninject.bind IServiceA, :to => ServiceA, :as => :singleton, :meta => { :type => "superservice" }, :name => "aaaaa"
 end
 
+The typical use case would probably look like this:
+to_configure_ninject do |ninject|
+  ninject.bind IServiceA, :to => ServiceA, :as => :transient
+  ninject.bind ISingletonService, :to => SingletonServiceImpl
+end
+
+All the configuration options:
+
+to_configure_ninject do |ninject|
+  ninject.bind IServiceA, :to => ServiceA, :as => :singleton,
+    :meta => { :type => "superservice" },
+    :name => "aaaaa",
+    :parameter => { :my_param => lambda { |context| "param_value" } },
+    :constructor_arguments => {:const_arg => 56 },
+    :property_values => {:property_name => 94 },
+    :on_activation => lambda { |obj| obj.do_some_work },
+    :on_deativated => lambda { |obj| obj.do_some_cleanup },
+    :when => {
+      :provider => lambda { |context| "a value" },
+      :injected_into => ServiceB,
+      :target_has => AnAttribute,
+      :member_has => AnAttribute,
+      :class_has => AnAttribute
+    }
+
+
 Happy playing :)
