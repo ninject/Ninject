@@ -27,37 +27,31 @@ namespace Ninject.Planning.Directives
 	/// <summary>
 	/// Describes the injection of a method or constructor.
 	/// </summary>
-	/// <typeparam name="T">The type of member that the directive describes.</typeparam>
-	public abstract class MethodInjectionDirectiveBase<T> : IDirective
-		where T : MethodBase
+	public abstract class MethodInjectionDirectiveBase<TMethod, TInjector> : IDirective
+		where TMethod : MethodBase
 	{
-		private ITarget[] _targets;
+		/// <summary>
+		/// Gets or sets the injector that will be triggered.
+		/// </summary>
+		public TInjector Injector { get; private set; }
 
 		/// <summary>
-		/// Gets the member associated with the directive.
+		/// Gets or sets the targets for the directive.
 		/// </summary>
-		public T Member { get; private set; }
+		public ITarget[] Targets { get; private set; }
 
 		/// <summary>
-		/// Gets the targets for the directive.
+		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;TMethod, TInjector&gt;"/> class.
 		/// </summary>
-		public ITarget[] Targets
-		{
-			get
-			{
-				if (_targets == null) _targets = CreateTargetsFromParameters(Member);
-				return _targets;
-			}
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;T&gt;"/> class.
-		/// </summary>
-		/// <param name="method">The method described by the directive.</param>
-		protected MethodInjectionDirectiveBase(T method)
+		/// <param name="method">The method this directive represents.</param>
+		/// <param name="injector">The injector that will be triggered.</param>
+		protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
 		{
 			Ensure.ArgumentNotNull(method, "method");
-			Member = method;
+			Ensure.ArgumentNotNull(injector, "injector");
+
+			Injector = injector;
+			Targets = CreateTargetsFromParameters(method);
 		}
 
 		/// <summary>
@@ -65,9 +59,8 @@ namespace Ninject.Planning.Directives
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <returns>The targets for the method's parameters.</returns>
-		protected virtual ITarget[] CreateTargetsFromParameters(T method)
+		protected virtual ITarget[] CreateTargetsFromParameters(TMethod method)
 		{
-			Ensure.ArgumentNotNull(method, "method");
 			return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
 		}
 	}

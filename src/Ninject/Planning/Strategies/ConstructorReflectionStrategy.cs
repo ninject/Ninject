@@ -19,6 +19,7 @@ using System;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
+using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Ninject.Selection;
 #endregion
@@ -36,13 +37,22 @@ namespace Ninject.Planning.Strategies
 		public ISelector Selector { get; private set; }
 
 		/// <summary>
+		/// Gets the injector factory component.
+		/// </summary>
+		public IInjectorFactory InjectorFactory { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="ConstructorReflectionStrategy"/> class.
 		/// </summary>
 		/// <param name="selector">The selector component.</param>
-		public ConstructorReflectionStrategy(ISelector selector)
+		/// <param name="injectorFactory">The injector factory component.</param>
+		public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
 		{
 			Ensure.ArgumentNotNull(selector, "selector");
+			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+
 			Selector = selector;
+			InjectorFactory = injectorFactory;
 		}
 
 		/// <summary>
@@ -57,7 +67,7 @@ namespace Ninject.Planning.Strategies
 			ConstructorInfo constructor = Selector.SelectConstructor(plan.Type);
 
 			if (constructor != null)
-				plan.Add(new ConstructorInjectionDirective(constructor));
+				plan.Add(new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)));
 		}
 	}
 }

@@ -32,21 +32,6 @@ namespace Ninject.Activation.Strategies
 	public class PropertyInjectionStrategy : ActivationStrategy
 	{
 		/// <summary>
-		/// Gets the injector factory component.
-		/// </summary>
-		public IInjectorFactory InjectorFactory { get; private set; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertyInjectionStrategy"/> class.
-		/// </summary>
-		/// <param name="injectorFactory">The injector factory component.</param>
-		public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
-		{
-			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
-			InjectorFactory = injectorFactory;
-		}
-
-		/// <summary>
 		/// Injects values into the properties as described by <see cref="PropertyInjectionDirective"/>s
 		/// contained in the plan.
 		/// </summary>
@@ -57,8 +42,8 @@ namespace Ninject.Activation.Strategies
 
 			foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
 			{
-				var injector = InjectorFactory.GetInjector(directive.Member);
-				injector.Invoke(context.Instance, GetValue(context, directive.Target));
+				object value = GetValue(context, directive.Target);
+				directive.Injector(context.Instance, value);
 			}
 		}
 

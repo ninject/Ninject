@@ -15,13 +15,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
 	public class PropertyInjectionDirectiveContext
 	{
-		protected Mock<IInjectorFactory> injectorFactoryMock;
 		protected readonly PropertyInjectionStrategy strategy;
 
 		public PropertyInjectionDirectiveContext()
 		{
-			injectorFactoryMock = new Mock<IInjectorFactory>();
-			strategy = new PropertyInjectionStrategy(injectorFactoryMock.Object);
+			strategy = new PropertyInjectionStrategy();
 		}
 	}
 
@@ -45,10 +43,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 			injector1 = (x, y) => { injector1WasCalled = true; };
 			injector2 = (x, y) => { injector2WasCalled = true; };
 
-			directives = new[] { new FakePropertyInjectionDirective(property1), new FakePropertyInjectionDirective(property2) };
-
-			injectorFactoryMock.Setup(x => x.GetInjector(property1)).Returns(injector1).AtMostOnce();
-			injectorFactoryMock.Setup(x => x.GetInjector(property2)).Returns(injector2).AtMostOnce();
+			directives = new[]
+			{
+				new FakePropertyInjectionDirective(property1, injector1),
+				new FakePropertyInjectionDirective(property2, injector2)
+			};
 
 			contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
@@ -63,15 +62,6 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 			strategy.Activate(contextMock.Object);
 
 			planMock.Verify(x => x.GetAll<PropertyInjectionDirective>());
-		}
-
-		[Fact]
-		public void CreatesMethodInjectorsForEachDirective()
-		{
-			strategy.Activate(contextMock.Object);
-
-			injectorFactoryMock.Verify(x => x.GetInjector(property1));
-			injectorFactoryMock.Verify(x => x.GetInjector(property2));
 		}
 
 		[Fact]
@@ -95,7 +85,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 	{
 		public Mock<ITarget> TargetMock { get; private set; }
 
-		public FakePropertyInjectionDirective(PropertyInfo property) : base(property) { }
+		public FakePropertyInjectionDirective(PropertyInfo property, PropertyInjector injector)
+			: base(property, injector) { }
 
 		protected override ITarget CreateTarget(PropertyInfo property)
 		{

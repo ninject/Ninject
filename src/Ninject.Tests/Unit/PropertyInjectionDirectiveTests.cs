@@ -1,4 +1,5 @@
 ﻿using System;
+using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Xunit;
 using Xunit.Should;
@@ -16,8 +17,9 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 		public void CreatesTargetForProperty()
 		{
 			var method = typeof(Dummy).GetProperty("Foo");
+			PropertyInjector injector = delegate { };
 
-			directive = new PropertyInjectionDirective(method);
+			directive = new PropertyInjectionDirective(method, injector);
 
 			directive.Target.Name.ShouldBe("Foo");
 			directive.Target.Type.ShouldBe(typeof(int));
