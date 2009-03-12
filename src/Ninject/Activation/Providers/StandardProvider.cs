@@ -39,11 +39,6 @@ namespace Ninject.Activation.Providers
 		public Type Type { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the injector factory component.
-		/// </summary>
-		public IInjectorFactory InjectorFactory { get; private set; }
-
-		/// <summary>
 		/// Gets or sets the planner component.
 		/// </summary>
 		public IPlanner Planner { get; private set; }
@@ -52,16 +47,13 @@ namespace Ninject.Activation.Providers
 		/// Initializes a new instance of the <see cref="StandardProvider"/> class.
 		/// </summary>
 		/// <param name="type">The type (or prototype) of instances the provider creates.</param>
-		/// <param name="injectorFactory">The injector factory component.</param>
 		/// <param name="planner">The planner component.</param>
-		public StandardProvider(Type type, IInjectorFactory injectorFactory, IPlanner planner)
+		public StandardProvider(Type type, IPlanner planner)
 		{
 			Ensure.ArgumentNotNull(type, "type");
-			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
 			Ensure.ArgumentNotNull(planner, "planner");
 
 			Type = type;
-			InjectorFactory = injectorFactory;
 			Planner = planner;
 		}
 
@@ -82,10 +74,8 @@ namespace Ninject.Activation.Providers
 			if (directive == null)
 				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
 
-			var injector = InjectorFactory.GetInjector(directive.Member);
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
-
-			context.Instance = injector.Invoke(arguments);
+			context.Instance = directive.Injector(arguments);
 
 			return context.Instance;
 		}
@@ -126,10 +116,7 @@ namespace Ninject.Activation.Providers
 		public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
 		{
 			Ensure.ArgumentNotNull(prototype, "prototype");
-
-			return ctx => new StandardProvider(prototype,
-				ctx.Kernel.Components.Get<IInjectorFactory>(),
-				ctx.Kernel.Components.Get<IPlanner>());
+			return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>());
 		}
 	}
 }

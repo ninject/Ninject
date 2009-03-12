@@ -16,13 +16,11 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
 	public class MethodInjectionStrategyContext
 	{
-		protected Mock<IInjectorFactory> injectorFactoryMock;
 		protected readonly MethodInjectionStrategy strategy;
 
 		public MethodInjectionStrategyContext()
 		{
-			injectorFactoryMock = new Mock<IInjectorFactory>();
-			strategy = new MethodInjectionStrategy(injectorFactoryMock.Object);
+			strategy = new MethodInjectionStrategy();
 		}
 	}
 
@@ -46,10 +44,11 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 			injector1 = (x, args) => { injector1WasCalled = true; };
 			injector2 = (x, args) => { injector2WasCalled = true; };
 
-			directives = new[] { new FakeMethodInjectionDirective(method1), new FakeMethodInjectionDirective(method2) };
-
-			injectorFactoryMock.Setup(x => x.GetInjector(method1)).Returns(injector1).AtMostOnce();
-			injectorFactoryMock.Setup(x => x.GetInjector(method2)).Returns(injector2).AtMostOnce();
+			directives = new[]
+			{
+				new FakeMethodInjectionDirective(method1, injector1),
+				new FakeMethodInjectionDirective(method2, injector2)
+			};
 
 			contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
 			contextMock.SetupGet(x => x.Instance).Returns(instance);
@@ -69,9 +68,6 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		public void CreatesMethodInjectorsForEachDirective()
 		{
 			strategy.Activate(contextMock.Object);
-
-			injectorFactoryMock.Verify(x => x.GetInjector(method1));
-			injectorFactoryMock.Verify(x => x.GetInjector(method2));
 		}
 
 		[Fact]
@@ -95,7 +91,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 	{
 		public Mock<ITarget>[] TargetMocks { get; private set; }
 
-		public FakeMethodInjectionDirective(MethodInfo method) : base(method) { }
+		public FakeMethodInjectionDirective(MethodInfo method, MethodInjector injector)
+			: base(method, injector) { }
 
 		protected override ITarget[] CreateTargetsFromParameters(MethodInfo method)
 		{

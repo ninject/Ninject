@@ -32,72 +32,15 @@ namespace Ninject.Injection
 	/// </summary>
 	public class ExpressionInjectorFactory : NinjectComponent, IInjectorFactory
 	{
-		private readonly Dictionary<MemberKey, ConstructorInjector> _constructorInjectors = new Dictionary<MemberKey, ConstructorInjector>();
-		private readonly Dictionary<MemberKey, PropertyInjector> _propertyInjectors = new Dictionary<MemberKey, PropertyInjector>();
-		private readonly Dictionary<MemberKey, MethodInjector> _methodInjectors = new Dictionary<MemberKey, MethodInjector>();
-
 		/// <summary>
 		/// Gets or creates an injector for the specified constructor.
 		/// </summary>
 		/// <param name="constructor">The constructor.</param>
 		/// <returns>The created injector.</returns>
-		public ConstructorInjector GetInjector(ConstructorInfo constructor)
+		public ConstructorInjector Create(ConstructorInfo constructor)
 		{
 			Ensure.ArgumentNotNull(constructor, "constructor");
 
-			var key = new MemberKey(constructor);
-
-			if (_constructorInjectors.ContainsKey(key))
-				return _constructorInjectors[key];
-
-			var injector = Create(constructor);
-			_constructorInjectors[key] = injector;
-
-			return injector;
-		}
-
-		/// <summary>
-		/// Gets or creates an injector for the specified property.
-		/// </summary>
-		/// <param name="property">The property.</param>
-		/// <returns>The created injector.</returns>
-		public PropertyInjector GetInjector(PropertyInfo property)
-		{
-			Ensure.ArgumentNotNull(property, "property");
-
-			var key = new MemberKey(property);
-
-			if (_propertyInjectors.ContainsKey(key))
-				return _propertyInjectors[key];
-
-			var injector = Create(property);
-			_propertyInjectors[key] = injector;
-
-			return injector;
-		}
-
-		/// <summary>
-		/// Gets or creates an injector for the specified method.
-		/// </summary>
-		/// <param name="method">The method.</param>
-		/// <returns>The created injector.</returns>
-		public MethodInjector GetInjector(MethodInfo method)
-		{
-			Ensure.ArgumentNotNull(method, "method");
-
-			var key = new MemberKey(method);
-
-			if (_methodInjectors.ContainsKey(key))
-				return _methodInjectors[key];
-
-			var injector = Create(method);
-			_methodInjectors[key] = injector;
-
-			return injector;
-		}
-
-		private static ConstructorInjector Create(ConstructorInfo constructor)
-		{
 			ParameterExpression argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
 
 			NewExpression call = Expression.New(constructor,
@@ -108,8 +51,37 @@ namespace Ninject.Injection
 			return expression.Compile();
 		}
 
-		private static MethodInjector Create(MethodInfo method)
+		/// <summary>
+		/// Gets or creates an injector for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The created injector.</returns>
+		public PropertyInjector Create(PropertyInfo property)
 		{
+			Ensure.ArgumentNotNull(property, "property");
+
+			ParameterExpression instanceParameter = Expression.Parameter(typeof(object), "instance");
+			ParameterExpression argumentParameter = Expression.Parameter(typeof(object), "value");
+
+			Expression call = Expression.Call(
+				Expression.Convert(instanceParameter, property.DeclaringType),
+				property.GetSetMethod(),
+				Expression.Convert(argumentParameter, property.PropertyType));
+
+			var expression = Expression.Lambda<PropertyInjector>(call, instanceParameter, argumentParameter);
+
+			return expression.Compile();
+		}
+
+		/// <summary>
+		/// Gets or creates an injector for the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <returns>The created injector.</returns>
+		public MethodInjector Create(MethodInfo method)
+		{
+			Ensure.ArgumentNotNull(method, "method");
+
 			ParameterExpression instanceParameter = Expression.Parameter(typeof(object), "instance");
 			ParameterExpression argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
 
@@ -119,21 +91,6 @@ namespace Ninject.Injection
 				CreateParameterExpressions(method, argumentsParameter));
 
 			var expression = Expression.Lambda<MethodInjector>(call, instanceParameter, argumentsParameter);
-
-			return expression.Compile();
-		}
-
-		private static PropertyInjector Create(PropertyInfo member)
-		{
-			ParameterExpression instanceParameter = Expression.Parameter(typeof(object), "instance");
-			ParameterExpression argumentParameter = Expression.Parameter(typeof(object), "value");
-
-			Expression call = Expression.Call(
-				Expression.Convert(instanceParameter, member.DeclaringType),
-				member.GetSetMethod(),
-				Expression.Convert(argumentParameter, member.PropertyType));
-
-			var expression = Expression.Lambda<PropertyInjector>(call, instanceParameter, argumentParameter);
 
 			return expression.Compile();
 		}

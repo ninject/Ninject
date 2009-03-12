@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Injection;
 using Ninject.Planning.Targets;
 #endregion
 
@@ -27,32 +28,25 @@ namespace Ninject.Planning.Directives
 	/// </summary>
 	public class PropertyInjectionDirective : IDirective
 	{
-		private ITarget _target;
-
 		/// <summary>
-		/// Gets or sets the member the directive describes.
+		/// Gets or sets the injector that will be triggered.
 		/// </summary>
-		public PropertyInfo Member { get; private set; }
+		public PropertyInjector Injector { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the injection target for the directive.
 		/// </summary>
-		public ITarget Target
-		{
-			get
-			{
-				if (_target == null) _target = CreateTarget(Member);
-				return _target;
-			}
-		}
+		public ITarget Target { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PropertyInjectionDirective"/> class.
 		/// </summary>
 		/// <param name="member">The member the directive describes.</param>
-		public PropertyInjectionDirective(PropertyInfo member)
+		/// <param name="injector">The injector that will be triggered.</param>
+		public PropertyInjectionDirective(PropertyInfo member, PropertyInjector injector)
 		{
-			Member = member;
+			Injector = injector;
+			Target = CreateTarget(member);
 		}
 
 		/// <summary>

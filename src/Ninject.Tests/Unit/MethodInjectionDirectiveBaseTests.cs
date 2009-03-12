@@ -5,6 +5,7 @@ using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
 using Xunit.Should;
+using Ninject.Injection;
 
 namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 {
@@ -19,8 +20,9 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 		public void CreatesTargetsForMethodParameters()
 		{
 			var method = typeof(Dummy).GetMethod("MethodA");
+			MethodInjector injector = delegate { };
 
-			directive = new FakeMethodInjectionDirective(method);
+			directive = new FakeMethodInjectionDirective(method, injector);
 			ITarget[] targets = directive.Targets;
 
 			targets.Length.ShouldBe(3);
@@ -33,9 +35,9 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 		}
 	}
 
-	public class FakeMethodInjectionDirective : MethodInjectionDirectiveBase<MethodInfo>
+	public class FakeMethodInjectionDirective : MethodInjectionDirectiveBase<MethodInfo, MethodInjector>
 	{
-		public FakeMethodInjectionDirective(MethodInfo method) : base(method) { }
+		public FakeMethodInjectionDirective(MethodInfo method, MethodInjector injector) : base(method, injector) { }
 	}
 
 	public class Dummy

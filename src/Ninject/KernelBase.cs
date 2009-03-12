@@ -330,6 +330,7 @@ namespace Ninject
 			var binding = new Binding(service)
 			{
 				ProviderCallback = StandardProvider.GetCreationCallback(service),
+				ScopeCallback = StandardScopeCallbacks.Transient,
 				IsImplicit = true
 			};
 

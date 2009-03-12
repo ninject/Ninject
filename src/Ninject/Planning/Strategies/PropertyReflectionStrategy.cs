@@ -19,6 +19,7 @@ using System;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
+using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Ninject.Selection;
 #endregion
@@ -36,13 +37,22 @@ namespace Ninject.Planning.Strategies
 		public ISelector Selector { get; private set; }
 
 		/// <summary>
+		/// Gets the injector factory component.
+		/// </summary>
+		public IInjectorFactory InjectorFactory { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="PropertyReflectionStrategy"/> class.
 		/// </summary>
 		/// <param name="selector">The selector component.</param>
-		public PropertyReflectionStrategy(ISelector selector)
+		/// <param name="injectorFactory">The injector factory component.</param>
+		public PropertyReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
 		{
 			Ensure.ArgumentNotNull(selector, "selector");
+			Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+
 			Selector = selector;
+			InjectorFactory = injectorFactory;
 		}
 
 		/// <summary>
@@ -55,7 +65,7 @@ namespace Ninject.Planning.Strategies
 			Ensure.ArgumentNotNull(plan, "plan");
 
 			foreach (PropertyInfo property in Selector.SelectPropertiesForInjection(plan.Type))
-				plan.Add(new PropertyInjectionDirective(property));
+				plan.Add(new PropertyInjectionDirective(property, InjectorFactory.Create(property)));
 		}
 	}
 }

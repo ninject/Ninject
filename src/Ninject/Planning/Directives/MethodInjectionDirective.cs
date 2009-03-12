@@ -17,6 +17,8 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Infrastructure;
+using Ninject.Injection;
 #endregion
 
 namespace Ninject.Planning.Directives
@@ -24,12 +26,14 @@ namespace Ninject.Planning.Directives
 	/// <summary>
 	/// Describes the injection of a method.
 	/// </summary>
-	public class MethodInjectionDirective : MethodInjectionDirectiveBase<MethodInfo>
+	public class MethodInjectionDirective : MethodInjectionDirectiveBase<MethodInfo, MethodInjector>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MethodInjectionDirective"/> class.
 		/// </summary>
 		/// <param name="method">The method described by the directive.</param>
-		public MethodInjectionDirective(MethodInfo method) : base(method) { }
+		/// <param name="injector">The injector that will be triggered.</param>
+		public MethodInjectionDirective(MethodInfo method, MethodInjector injector)
+			: base(method, injector) { }
 	}
 }

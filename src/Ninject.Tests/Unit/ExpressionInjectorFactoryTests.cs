@@ -25,7 +25,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		public WhenConstructorInjectorIsInvoked()
 		{
 			constructor = typeof(Samurai).GetConstructor(new[] { typeof(IWeapon) });
-			injector = injectorFactory.GetInjector(constructor);
+			injector = injectorFactory.Create(constructor);
 		}
 
 		[Fact]
@@ -47,13 +47,6 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 			samurai.ShouldNotBeNull();
 			samurai.Weapon.ShouldBeNull();
 		}
-
-		[Fact]
-		public void RequestingInjectorAgainReturnsSameInjector()
-		{
-			var injector2 = injectorFactory.GetInjector(constructor);
-			injector2.ShouldBeSameAs(injector);
-		}
 	}
 
 	public class WhenPropertyInjectorIsInvoked : ExpressionInjectorFactoryContext
@@ -64,7 +57,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		public WhenPropertyInjectorIsInvoked()
 		{
 			property = typeof(Samurai).GetProperty("Weapon");
-			injector = injectorFactory.GetInjector(property);
+			injector = injectorFactory.Create(property);
 		}
 
 		[Fact]
@@ -85,13 +78,6 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 			injector.Invoke(samurai, null);
 			samurai.Weapon.ShouldBeNull();
 		}
-
-		[Fact]
-		public void RequestingInjectorAgainReturnsSameInjector()
-		{
-			var injector2 = injectorFactory.GetInjector(property);
-			injector2.ShouldBeSameAs(injector);
-		}
 	}
 
 	public class WhenMethodInjectorIsInvokedOnVoidMethod : ExpressionInjectorFactoryContext
@@ -102,7 +88,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		public WhenMethodInjectorIsInvokedOnVoidMethod()
 		{
 			method = typeof(Samurai).GetMethod("SetName");
-			injector = injectorFactory.GetInjector(method);
+			injector = injectorFactory.Create(method);
 		}
 
 		[Fact]
@@ -111,13 +97,6 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 			var samurai = new Samurai(new Sword());
 			injector.Invoke(samurai, new[] { "Bob" });
 			samurai.Name.ShouldBe("Bob");
-		}
-
-		[Fact]
-		public void RequestingInjectorAgainReturnsSameInjector()
-		{
-			var injector2 = injectorFactory.GetInjector(method);
-			injector2.ShouldBeSameAs(injector);
 		}
 	}
 
@@ -129,7 +108,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		public WhenMethodInjectorIsInvokedOnNonVoidMethod()
 		{
 			method = typeof(Samurai).GetMethod("Attack");
-			injector = injectorFactory.GetInjector(method);
+			injector = injectorFactory.Create(method);
 		}
 
 		[Fact]
