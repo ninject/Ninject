@@ -45,7 +45,7 @@ namespace Ninject.Dynamic.Modules
             get
             {
                 //FIXME: do not forget to move to the tests project
-                if (_patterns.IsNull())
+                if (_patterns.IsNotNull())
                     return _patterns;
                 return Patterns;
             }

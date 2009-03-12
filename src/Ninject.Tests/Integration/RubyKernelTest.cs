@@ -29,7 +29,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
             IEnumerableExtensions.ForEach((IEnumerable)kernel.Components.GetAll<IModuleLoaderPlugin>(), mod =>
             {
                 if (mod is RubyModuleLoaderPlugin)
-                    ((RubyModuleLoaderPlugin)mod).SupportedPatterns = new[] { "config_to_self.rb" };
+                    ((RubyModuleLoaderPlugin)mod).SupportedPatterns = new[] { path };
             });
         }
     }
@@ -188,6 +188,15 @@ namespace Ninject.Tests.Integration.RubyKernelTests
 
             weapon.ShouldNotBeNull();
             weapon.ShouldBeInstanceOf<Sword>();
+        }
+    }
+
+    public class WhenBoundWithParameters: RubyKernelContext
+    {
+        [Fact]
+        public void ReturnsServiceRegisteredViaBindingWithParameters()
+        {
+            
         }
     }
 }

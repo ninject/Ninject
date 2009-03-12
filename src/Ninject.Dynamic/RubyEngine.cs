@@ -177,7 +177,7 @@ namespace Ninject.Dynamic
         {
             if (readerType == ReaderType.Assembly)
                 return Engine.CreateScriptSource(new AssemblyStreamContentProvider(path, typeof (IRubyEngine).Assembly), null, Encoding.UTF8).Execute();
-            
+
             return Engine.CreateScriptSourceFromFile(path, Encoding.UTF8).Execute();
         }
 

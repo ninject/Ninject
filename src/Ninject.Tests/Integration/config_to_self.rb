@@ -2,6 +2,6 @@ require File.dirname(__FILE__) + '/../Ninject.Tests.dll'
 include Ninject::Tests::Fakes
 
 to_configure_ninject do |ninject|
-  ninject.bind IWeapon, :to => Sword
-  ninject.bind IWarrior, :to => Samurai
+  ninject.bind Sword, :to => :self
+  ninject.bind Samurai, :to => :self
 end

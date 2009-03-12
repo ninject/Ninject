@@ -4,6 +4,7 @@ include Ninject::Activation::Providers
 include Ninject::Dynamic::Activation::Providers
 BindingTarget = Ninject::Planning::Bindings::BindingTarget
 
+
 class Symbol
   
   def to_binding_target
@@ -68,20 +69,20 @@ module System
     
     def to_constant_callback
       System::Func.of(IContext, IProvider).new do |context|
-        ConstantProvider.new self
+        ConstantProvider.new(self)
       end
     end
     
     def to_binding_parameter(name)
-      Ninject::Parameters::Parameter.new name.to_s.to_clr_string, self, true
+      Ninject::Parameters::Parameter.new(name.to_s.to_clr_string, self, true)
     end
     
     def to_property_value(name)
-      Ninject::Parameters::PropertyValue.new name.to_s.to_clr_string, self, true
+      Ninject::Parameters::PropertyValue.new(name.to_s.to_clr_string, self, true)
     end
     
     def to_constructor_argument(name)
-      Ninject::Parameters::ConstructorArgument.new name.to_s.to_clr_string, self, true
+      Ninject::Parameters::ConstructorArgument.new(name.to_s.to_clr_string, self, true)
     end
   end
   
@@ -126,7 +127,7 @@ class Proc
   def to_parameter(name, klass)
     b = self
     callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
-    klass.new name.to_s.to_clr_string, callback, true
+    klass.new(name.to_s.to_clr_string, callback, true)
   end
   
   def to_dotnet_action
@@ -169,12 +170,12 @@ module Ninject
       class RubyBindingBuilder
         
         def initialize(config={})
-          raise ArgumentError.new "You have to provide a config with a service to build a binding" unless config.has_key? :service
+          raise ArgumentError.new("You have to provide a config with a service to build a binding") unless config.has_key?(:service)
           @config = config
         end
         
         def to_create_a_binding
-          @binding = @binding.new @config[:service].to_clr_type
+          @binding = Binding.new(@config[:service].to_clr_type)
           yield if block_given?
           @binding
         end 
@@ -202,7 +203,7 @@ module Ninject
         def set_metadata
           @binding.metadata.name = System::String.intern(@config[:name].to_s.to_clr_string) if @config.has_name?
           @config[:meta].each do |k, v|
-            @binding.metadata.set k.to_s.to_clr_string, v.to_s.to_clr_string
+            @binding.metadata.set(k.to_s.to_clr_string, v.to_s.to_clr_string)
           end if @config[:meta] and @config[:meta].is_a?(Hash)
         end
         
@@ -216,40 +217,40 @@ module Ninject
         end
         
         def add_parameters
-          parameters = config[:parameter] || config[:parameters] || {}
+          parameters = @config[:parameter] || @config[:parameters] || {}
           parameters.each do |name, value|
-            @binding.parameters.add value.to_binding_parameter(name)
+            @binding.parameters.add(value.to_binding_parameter(name))
           end
         end
         
         def add_constructor_arguments
-          arguments = config[:constructor_argument] || config[:constructor_arguments] || {}
+          arguments = @config[:constructor_argument] || @config[:constructor_arguments] || {}
           arguments.each do |name, value|
-            @binding.parameters.add value.to_constructor_argument(name)
+            @binding.parameters.add(value.to_constructor_argument(name))
           end
         end
         
         def add_property_values
-          values = config[:property_value] || config[:property_values] || {}
+          values = @config[:property_value] || @config[:property_values] || {}
           values.each do |name, value|
-            @binding.parameters.add value.to_property_value(name)
+            @binding.parameters.add(value.to_property_value(name))
           end
         end 
         
         def add_on_activation
-          handler = config[:on_activation]||config[:activation!]
-          handler.each { |h| binding.activation_actions.add h.to_dotnet_action unless h.nil? } if handler.respond_to? :each
-          binding.activation_actions.add handler.to_dotnet_action unless handler.nil? && !handler.respond_to? :each
+          handler = @config[:on_activation]||@config[:activation!]
+          handler.each { |h| binding.activation_actions.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
+          binding.activation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
         end 
         
         def add_on_deactivation
-          handler = config[:on_deactivation]||config[:deactivation!]
-          handler.each { |h| binding.deactivation_action.add h.to_dotnet_action unless h.nil? } if handler.respond_to? :each
-          binding.deactivation_actions.add handler.to_dotnet_action unless handler.nil? && !handler.respond_to? :each          
+          handler = @config[:on_deactivation]||@config[:deactivation!]
+          handler.each { |h| binding.deactivation_action.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
+          binding.deactivation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
         end
         
         def add_when_constraint
-          wh = config[:when]   
+          wh = @config[:when]   
           binding.condition = wh.to_when_condition unless wh.nil?          
         end
         
@@ -287,8 +288,8 @@ class NinjectInitializer
   def bind(service_type, config={}, &b)
     config[:service] ||= service_type
     @config = config
-    instance_eval &b unless b.nil?
-    @bindings << RubyBindingBuilder.new(config).build
+    instance_eval b unless b.nil?
+    @bindings << Ninject::Planning::Bindings::RubyBindingBuilder.new(config).build
   end
   
   def method_missing(receiver, message, args)
@@ -305,6 +306,8 @@ class NinjectInitializer
   end
   
 end
+
+
 
 def to_configure_ninject(&b)
   raise ArgumentError.new("You need to provide a block for the initializer to work") if b.nil?
