@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-release.cmd = build-release.cmd
 		build.cmd = build.cmd
 		Ninject.build = Ninject.build
-		README = README
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Web.Mvc", "src\Ninject.Web.Mvc\Ninject.Web.Mvc.csproj", "{5C02730F-60D7-454E-88C7-B0C257B01C77}"

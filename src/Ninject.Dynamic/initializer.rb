@@ -134,7 +134,7 @@ class Proc
     System::Action.of(IContext).new { |context| b.call(context.instance) }
   end
   
-  def to_provider_condition
+  def to_when_condition
     b=self
     System::Func.of(IRequest, System::Boolean).new { |request| b.call(request) }
   end
@@ -152,10 +152,12 @@ end
 
 class Hash
   def has_name?
-    def has_name?
-      self[:name].is_a?(String) || self[:name].is_a?(System::String) || self[:name].is_a?(Symbol) ||
-      self[:name.to_s].is_a?(String) || self[:name.to_s].is_a?(System::String) || self[:name.to_s].is_a?(Symbol)
-    end
+    self[:name].is_a?(String) || self[:name].is_a?(System::String) || self[:name].is_a?(Symbol) ||
+    self[:name.to_s].is_a?(String) || self[:name.to_s].is_a?(System::String) || self[:name.to_s].is_a?(Symbol)
+  end
+  
+  def to_when_condition
+    value.send("to_#{self}_condition".to_sym)
   end
 end
 
@@ -246,11 +248,9 @@ module Ninject
           binding.deactivation_actions.add handler.to_dotnet_action unless handler.nil? && !handler.respond_to? :each          
         end
         
-        def add_when_constraints
-          wh = config[:when]             
-          wh.each do |key, value|
-            binding.condition = value.send("to_#{key}_condition".to_sym)
-          end unless wh.nil?          
+        def add_when_constraint
+          wh = config[:when]   
+          binding.condition = wh.to_when_condition unless wh.nil?          
         end
         
         def build
@@ -263,7 +263,7 @@ module Ninject
             add_property_values
             add_on_activation
             add_on_deactivation
-            add_when_constraints
+            add_when_constraint
             set_target 
           end 
         end
@@ -284,9 +284,20 @@ class NinjectInitializer
     @bindings = []
   end
   
-  def bind(service_type, config={})
+  def bind(service_type, config={}, &b)
     config[:service] ||= service_type
+    @config = config
+    instance_eval &b unless b.nil?
     @bindings << RubyBindingBuilder.new(config).build
+  end
+  
+  def method_missing(receiver, message, args)
+    @@posibilities ||=  [:meta, :name, :with, :on_activation, :on_deactivation, :activated, :deactivated, :when]
+    if @@posibilities.include?(message.to_sym)
+      @config[message.to_sym] = args
+    else
+      super #preserve normal behavior
+    end
   end
   
   def clear_bindings
@@ -301,43 +312,3 @@ def to_configure_ninject(&b)
   b.call(initializer)
   initializer.bindings
 end
-
-
-# Step 1: create a builder
-#to_configure_ninject do |ninject|
-#  ninject.bind IServiceA,
-#  :to => ServiceA,
-#  :as => :singleton,
-#  :meta => { :type => "superservice" },
-#  :name => "aaaaa",
-#  :parameter => [{ :name => "my_param", :value => lambda { |context| "param_value" }  }],
-#  :constructor_arguments => [{:name => :const_arg, :value => 56 }],
-#  :property_values => [{:name => :property_name, :value => 94 }],
-#  :on_activation => lambda { |obj| obj.do_some_work },
-#  :on_deativated => lambda { |obj| obj.do_some_cleanup },
-#  :when => {
-#    :provider => lambda { |context| "a value" },
-#    :injected_into => ServiceB,
-#    :target_has => AnAttribute,
-#    :member_has => AnAttribute,
-#    :class_has => AnAttribute
-#  ]
-#end
-
-# Step 2: Sprinkle sugar :)
-#to_configure_ninject do |ninject|
-#  ninject.bind IServiceA, :to => ServiceA, :as => :singleton do
-#    meta { :type => "superservice" },
-#    name  "aaaaa",
-#    with :parameter => [{ :my_param => lambda { |context| "param_value" }  }],
-#         :constructor_arguments => [{:const_arg => 56 }],
-#         :property_values => [{:property_name => 94 }],
-#    on_activation { |obj| obj.do_some_work },
-#    on_deativated { |obj| obj.do_some_cleanup },
-#    when :provider => lambda { |context| "a value" },
-#         :injected_into => ServiceB,
-#         :target_has => AnAttribute,
-#         :member_has => AnAttribute,
-#         :class_has => AnAttribute
-#    
-#end
