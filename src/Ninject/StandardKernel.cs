@@ -70,7 +70,8 @@ namespace Ninject
 			Components.Add<IActivationStrategy, BindingActionStrategy>();
 			Components.Add<IActivationStrategy, DisposableStrategy>();
 
-			Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
+			//Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
+			Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
 			Components.Add<ICache, Cache>();
 			Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 

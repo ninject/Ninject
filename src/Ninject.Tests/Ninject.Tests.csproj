@@ -71,7 +71,7 @@
     <Compile Include="Integration\TransientScopeTests.cs" />
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
-    <Compile Include="Unit\ExpressionInjectorFactoryTests.cs" />
+    <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />

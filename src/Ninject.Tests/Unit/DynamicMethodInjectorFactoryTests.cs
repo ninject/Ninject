@@ -5,19 +5,19 @@ using Ninject.Tests.Fakes;
 using Xunit;
 using Xunit.Should;
 
-namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
+namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 {
-	public class ExpressionInjectorFactoryContext
+	public class DynamicMethodInjectorFactoryContext
 	{
-		protected ExpressionInjectorFactory injectorFactory;
+		protected DynamicMethodInjectorFactory injectorFactory;
 
-		public ExpressionInjectorFactoryContext()
+		public DynamicMethodInjectorFactoryContext()
 		{
-			injectorFactory = new ExpressionInjectorFactory();
+			injectorFactory = new DynamicMethodInjectorFactory();
 		}
 	}
 
-	public class WhenConstructorInjectorIsInvoked : ExpressionInjectorFactoryContext
+	public class WhenConstructorInjectorIsInvoked : DynamicMethodInjectorFactoryContext
 	{
 		protected ConstructorInfo constructor;
 		protected ConstructorInjector injector;
@@ -49,7 +49,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		}
 	}
 
-	public class WhenPropertyInjectorIsInvoked : ExpressionInjectorFactoryContext
+	public class WhenPropertyInjectorIsInvoked : DynamicMethodInjectorFactoryContext
 	{
 		protected PropertyInfo property;
 		protected PropertyInjector injector;
@@ -80,7 +80,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		}
 	}
 
-	public class WhenMethodInjectorIsInvokedOnVoidMethod : ExpressionInjectorFactoryContext
+	public class WhenMethodInjectorIsInvokedOnVoidMethod : DynamicMethodInjectorFactoryContext
 	{
 		protected MethodInfo method;
 		protected MethodInjector injector;
@@ -100,7 +100,7 @@ namespace Ninject.Tests.Unit.ExpressionInjectorFactoryTests
 		}
 	}
 
-	public class WhenMethodInjectorIsInvokedOnNonVoidMethod : ExpressionInjectorFactoryContext
+	public class WhenMethodInjectorIsInvokedOnNonVoidMethod : DynamicMethodInjectorFactoryContext
 	{
 		protected MethodInfo method;
 		protected MethodInjector injector;
