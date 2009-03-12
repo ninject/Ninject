@@ -33,6 +33,6 @@ to_configure_ninject do |ninject|
       :member_has => AnAttribute,
       :class_has => AnAttribute
     }
-
+end
 
 Happy playing :)
