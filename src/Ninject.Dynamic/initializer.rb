@@ -292,10 +292,11 @@ class NinjectInitializer
     @bindings << Ninject::Planning::Bindings::RubyBindingBuilder.new(config).build
   end
   
-  def method_missing(receiver, message, args)
+  def method_missing(message, *args, &b)
     @@posibilities ||=  [:meta, :name, :with, :on_activation, :on_deactivation, :activated, :deactivated, :when]
     if @@posibilities.include?(message.to_sym)
-      @config[message.to_sym] = args
+      @config[message.to_sym] = args.first if args.size > 0
+      @config[message.to_sym] = b unless b.nil?
     else
       super #preserve normal behavior
     end
