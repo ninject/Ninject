@@ -170,6 +170,15 @@ namespace Ninject
 		}
 
 		/// <summary>
+		/// Unregisters all bindings for the specified service.
+		/// </summary>
+		/// <param name="service">The service to unbind.</param>
+		public override void Unbind(Type service)
+		{
+			_bindings.RemoveAll(service);
+		}
+
+		/// <summary>
 		/// Registers the specified binding.
 		/// </summary>
 		/// <param name="binding">The binding to add.</param>
@@ -257,7 +266,7 @@ namespace Ninject
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
-			return GetBindings(request)
+			return GetBindings(request.Service)
 				.Where(binding => binding.Matches(request) && request.Matches(binding))
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
@@ -280,20 +289,20 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Gets the bindings that match the request.
+		/// Gets the bindings registered for the specified service.
 		/// </summary>
-		/// <param name="request">The request to match.</param>
-		/// <returns>A series of bindings that match the request.</returns>
-		public virtual IEnumerable<IBinding> GetBindings(IRequest request)
+		/// <param name="service">The service in question.</param>
+		/// <returns>A series of bindings that are registered for the service.</returns>
+		public virtual IEnumerable<IBinding> GetBindings(Type service)
 		{
-			Ensure.ArgumentNotNull(request, "request");
+			Ensure.ArgumentNotNull(service, "service");
 
-			foreach (IBinding binding in _bindings[request.Service])
+			foreach (IBinding binding in _bindings[service])
 				yield return binding;
 
-			if (request.Service.IsGenericType)
+			if (service.IsGenericType)
 			{
-				Type gtd = request.Service.GetGenericTypeDefinition();
+				Type gtd = service.GetGenericTypeDefinition();
 
 				foreach (IBinding binding in _bindings[gtd])
 					yield return binding;

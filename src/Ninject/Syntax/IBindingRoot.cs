@@ -40,6 +40,30 @@ namespace Ninject.Syntax
 		IBindingToSyntax<object> Bind(Type service);
 
 		/// <summary>
+		/// Unregisters all bindings for the specified service.
+		/// </summary>
+		/// <typeparam name="T">The service to unbind.</typeparam>
+		void Unbind<T>();
+
+		/// <summary>
+		/// Unregisters all bindings for the specified service.
+		/// </summary>
+		/// <param name="service">The service to unbind.</param>
+		void Unbind(Type service);
+
+		/// <summary>
+		/// Removes any existing bindings for the specified service, and declares a new one.
+		/// </summary>
+		/// <typeparam name="T">The service to re-bind.</typeparam>
+		IBindingToSyntax<T> Rebind<T>();
+
+		/// <summary>
+		/// Removes any existing bindings for the specified service, and declares a new one.
+		/// </summary>
+		/// <param name="service">The service to re-bind.</param>
+		IBindingToSyntax<object> Rebind(Type service);
+
+		/// <summary>
 		/// Registers the specified binding.
 		/// </summary>
 		/// <param name="binding">The binding to add.</param>

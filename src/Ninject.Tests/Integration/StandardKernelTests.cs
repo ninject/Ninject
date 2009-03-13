@@ -277,6 +277,40 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 	}
 
+	public class WhenUnbindIsCalled : StandardKernelContext
+	{
+		[Fact]
+		public void RemovesAllBindingsForService()
+		{
+			kernel.Bind<IWeapon>().To<Shuriken>();
+			kernel.Bind<IWeapon>().To<Sword>();
+
+			var bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
+			bindings.Length.ShouldBe(2);
+
+			kernel.Unbind<IWeapon>();
+			bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
+			bindings.ShouldBeEmpty();
+		}
+	}
+
+	public class WhenRebindIsCalled : StandardKernelContext
+	{
+		[Fact]
+		public void RemovesAllBindingsForServiceAndReplacesWithSpecifiedBinding()
+		{
+			kernel.Bind<IWeapon>().To<Shuriken>();
+			kernel.Bind<IWeapon>().To<Sword>();
+
+			var bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
+			bindings.Length.ShouldBe(2);
+
+			kernel.Rebind<IWeapon>().To<Sword>();
+			bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
+			bindings.Length.ShouldBe(1);
+		}
+	}
+
 	public class InitializableA : IInitializable
 	{
 		public static int Count = 0;

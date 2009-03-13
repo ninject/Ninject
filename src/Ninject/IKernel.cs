@@ -92,11 +92,11 @@ namespace Ninject
 		void Inject(object instance, params IParameter[] parameters);
 
 		/// <summary>
-		/// Gets the bindings that match the request.
+		/// Gets the bindings registered for the specified service.
 		/// </summary>
-		/// <param name="request">The request to match.</param>
-		/// <returns>A series of bindings that match the request.</returns>
-		IEnumerable<IBinding> GetBindings(IRequest request);
+		/// <param name="service">The service in question.</param>
+		/// <returns>A series of bindings that are registered for the service.</returns>
+		IEnumerable<IBinding> GetBindings(Type service);
 
 		/// <summary>
 		/// Begins a new activation block, which can be used to deterministically dispose resolved instances.
