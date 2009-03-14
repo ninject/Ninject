@@ -42,7 +42,7 @@ namespace Ninject
 	public abstract class KernelBase : BindingRoot, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
-		private readonly Dictionary<Type, IModule> _modules = new Dictionary<Type, IModule>();
+		private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
 
 		/// <summary>
 		/// Gets the kernel settings.
@@ -129,14 +129,14 @@ namespace Ninject
 		}
 
 		/// <summary>
-		/// Determines whether a module of the specified type has been loaded in the kernel.
+		/// Determines whether a module with the specified name has been loaded in the kernel.
 		/// </summary>
-		/// <param name="moduleType">The type of the module.</param>
+		/// <param name="name">The name of the module.</param>
 		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
-		public virtual bool HasModule(Type moduleType)
+		public virtual bool HasModule(string name)
 		{
-			Ensure.ArgumentNotNull(moduleType, "moduleType");
-			return _modules.ContainsKey(moduleType);
+			Ensure.ArgumentNotNullOrEmpty(name, "name");
+			return _modules.ContainsKey(name);
 		}
 
 		/// <summary>
@@ -147,7 +147,12 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(module, "module");
 
-			_modules.Add(module.GetType(), module);
+			IModule existingModule;
+
+			if (_modules.TryGetValue(module.Name, out existingModule))
+				throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
+
+			_modules.Add(module.Name, module);
 			module.OnLoad(this);
 
 			OnModuleLoaded(module);
@@ -163,17 +168,20 @@ namespace Ninject
         }
 
 		/// <summary>
-		/// Unloads the module with the specified type.
+		/// Unloads the module with the specified name.
 		/// </summary>
-		/// <param name="moduleType">The type of the module.</param>
-		public virtual void UnloadModule(Type moduleType)
+		/// <param name="name">The module's name.</param>
+		public virtual void UnloadModule(string name)
 		{
-			Ensure.ArgumentNotNull(moduleType, "moduleType");
+			Ensure.ArgumentNotNull(name, "name");
 
-			IModule module = _modules[moduleType];
+			IModule module;
+
+			if (!_modules.TryGetValue(name, out module))
+				throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
 
 			module.OnUnload(this);
-			_modules.Remove(moduleType);
+			_modules.Remove(name);
 
 			ModuleUnloaded.Raise(this, new ModuleEventArgs(module));
 		}

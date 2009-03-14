@@ -208,8 +208,8 @@ namespace Ninject.Syntax
 		/// Indicates that the specified constructor argument should be overridden with the specified value.
 		/// </summary>
 		/// <param name="name">The name of the argument to override.</param>
-		/// <param name="valueCallback">The callback to invoke to get the value for the argument.</param>
-		IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback);
+		/// <param name="callback">The callback to invoke to get the value for the argument.</param>
+		IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> callback);
 
 		/// <summary>
 		/// Indicates that the specified property should be injected with the specified value.
@@ -222,8 +222,8 @@ namespace Ninject.Syntax
 		/// Indicates that the specified property should be injected with the specified value.
 		/// </summary>
 		/// <param name="name">The name of the property to override.</param>
-		/// <param name="valueCallback">The callback to invoke to get the value for the property.</param>
-		IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback);
+		/// <param name="callback">The callback to invoke to get the value for the property.</param>
+		IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> callback);
 
 		/// <summary>
 		/// Adds a custom parameter to the binding.

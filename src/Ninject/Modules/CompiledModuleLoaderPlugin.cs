@@ -74,10 +74,11 @@ namespace Ninject.Modules
 		{
 			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
 			{
-				if (Kernel.HasModule(type))
+				var module = Activator.CreateInstance(type) as IModule;
+
+				if (Kernel.HasModule(module.Name))
 					continue;
 
-				var module = Activator.CreateInstance(type) as IModule;
 				Kernel.LoadModule(module);
 			}
 		}

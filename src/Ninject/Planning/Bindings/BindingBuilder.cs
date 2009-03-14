@@ -320,10 +320,10 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the specified constructor argument should be overridden with the specified value.
 		/// </summary>
 		/// <param name="name">The name of the argument to override.</param>
-		/// <param name="valueCallback">The callback to invoke to get the value for the argument.</param>
-		public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> valueCallback)
+		/// <param name="callback">The callback to invoke to get the value for the argument.</param>
+		public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> callback)
 		{
-			Binding.Parameters.Add(new ConstructorArgument(name, valueCallback));
+			Binding.Parameters.Add(new ConstructorArgument(name, callback));
 			return this;
 		}
 
@@ -342,10 +342,10 @@ namespace Ninject.Planning.Bindings
 		/// Indicates that the specified property should be injected with the specified value.
 		/// </summary>
 		/// <param name="name">The name of the property to override.</param>
-		/// <param name="valueCallback">The callback to invoke to get the value for the property.</param>
-		public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> valueCallback)
+		/// <param name="callback">The callback to invoke to get the value for the property.</param>
+		public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> callback)
 		{
-			Binding.Parameters.Add(new PropertyValue(name, valueCallback));
+			Binding.Parameters.Add(new PropertyValue(name, callback));
 			return this;
 		}
 

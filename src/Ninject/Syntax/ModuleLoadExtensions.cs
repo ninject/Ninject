@@ -29,18 +29,6 @@ namespace Ninject
 	public static class ModuleLoadExtensions
 	{
 		/// <summary>
-		/// Determines whether a module of the specified type has been loaded in the kernel.
-		/// </summary>
-		/// <typeparam name="TModule">The type of the module.</typeparam>
-		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
-		public static bool HasModule<TModule>(this IKernel kernel)
-			where TModule : IModule
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			return kernel.HasModule(typeof(TModule));
-		}
-
-		/// <summary>
 		/// Creates a new instance of the module and loads it into the kernel.
 		/// </summary>
 		/// <typeparam name="TModule">The type of the module.</typeparam>
@@ -49,17 +37,6 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			kernel.LoadModule(new TModule());
-		}
-
-		/// <summary>
-		/// Unloads the module with the specified type.
-		/// </summary>
-		/// <typeparam name="TModule">The type of the module.</typeparam>
-		public static void UnloadModule<TModule>(this IKernel kernel)
-			where TModule : IModule
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			kernel.UnloadModule(typeof(TModule));
 		}
 
 		/// <summary>

@@ -32,6 +32,11 @@ namespace Ninject.Modules
 		IKernel Kernel { get; set; }
 
 		/// <summary>
+		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
 		/// Called when the module is loaded into a kernel.
 		/// </summary>
 		/// <param name="kernel">The kernel that is loading the module.</param>
