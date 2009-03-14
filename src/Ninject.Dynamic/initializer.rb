@@ -1,9 +1,13 @@
+require 'mscorlib'
 
 include Ninject::Activation
 include Ninject::Activation::Providers
 include Ninject::Dynamic::Activation::Providers
 BindingTarget = Ninject::Planning::Bindings::BindingTarget
 
+def puts(msg)
+  System::Console.write_line msg.to_s
+end
 
 class Symbol
   
@@ -74,15 +78,15 @@ module System
     end
     
     def to_binding_parameter(name)
-      Ninject::Parameters::Parameter.new(name.to_s.to_clr_string, self, true)
+      Ninject::Parameters::Parameter.new(name.to_s.to_clr_string, self, false)
     end
     
     def to_property_value(name)
-      Ninject::Parameters::PropertyValue.new(name.to_s.to_clr_string, self, true)
+      Ninject::Parameters::PropertyValue.new(name.to_s.to_clr_string, self)
     end
     
     def to_constructor_argument(name)
-      Ninject::Parameters::ConstructorArgument.new(name.to_s.to_clr_string, self, true)
+      Ninject::Parameters::ConstructorArgument.new(name.to_s.to_clr_string, self)
     end
   end
   
@@ -113,21 +117,21 @@ class Proc
   end
   
   def to_binding_parameter(name)
-    to_parameter(name, Ninject::Parameters::Parameter)
+    b = self
+    callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
+    Ninject::Parameters::Parameter.new(name.to_s.to_clr_string, callback, false)
   end
   
   def to_property_value(name)
-    to_parameter(name, Ninject::Parameters::PropertyValue)
+    b = self
+    callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
+    Ninject::Parameters::PropertyValue.new(name.to_s.to_clr_string, callback)
   end
   
   def to_constructor_argument(name)
-    to_parameter(name, Ninject::Parameters::ConstructorArgument)
-  end
-  
-  def to_parameter(name, klass)
     b = self
     callback = System::Func.of(IContext, System::Object).new { |context| b.call(context) }
-    klass.new(name.to_s.to_clr_string, callback, true)
+    Ninject::Parameters::ConstructorArgument.new(name.to_s.to_clr_string, callback)
   end
   
   def to_dotnet_action
@@ -217,21 +221,24 @@ module Ninject
         end
         
         def add_parameters
-          parameters = @config[:parameter] || @config[:parameters] || {}
+          return nil if @config[:with].nil?
+          parameters = @config[:with][:parameter] || @config[:with][:parameters] || {}
           parameters.each do |name, value|
             @binding.parameters.add(value.to_binding_parameter(name))
           end
         end
         
         def add_constructor_arguments
-          arguments = @config[:constructor_argument] || @config[:constructor_arguments] || {}
+          return nil if @config[:with].nil?
+          arguments = @config[:with][:constructor_argument] || @config[:with][:constructor_arguments] || {}
           arguments.each do |name, value|
             @binding.parameters.add(value.to_constructor_argument(name))
           end
         end
         
         def add_property_values
-          values = @config[:property_value] || @config[:property_values] || {}
+          return nil if @config[:with].nil?
+          values = @config[:with][:property_value] || @config[:with][:property_values] || {}
           values.each do |name, value|
             @binding.parameters.add(value.to_property_value(name))
           end
@@ -288,7 +295,10 @@ class NinjectInitializer
   def bind(service_type, config={}, &b)
     config[:service] ||= service_type
     @config = config
-    instance_eval b unless b.nil?
+    puts @config
+    puts "We've got a block: #{!b.nil?}"
+    instance_eval(&b) unless b.nil?
+    puts @config
     @bindings << Ninject::Planning::Bindings::RubyBindingBuilder.new(config).build
   end
   

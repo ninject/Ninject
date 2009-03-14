@@ -6,6 +6,7 @@ using Ninject.Dynamic;
 using Ninject.Dynamic.Extensions;
 using Ninject.Dynamic.Modules;
 using Ninject.Modules;
+using Ninject.Parameters;
 using Ninject.Tests.Fakes;
 using Ninject.Tests.Integration.StandardKernelTests;
 using Xunit;
@@ -191,12 +192,34 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBoundWithParameters: RubyKernelContext
+    public class WhenBoundWithConstructorArguments : RubyKernelContext
     {
         [Fact]
-        public void ReturnsServiceRegisteredViaBindingWithParameters()
+        public void ReturnsServiceRegistered()
         {
-            
+            SetPath("config_constructor_arguments.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Knife>();
+            weapon.Name.ShouldBe("Blunt knife");
+        }
+
+        [Fact]
+        public void ReturnsServiceWhenRegisteredAsDSL()
+        {
+            SetPath("config_constructor_arguments_dsl.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Knife>();
+            weapon.Name.ShouldBe("Blunt knife");
         }
     }
+
+
 }
