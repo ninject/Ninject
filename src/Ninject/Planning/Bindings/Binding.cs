@@ -45,6 +45,14 @@ namespace Ninject.Planning.Bindings
 		public bool IsImplicit { get; set; }
 
 		/// <summary>
+		/// Gets a value indicating whether the binding has a condition associated with it.
+		/// </summary>
+		public bool IsConditional
+		{
+			get { return Condition != null; }
+		}
+
+		/// <summary>
 		/// Gets or sets the type of target for the binding.
 		/// </summary>
 		public BindingTarget Target { get; set; }

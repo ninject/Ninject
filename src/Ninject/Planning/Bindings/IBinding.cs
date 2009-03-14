@@ -49,6 +49,11 @@ namespace Ninject.Planning.Bindings
 		bool IsImplicit { get; set; }
 
 		/// <summary>
+		/// Gets a value indicating whether the binding has a condition associated with it.
+		/// </summary>
+		bool IsConditional { get; }
+
+		/// <summary>
 		/// Gets or sets the condition defined for the binding.
 		/// </summary>
 		Func<IRequest, bool> Condition { get; set; }

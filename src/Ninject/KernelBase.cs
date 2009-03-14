@@ -275,6 +275,7 @@ namespace Ninject
 			}
 
 			return GetBindings(request.Service)
+				.OrderBy(binding => binding.IsConditional ? 0 : 1)
 				.Where(binding => binding.Matches(request) && request.Matches(binding))
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
