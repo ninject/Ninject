@@ -85,6 +85,15 @@ namespace Ninject.Modules
 		public virtual void Unload() { }
 
 		/// <summary>
+		/// Unregisters all bindings for the specified service.
+		/// </summary>
+		/// <param name="service">The service to unbind.</param>
+		public override void Unbind(Type service)
+		{
+			Kernel.Unbind(service);
+		}
+
+		/// <summary>
 		/// Registers the specified binding.
 		/// </summary>
 		/// <param name="binding">The binding to add.</param>
