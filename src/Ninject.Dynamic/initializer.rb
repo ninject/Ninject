@@ -339,10 +339,11 @@ class NinjectInitializer
   end
   
   def method_missing(message, *args, &b)
-    @@posibilities ||=  [:meta, :name, :with, :on_activation, :on_deactivation, :activated, :deactivated, :when]
+    @@posibilities ||=  [:meta, :name, :with, :on_activation, :on_deactivation, :activated, :deactivated, :when, :condition]
     if @@posibilities.include?(message.to_sym)
-      @config[message.to_sym] = args.first if args.size > 0
-      @config[message.to_sym] = b unless b.nil?
+      key = (message.to_sym == :condition) ? :when : message.to_sym
+      @config[key] = args.first if args.size > 0
+      @config[key] = lambda { |request| b.call(request) } unless b.nil?
     else
       super #preserve normal behavior
     end

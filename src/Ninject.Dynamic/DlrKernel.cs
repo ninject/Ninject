@@ -13,14 +13,14 @@ using Ninject.Modules;
 
 namespace Ninject.Dynamic
 {
-    public class RubyKernel : StandardKernel
+    public class DlrKernel : StandardKernel
     {
-        public RubyKernel(params IModule[] modules) : base(modules)
+        public DlrKernel(params IModule[] modules) : base(modules)
         {
         }
 
 
-        public RubyKernel(INinjectSettings settings, params IModule[] modules) : base(settings, modules)
+        public DlrKernel(INinjectSettings settings, params IModule[] modules) : base(settings, modules)
         {
         }
 

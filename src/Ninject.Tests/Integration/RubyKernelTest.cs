@@ -14,15 +14,15 @@ using Xunit.Should;
 
 #endregion
 
-namespace Ninject.Tests.Integration.RubyKernelTests
+namespace Ninject.Tests.Integration.DlrKernelTests
 {
-    public class RubyKernelContext
+    public class DlrKernelContext
     {
-        protected readonly RubyKernel kernel;
+        protected readonly DlrKernel kernel;
 
-        public RubyKernelContext()
+        public DlrKernelContext()
         {
-            kernel = new RubyKernel();
+            kernel = new DlrKernel();
         }
 
         protected void SetPath(string path)
@@ -35,7 +35,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenConfiguredFromCSharp : RubyKernelContext
+    public class WhenConfiguredFromCSharp : DlrKernelContext
     {
         [Fact]
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
@@ -76,7 +76,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
     }
 
 
-    public class WhenConfiguredFromRuby : RubyKernelContext
+    public class WhenConfiguredFromRuby : DlrKernelContext
     {
         [Fact]
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
@@ -117,7 +117,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBoundToSelf : RubyKernelContext
+    public class WhenBoundToSelf : DlrKernelContext
     {
         [Fact]
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
@@ -148,7 +148,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
     }
 
 
-    public class WhenBoundToGenericServiceRegisteredViaOpenGenericType : RubyKernelContext
+    public class WhenBoundToGenericServiceRegisteredViaOpenGenericType : DlrKernelContext
     {
         [Fact]
         public void GenericParametersAreInferred()
@@ -165,7 +165,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBoundWithConstraints : RubyKernelContext
+    public class WhenBoundWithConstraints : DlrKernelContext
     {
         [Fact]
         public void ReturnsServiceRegisteredViaBindingWithSpecifiedName()
@@ -192,7 +192,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBoundWithConstructorArguments : RubyKernelContext
+    public class WhenBoundWithConstructorArguments : DlrKernelContext
     {
         [Fact]
         public void ReturnsServiceRegistered()
@@ -221,12 +221,28 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
-    public class WhenBoundWithWhenArgument : RubyKernelContext
+    public class WhenBoundWithWhenArgument : DlrKernelContext
     {
         [Fact]
         public void ResolvesTheCorrectTypeAccordingToCondition()
         {
             SetPath("config_when.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+            var warrior = kernel.Get<IWarrior>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+            warrior.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
+
+        }
+
+        [Fact]
+        public void ResolvesTheCorrectTypeAccordingToConditionWithDsl()
+        {
+            SetPath("config_when_dsl.rb");
             kernel.AutoLoadModulesRecursively("~");
 
             var weapon = kernel.Get<IWeapon>();
