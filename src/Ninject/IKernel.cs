@@ -66,11 +66,11 @@ namespace Ninject
 		event EventHandler<ModuleEventArgs> ModuleUnloaded;
 
 		/// <summary>
-		/// Determines whether a module of the specified type has been loaded in the kernel.
+		/// Determines whether a module with the specified name has been loaded in the kernel.
 		/// </summary>
-		/// <param name="moduleType">The type of the module.</param>
+		/// <param name="name">The name of the module.</param>
 		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
-		bool HasModule(Type moduleType);
+		bool HasModule(string name);
 
 		/// <summary>
 		/// Loads the module into the kernel.
@@ -79,10 +79,10 @@ namespace Ninject
 		void LoadModule(IModule module);
 
 		/// <summary>
-		/// Unloads the module with the specified type.
+		/// Unloads the module with the specified name.
 		/// </summary>
-		/// <param name="moduleType">The type of the module.</param>
-		void UnloadModule(Type moduleType);
+		/// <param name="name">The module's name.</param>
+		void UnloadModule(string name);
 
 		/// <summary>
 		/// Injects the specified existing instance, without managing its lifecycle.

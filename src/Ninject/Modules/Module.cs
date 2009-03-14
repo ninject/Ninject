@@ -37,6 +37,14 @@ namespace Ninject.Modules
 		public IKernel Kernel { get; set; }
 
 		/// <summary>
+		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
+		/// </summary>
+		public virtual string Name
+		{
+			get { return GetType().Name; }
+		}
+
+		/// <summary>
 		/// Gets the bindings that were registered by the module.
 		/// </summary>
 		public ICollection<IBinding> Bindings { get; private set; }
