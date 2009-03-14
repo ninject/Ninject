@@ -221,5 +221,23 @@ namespace Ninject.Tests.Integration.RubyKernelTests
         }
     }
 
+    public class WhenBoundWithWhenArgument : RubyKernelContext
+    {
+        [Fact]
+        public void ResolvesTheCorrectTypeAccordingToCondition()
+        {
+            SetPath("config_when.rb");
+            kernel.AutoLoadModulesRecursively("~");
+
+            var weapon = kernel.Get<IWeapon>();
+            var warrior = kernel.Get<Samurai>();
+
+            weapon.ShouldNotBeNull();
+            weapon.ShouldBeInstanceOf<Sword>();
+            warrior.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
+
+        }
+    }
 
 }

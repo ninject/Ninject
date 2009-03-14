@@ -50,19 +50,28 @@ module System
     end
     
     def to_injected_into_condition
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.reflected_type == self }
+      k = self
+      fn = lambda do |request| 
+        puts "#{k.full_name}"
+        puts request.target.inspect
+        request.target.member.reflected_type == k unless request.target.nil?  
+      end
+      Ninject::Dynamic::Workarounds.to_request_predicate fn
     end
     
     def to_class_has_condition
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.reflected_type.is_defined(self) }
+      k = self
+      Ninject::Dynamic::Workarounds.to_request_predicate(lambda { |request| request.target.member.reflected_type.is_defined(k) })
     end
     
     def to_member_has_condition
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.is_defined(self) }
+      k = self
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.is_defined(k) }
     end
     
     def to_target_has_condition
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.is_defined(self) }
+      k = self
+      System::Func.of(IRequest, System::Boolean).new { |request| request.target.is_defined(k) }
     end
   end
   
@@ -153,6 +162,22 @@ class Class
   def to_creation_callback
     self.to_clr_type.to_creation_callback
   end
+  
+  def to_injected_into_condition
+    self.to_clr_type.to_injected_into_condition
+  end
+  
+  def to_class_has_condition
+    self.to_clr_type.to_class_has_condition
+  end
+  
+  def to_member_has_condition
+    self.to_clr_type.to_member_has_condition
+  end
+  
+  def to_target_has_condition
+    self.to_clr_type.to_target_has_condition
+  end
 end
 
 class Hash
@@ -162,7 +187,11 @@ class Hash
   end
   
   def to_when_condition
-    value.send("to_#{self}_condition".to_sym)
+    result = nil
+    self.each do |name, value|
+      result = value.send("to_#{name}_condition".to_sym)
+    end
+    result
   end
 end
 
@@ -246,19 +275,19 @@ module Ninject
         
         def add_on_activation
           handler = @config[:on_activation]||@config[:activation!]
-          handler.each { |h| binding.activation_actions.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
-          binding.activation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
+          handler.each { |h| @binding.activation_actions.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
+          @binding.activation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
         end 
         
         def add_on_deactivation
           handler = @config[:on_deactivation]||@config[:deactivation!]
-          handler.each { |h| binding.deactivation_action.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
-          binding.deactivation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
+          handler.each { |h| @binding.deactivation_action.add h.to_dotnet_action unless h.nil? } if handler.respond_to?(:each)
+          @binding.deactivation_actions.add(handler.to_dotnet_action) unless handler.nil? && !handler.respond_to?(:each)
         end
         
         def add_when_constraint
           wh = @config[:when]   
-          binding.condition = wh.to_when_condition unless wh.nil?          
+          @binding.condition = wh.to_when_condition unless wh.nil?          
         end
         
         def build
@@ -295,10 +324,7 @@ class NinjectInitializer
   def bind(service_type, config={}, &b)
     config[:service] ||= service_type
     @config = config
-    puts @config
-    puts "We've got a block: #{!b.nil?}"
     instance_eval(&b) unless b.nil?
-    puts @config
     @bindings << Ninject::Planning::Bindings::RubyBindingBuilder.new(config).build
   end
   

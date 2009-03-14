@@ -52,6 +52,10 @@
       <HintPath>..\lib\ironruby\Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Aliases>clr3</Aliases>
+    </Reference>
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +77,7 @@
     <Compile Include="Modules\RubyModule.cs" />
     <Compile Include="Modules\RubyModuleLoaderPlugin.cs" />
     <Compile Include="RubyKernel.cs" />
+    <Compile Include="Workarounds.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ninject\Ninject.csproj">
