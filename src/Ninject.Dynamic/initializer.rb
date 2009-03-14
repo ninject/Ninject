@@ -52,27 +52,38 @@ module System
     def to_injected_into_condition
       k = self
       fn = lambda do |request| 
-        puts "#{k.full_name}"
-        puts request.target.inspect
-        request.target.member.reflected_type == k unless request.target.nil?  
+        return false if request.target.nil?
+        request.target.member.reflected_type == k 
       end
       Ninject::Dynamic::Workarounds.to_request_predicate fn
     end
     
     def to_class_has_condition
       k = self
-      Ninject::Dynamic::Workarounds.to_request_predicate(lambda { |request| request.target.member.reflected_type.is_defined(k) })
+      fn = lambda do |request| 
+        return false if request.target.nil?
+        request.target.member.reflected_type.is_defined(k)
+      end
+      Ninject::Dynamic::Workarounds.to_request_predicate(fn)
     end
     
     def to_member_has_condition
       k = self
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.member.is_defined(k) }
+      fn = lambda do |request| 
+        return false if request.target.nil?
+        request.target.member.is_defined(k)
+      end
+       Ninject::Dynamic::Workarounds.to_request_predicate fn
     end
     
     def to_target_has_condition
       k = self
-      System::Func.of(IRequest, System::Boolean).new { |request| request.target.is_defined(k) }
-    end
+       fn = lambda do |request| 
+         return false if request.target.nil?
+         request.target.is_defined(k)
+       end
+       Ninject::Dynamic::Workarounds.to_request_predicate fn
+   end
   end
   
   class Object
@@ -149,8 +160,7 @@ class Proc
   end
   
   def to_when_condition
-    b=self
-    System::Func.of(IRequest, System::Boolean).new { |request| b.call(request) }
+    Ninject::Dynamic::Workarounds.to_request_predicate self
   end
 end
 

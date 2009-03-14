@@ -1,5 +1,6 @@
 #region Usings
 
+using System.IO;
 using IronRuby.Builtins;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
@@ -26,6 +27,14 @@ namespace Ninject.Dynamic.Modules
         }
 
         #region Overrides of Module
+
+        public override string Name
+        {
+            get
+            {
+                return _scriptPath;
+            }
+        }
 
         /// <summary>
         /// Loads the module into the kernel.

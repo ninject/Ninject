@@ -65,6 +65,7 @@
     <Compile Include="Activation\Providers\RubyProcProvider.cs" />
     <Compile Include="AssemblyStreamContentProvider.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ExceptionFormatterExtensions.cs" />
     <Compile Include="Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\Inflector.cs" />

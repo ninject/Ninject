@@ -230,7 +230,7 @@ namespace Ninject.Tests.Integration.RubyKernelTests
             kernel.AutoLoadModulesRecursively("~");
 
             var weapon = kernel.Get<IWeapon>();
-            var warrior = kernel.Get<Samurai>();
+            var warrior = kernel.Get<IWarrior>();
 
             weapon.ShouldNotBeNull();
             weapon.ShouldBeInstanceOf<Sword>();

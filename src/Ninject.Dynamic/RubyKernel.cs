@@ -15,8 +15,6 @@ namespace Ninject.Dynamic
 {
     public class RubyKernel : StandardKernel
     {
-        private readonly IDictionary<string, IModule> _rubyModules = new Dictionary<string, IModule>();
-
         public RubyKernel(params IModule[] modules) : base(modules)
         {
         }
@@ -43,23 +41,7 @@ namespace Ninject.Dynamic
             engine.LoadAssemblies(types);
         }
 
-        /// <summary>
-        /// Loads the module into the kernel.
-        /// </summary>
-        /// <param name="module">The module to load.</param>
-        public override void LoadModule(IModule module)
-        {
-            module.EnsureArgumentNotNull("module");
 
-            if(module is RubyModule)
-            {
-                _rubyModules.Add(((RubyModule)module).ScriptPath, module);
-                module.OnLoad(this);
-
-                OnModuleLoaded(module);
-            }
-            else base.LoadModule(module);
-        }
 
 
     }
