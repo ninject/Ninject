@@ -9,7 +9,7 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Dynamic.Modules
 {
-    public class RubyModule : Module
+    public class RubyModule : NinjectModule
     {
         private readonly IRubyEngine _engine;
         private readonly string _scriptPath;

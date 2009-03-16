@@ -12,6 +12,5 @@ namespace Ninject.Dynamic
         {
             return r => (bool)proc.Call(r);
         }
-
     }
 }

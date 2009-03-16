@@ -44,21 +44,17 @@ namespace Ninject.Dynamic.Modules
         {
             get
             {
-                //FIXME: do not forget to move to the tests project
-                if (_patterns.IsNotNull())
-                    return _patterns;
                 return Patterns;
             }
-            internal set { _patterns = value; }
         }
 
         /// <summary>
         /// Loads modules from the specified files.
         /// </summary>
-        /// <param name="files">The names of the files to load modules from.</param>
-        public void LoadModules(IEnumerable<string> files)
+        /// <param name="filenames">The names of the files to load modules from.</param>
+        public void LoadModules(IEnumerable<string> filenames)
         {
-            files.ForEach(file =>
+            filenames.ForEach(file =>
                               {
                                   var rubyModule = new RubyModule(_engine, file);
                                   Kernel.LoadModule(rubyModule);

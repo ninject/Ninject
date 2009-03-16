@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 #if !NO_WEB
+using System.Text.RegularExpressions;
 using System.Web;
 #endif
 using Ninject.Components;
@@ -59,12 +60,24 @@ namespace Ninject.Modules
 		}
 
 		/// <summary>
+		/// Loads any modules found in the specified file.
+		/// </summary>
+		/// <param name="filename">The name of the file to search.</param>
+		public void LoadModules(string filename)
+		{
+			var matchingPlugins = Plugins.Where(plugin => plugin.SupportedPatterns.Any(glob => GlobMatches(glob, filename)));
+
+			foreach (IModuleLoaderPlugin plugin in matchingPlugins)
+				plugin.LoadModules(new[] { filename });
+		}
+
+		/// <summary>
 		/// Loads any modules found in files in the specified path.
 		/// </summary>
 		/// <param name="path">The path to search.</param>
-		public void LoadModules(string path)
+		public void FindAndLoadModules(string path)
 		{
-			LoadModules(path, false);
+			FindAndLoadModules(path, false);
 		}
 
 		/// <summary>
@@ -72,7 +85,7 @@ namespace Ninject.Modules
 		/// </summary>
 		/// <param name="path">The path to search.</param>
 		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
-		public void LoadModules(string path, bool recursive)
+		public void FindAndLoadModules(string path, bool recursive)
 		{
 			Ensure.ArgumentNotNull(path, "path");
 
@@ -123,6 +136,12 @@ namespace Ninject.Modules
 			#else
 			return HttpContext.Current != null ? HttpContext.Current.Server.MapPath("~") : AppDomain.CurrentDomain.BaseDirectory;
 			#endif
+		}
+
+		private static bool GlobMatches(string glob, string filename)
+		{
+			string pattern = Regex.Escape(glob).Replace(@"\*", ".*").Replace(@"\?", ".");
+			return Regex.IsMatch(filename, pattern, RegexOptions.IgnoreCase);
 		}
 	}
 }

@@ -25,29 +25,27 @@ using System.Reflection;
 namespace Ninject.Infrastructure
 {
 	/// <summary>
-	/// Loads modules from compiled assemblies.
+	/// Finds types in assemblies without loading them into the main <see cref="AppDomain"/>.
 	/// </summary>
 	public static class AssemblyScanner
 	{
 		/// <summary>
 		/// Finds matching types in the specified assemblies.
 		/// </summary>
-		/// <param name="files">The files to scan to scan.</param>
+		/// <param name="assemblyOrFileNames">The assembly or file names to scan.</param>
 		/// <param name="predicate">The predicate to match.</param>
 		/// <returns>A series of the matching types.</returns>
-		public static IEnumerable<Type> FindMatchingTypesInAssemblies(IEnumerable<string> files, Func<Type, bool> predicate)
+		public static IEnumerable<Type> FindMatchingTypesInAssemblies(IEnumerable<string> assemblyOrFileNames, Func<Type, bool> predicate)
 		{
 			AppDomain temporaryDomain = CreateTemporaryAppDomain();
 
-			foreach (string file in files)
+			foreach (string file in assemblyOrFileNames)
 			{
-				var assemblyName = new AssemblyName { CodeBase = file };
-
 				Assembly assembly;
 
 				try
 				{
-					assembly = temporaryDomain.Load(assemblyName);
+					assembly = temporaryDomain.Load(GetAssemblyName(file));
 				}
 				catch (BadImageFormatException)
 				{
@@ -60,6 +58,16 @@ namespace Ninject.Infrastructure
 			}
 
 			AppDomain.Unload(temporaryDomain);
+		}
+
+		private static AssemblyName GetAssemblyName(string assemblyOrFileName)
+		{
+			AssemblyName name;
+
+			try { name = new AssemblyName(assemblyOrFileName); }
+			catch { name = new AssemblyName { CodeBase = assemblyOrFileName }; }
+
+			return name;
 		}
 
 		private static AppDomain CreateTemporaryAppDomain()

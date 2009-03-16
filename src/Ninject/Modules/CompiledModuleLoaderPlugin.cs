@@ -59,34 +59,22 @@ namespace Ninject.Modules
 		/// <summary>
 		/// Loads modules from the specified files.
 		/// </summary>
-		/// <param name="files">The names of the files to load modules from.</param>
-		public void LoadModules(IEnumerable<string> files)
+		/// <param name="filenames">The names of the files to load modules from.</param>
+		public void LoadModules(IEnumerable<string> filenames)
 		{
-			LoadModules(AssemblyScanner.FindMatchingTypesInAssemblies(files, IsLoadableModule));
-		}
-
-		/// <summary>
-		/// Determines whether the specified type is a loadable module.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns><see langword="True"/> if the type represents a loadable module; otherwise <see langword="false"/>.</returns>
-		protected virtual bool IsLoadableModule(Type type)
-		{
-			Ensure.ArgumentNotNull(type, "type");
-
-			if (!typeof(INinjectModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
-				return false;
-
-			return type.GetConstructor(Type.EmptyTypes) != null;
-		}
-
-		private void LoadModules(IEnumerable<Type> types)
-		{
-			foreach (Type type in types)
+			foreach (Type type in AssemblyScanner.FindMatchingTypesInAssemblies(filenames, IsLoadableModule))
 			{
 				var module = Activator.CreateInstance(type) as INinjectModule;
 				Kernel.LoadModule(module);
 			}
+		}
+
+		private static bool IsLoadableModule(Type type)
+		{
+			return typeof(INinjectModule).IsAssignableFrom(type)
+				&& !type.IsAbstract
+				&& !type.IsInterface
+				&& type.GetConstructor(Type.EmptyTypes) != null;
 		}
 	}
 }

@@ -33,9 +33,5 @@ namespace Ninject.Dynamic
             var engine = Components.Get<IRubyEngine>();
             engine.LoadAssemblies(types);
         }
-
-
-
-
     }
 }

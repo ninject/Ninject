@@ -28,7 +28,7 @@ namespace Ninject.Modules
 	/// <summary>
 	/// A pluggable unit that can be loaded into a kernel.
 	/// </summary>
-	public abstract class Module : BindingRoot, INinjectModule
+	public abstract class NinjectModule : BindingRoot, INinjectModule
 	{
 		/// <summary>
 		/// Gets the kernel that the module is loaded into.
@@ -49,9 +49,9 @@ namespace Ninject.Modules
 		public ICollection<IBinding> Bindings { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Module"/> class.
+		/// Initializes a new instance of the <see cref="NinjectModule"/> class.
 		/// </summary>
-		protected Module()
+		protected NinjectModule()
 		{
 			Bindings = new List<IBinding>();
 		}

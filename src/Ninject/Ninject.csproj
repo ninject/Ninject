@@ -148,7 +148,7 @@
     <Compile Include="Syntax\IBindingRoot.cs" />
     <Compile Include="Activation\Providers\CallbackProvider.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
-    <Compile Include="Modules\Module.cs" />
+    <Compile Include="Modules\NinjectModule.cs" />
     <Compile Include="Modules\INinjectModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />

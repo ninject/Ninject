@@ -35,7 +35,7 @@ namespace Ninject.Modules
 		/// <summary>
 		/// Loads modules from the specified files.
 		/// </summary>
-		/// <param name="files">The names of the files to load modules from.</param>
-		void LoadModules(IEnumerable<string> files);
+		/// <param name="filenames">The names of the files to load modules from.</param>
+		void LoadModules(IEnumerable<string> filenames);
 	}
 }

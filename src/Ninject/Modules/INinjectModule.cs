@@ -24,7 +24,7 @@ namespace Ninject.Modules
 	/// <summary>
 	/// A pluggable unit that can be loaded into a kernel.
 	/// </summary>
-	public interface INinjectModule : IBindingRoot
+	public interface INinjectModule
 	{
 		/// <summary>
 		/// Gets or the kernel that the module is loaded into.
