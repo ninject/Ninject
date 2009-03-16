@@ -73,17 +73,17 @@ module System
         return false if request.target.nil?
         request.target.member.is_defined(k)
       end
-       Ninject::Dynamic::Workarounds.to_request_predicate fn
+      Ninject::Dynamic::Workarounds.to_request_predicate fn
     end
     
     def to_target_has_condition
       k = self
-       fn = lambda do |request| 
-         return false if request.target.nil?
-         request.target.is_defined(k)
-       end
-       Ninject::Dynamic::Workarounds.to_request_predicate fn
-   end
+      fn = lambda do |request| 
+        return false if request.target.nil?
+        request.target.is_defined(k)
+      end
+      Ninject::Dynamic::Workarounds.to_request_predicate fn
+    end
   end
   
   class Object

@@ -39,6 +39,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ironruby\IronRuby.Libraries.dll</HintPath>
     </Reference>
+    <Reference Include="IronRuby.Libraries.Yaml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ironruby\IronRuby.Libraries.Yaml.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ironruby\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Scripting, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ironruby\Microsoft.Scripting.dll</HintPath>
