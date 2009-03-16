@@ -39,14 +39,14 @@ namespace Ninject
 		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
 		/// </summary>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		public StandardKernel(params IModule[] modules) : base(modules) { }
+		public StandardKernel(params INinjectModule[] modules) : base(modules) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
 		/// </summary>
 		/// <param name="settings">The configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		public StandardKernel(INinjectSettings settings, params IModule[] modules) : base(settings, modules) { }
+		public StandardKernel(INinjectSettings settings, params INinjectModule[] modules) : base(settings, modules) { }
 
 		/// <summary>
 		/// Adds components to the kernel during startup.

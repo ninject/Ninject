@@ -23,7 +23,6 @@ using Ninject.Activation.Blocks;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
 using Ninject.Components;
-using Ninject.Events;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
@@ -42,7 +41,7 @@ namespace Ninject
 	public abstract class KernelBase : BindingRoot, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
-		private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>();
+		private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
 
 		/// <summary>
 		/// Gets the kernel settings.
@@ -55,36 +54,16 @@ namespace Ninject
 		public IComponentContainer Components { get; private set; }
 
 		/// <summary>
-		/// Occurs when a binding is added.
-		/// </summary>
-		public event EventHandler<BindingEventArgs> BindingAdded;
-
-		/// <summary>
-		/// Occurs when a binding is removed.
-		/// </summary>
-		public event EventHandler<BindingEventArgs> BindingRemoved;
-
-		/// <summary>
-		/// Occurs when a module is loaded.
-		/// </summary>
-		public event EventHandler<ModuleEventArgs> ModuleLoaded;
-
-		/// <summary>
-		/// Occurs when a module is unloaded.
-		/// </summary>
-		public event EventHandler<ModuleEventArgs> ModuleUnloaded;
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="KernelBase"/> class.
 		/// </summary>
 		protected KernelBase()
-			: this(new ComponentContainer(), new NinjectSettings(), new IModule[0]) { }
+			: this(new ComponentContainer(), new NinjectSettings(), new INinjectModule[0]) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="KernelBase"/> class.
 		/// </summary>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(IEnumerable<IModule> modules)
+		protected KernelBase(IEnumerable<INinjectModule> modules)
 			: this(new ComponentContainer(), new NinjectSettings(), modules) { }
 
 		/// <summary>
@@ -92,7 +71,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="settings">The configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(INinjectSettings settings, IEnumerable<IModule> modules)
+		protected KernelBase(INinjectSettings settings, IEnumerable<INinjectModule> modules)
 			: this(new ComponentContainer(), settings, modules) { }
 
 		/// <summary>
@@ -101,7 +80,7 @@ namespace Ninject
 		/// <param name="components">The component container to use.</param>
 		/// <param name="settings">The configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(IComponentContainer components, INinjectSettings settings, IEnumerable<IModule> modules)
+		protected KernelBase(IComponentContainer components, INinjectSettings settings, IEnumerable<INinjectModule> modules)
 		{
 			Ensure.ArgumentNotNull(components, "components");
 			Ensure.ArgumentNotNull(settings, "settings");
@@ -129,6 +108,15 @@ namespace Ninject
 		}
 
 		/// <summary>
+		/// Gets the modules that have been loaded into the kernel.
+		/// </summary>
+		/// <returns>A series of the loaded modules.</returns>
+		public virtual IEnumerable<INinjectModule> GetModules()
+		{
+			return _modules.Values.ToArray();
+		}
+
+		/// <summary>
 		/// Determines whether a module with the specified name has been loaded in the kernel.
 		/// </summary>
 		/// <param name="name">The name of the module.</param>
@@ -143,29 +131,18 @@ namespace Ninject
 		/// Loads the module into the kernel.
 		/// </summary>
 		/// <param name="module">The module to load.</param>
-		public virtual void LoadModule(IModule module)
+		public virtual void LoadModule(INinjectModule module)
 		{
 			Ensure.ArgumentNotNull(module, "module");
 
-			IModule existingModule;
+			INinjectModule existingModule;
 
 			if (_modules.TryGetValue(module.Name, out existingModule))
 				throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
 
 			_modules.Add(module.Name, module);
 			module.OnLoad(this);
-
-			OnModuleLoaded(module);
 		}
-
-        /// <summary>
-        /// Called when a module has been loaded.
-        /// </summary>
-        /// <param name="module">The module.</param>
-        protected void OnModuleLoaded(IModule module)
-        {
-            ModuleLoaded.Raise(this, new ModuleEventArgs(module));
-        }
 
 		/// <summary>
 		/// Unloads the module with the specified name.
@@ -175,15 +152,13 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(name, "name");
 
-			IModule module;
+			INinjectModule module;
 
 			if (!_modules.TryGetValue(name, out module))
 				throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
 
 			module.OnUnload(this);
 			_modules.Remove(name);
-
-			ModuleUnloaded.Raise(this, new ModuleEventArgs(module));
 		}
 
 		/// <summary>
@@ -202,9 +177,7 @@ namespace Ninject
 		public override void AddBinding(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
-
 			_bindings.Add(binding.Service, binding);
-			BindingAdded.Raise(this, new BindingEventArgs(binding));
 		}
 
 		/// <summary>
@@ -214,9 +187,7 @@ namespace Ninject
 		public override void RemoveBinding(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
-
 			_bindings.Remove(binding.Service, binding);
-			BindingRemoved.Raise(this, new BindingEventArgs(binding));
 		}
 
 		/// <summary>
@@ -224,7 +195,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="instance">The instance to inject.</param>
 		/// <param name="parameters">The parameters to pass to the request.</param>
-		public void Inject(object instance, params IParameter[] parameters)
+		public virtual void Inject(object instance, params IParameter[] parameters)
 		{
 			Ensure.ArgumentNotNull(instance, "instance");
 			Ensure.ArgumentNotNull(parameters, "parameters");
@@ -331,7 +302,7 @@ namespace Ninject
 		/// Begins a new activation block, which can be used to deterministically dispose resolved instances.
 		/// </summary>
 		/// <returns>The new activation block.</returns>
-		public IActivationBlock BeginBlock()
+		public virtual IActivationBlock BeginBlock()
 		{
 			return new ActivationBlock(this);
 		}

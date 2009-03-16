@@ -32,7 +32,7 @@ namespace Ninject.Modules
 	/// <summary>
 	/// Automatically finds and loads modules from assemblies.
 	/// </summary>
-	public class ModuleLoader : NinjectComponent, IDecoratableModuleLoader
+	public class ModuleLoader : NinjectComponent, IModuleLoader
 	{
 		/// <summary>
 		/// Gets or sets the kernel into which modules will be loaded.

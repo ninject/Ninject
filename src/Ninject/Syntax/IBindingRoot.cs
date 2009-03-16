@@ -16,7 +16,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Events;
 using Ninject.Planning.Bindings;
 #endregion
 

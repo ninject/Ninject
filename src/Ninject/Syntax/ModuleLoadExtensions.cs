@@ -33,7 +33,7 @@ namespace Ninject
 		/// </summary>
 		/// <typeparam name="TModule">The type of the module.</typeparam>
 		public static void LoadModule<TModule>(this IKernel kernel)
-			where TModule : IModule, new()
+			where TModule : INinjectModule, new()
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			kernel.LoadModule(new TModule());

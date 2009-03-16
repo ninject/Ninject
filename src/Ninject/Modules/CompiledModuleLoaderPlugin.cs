@@ -62,25 +62,7 @@ namespace Ninject.Modules
 		/// <param name="files">The names of the files to load modules from.</param>
 		public void LoadModules(IEnumerable<string> files)
 		{
-			foreach (AssemblyName assemblyName in FindAssembliesWithModules(files))
-				LoadModulesFromAssembly(Assembly.Load(assemblyName));
-		}
-
-		/// <summary>
-		/// Loads any modules defined in the specified assembly.
-		/// </summary>
-		/// <param name="assembly">The assembly to search for modules.</param>
-		protected virtual void LoadModulesFromAssembly(Assembly assembly)
-		{
-			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
-			{
-				var module = Activator.CreateInstance(type) as IModule;
-
-				if (Kernel.HasModule(module.Name))
-					continue;
-
-				Kernel.LoadModule(module);
-			}
+			LoadModules(AssemblyScanner.FindMatchingTypesInAssemblies(files, IsLoadableModule));
 		}
 
 		/// <summary>
@@ -92,47 +74,19 @@ namespace Ninject.Modules
 		{
 			Ensure.ArgumentNotNull(type, "type");
 
-			if (!typeof(IModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
+			if (!typeof(INinjectModule).IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
 				return false;
 
 			return type.GetConstructor(Type.EmptyTypes) != null;
 		}
 
-		private IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> files)
+		private void LoadModules(IEnumerable<Type> types)
 		{
-			AppDomain temporaryDomain = CreateTemporaryAppDomain();
-
-			foreach (string file in files)
+			foreach (Type type in types)
 			{
-				var assemblyName = new AssemblyName { CodeBase = file };
-
-				Assembly assembly;
-
-				try
-				{
-					assembly = temporaryDomain.Load(assemblyName);
-				}
-				catch (BadImageFormatException)
-				{
-					// Ignore native assemblies
-					continue;
-				}
-
-				if (assembly.GetExportedTypes().Any(IsLoadableModule))
-					yield return assemblyName;
+				var module = Activator.CreateInstance(type) as INinjectModule;
+				Kernel.LoadModule(module);
 			}
-
-			AppDomain.Unload(temporaryDomain);
-		}
-
-		private static AppDomain CreateTemporaryAppDomain()
-		{
-			return AppDomain.CreateDomain(
-				"NinjectModuleLoader",
-				AppDomain.CurrentDomain.Evidence,
-				AppDomain.CurrentDomain.BaseDirectory,
-				AppDomain.CurrentDomain.RelativeSearchPath,
-				false);
 		}
 	}
 }

@@ -32,6 +32,11 @@ namespace Ninject.Infrastructure.Disposal
 		public bool IsDisposed { get; private set; }
 
 		/// <summary>
+		/// Occurs when the object is disposed.
+		/// </summary>
+		public event EventHandler Disposed;
+
+		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
 		public void Dispose()
@@ -48,8 +53,10 @@ namespace Ninject.Infrastructure.Disposal
 			{
 				if (disposing && !IsDisposed)
 				{
-					Disposed.Raise(this, EventArgs.Empty);
+					var evt = Disposed;
+					if (evt != null) evt(this, EventArgs.Empty);
 					Disposed = null;
+
 					IsDisposed = true;
 					GC.SuppressFinalize(this);
 				}
@@ -63,10 +70,5 @@ namespace Ninject.Infrastructure.Disposal
 		{
 			Dispose(false);
 		}
-
-		/// <summary>
-		/// Occurs when the object is disposed.
-		/// </summary>
-		public event EventHandler Disposed;
 	}
 }

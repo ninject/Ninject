@@ -105,6 +105,7 @@
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\AssemblyScanner.cs" />
     <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
@@ -120,8 +121,6 @@
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
-    <Compile Include="Events\BindingEventArgs.cs" />
-    <Compile Include="Events\ModuleEventArgs.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Activation\Blocks\IActivationBlock.cs" />
     <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
-    <Compile Include="Infrastructure\Language\ExtensionsForEventHandler.cs" />
     <Compile Include="Syntax\IResolutionRoot.cs" />
     <Compile Include="Activation\Blocks\ActivationBlock.cs" />
     <Compile Include="NinjectSettings.cs" />
@@ -150,7 +148,7 @@
     <Compile Include="Activation\Providers\CallbackProvider.cs" />
     <Compile Include="Injection\IInjectorFactory.cs" />
     <Compile Include="Modules\Module.cs" />
-    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\INinjectModule.cs" />
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />
     <Compile Include="Parameters\Parameter.cs" />

@@ -31,7 +31,7 @@ namespace Ninject.Infrastructure.Introspection
 {
 	internal static class ExceptionFormatter
 	{
-		public static string ModuleWithSameNameIsAlreadyLoaded(IModule newModule, IModule existingModule)
+		public static string ModuleWithSameNameIsAlreadyLoaded(INinjectModule newModule, INinjectModule existingModule)
 		{
 			using (var sw = new StringWriter())
 			{

@@ -17,7 +17,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Events;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
@@ -29,12 +28,12 @@ namespace Ninject.Modules
 	/// <summary>
 	/// A pluggable unit that can be loaded into a kernel.
 	/// </summary>
-	public abstract class Module : BindingRoot, IModule
+	public abstract class Module : BindingRoot, INinjectModule
 	{
 		/// <summary>
-		/// Gets or sets the kernel that the module is loaded into.
+		/// Gets the kernel that the module is loaded into.
 		/// </summary>
-		public IKernel Kernel { get; set; }
+		public IKernel Kernel { get; private set; }
 
 		/// <summary>
 		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
@@ -64,7 +63,6 @@ namespace Ninject.Modules
 		public void OnLoad(IKernel kernel)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
-
 			Kernel = kernel;
 			Load();
 		}
@@ -76,7 +74,6 @@ namespace Ninject.Modules
 		public void OnUnload(IKernel kernel)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
-
 			Unload();
 			Bindings.Map(Kernel.RemoveBinding);
 			Kernel = null;

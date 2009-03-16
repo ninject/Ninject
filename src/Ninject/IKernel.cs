@@ -17,10 +17,8 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Activation;
 using Ninject.Activation.Blocks;
 using Ninject.Components;
-using Ninject.Events;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Modules;
 using Ninject.Parameters;
@@ -46,24 +44,10 @@ namespace Ninject
 		IComponentContainer Components { get; }
 
 		/// <summary>
-		/// Occurs when a binding is added.
+		/// Gets the modules that have been loaded into the kernel.
 		/// </summary>
-		event EventHandler<BindingEventArgs> BindingAdded;
-
-		/// <summary>
-		/// Occurs when a binding is removed.
-		/// </summary>
-		event EventHandler<BindingEventArgs> BindingRemoved;
-
-		/// <summary>
-		/// Occurs when a module is loaded.
-		/// </summary>
-		event EventHandler<ModuleEventArgs> ModuleLoaded;
-
-		/// <summary>
-		/// Occurs when a module is unloaded.
-		/// </summary>
-		event EventHandler<ModuleEventArgs> ModuleUnloaded;
+		/// <returns>A series of the loaded modules.</returns>
+		IEnumerable<INinjectModule> GetModules();
 
 		/// <summary>
 		/// Determines whether a module with the specified name has been loaded in the kernel.
@@ -76,7 +60,7 @@ namespace Ninject
 		/// Loads the module into the kernel.
 		/// </summary>
 		/// <param name="module">The module to load.</param>
-		void LoadModule(IModule module);
+		void LoadModule(INinjectModule module);
 
 		/// <summary>
 		/// Unloads the module with the specified name.
