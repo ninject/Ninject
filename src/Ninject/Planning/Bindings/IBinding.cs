@@ -59,6 +59,16 @@ namespace Ninject.Planning.Bindings
 		Func<IRequest, bool> Condition { get; set; }
 
 		/// <summary>
+		/// Gets or sets the callback that returns the provider that should be used by the binding.
+		/// </summary>
+		Func<IContext, IProvider> ProviderCallback { get; set; }
+
+		/// <summary>
+		/// Gets or sets the callback that returns the object that will act as the binding's scope.
+		/// </summary>
+		Func<IContext, object> ScopeCallback { get; set; }
+
+		/// <summary>
 		/// Gets the parameters defined for the binding.
 		/// </summary>
 		ICollection<IParameter> Parameters { get; }

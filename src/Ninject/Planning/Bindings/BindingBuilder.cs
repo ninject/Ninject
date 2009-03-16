@@ -34,18 +34,18 @@ namespace Ninject.Planning.Bindings
 	/// <summary>
 	/// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
 	/// </summary>
-	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
+	public class BindingBuilder<T> : IHaveBinding, IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
 	{
 		/// <summary>
 		/// Gets the binding being built.
 		/// </summary>
-		public Binding Binding { get; private set; }
+		public IBinding Binding { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BindingBuilder&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="binding">The binding to build.</param>
-		public BindingBuilder(Binding binding)
+		public BindingBuilder(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
 			Binding = binding;

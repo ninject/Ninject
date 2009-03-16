@@ -118,6 +118,7 @@
     <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
     <Compile Include="Modules\IModuleLoaderPlugin.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
+    <Compile Include="Infrastructure\IHaveBinding.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />

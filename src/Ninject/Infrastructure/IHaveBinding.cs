@@ -14,12 +14,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #endregion
+#region Using Directives
+using System;
+using Ninject.Planning.Bindings;
+#endregion
 
-
-namespace Ninject.Injection
+namespace Ninject.Infrastructure
 {
 	/// <summary>
-	/// A delegate that can inject values into a constructor.
+	/// Indicates the object has a reference to a <see cref="IBinding"/>.
 	/// </summary>
-	public delegate object ConstructorInjector(params object[] arguments);
+	public interface IHaveBinding
+	{
+		/// <summary>
+		/// Gets the binding.
+		/// </summary>
+		IBinding Binding { get; }
+	}
 }

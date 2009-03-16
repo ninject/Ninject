@@ -313,11 +313,10 @@ namespace Ninject
 		protected abstract void AddComponents();
 
 		/// <summary>
-		/// Tries to handle a missing binding by registering an implicit self-binding for the
-		/// specified service.
+		/// Attempts to handle a missing binding for a service.
 		/// </summary>
 		/// <param name="service">The service.</param>
-		/// <returns><c>True</c> if the type is self-bindable; otherwise <c>false</c>.</returns>
+		/// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
 		protected virtual bool HandleMissingBinding(Type service)
 		{
 			Ensure.ArgumentNotNull(service, "service");

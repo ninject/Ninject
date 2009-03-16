@@ -63,6 +63,16 @@ namespace Ninject.Planning.Bindings
 		public Func<IRequest, bool> Condition { get; set; }
 
 		/// <summary>
+		/// Gets or sets the callback that returns the provider that should be used by the binding.
+		/// </summary>
+		public Func<IContext, IProvider> ProviderCallback { get; set; }
+
+		/// <summary>
+		/// Gets or sets the callback that returns the object that will act as the binding's scope.
+		/// </summary>
+		public Func<IContext, object> ScopeCallback { get; set; }
+
+		/// <summary>
 		/// Gets the parameters defined for the binding.
 		/// </summary>
 		public ICollection<IParameter> Parameters { get; private set; }
@@ -76,16 +86,6 @@ namespace Ninject.Planning.Bindings
 		/// Gets the actions that should be called before instances are deactivated via the binding.
 		/// </summary>
 		public ICollection<Action<IContext>> DeactivationActions { get; private set; }
-
-		/// <summary>
-		/// Gets or sets the callback that returns the provider that should be used by the binding.
-		/// </summary>
-		public Func<IContext, IProvider> ProviderCallback { get; set; }
-
-		/// <summary>
-		/// Gets or sets the callback that returns the object that will act as the binding's scope.
-		/// </summary>
-		public Func<IContext, object> ScopeCallback { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Binding"/> class.
