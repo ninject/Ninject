@@ -39,18 +39,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries.Yaml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ironruby\IronRuby.Libraries.Yaml.dll</HintPath>
-    </Reference>
     <Reference Include="Moq, Version=2.6.1014.1, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\moq\Moq.dll</HintPath>
@@ -81,7 +69,6 @@
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />
     <Compile Include="Integration\CircularDependenciesTests.cs" />
-    <Compile Include="Integration\RubyKernelTest.cs" />
     <Compile Include="Integration\TransientScopeTests.cs" />
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
@@ -113,52 +100,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ninject.Dynamic\Ninject.Dynamic.csproj">
-      <Project>{97CB9925-DF95-4772-965B-7E2034109B6E}</Project>
-      <Name>Ninject.Dynamic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ninject\Ninject.csproj">
       <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
       <Name>Ninject</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Integration\config_single.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_double.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_two_types.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_to_self.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_two_types_to_self.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_open_generics.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_named.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_metadata.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_constructor_arguments.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_constructor_arguments_dsl.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_when_dsl.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Integration\config_when.rb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
