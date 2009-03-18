@@ -40,7 +40,7 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public ConstructorInjector Create(ConstructorInfo constructor)
 		{
-			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) }, true);
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) });
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			EmitLoadMethodArguments(il, constructor);
@@ -61,7 +61,7 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public PropertyInjector Create(PropertyInfo property)
 		{
-			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			il.Emit(OpCodes.Ldarg_0);
@@ -84,7 +84,7 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public MethodInjector Create(MethodInfo method)
 		{
-			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, true);
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			il.Emit(OpCodes.Ldarg_0);

@@ -65,6 +65,7 @@ namespace Ninject
 		/// <param name="path">The path to search.</param>
 		public static void AutoLoadModules(this IKernel kernel, string path)
 		{
+			Ensure.ArgumentNotNullOrEmpty(path, "path");
 			GetModuleLoader(kernel).FindAndLoadModules(path);
 		}
 
@@ -86,6 +87,7 @@ namespace Ninject
 		/// <param name="path">The path to search.</param>
 		public static void AutoLoadModulesRecursively(this IKernel kernel, string path)
 		{
+			Ensure.ArgumentNotNullOrEmpty(path, "path");
 			GetModuleLoader(kernel).FindAndLoadModules(path, true);
 		}
 
