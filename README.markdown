@@ -6,18 +6,18 @@ This is the master repository for Ninject, the lightweight and lightning-fast .N
 
 Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications. It helps you split your
 application into a collection of loosely-coupled, highly-cohesive pieces, and then glue them back together in a
-flexible manner. By using Ninject to support your software’s architecture, your code will become easier to write,
+flexible manner. By using Ninject to support your software's architecture, your code will become easier to write,
 reuse, test, and modify.
 
 Ninject is:
 
-1. Focused. Too many existing dependency injection projects sacrifice usability for features that aren’t often necessary.
+1. Focused. Too many existing dependency injection projects sacrifice usability for features that aren't often necessary.
    Each time a feature is added to Ninject, its benefit is weighed against the complexity it adds to everyday use. Our goal
-   is to keep the barrier to entry – the baseline level of knowledge required to use Ninject – as low as possible. Ninject
+   is to keep the barrier to entry - the baseline level of knowledge required to use Ninject - as low as possible. Ninject
    has many advanced features, but understanding them is not required to use the basic features.
    
-2. Sleek. Framework bloat is a major concern for some projects, and as such, all of Ninject’s core functionality is in a
-   single assembly with no dependencies outside the .NET base class library. This single assembly’s footprint is approximately
+2. Sleek. Framework bloat is a major concern for some projects, and as such, all of Ninject's core functionality is in a
+   single assembly with no dependencies outside the .NET base class library. This single assembly's footprint is approximately
    82KB when compiled for release.
    
 3. Fast. Instead of relying on reflection for invocation, Ninject takes advantage of lightweight code generation in the CLR.
@@ -36,3 +36,9 @@ Ninject is:
 7. Powerful. Ninject includes many advanced features. For example, Ninject is the first dependency injector to support
    contextual binding, in which a different concrete implementation of a service may be injected depending on the context in
    which it is requested.
+
+Extensions (this will move to a better list soon):
+
+- [Ninject.Dynamic](http://github.com/casualjim/ninject-dynamic): Support for module loaders for Ruby and (eventually) other DLR languages
+- [Ninject.Web.Mvc](http://github.com/enkari/ninject.web.mvc): Integration between Ninject and ASP.NET MVC
+- [Ninject.Moq](http://github.com/enkari/ninject.moq): Integration between Ninject and Moq
