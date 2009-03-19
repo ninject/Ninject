@@ -33,22 +33,9 @@ namespace Ninject.Modules
 		ICollection<IModuleLoaderPlugin> Plugins { get; }
 
 		/// <summary>
-		/// Loads any modules found in the specified file.
+		/// Loads any modules found in the files that match the specified patterns.
 		/// </summary>
-		/// <param name="filename">The name of the file to search.</param>
-		void LoadModules(string filename);
-
-		/// <summary>
-		/// Loads any modules found in files in the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		void FindAndLoadModules(string path);
-
-		/// <summary>
-		/// Loads any modules found in files in the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
-		void FindAndLoadModules(string path, bool recursive);
+		/// <param name="patterns">The patterns to search.</param>
+		void LoadModules(IEnumerable<string> patterns);
 	}
 }

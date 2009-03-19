@@ -13,7 +13,7 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 
 		public ThreadScopeContext()
 		{
-			var settings = new NinjectSettings { CachePruningIntervalMs = Int32.MaxValue };
+			var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
 			kernel = new StandardKernel(settings);
 		}
 	}

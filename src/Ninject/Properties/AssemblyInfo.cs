@@ -21,6 +21,7 @@ using System.Security;
 #endregion
 
 [assembly: AssemblyTitle("Ninject Core Library")]
+
 #if !NO_PARTIAL_TRUST
 [assembly: AllowPartiallyTrustedCallers]
 #endif

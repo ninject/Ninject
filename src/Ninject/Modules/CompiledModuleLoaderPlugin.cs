@@ -31,20 +31,10 @@ namespace Ninject.Modules
 	/// </summary>
 	public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
 	{
-		private static readonly string[] Patterns = new[] { "*.dll" };
-
 		/// <summary>
 		/// Gets or sets the kernel into which modules will be loaded.
 		/// </summary>
 		public IKernel Kernel { get; private set; }
-
-		/// <summary>
-		/// Gets the file patterns (*.dll, etc.) supported by the plugin.
-		/// </summary>
-		public ICollection<string> SupportedPatterns
-		{
-			get { return Patterns; }
-		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
@@ -62,11 +52,33 @@ namespace Ninject.Modules
 		/// <param name="filenames">The names of the files to load modules from.</param>
 		public void LoadModules(IEnumerable<string> filenames)
 		{
-			foreach (Type type in AssemblyScanner.FindMatchingTypesInAssemblies(filenames, IsLoadableModule))
+			Kernel.Load(FindModules(filenames).ToArray());
+		}
+
+		private static IEnumerable<INinjectModule> FindModules(IEnumerable<string> filenames)
+		{
+			AppDomain temporaryDomain = CreateTemporaryAppDomain();
+
+			foreach (string file in filenames)
 			{
-				var module = Activator.CreateInstance(type) as INinjectModule;
-				Kernel.LoadModule(module);
+				Assembly assembly;
+
+				try
+				{
+					var name = new AssemblyName { CodeBase = file };
+					assembly = temporaryDomain.Load(name);
+				}
+				catch (BadImageFormatException)
+				{
+					// Ignore native assemblies
+					continue;
+				}
+
+				foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
+					yield return Activator.CreateInstance(type) as INinjectModule;
 			}
+
+			AppDomain.Unload(temporaryDomain);
 		}
 
 		private static bool IsLoadableModule(Type type)
@@ -75,6 +87,16 @@ namespace Ninject.Modules
 				&& !type.IsAbstract
 				&& !type.IsInterface
 				&& type.GetConstructor(Type.EmptyTypes) != null;
+		}
+
+		private static AppDomain CreateTemporaryAppDomain()
+		{
+			return AppDomain.CreateDomain(
+				"NinjectModuleLoader",
+				AppDomain.CurrentDomain.Evidence,
+				AppDomain.CurrentDomain.BaseDirectory,
+				AppDomain.CurrentDomain.RelativeSearchPath,
+				false);
 		}
 	}
 }

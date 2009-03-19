@@ -46,7 +46,7 @@ namespace Ninject
 		/// <summary>
 		/// Gets the modules that have been loaded into the kernel.
 		/// </summary>
-		/// <returns>A series of the loaded modules.</returns>
+		/// <returns>A series of loaded modules.</returns>
 		IEnumerable<INinjectModule> GetModules();
 
 		/// <summary>
@@ -57,16 +57,22 @@ namespace Ninject
 		bool HasModule(string name);
 
 		/// <summary>
-		/// Loads the module into the kernel.
+		/// Loads the module(s) into the kernel.
 		/// </summary>
-		/// <param name="module">The module to load.</param>
-		void LoadModule(INinjectModule module);
+		/// <param name="modules">The modules to load.</param>
+		void Load(params INinjectModule[] modules);
 
 		/// <summary>
-		/// Unloads the module with the specified name.
+		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>
-		/// <param name="name">The module's name.</param>
-		void UnloadModule(string name);
+		/// <param name="patterns">The patterns to match.</param>
+		void Load(params string[] patterns);
+
+		/// <summary>
+		/// Unloads the plugin with the specified name.
+		/// </summary>
+		/// <param name="name">The plugin's name.</param>
+		void Unload(string name);
 
 		/// <summary>
 		/// Injects the specified existing instance, without managing its lifecycle.

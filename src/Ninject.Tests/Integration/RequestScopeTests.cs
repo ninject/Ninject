@@ -15,7 +15,7 @@ namespace Ninject.Tests.Integration.RequestScopeTests
 
 		public RequestScopeContext()
 		{
-			var settings = new NinjectSettings { CachePruningIntervalMs = Int32.MaxValue };
+			var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
 			kernel = new StandardKernel(settings);
 		}
 

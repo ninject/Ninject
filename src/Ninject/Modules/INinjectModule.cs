@@ -16,13 +16,14 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 using Ninject.Syntax;
 #endregion
 
 namespace Ninject.Modules
 {
 	/// <summary>
-	/// A pluggable unit that can be loaded into a kernel.
+	/// A pluggable unit that can be loaded into an <see cref="IKernel"/>.
 	/// </summary>
 	public interface INinjectModule
 	{
@@ -32,7 +33,7 @@ namespace Ninject.Modules
 		IKernel Kernel { get; }
 
 		/// <summary>
-		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
+		/// Gets the module's name.
 		/// </summary>
 		string Name { get; }
 

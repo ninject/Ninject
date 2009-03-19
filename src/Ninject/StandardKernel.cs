@@ -70,8 +70,13 @@ namespace Ninject
 			Components.Add<IActivationStrategy, BindingActionStrategy>();
 			Components.Add<IActivationStrategy, DisposableStrategy>();
 
-			//Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
-			Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
+			#if !NO_LCG
+			if (!Settings.UseReflectionBasedInjection)
+				Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
+			else
+			#endif
+				Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
+
 			Components.Add<ICache, Cache>();
 			Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 

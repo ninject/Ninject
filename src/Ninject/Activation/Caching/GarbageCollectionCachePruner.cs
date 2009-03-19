@@ -61,7 +61,7 @@ namespace Ninject.Activation.Caching
 				Stop();
 
 			Cache = cache;
-			_timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, Settings.CachePruningIntervalMs, Timeout.Infinite);
+			_timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, GetTimeoutInMilliseconds(), Timeout.Infinite);
 		}
 
 		/// <summary>
@@ -83,7 +83,13 @@ namespace Ninject.Activation.Caching
 			Cache.Prune();
 			_indicator.Target = new object();
 
-			_timer.Change(Settings.CachePruningIntervalMs, Timeout.Infinite);
+			_timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
+		}
+
+		private int GetTimeoutInMilliseconds()
+		{
+			TimeSpan interval = Settings.CachePruningInterval;
+			return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
 		}
 	}
 }

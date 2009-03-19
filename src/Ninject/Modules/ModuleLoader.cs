@@ -60,88 +60,39 @@ namespace Ninject.Modules
 		}
 
 		/// <summary>
-		/// Loads any modules found in the specified file.
+		/// Loads any modules found in the files that match the specified patterns.
 		/// </summary>
-		/// <param name="filename">The name of the file to search.</param>
-		public void LoadModules(string filename)
+		/// <param name="patterns">The patterns to search.</param>
+		public void LoadModules(IEnumerable<string> patterns)
 		{
-			var matchingPlugins = Plugins.Where(plugin => plugin.SupportedPatterns.Any(glob => GlobMatches(glob, filename)));
-
-			foreach (IModuleLoaderPlugin plugin in matchingPlugins)
-				plugin.LoadModules(new[] { filename });
-		}
-
-		/// <summary>
-		/// Loads any modules found in files in the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		public void FindAndLoadModules(string path)
-		{
-			FindAndLoadModules(path, false);
-		}
-
-		/// <summary>
-		/// Loads any modules found in files in the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
-		public void FindAndLoadModules(string path, bool recursive)
-		{
-			Ensure.ArgumentNotNull(path, "path");
+			IEnumerable<string> matchingFiles = patterns.SelectMany(p => GetFilesMatchingPattern(p));
 
 			foreach (IModuleLoaderPlugin plugin in Plugins)
-			{
-				var files = FindFiles(path, plugin.SupportedPatterns, recursive);
-				plugin.LoadModules(files);
-			}
+				plugin.LoadModules(matchingFiles);
 		}
 
-		/// <summary>
-		/// Finds files in the specified path, matching the specified patterns.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		/// <param name="patterns">The patterns to match.</param>
-		/// <param name="recursive">If <see langword="true"/>, search the path's subdirectories as well.</param>
-		/// <returns>A series of filenames that match the criteria.</returns>
-		protected virtual IEnumerable<string> FindFiles(string path, IEnumerable<string> patterns, bool recursive)
+		private static string[] GetFilesMatchingPattern(string pattern)
 		{
-			Ensure.ArgumentNotNullOrEmpty(path, "path");
-			Ensure.ArgumentNotNull(patterns, "patterns");
+			string path = NormalizePath(Path.GetDirectoryName(pattern));
+			string glob = Path.GetFileName(pattern);
 
-			var searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-			var directory = new DirectoryInfo(NormalizePath(path));
-
-			return patterns.SelectMany(pattern => directory.GetFiles(pattern, searchOption).Select(fi => fi.FullName));
+			return Directory.GetFiles(path, glob);
 		}
 
-		/// <summary>
-		/// Normalizes the provided path.
-		/// </summary>
-		/// <param name="path">The path.</param>
-		/// <returns>The normalized path.</returns>
-		protected virtual string NormalizePath(string path)
+		private static string NormalizePath(string path)
 		{
-			Ensure.ArgumentNotNullOrEmpty(path, "path");
+			if (!Path.IsPathRooted(path))
+				path = Path.Combine(GetSearchPath(), path);
 
-			if (path.StartsWith("~"))
-				path = GetBaseDirectory() + path.Substring(1);
-
-			return new DirectoryInfo(path).FullName;
+			return Path.GetFullPath(path);
 		}
 
-		private static string GetBaseDirectory()
+		private static string GetSearchPath()
 		{
-			#if NO_WEB
-			return AppDomain.CurrentDomain.BaseDirectory;
-			#else
-			return HttpContext.Current != null ? HttpContext.Current.Server.MapPath("~") : AppDomain.CurrentDomain.BaseDirectory;
-			#endif
-		}
+			string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+			string searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
-		private static bool GlobMatches(string glob, string filename)
-		{
-			string pattern = Regex.Escape(glob).Replace(@"\*", ".*").Replace(@"\?", ".");
-			return Regex.IsMatch(filename, pattern, RegexOptions.IgnoreCase);
+			return String.IsNullOrEmpty(searchPath) ? baseDirectory : Path.Combine(baseDirectory, searchPath);
 		}
 	}
 }

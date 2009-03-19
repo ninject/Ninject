@@ -28,11 +28,6 @@ namespace Ninject.Modules
 	public interface IModuleLoaderPlugin : INinjectComponent
 	{
 		/// <summary>
-		/// Gets the file patterns (*.dll, etc.) supported by the plugin.
-		/// </summary>
-		ICollection<string> SupportedPatterns { get; }
-
-		/// <summary>
 		/// Loads modules from the specified files.
 		/// </summary>
 		/// <param name="filenames">The names of the files to load modules from.</param>

@@ -16,7 +16,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
 using Ninject.Infrastructure;
 using Ninject.Modules;
 #endregion
@@ -32,69 +31,11 @@ namespace Ninject
 		/// Creates a new instance of the module and loads it into the kernel.
 		/// </summary>
 		/// <typeparam name="TModule">The type of the module.</typeparam>
-		public static void LoadModule<TModule>(this IKernel kernel)
+		public static void Load<TModule>(this IKernel kernel)
 			where TModule : INinjectModule, new()
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
-			kernel.LoadModule(new TModule());
-		}
-
-		/// <summary>
-		/// Loads any modules defined the specified file.
-		/// </summary>
-		/// <param name="kernel">The kernel.</param>
-		/// <param name="filename">The name of the file to search.</param>
-		public static void Load(this IKernel kernel, string filename)
-		{
-			Ensure.ArgumentNotNullOrEmpty(filename, "filename");
-			GetModuleLoader(kernel).LoadModules(filename);
-		}
-
-		/// <summary>
-		/// Scans the application's base directory for assemblies, and if they have loadable modules, loads them.
-		/// </summary>
-		public static void AutoLoadModules(this IKernel kernel)
-		{
-			GetModuleLoader(kernel).FindAndLoadModules("~");
-		}
-
-		/// <summary>
-		/// Scans the specified path for assemblies, and if they have loadable modules, loads them.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="path">The path to search.</param>
-		public static void AutoLoadModules(this IKernel kernel, string path)
-		{
-			Ensure.ArgumentNotNullOrEmpty(path, "path");
-			GetModuleLoader(kernel).FindAndLoadModules(path);
-		}
-
-		/// <summary>
-		/// Scans the application's base directory and all subdirectories for assemblies, and if
-		/// they have loadable modules, loads them.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		public static void AutoLoadModulesRecursively(this IKernel kernel)
-		{
-			GetModuleLoader(kernel).FindAndLoadModules("~", true);
-		}
-
-		/// <summary>
-		/// Scans the specified path and all subdirectories for assemblies, and if they have
-		/// loadable modules, loads them.
-		/// </summary>
-		/// <param name="kernel">The kernel to load the modules into.</param>
-		/// <param name="path">The path to search.</param>
-		public static void AutoLoadModulesRecursively(this IKernel kernel, string path)
-		{
-			Ensure.ArgumentNotNullOrEmpty(path, "path");
-			GetModuleLoader(kernel).FindAndLoadModules(path, true);
-		}
-
-		private static IModuleLoader GetModuleLoader(IKernel kernel)
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			return kernel.Components.Get<IModuleLoader>();
+			kernel.Load(new TModule());
 		}
 	}
 }

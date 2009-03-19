@@ -26,7 +26,7 @@ using Ninject.Syntax;
 namespace Ninject.Modules
 {
 	/// <summary>
-	/// A pluggable unit that can be loaded into a kernel.
+	/// A loadable unit that defines bindings for your application.
 	/// </summary>
 	public abstract class NinjectModule : BindingRoot, INinjectModule
 	{
@@ -85,7 +85,7 @@ namespace Ninject.Modules
 		public abstract void Load();
 
 		/// <summary>
-		/// Unloads this module from the kernel.
+		/// Unloads the module from the kernel.
 		/// </summary>
 		public virtual void Unload() { }
 

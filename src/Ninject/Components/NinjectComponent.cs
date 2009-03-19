@@ -22,12 +22,12 @@ using Ninject.Infrastructure.Disposal;
 namespace Ninject.Components
 {
 	/// <summary>
-	/// An abstract component that contributes to Ninject.
+	/// A component that contributes to the internals of Ninject.
 	/// </summary>
 	public abstract class NinjectComponent : DisposableObject, INinjectComponent
 	{
 		/// <summary>
-		/// Gets or sets the settings that are being used.
+		/// Gets or sets the settings.
 		/// </summary>
 		public INinjectSettings Settings { get; set; }
 	}

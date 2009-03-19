@@ -25,7 +25,6 @@ using Ninject.Activation.Providers;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
-using Ninject.Infrastructure.Language;
 using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -63,7 +62,7 @@ namespace Ninject
 		/// Initializes a new instance of the <see cref="KernelBase"/> class.
 		/// </summary>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(IEnumerable<INinjectModule> modules)
+		protected KernelBase(params INinjectModule[] modules)
 			: this(new ComponentContainer(), new NinjectSettings(), modules) { }
 
 		/// <summary>
@@ -71,7 +70,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="settings">The configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(INinjectSettings settings, IEnumerable<INinjectModule> modules)
+		protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
 			: this(new ComponentContainer(), settings, modules) { }
 
 		/// <summary>
@@ -80,7 +79,7 @@ namespace Ninject
 		/// <param name="components">The component container to use.</param>
 		/// <param name="settings">The configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(IComponentContainer components, INinjectSettings settings, IEnumerable<INinjectModule> modules)
+		protected KernelBase(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
 		{
 			Ensure.ArgumentNotNull(components, "components");
 			Ensure.ArgumentNotNull(settings, "settings");
@@ -93,7 +92,10 @@ namespace Ninject
 
 			AddComponents();
 
-			modules.Map(LoadModule);
+			// Search for and load extensions before loading modules.
+			Load(Settings.ExtensionSearchPattern);
+
+			Load(modules);
 		}
 
 		/// <summary>
@@ -105,60 +107,6 @@ namespace Ninject
 				Components.Dispose();
 
 			base.Dispose(disposing);
-		}
-
-		/// <summary>
-		/// Gets the modules that have been loaded into the kernel.
-		/// </summary>
-		/// <returns>A series of the loaded modules.</returns>
-		public virtual IEnumerable<INinjectModule> GetModules()
-		{
-			return _modules.Values.ToArray();
-		}
-
-		/// <summary>
-		/// Determines whether a module with the specified name has been loaded in the kernel.
-		/// </summary>
-		/// <param name="name">The name of the module.</param>
-		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
-		public virtual bool HasModule(string name)
-		{
-			Ensure.ArgumentNotNullOrEmpty(name, "name");
-			return _modules.ContainsKey(name);
-		}
-
-		/// <summary>
-		/// Loads the module into the kernel.
-		/// </summary>
-		/// <param name="module">The module to load.</param>
-		public virtual void LoadModule(INinjectModule module)
-		{
-			Ensure.ArgumentNotNull(module, "module");
-
-			INinjectModule existingModule;
-
-			if (_modules.TryGetValue(module.Name, out existingModule))
-				throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
-
-			_modules.Add(module.Name, module);
-			module.OnLoad(this);
-		}
-
-		/// <summary>
-		/// Unloads the module with the specified name.
-		/// </summary>
-		/// <param name="name">The module's name.</param>
-		public virtual void UnloadModule(string name)
-		{
-			Ensure.ArgumentNotNull(name, "name");
-
-			INinjectModule module;
-
-			if (!_modules.TryGetValue(name, out module))
-				throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
-
-			module.OnUnload(this);
-			_modules.Remove(name);
 		}
 
 		/// <summary>
@@ -188,6 +136,75 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
 			_bindings.Remove(binding.Service, binding);
+		}
+
+		/// <summary>
+		/// Determines whether a module with the specified name has been loaded in the kernel.
+		/// </summary>
+		/// <param name="name">The name of the module.</param>
+		/// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
+		public bool HasModule(string name)
+		{
+			Ensure.ArgumentNotNullOrEmpty(name, "name");
+			return _modules.ContainsKey(name);
+		}
+
+		/// <summary>
+		/// Gets the modules that have been loaded into the kernel.
+		/// </summary>
+		/// <returns>A series of loaded modules.</returns>
+		public IEnumerable<INinjectModule> GetModules()
+		{
+			return _modules.Values.ToArray();
+		}
+
+		/// <summary>
+		/// Loads the module(s) into the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to load.</param>
+		public void Load(params INinjectModule[] modules)
+		{
+			Ensure.ArgumentNotNull(modules, "modules");
+
+			foreach (INinjectModule module in modules)
+			{
+				INinjectModule existingModule;
+
+				if (_modules.TryGetValue(module.Name, out existingModule))
+					throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
+
+				module.OnLoad(this);
+
+				_modules.Add(module.Name, module);
+			}
+		}
+
+		/// <summary>
+		/// Loads modules from the files that match the specified pattern(s).
+		/// </summary>
+		/// <param name="patterns">The file patterns (i.e. "*.dll", "foo/*.rb") to match.</param>
+		public void Load(params string[] patterns)
+		{
+			var moduleLoader = Components.Get<IModuleLoader>();
+			moduleLoader.LoadModules(patterns);
+		}
+
+		/// <summary>
+		/// Unloads the plugin with the specified name.
+		/// </summary>
+		/// <param name="name">The plugin's name.</param>
+		public void Unload(string name)
+		{
+			Ensure.ArgumentNotNullOrEmpty(name, "name");
+
+			INinjectModule module;
+
+			if (!_modules.TryGetValue(name, out module))
+				throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
+
+			module.OnUnload(this);
+
+			_modules.Remove(name);
 		}
 
 		/// <summary>
