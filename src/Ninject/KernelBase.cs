@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Ninject.Activation;
 using Ninject.Activation.Blocks;
 using Ninject.Activation.Caching;
@@ -25,6 +26,7 @@ using Ninject.Activation.Providers;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
+using Ninject.Infrastructure.Language;
 using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -92,8 +94,10 @@ namespace Ninject
 
 			AddComponents();
 
+			#if !SILVERLIGHT
 			// Search for and load extensions before loading modules.
-			Load(Settings.ExtensionSearchPattern);
+			Load(new[] { Settings.ExtensionSearchPattern });
+			#endif
 
 			Load(modules);
 		}
@@ -162,7 +166,7 @@ namespace Ninject
 		/// Loads the module(s) into the kernel.
 		/// </summary>
 		/// <param name="modules">The modules to load.</param>
-		public void Load(params INinjectModule[] modules)
+		public void Load(IEnumerable<INinjectModule> modules)
 		{
 			Ensure.ArgumentNotNull(modules, "modules");
 
@@ -179,15 +183,27 @@ namespace Ninject
 			}
 		}
 
+		#if !SILVERLIGHT
 		/// <summary>
 		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>
-		/// <param name="patterns">The file patterns (i.e. "*.dll", "foo/*.rb") to match.</param>
-		public void Load(params string[] patterns)
+		/// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+		public void Load(IEnumerable<string> filePatterns)
 		{
 			var moduleLoader = Components.Get<IModuleLoader>();
-			moduleLoader.LoadModules(patterns);
+			moduleLoader.LoadModules(filePatterns);
 		}
+
+		/// <summary>
+		/// Loads modules defined in the specified assemblies.
+		/// </summary>
+		/// <param name="assemblies">The assemblies to search.</param>
+		public void Load(IEnumerable<Assembly> assemblies)
+		{
+			foreach (Assembly assembly in assemblies)
+				Load(assembly.GetNinjectModules());
+		}
+		#endif
 
 		/// <summary>
 		/// Unloads the plugin with the specified name.

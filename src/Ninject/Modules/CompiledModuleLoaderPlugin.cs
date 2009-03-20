@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Modules
@@ -31,10 +32,20 @@ namespace Ninject.Modules
 	/// </summary>
 	public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
 	{
+		private static readonly string[] Extensions = new[] { "dll" };
+
 		/// <summary>
 		/// Gets or sets the kernel into which modules will be loaded.
 		/// </summary>
 		public IKernel Kernel { get; private set; }
+
+		/// <summary>
+		/// Gets the file extensions that the plugin understands how to load.
+		/// </summary>
+		public IEnumerable<string> SupportedExtensions
+		{
+			get { return Extensions; }
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
@@ -52,10 +63,10 @@ namespace Ninject.Modules
 		/// <param name="filenames">The names of the files to load modules from.</param>
 		public void LoadModules(IEnumerable<string> filenames)
 		{
-			Kernel.Load(FindModules(filenames).ToArray());
+			Kernel.Load(FindAssembliesWithModules(filenames).Select(name => Assembly.Load(name)));
 		}
 
-		private static IEnumerable<INinjectModule> FindModules(IEnumerable<string> filenames)
+		private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
 		{
 			AppDomain temporaryDomain = CreateTemporaryAppDomain();
 
@@ -74,19 +85,11 @@ namespace Ninject.Modules
 					continue;
 				}
 
-				foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
-					yield return Activator.CreateInstance(type) as INinjectModule;
+				if (assembly.HasNinjectModules())
+					yield return assembly.GetName();
 			}
 
 			AppDomain.Unload(temporaryDomain);
-		}
-
-		private static bool IsLoadableModule(Type type)
-		{
-			return typeof(INinjectModule).IsAssignableFrom(type)
-				&& !type.IsAbstract
-				&& !type.IsInterface
-				&& type.GetConstructor(Type.EmptyTypes) != null;
 		}
 
 		private static AppDomain CreateTemporaryAppDomain()

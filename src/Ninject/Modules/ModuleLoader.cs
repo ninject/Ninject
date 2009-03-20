@@ -65,10 +65,18 @@ namespace Ninject.Modules
 		/// <param name="patterns">The patterns to search.</param>
 		public void LoadModules(IEnumerable<string> patterns)
 		{
-			IEnumerable<string> matchingFiles = patterns.SelectMany(p => GetFilesMatchingPattern(p));
+			var fileGroups = patterns
+				.SelectMany(pattern => GetFilesMatchingPattern(pattern))
+				.GroupBy(filename => Path.GetExtension(filename).ToLowerInvariant());
 
-			foreach (IModuleLoaderPlugin plugin in Plugins)
-				plugin.LoadModules(matchingFiles);
+			foreach (var fileGroup in fileGroups)
+			{
+				string extension = fileGroup.Key;
+				IModuleLoaderPlugin plugin = Plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
+
+				if (plugin != null)
+					plugin.LoadModules(fileGroup);
+			}
 		}
 
 		private static string[] GetFilesMatchingPattern(string pattern)
@@ -82,12 +90,12 @@ namespace Ninject.Modules
 		private static string NormalizePath(string path)
 		{
 			if (!Path.IsPathRooted(path))
-				path = Path.Combine(GetSearchPath(), path);
+				path = Path.Combine(GetBaseDirectory(), path);
 
 			return Path.GetFullPath(path);
 		}
 
-		private static string GetSearchPath()
+		private static string GetBaseDirectory()
 		{
 			string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 			string searchPath = AppDomain.CurrentDomain.RelativeSearchPath;

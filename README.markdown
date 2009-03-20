@@ -18,7 +18,7 @@ Ninject is:
    
 2. Sleek. Framework bloat is a major concern for some projects, and as such, all of Ninject's core functionality is in a
    single assembly with no dependencies outside the .NET base class library. This single assembly's footprint is approximately
-   82KB when compiled for release.
+   85KB when compiled for release.
    
 3. Fast. Instead of relying on reflection for invocation, Ninject takes advantage of lightweight code generation in the CLR.
    This can result in a dramatic (8-50x) improvement in performance in many situations.

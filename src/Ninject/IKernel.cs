@@ -17,6 +17,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Ninject.Activation.Blocks;
 using Ninject.Components;
 using Ninject.Infrastructure.Disposal;
@@ -60,13 +61,21 @@ namespace Ninject
 		/// Loads the module(s) into the kernel.
 		/// </summary>
 		/// <param name="modules">The modules to load.</param>
-		void Load(params INinjectModule[] modules);
+		void Load(IEnumerable<INinjectModule> modules);
 
+		#if !SILVERLIGHT
 		/// <summary>
 		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>
-		/// <param name="patterns">The patterns to match.</param>
-		void Load(params string[] patterns);
+		/// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+		void Load(IEnumerable<string> filePatterns);
+
+		/// <summary>
+		/// Loads modules defined in the specified assemblies.
+		/// </summary>
+		/// <param name="assemblies">The assemblies to search.</param>
+		void Load(IEnumerable<Assembly> assemblies);
+		#endif
 
 		/// <summary>
 		/// Unloads the plugin with the specified name.
