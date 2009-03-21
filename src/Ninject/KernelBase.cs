@@ -354,7 +354,7 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(service, "service");
 
-			if (service.IsInterface || service.IsAbstract || service.ContainsGenericParameters)
+			if (!TypeIsSelfBindable(service))
 				return false;
 
 			var binding = new Binding(service)
@@ -367,6 +367,20 @@ namespace Ninject
 			AddBinding(binding);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Returns a value indicating whether the specified service is self-bindable.
+		/// </summary>
+		/// <param name="service">The service.</param>
+		/// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
+		protected virtual bool TypeIsSelfBindable(Type service)
+		{
+			return !service.IsInterface
+				&& !service.IsAbstract
+				&& !service.IsValueType
+				&& service != typeof(string)
+				&& !service.ContainsGenericParameters;
 		}
 
 		/// <summary>

@@ -117,6 +117,18 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 
 		[Fact]
+		public void ThrowsExceptionIfAnUnboundValueTypeIsRequested()
+		{
+			Assert.Throws<ActivationException>(() => kernel.Get<int>());
+		}
+
+		[Fact]
+		public void ThrowsExceptionIfAStringIsRequestedWithNoBinding()
+		{
+			Assert.Throws<ActivationException>(() => kernel.Get<string>());
+		}
+
+		[Fact]
 		public void ThrowsExceptionIfAnOpenGenericTypeIsRequested()
 		{
 			Assert.Throws<ActivationException>(() => kernel.Get(typeof(IGeneric<>)));
