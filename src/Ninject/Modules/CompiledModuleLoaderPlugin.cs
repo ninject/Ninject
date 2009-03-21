@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
@@ -97,9 +98,7 @@ namespace Ninject.Modules
 			return AppDomain.CreateDomain(
 				"NinjectModuleLoader",
 				AppDomain.CurrentDomain.Evidence,
-				AppDomain.CurrentDomain.BaseDirectory,
-				AppDomain.CurrentDomain.RelativeSearchPath,
-				false);
+				AppDomain.CurrentDomain.SetupInformation);
 		}
 	}
 }
