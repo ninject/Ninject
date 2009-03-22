@@ -38,7 +38,12 @@ namespace Ninject.Activation
 		/// <summary>
 		/// Gets the parent request.
 		/// </summary>
-		IRequest Parent { get; }
+		IRequest ParentRequest { get; }
+
+		/// <summary>
+		/// Gets the parent context.
+		/// </summary>
+		IContext ParentContext { get; }
 
 		/// <summary>
 		/// Gets the target that will receive the injection, if any.
@@ -87,8 +92,9 @@ namespace Ninject.Activation
 		/// Creates a child request.
 		/// </summary>
 		/// <param name="service">The service that is being requested.</param>
+		/// <param name="parentContext">The context in which the request was made.</param>
 		/// <param name="target">The target that will receive the injection.</param>
 		/// <returns>The child request.</returns>
-		IRequest CreateChild(Type service, ITarget target);
+		IRequest CreateChild(Type service, IContext parentContext, ITarget target);
 	}
 }

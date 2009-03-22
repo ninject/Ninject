@@ -136,6 +136,13 @@ namespace Ninject.Syntax
 		/// </summary>
 		/// <param name="attributeType">The type of attribute.</param>
 		IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType);
+
+		/// <summary>
+		/// Indicates that the binding should be used only when the service is being requested
+		/// by a service bound with the specified name.
+		/// </summary>
+		/// <param name="name">The name to expect.</param>
+		IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name);
 	}
 
 	/// <summary>

@@ -39,7 +39,12 @@ namespace Ninject.Activation
 		/// <summary>
 		/// Gets the parent request.
 		/// </summary>
-		public IRequest Parent { get; private set; }
+		public IRequest ParentRequest { get; private set; }
+
+		/// <summary>
+		/// Gets the parent context.
+		/// </summary>
+		public IContext ParentContext { get; private set; }
 
 		/// <summary>
 		/// Gets the target that will receive the injection, if any.
@@ -101,25 +106,26 @@ namespace Ninject.Activation
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Request"/> class.
 		/// </summary>
-		/// <param name="parent">The parent request.</param>
+		/// <param name="parentContext">The parent context.</param>
 		/// <param name="service">The service that was requested.</param>
 		/// <param name="target">The target that will receive the injection.</param>
 		/// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
-		public Request(IRequest parent, Type service, ITarget target, Func<object> scopeCallback)
+		public Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
 		{
-			Ensure.ArgumentNotNull(parent, "parent");
+			Ensure.ArgumentNotNull(parentContext, "parentContext");
 			Ensure.ArgumentNotNull(service, "service");
 			Ensure.ArgumentNotNull(target, "target");
 
-			Parent = parent;
+			ParentContext = parentContext;
+			ParentRequest = parentContext.Request;
 			Service = service;
 			Target = target;
 			Constraint = target.Constraint;
 			IsOptional = target.IsOptional;
-			Parameters = parent.Parameters.Where(p => p.ShouldInherit).ToList();
+			Parameters = parentContext.Parameters.Where(p => p.ShouldInherit).ToList();
 			ScopeCallback = scopeCallback;
-			ActiveBindings = new Stack<IBinding>(parent.ActiveBindings);
-			Depth = parent.Depth + 1;
+			ActiveBindings = new Stack<IBinding>(ParentRequest.ActiveBindings);
+			Depth = ParentRequest.Depth + 1;
 		}
 
 		/// <summary>
@@ -145,11 +151,12 @@ namespace Ninject.Activation
 		/// Creates a child request.
 		/// </summary>
 		/// <param name="service">The service that is being requested.</param>
+		/// <param name="parentContext">The context in which the request was made.</param>
 		/// <param name="target">The target that will receive the injection.</param>
 		/// <returns>The child request.</returns>
-		public IRequest CreateChild(Type service, ITarget target)
+		public IRequest CreateChild(Type service, IContext parentContext, ITarget target)
 		{
-			return new Request(this, service, target, ScopeCallback);
+			return new Request(parentContext, service, target, ScopeCallback);
 		}
 	}
 }

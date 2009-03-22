@@ -40,7 +40,7 @@ namespace Ninject.Infrastructure.Introspection
 				while (current != null)
 				{
 					sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
-					current = current.Parent;
+					current = current.ParentRequest;
 				}
 
 				return sw.ToString();

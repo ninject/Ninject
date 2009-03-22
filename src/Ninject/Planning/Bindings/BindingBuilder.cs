@@ -242,6 +242,18 @@ namespace Ninject.Planning.Bindings
 		}
 
 		/// <summary>
+		/// Indicates that the binding should be used only when the service is being requested
+		/// by a service bound with the specified name.
+		/// </summary>
+		/// <param name="name">The name to expect.</param>
+		public IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name)
+		{
+			String.Intern(name);
+			Binding.Condition = r => r.ParentContext.Binding.Metadata.Name == name;
+			return this;
+		}
+
+		/// <summary>
 		/// Indicates that the binding should be registered with the specified name. Names are not
 		/// necessarily unique; multiple bindings for a given service may be registered with the same name.
 		/// </summary>
