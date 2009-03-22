@@ -33,7 +33,7 @@ namespace Ninject.Modules
 	/// </summary>
 	public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
 	{
-		private static readonly string[] Extensions = new[] { "dll" };
+		private static readonly string[] Extensions = new[] { ".dll" };
 
 		/// <summary>
 		/// Gets or sets the kernel into which modules will be loaded.

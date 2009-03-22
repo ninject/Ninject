@@ -65,7 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fakes\Knife.cs" />
+    <Compile Include="Integration\ModuleLoadingTests.cs" />
     <Compile Include="Integration\RequestScopeTests.cs" />
     <Compile Include="Integration\ExternalInjectionTests.cs" />
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
@@ -77,10 +77,18 @@
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <None Include="TestModules\test.bar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestModules\test.foo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Include="Unit\CallbackProviderTests.cs" />
     <Compile Include="Unit\ConstantProviderTests.cs" />
     <Compile Include="Unit\ActivationBlockTests.cs" />
     <Compile Include="Unit\BindingActionStrategyTests.cs" />
+    <Compile Include="Unit\CompiledModuleLoaderPluginTests.cs" />
+    <Compile Include="Unit\ModuleLoaderTests.cs" />
     <Compile Include="Unit\NamedAttributeTests.cs" />
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
@@ -106,6 +114,11 @@
       <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
       <Name>Ninject</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestModules\Ninject.Tests.TestModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
