@@ -39,6 +39,6 @@ Ninject is:
 
 Extensions (this will move to a better list soon):
 
-- [Ninject.Dynamic](http://github.com/casualjim/ninject-dynamic): Support for module loaders for Ruby and (eventually) other DLR languages
+- [Ninject.Dynamic](http://github.com/casualjim/ninject-dynamic): Support for module loaders for Ruby (DSL) and (eventually) other DLR languages
 - [Ninject.Web.Mvc](http://github.com/enkari/ninject.web.mvc): Integration between Ninject and ASP.NET MVC
 - [Ninject.Moq](http://github.com/enkari/ninject.moq): Integration between Ninject and Moq
