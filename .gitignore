@@ -6,3 +6,4 @@ dist
 *.suo
 *resharper*
 *.user
+*.cache

@@ -105,6 +105,7 @@
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="ActivationException.cs" />
+    <Compile Include="Infrastructure\Future.cs" />
     <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
     <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />

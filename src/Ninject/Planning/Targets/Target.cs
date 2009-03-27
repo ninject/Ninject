@@ -27,7 +27,8 @@ namespace Ninject.Planning.Targets
 	public abstract class Target<T> : ITarget
 		where T : ICustomAttributeProvider
 	{
-		private Func<IBindingMetadata, bool> _constraint;
+		private readonly Future<Func<IBindingMetadata, bool>> _constraint;
+		private readonly Future<bool> _isOptional;
 
 		/// <summary>
 		/// Gets the member that contains the target.
@@ -54,11 +55,7 @@ namespace Ninject.Planning.Targets
 		/// </summary>
 		public Func<IBindingMetadata, bool> Constraint
 		{
-			get
-			{
-				if (_constraint == null) _constraint = ReadConstraintFromTarget();
-				return _constraint;
-			}
+			get { return _constraint; }
 		}
 
 		/// <summary>
@@ -66,7 +63,7 @@ namespace Ninject.Planning.Targets
 		/// </summary>
 		public bool IsOptional
 		{
-			get { return Site.HasAttribute<OptionalAttribute>(); }
+			get { return _isOptional; }
 		}
 
 			/// <summary>
@@ -81,6 +78,9 @@ namespace Ninject.Planning.Targets
 
 			Member = member;
 			Site = site;
+
+			_constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
+			_isOptional = new Future<bool>(ReadOptionalFromTarget);
 		}
 
 		/// <summary>
@@ -160,6 +160,15 @@ namespace Ninject.Planning.Targets
 
 			var request = parent.Request.CreateChild(service, parent, this);
 			return parent.Kernel.Resolve(request);
+		}
+
+		/// <summary>
+		/// Reads whether the target represents an optional dependency.
+		/// </summary>
+		/// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
+		protected virtual bool ReadOptionalFromTarget()
+		{
+			return Site.HasAttribute<OptionalAttribute>();
 		}
 
 		/// <summary>

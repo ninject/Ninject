@@ -32,19 +32,9 @@
 		<delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
 	</target>
 
-	<target name="all" depends="core extensions test"/>
-	<target name="extensions" depends="mvc csl"/>
+	<target name="all" depends="core csl test"/>
 
-	<target name="get-subversion-revision-number">
-		<if test="${version.revision=='0'}">
-			<!-- Credit to Ayende Rahien -->
-			<exec program="svn" commandline='info "${project::get-base-directory()}" --xml' output="_svn.xml" failonerror="false"/>
-			<xmlpeek file="_svn.xml" xpath="/info/entry/@revision" property="version.revision" failonerror="false"/>
-			<delete file="_svn.xml" failonerror="false"/>
-		</if>
-	</target>
-
-	<target name="create-assembly-info" depends="get-subversion-revision-number">
+	<target name="create-assembly-info">
 		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
 			<imports>
 				<import namespace="System"/>
@@ -147,27 +137,6 @@
 				<include name="System.Web.dll"/>
 				<include name="Ninject.dll"/>
 				<include name="lib/Microsoft.Practices.ServiceLocation.dll"/>
-			</references>
-		</csc>
-	</target>
-
-	<target name="mvc" depends="init core" unless="${build.platform == 'silverlight-2.0'}">
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         keyfile="${path.src}/Ninject.snk" output="${current.path.build.extensions}/Ninject.Web.Mvc.dll">
-			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
-			<sources basedir="${path.src}">
-				<include name="${build.asminfo}"/>
-				<include name="Ninject.Web.Mvc/**/*.cs"/>
-			</sources>
-			<references basedir="${current.path.build}">
-				<include name="mscorlib.dll"/>
-				<include name="System.dll"/>
-				<include name="System.Core.dll"/>
-				<include name="System.Web.dll"/>
-				<include name="Ninject.dll"/>
-				<include name="lib/System.Web.Abstractions.dll"/>
-				<include name="lib/System.Web.Mvc.dll"/>
-				<include name="lib/System.Web.Routing.dll"/>
 			</references>
 		</csc>
 	</target>

@@ -88,8 +88,8 @@ namespace Ninject
 			AddComponents();
 
 			#if !SILVERLIGHT
-			// Search for and load extensions before loading modules.
-			Load(new[] { Settings.ExtensionSearchPattern });
+			if (Settings.LoadExtensions)
+				Load(new[] { Settings.ExtensionSearchPattern });
 			#endif
 
 			Load(modules);
@@ -112,6 +112,7 @@ namespace Ninject
 		/// <param name="service">The service to unbind.</param>
 		public override void Unbind(Type service)
 		{
+			Ensure.ArgumentNotNull(service, "service");
 			_bindings.RemoveAll(service);
 		}
 
@@ -388,6 +389,11 @@ namespace Ninject
 			Ensure.ArgumentNotNull(binding, "binding");
 
 			return new Context(this, request, binding, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
+		}
+
+		object IServiceProvider.GetService(Type service)
+		{
+			return this.Get(service);
 		}
 	}
 }
