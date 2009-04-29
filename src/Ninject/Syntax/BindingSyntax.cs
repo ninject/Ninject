@@ -46,6 +46,13 @@ namespace Ninject.Syntax
 		IBindingWhenInNamedWithOrOnSyntax<T> ToProvider<TProvider>() where TProvider : IProvider;
 
 		/// <summary>
+		/// Indicates that the service should be bound to an instance of the specified provider type.
+		/// The instance will be activated via the kernel when an instance of the service is activated.
+		/// </summary>
+		/// <param name="providerType">The type of provider to activate.</param>
+		IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(Type providerType);
+
+		/// <summary>
 		/// Indicates that the service should be bound to the specified provider.
 		/// </summary>
 		/// <param name="provider">The provider.</param>

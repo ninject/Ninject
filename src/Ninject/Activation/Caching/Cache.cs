@@ -89,8 +89,6 @@ namespace Ninject.Activation.Caching
 
 			lock (_entries)
 			{
-				Prune();
-
 				var scope = context.GetScope();
 
 				foreach (CacheEntry entry in _entries[context.Binding])

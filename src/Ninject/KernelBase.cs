@@ -232,7 +232,7 @@ namespace Ninject
 			var planner = Components.Get<IPlanner>();
 			var pipeline = Components.Get<IPipeline>();
 
-			var binding = new Binding(service) { ScopeCallback = StandardScopeCallbacks.Transient };
+			var binding = new Binding(service);
 			var request = CreateRequest(service, null, parameters, false);
 			var context = CreateContext(request, binding);
 
@@ -354,7 +354,6 @@ namespace Ninject
 			var binding = new Binding(service)
 			{
 				ProviderCallback = StandardProvider.GetCreationCallback(service),
-				ScopeCallback = StandardScopeCallbacks.Transient,
 				IsImplicit = true
 			};
 

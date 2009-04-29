@@ -91,6 +91,19 @@ namespace Ninject.Planning.Bindings
 		}
 
 		/// <summary>
+		/// Indicates that the service should be bound to an instance of the specified provider type.
+		/// The instance will be activated via the kernel when an instance of the service is activated.
+		/// </summary>
+		/// <param name="providerType">The type of provider to activate.</param>
+		public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(Type providerType)
+		{
+			Binding.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
+			Binding.Target = BindingTarget.Provider;
+
+			return this;
+		}
+
+		/// <summary>
 		/// Indicates that the service should be bound to the specified provider.
 		/// </summary>
 		/// <param name="provider">The provider.</param>

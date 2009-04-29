@@ -48,18 +48,19 @@ namespace Ninject.Planning.Bindings
 		public T Get<T>(string key)
 		{
 			Ensure.ArgumentNotNullOrEmpty(key, "key");
-			return (T)Get(key);
+			return Get(key, default(T));
 		}
 
 		/// <summary>
 		/// Gets the value of metadata defined with the specified key.
 		/// </summary>
 		/// <param name="key">The metadata key.</param>
-		/// <returns>The metadata value.</returns>
-		public object Get(string key)
+		/// <param name="defaultValue">The value to return if the binding has no metadata set with the specified key.</param>
+		/// <returns>The metadata value, or the default value if none was set.</returns>
+		public T Get<T>(string key, T defaultValue)
 		{
 			Ensure.ArgumentNotNullOrEmpty(key, "key");
-			return _values.ContainsKey(key) ? _values[key] : null;
+			return _values.ContainsKey(key) ? (T)_values[key] : defaultValue;
 		}
 
 		/// <summary>

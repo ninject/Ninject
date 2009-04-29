@@ -101,7 +101,7 @@ namespace Ninject.Planning.Bindings
 			Parameters = new List<IParameter>();
 			ActivationActions = new List<Action<IContext>>();
 			DeactivationActions = new List<Action<IContext>>();
-			ScopeCallback = StandardScopeCallbacks.Singleton;
+			ScopeCallback = StandardScopeCallbacks.Transient;
 		}
 
 		/// <summary>
