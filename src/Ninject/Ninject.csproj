@@ -59,6 +59,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Activation\InstanceReference.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
     <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs">
       <SubType>Code</SubType>
@@ -88,7 +89,6 @@
     <Compile Include="Activation\Strategies\BindingActionStrategy.cs" />
     <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
     <Compile Include="Activation\Strategies\StartableStrategy.cs" />
-    <Compile Include="Activation\Strategies\ActivationStrategyFor.cs" />
     <Compile Include="Activation\Strategies\DisposableStrategy.cs">
       <SubType>Code</SubType>
     </Compile>

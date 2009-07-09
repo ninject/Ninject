@@ -25,10 +25,9 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 		public void StrategyStartsInstanceIfItIsStartable()
 		{
 			var instance = new StartableObject();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Activate(contextMock.Object);
-
+			strategy.Activate(contextMock.Object, reference);
 			instance.WasStarted.ShouldBeTrue();
 		}
 
@@ -36,9 +35,9 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 		public void StrategyDoesNotAttemptToStartInstanceIfItIsNotStartable()
 		{
 			var instance = new object();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 		}
 	}
 
@@ -48,9 +47,9 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 		public void StrategyStopsInstanceIfItIsStartable()
 		{
 			var instance = new StartableObject();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Deactivate(contextMock.Object);
+			strategy.Deactivate(contextMock.Object, reference);
 
 			instance.WasStopped.ShouldBeTrue();
 		}
@@ -59,9 +58,9 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 		public void StrategyDoesNotAttemptToInitializeInstanceIfItIsNotInitializable()
 		{
 			var instance = new object();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Deactivate(contextMock.Object);
+			strategy.Deactivate(contextMock.Object, reference);
 		}
 	}
 

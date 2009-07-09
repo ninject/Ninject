@@ -1,5 +1,6 @@
 ﻿using System;
 using Ninject.Activation;
+using Ninject.Activation.Caching;
 using Ninject.Tests.Fakes;
 using Xunit;
 using Xunit.Should;
@@ -73,6 +74,11 @@ namespace Ninject.Tests.Integration.TransientScopeTests
 			GC.WaitForPendingFinalizers();
 
 			reference.IsAlive.ShouldBeFalse();
+
+			var cache = kernel.Components.Get<ICache>();
+			cache.Prune();
+
+			cache.Count.ShouldBe(0);
 		}
 	}
 

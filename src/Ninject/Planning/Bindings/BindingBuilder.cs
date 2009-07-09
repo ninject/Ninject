@@ -390,7 +390,7 @@ namespace Ninject.Planning.Bindings
 		/// <param name="action">The action callback.</param>
 		public IBindingOnSyntax<T> OnActivation(Action<T> action)
 		{
-			Binding.ActivationActions.Add(ctx => action((T)ctx.Instance));
+			Binding.ActivationActions.Add(instance => action((T)instance));
 			return this;
 		}
 
@@ -400,7 +400,7 @@ namespace Ninject.Planning.Bindings
 		/// <param name="action">The action callback.</param>
 		public IBindingOnSyntax<T> OnDeactivation(Action<T> action)
 		{
-			Binding.DeactivationActions.Add(ctx => action((T)ctx.Instance));
+			Binding.DeactivationActions.Add(instance => action((T)instance));
 			return this;
 		}
 	}

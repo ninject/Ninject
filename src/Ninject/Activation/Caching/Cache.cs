@@ -33,6 +33,14 @@ namespace Ninject.Activation.Caching
 		public IPipeline Pipeline { get; private set; }
 
 		/// <summary>
+		/// Gets the number of entries currently stored in the cache.
+		/// </summary>
+		public int Count
+		{
+			get { return _entries.Sum(list => list.Value.Count); }
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Cache"/> class.
 		/// </summary>
 		/// <param name="pipeline">The pipeline component.</param>
@@ -62,13 +70,14 @@ namespace Ninject.Activation.Caching
 		/// Stores the specified context in the cache.
 		/// </summary>
 		/// <param name="context">The context to store.</param>
-		public void Remember(IContext context)
+		/// <param name="reference">The instance reference.</param>
+		public void Remember(IContext context, InstanceReference reference)
 		{
 			Ensure.ArgumentNotNull(context, "context");
 
 			lock (_entries)
 			{
-				var entry = new CacheEntry(context);
+				var entry = new CacheEntry(context, reference);
 				_entries[context.Binding].Add(entry);
 
 				var scope = context.GetScope() as INotifyWhenDisposed;
@@ -105,7 +114,7 @@ namespace Ninject.Activation.Caching
 							continue;
 					}
 
-					return entry.Context.Instance;
+					return entry.Reference.Instance;
 				}
 
 				return null;
@@ -136,18 +145,20 @@ namespace Ninject.Activation.Caching
 
 		private void Forget(CacheEntry entry)
 		{
-			Pipeline.Deactivate(entry.Context);
+			Pipeline.Deactivate(entry.Context, entry.Reference);
 			_entries[entry.Context.Binding].Remove(entry);
 		}
 
 		private class CacheEntry
 		{
 			public IContext Context { get; set; }
+			public InstanceReference Reference { get; set; }
 			public WeakReference Scope { get; set; }
 
-			public CacheEntry(IContext context)
+			public CacheEntry(IContext context, InstanceReference reference)
 			{
 				Context = context;
+				Reference = reference;
 				Scope = new WeakReference(context.GetScope());
 			}
 		}

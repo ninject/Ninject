@@ -48,11 +48,6 @@ namespace Ninject.Activation
 		ICollection<IParameter> Parameters { get; }
 
 		/// <summary>
-		/// Gets or sets the activated instance.
-		/// </summary>
-		object Instance { get; set; }
-
-		/// <summary>
 		/// Gets the generic arguments for the request, if any.
 		/// </summary>
 		Type[] GenericArguments { get; }

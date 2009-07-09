@@ -41,8 +41,11 @@ namespace Ninject.Tests.Unit.PipelineTests
 		public void CallsActivateOnStrategies()
 		{
 			var contextMock = new Mock<IContext>();
-			pipeline.Activate(contextMock.Object);
-			strategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object)));
+			var reference = new InstanceReference();
+
+			pipeline.Activate(contextMock.Object, reference);
+
+			strategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object, reference)));
 		}
 	}
 
@@ -52,8 +55,11 @@ namespace Ninject.Tests.Unit.PipelineTests
 		public void CallsDeactivateOnStrategies()
 		{
 			var contextMock = new Mock<IContext>();
-			pipeline.Deactivate(contextMock.Object);
-			strategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object)));
+			var reference = new InstanceReference();
+
+			pipeline.Deactivate(contextMock.Object, reference);
+
+			strategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object, reference)));
 		}
 	}
 }

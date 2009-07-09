@@ -27,10 +27,9 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 		public void StrategyDisposesInstanceIfItIsDisposable()
 		{
 			var instance = new NotifiesWhenDisposed();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Deactivate(contextMock.Object);
-
+			strategy.Deactivate(contextMock.Object, reference);
 			instance.IsDisposed.ShouldBeTrue();
 		}
 
@@ -38,9 +37,9 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 		public void StrategyDoesNotAttemptToDisposeInstanceIfItIsNotDisposable()
 		{
 			var instance = new object();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Deactivate(contextMock.Object);
+			strategy.Deactivate(contextMock.Object, reference);
 		}
 	}
 }

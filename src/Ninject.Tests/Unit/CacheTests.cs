@@ -46,14 +46,13 @@ namespace Ninject.Tests.Unit.CacheTests
 		public void ReturnsCachedInstanceIfOneHasBeenAddedWithinSpecifiedScope()
 		{
 			var scope = new object();
-			var sword = new Sword();
+			var reference = new InstanceReference { Instance = new Sword() };
 
 			var contextMock1 = new Mock<IContext>();
 			contextMock1.SetupGet(x => x.Binding).Returns(bindingMock.Object);
-			contextMock1.SetupGet(x => x.Instance).Returns(sword);
 			contextMock1.Setup(x => x.GetScope()).Returns(scope);
 
-			cache.Remember(contextMock1.Object);
+			cache.Remember(contextMock1.Object, reference);
 
 			var contextMock2 = new Mock<IContext>();
 			contextMock2.SetupGet(x => x.Binding).Returns(bindingMock.Object);
@@ -61,20 +60,19 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			instance.ShouldBeSameAs(sword);
+			instance.ShouldBeSameAs(reference.Instance);
 		}
 
 		[Fact]
 		public void ReturnsNullIfNoInstancesHaveBeenAddedWithinSpecifiedScope()
 		{
-			var sword = new Sword();
+			var reference = new InstanceReference { Instance = new Sword() };
 
 			var contextMock1 = new Mock<IContext>();
 			contextMock1.SetupGet(x => x.Binding).Returns(bindingMock.Object);
-			contextMock1.SetupGet(x => x.Instance).Returns(sword);
 			contextMock1.Setup(x => x.GetScope()).Returns(new object());
 
-			cache.Remember(contextMock1.Object);
+			cache.Remember(contextMock1.Object, reference);
 
 			var contextMock2 = new Mock<IContext>();
 			contextMock2.SetupGet(x => x.Binding).Returns(bindingMock.Object);
@@ -92,16 +90,15 @@ namespace Ninject.Tests.Unit.CacheTests
 		public void ReturnsInstanceIfOneHasBeenCachedWithSameGenericParameters()
 		{
 			var scope = new object();
-			var sword = new Sword();
+			var reference = new InstanceReference { Instance = new Sword() };
 
 			var contextMock1 = new Mock<IContext>();
 			contextMock1.SetupGet(x => x.Binding).Returns(bindingMock.Object);
-			contextMock1.SetupGet(x => x.Instance).Returns(sword);
 			contextMock1.SetupGet(x => x.HasInferredGenericArguments).Returns(true);
 			contextMock1.SetupGet(x => x.GenericArguments).Returns(new[] { typeof(int) });
 			contextMock1.Setup(x => x.GetScope()).Returns(scope);
 
-			cache.Remember(contextMock1.Object);
+			cache.Remember(contextMock1.Object, reference);
 
 			var contextMock2 = new Mock<IContext>();
 			contextMock2.SetupGet(x => x.Binding).Returns(bindingMock.Object);
@@ -111,23 +108,22 @@ namespace Ninject.Tests.Unit.CacheTests
 
 			object instance = cache.TryGet(contextMock2.Object);
 
-			instance.ShouldBeSameAs(sword);
+			instance.ShouldBeSameAs(reference.Instance);
 		}
 
 		[Fact]
 		public void ReturnsNullIfInstanceAddedToCacheHasDifferentGenericParameters()
 		{
 			var scope = new object();
-			var sword = new Sword();
+			var reference = new InstanceReference { Instance = new Sword() };
 
 			var contextMock1 = new Mock<IContext>();
 			contextMock1.SetupGet(x => x.Binding).Returns(bindingMock.Object);
-			contextMock1.SetupGet(x => x.Instance).Returns(sword);
 			contextMock1.SetupGet(x => x.HasInferredGenericArguments).Returns(true);
 			contextMock1.SetupGet(x => x.GenericArguments).Returns(new[] { typeof(int) });
 			contextMock1.Setup(x => x.GetScope()).Returns(scope);
 
-			cache.Remember(contextMock1.Object);
+			cache.Remember(contextMock1.Object, reference);
 
 			var contextMock2 = new Mock<IContext>();
 			contextMock2.SetupGet(x => x.Binding).Returns(bindingMock.Object);

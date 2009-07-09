@@ -29,14 +29,16 @@ namespace Ninject.Activation.Strategies
 		/// contained in the plan.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		public override void Activate(IContext context)
+		/// <param name="reference">A reference to the instance being activated.</param>
+		public override void Activate(IContext context, InstanceReference reference)
 		{
 			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(reference, "reference");
 
 			foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
 			{
 				object value = GetValue(context, directive.Target);
-				directive.Injector(context.Instance, value);
+				directive.Injector(reference.Instance, value);
 			}
 		}
 

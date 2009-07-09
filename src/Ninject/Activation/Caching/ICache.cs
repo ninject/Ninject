@@ -20,10 +20,16 @@ namespace Ninject.Activation.Caching
 	public interface ICache : INinjectComponent
 	{
 		/// <summary>
-		/// Stores the specified context in the cache.
+		/// Gets the number of entries currently stored in the cache.
+		/// </summary>
+		int Count { get; }
+
+		/// <summary>
+		/// Stores the specified instance in the cache.
 		/// </summary>
 		/// <param name="context">The context to store.</param>
-		void Remember(IContext context);
+		/// <param name="reference">The instance reference.</param>
+		void Remember(IContext context, InstanceReference reference);
 
 		/// <summary>
 		/// Tries to retrieve an instance to re-use in the specified context.

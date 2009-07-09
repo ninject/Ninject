@@ -27,6 +27,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 	public class WhenActivateIsCalled : MethodInjectionStrategyContext
 	{
 		protected Dummy instance = new Dummy();
+		protected InstanceReference reference;
 		protected MethodInfo method1 = typeof(Dummy).GetMethod("Foo");
 		protected MethodInfo method2 = typeof(Dummy).GetMethod("Bar");
 		protected Mock<IContext> contextMock;
@@ -39,6 +40,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 
 		public WhenActivateIsCalled()
 		{
+			reference = new InstanceReference { Instance = instance };
+
 			contextMock = new Mock<IContext>();
 			planMock = new Mock<IPlan>();
 			injector1 = (x, args) => { injector1WasCalled = true; };
@@ -51,7 +54,6 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 			};
 
 			contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
 
 			planMock.Setup(x => x.GetAll<MethodInjectionDirective>()).Returns(directives);
 		}
@@ -59,7 +61,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		[Fact]
 		public void ReadsMethodInjectorsFromPlan()
 		{
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 
 			planMock.Verify(x => x.GetAll<MethodInjectionDirective>());
 		}
@@ -67,13 +69,13 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		[Fact]
 		public void CreatesMethodInjectorsForEachDirective()
 		{
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 		}
 
 		[Fact]
 		public void ResolvesValuesForEachTargetOfEachDirective()
 		{
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 
 			directives.Map(d => d.TargetMocks.Map(m => m.Verify(x => x.ResolveWithin(contextMock.Object))));
 		}
@@ -81,7 +83,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 		[Fact]
 		public void InvokesInjectorsForEachDirective()
 		{
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 			injector1WasCalled.ShouldBeTrue();
 			injector2WasCalled.ShouldBeTrue();
 		}

@@ -52,11 +52,6 @@ namespace Ninject.Activation
 		public ICollection<IParameter> Parameters { get; set; }
 
 		/// <summary>
-		/// Gets or sets the activated instance.
-		/// </summary>
-		public object Instance { get; set; }
-
-		/// <summary>
 		/// Gets the generic arguments for the request, if any.
 		/// </summary>
 		public Type[] GenericArguments { get; private set; }
@@ -146,24 +141,26 @@ namespace Ninject.Activation
 
 				Request.ActiveBindings.Push(Binding);
 
-				Instance = Cache.TryGet(this);
+				var reference = new InstanceReference();
 
-				if (Instance != null)
-					return Instance;
+				reference.Instance = Cache.TryGet(this);
 
-				Instance = GetProvider().Create(this);
+				if (reference.Instance != null)
+					return reference.Instance;
+
+				reference.Instance = GetProvider().Create(this);
 
 				if (GetScope() != null)
-					Cache.Remember(this);
+					Cache.Remember(this, reference);
 
 				Request.ActiveBindings.Pop();
 
 				if (Plan == null)
-					Plan = Planner.GetPlan(Instance.GetType());
+					Plan = Planner.GetPlan(reference.Instance.GetType());
 
-				Pipeline.Activate(this);
+				Pipeline.Activate(this, reference);
 
-				return Instance;
+				return reference.Instance;
 			}
 		}
 	}

@@ -69,12 +69,12 @@ namespace Ninject.Planning.Bindings
 		/// <summary>
 		/// Gets the actions that should be called after instances are activated via the binding.
 		/// </summary>
-		ICollection<Action<IContext>> ActivationActions { get; }
+		ICollection<Action<object>> ActivationActions { get; }
 
 		/// <summary>
 		/// Gets the actions that should be called before instances are deactivated via the binding.
 		/// </summary>
-		ICollection<Action<IContext>> DeactivationActions { get; }
+		ICollection<Action<object>> DeactivationActions { get; }
 
 		/// <summary>
 		/// Gets the provider for the binding.

@@ -30,12 +30,14 @@ namespace Ninject.Activation
 		/// Activates the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		void Activate(IContext context);
+		/// <param name="reference">The instance reference.</param>
+		void Activate(IContext context, InstanceReference reference);
 
 		/// <summary>
 		/// Deactivates the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		void Deactivate(IContext context);
+		/// <param name="reference">The instance reference.</param>
+		void Deactivate(IContext context, InstanceReference reference);
 	}
 }

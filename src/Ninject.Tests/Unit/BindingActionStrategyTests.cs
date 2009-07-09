@@ -30,13 +30,13 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bool action1WasCalled = false;
 			bool action2WasCalled = false;
 
-			Action<IContext> action1 = c => action1WasCalled = true;
-			Action<IContext> action2 = c => action2WasCalled = true;
+			Action<object> action1 = c => action1WasCalled = true;
+			Action<object> action2 = c => action2WasCalled = true;
 			var actions = new[] { action1, action2 };
 
 			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
 			bindingMock.SetupGet(x => x.ActivationActions).Returns(actions);
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, new InstanceReference());
 
 			action1WasCalled.ShouldBeTrue();
 			action2WasCalled.ShouldBeTrue();
@@ -51,13 +51,13 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bool action1WasCalled = false;
 			bool action2WasCalled = false;
 
-			Action<IContext> action1 = c => action1WasCalled = true;
-			Action<IContext> action2 = c => action2WasCalled = true;
+			Action<object> action1 = c => action1WasCalled = true;
+			Action<object> action2 = c => action2WasCalled = true;
 			var actions = new[] { action1, action2 };
 
 			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
 			bindingMock.SetupGet(x => x.DeactivationActions).Returns(actions);
-			strategy.Deactivate(contextMock.Object);
+			strategy.Deactivate(contextMock.Object, new InstanceReference());
 
 			action1WasCalled.ShouldBeTrue();
 			action2WasCalled.ShouldBeTrue();

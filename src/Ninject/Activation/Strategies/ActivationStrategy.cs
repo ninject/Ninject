@@ -24,12 +24,14 @@ namespace Ninject.Activation.Strategies
 		/// Contributes to the activation of the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		public virtual void Activate(IContext context) { }
+		/// <param name="reference">A reference to the instance being activated.</param>
+		public virtual void Activate(IContext context, InstanceReference reference) { }
 
 		/// <summary>
 		/// Contributes to the deactivation of the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		public virtual void Deactivate(IContext context) { }
+		/// <param name="reference">A reference to the instance being deactivated.</param>
+		public virtual void Deactivate(IContext context, InstanceReference reference) { }
 	}
 }

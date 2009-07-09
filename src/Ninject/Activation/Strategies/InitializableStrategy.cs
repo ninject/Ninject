@@ -16,16 +16,16 @@ namespace Ninject.Activation.Strategies
 	/// <summary>
 	/// During activation, initializes instances that implement <see cref="IInitializable"/>.
 	/// </summary>
-	public class InitializableStrategy : ActivationStrategyFor<IInitializable>
+	public class InitializableStrategy : ActivationStrategy
 	{
 		/// <summary>
 		/// Initializes the specified instance.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		/// <param name="instance">The instance.</param>
-		public override void Activate(IContext context, IInitializable instance)
+		/// <param name="reference">A reference to the instance being activated.</param>
+		public override void Activate(IContext context, InstanceReference reference)
 		{
-			instance.Initialize();
+			reference.IfInstanceIs<IInitializable>(x => x.Initialize());
 		}
 	}
 }

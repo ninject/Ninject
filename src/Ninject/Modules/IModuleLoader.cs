@@ -38,11 +38,6 @@ namespace Ninject.Modules
 	public interface IModuleLoader : INinjectComponent
 	{
 		/// <summary>
-		/// Gets the plugins that will be used to load modules.
-		/// </summary>
-		ICollection<IModuleLoaderPlugin> Plugins { get; }
-
-		/// <summary>
 		/// Loads any modules found in the files that match the specified patterns.
 		/// </summary>
 		/// <param name="patterns">The patterns to search.</param>

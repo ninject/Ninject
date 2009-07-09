@@ -25,10 +25,9 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 		public void StrategyInitializesInstanceIfItIsInitializable()
 		{
 			var instance = new InitializableObject();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Activate(contextMock.Object);
-
+			strategy.Activate(contextMock.Object, reference);
 			instance.WasInitialized.ShouldBeTrue();
 		}
 
@@ -36,9 +35,9 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 		public void StrategyDoesNotAttemptToInitializeInstanceIfItIsNotInitializable()
 		{
 			var instance = new object();
+			var reference = new InstanceReference { Instance = instance };
 
-			contextMock.SetupGet(x => x.Instance).Returns(instance);
-			strategy.Activate(contextMock.Object);
+			strategy.Activate(contextMock.Object, reference);
 		}
 	}
 

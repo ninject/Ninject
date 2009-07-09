@@ -27,14 +27,16 @@ namespace Ninject.Activation.Strategies
 		/// contained in the plan.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		public override void Activate(IContext context)
+		/// <param name="reference">A reference to the instance being activated.</param>
+		public override void Activate(IContext context, InstanceReference reference)
 		{
 			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(reference, "reference");
 
 			foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
 			{
 				var arguments = directive.Targets.Select(target => target.ResolveWithin(context));
-				directive.Injector(context.Instance, arguments.ToArray());
+				directive.Injector(reference.Instance, arguments.ToArray());
 			}
 		}
 	}

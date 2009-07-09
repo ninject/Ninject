@@ -50,22 +50,13 @@ namespace Ninject.Modules
 		public IKernel Kernel { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the plugins.
-		/// </summary>
-		public ICollection<IModuleLoaderPlugin> Plugins { get; private set; }
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="ModuleLoader"/> class.
 		/// </summary>
 		/// <param name="kernel">The kernel into which modules will be loaded.</param>
-		/// <param name="plugins">The plugins that will be used to load modules from files.</param>
-		public ModuleLoader(IKernel kernel, IEnumerable<IModuleLoaderPlugin> plugins)
+		public ModuleLoader(IKernel kernel)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
-			Ensure.ArgumentNotNull(plugins, "plugins");
-
 			Kernel = kernel;
-			Plugins = plugins.ToList();
 		}
 
 		/// <summary>
@@ -74,6 +65,8 @@ namespace Ninject.Modules
 		/// <param name="patterns">The patterns to search.</param>
 		public void LoadModules(IEnumerable<string> patterns)
 		{
+			var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
+
 			var fileGroups = patterns
 				.SelectMany(pattern => GetFilesMatchingPattern(pattern))
 				.GroupBy(filename => Path.GetExtension(filename).ToLowerInvariant());
@@ -81,7 +74,7 @@ namespace Ninject.Modules
 			foreach (var fileGroup in fileGroups)
 			{
 				string extension = fileGroup.Key;
-				IModuleLoaderPlugin plugin = Plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
+				IModuleLoaderPlugin plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
 				if (plugin != null)
 					plugin.LoadModules(fileGroup);

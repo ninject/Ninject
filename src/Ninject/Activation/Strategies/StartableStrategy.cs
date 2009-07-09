@@ -17,26 +17,26 @@ namespace Ninject.Activation.Strategies
 	/// Starts instances that implement <see cref="IStartable"/> during activation,
 	/// and stops them during deactivation.
 	/// </summary>
-	public class StartableStrategy : ActivationStrategyFor<IStartable>
+	public class StartableStrategy : ActivationStrategy
 	{
 		/// <summary>
 		/// Starts the specified instance.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		/// <param name="instance">The instance.</param>
-		public override void Activate(IContext context, IStartable instance)
+		/// <param name="reference">A reference to the instance being activated.</param>
+		public override void Activate(IContext context, InstanceReference reference)
 		{
-			instance.Start();
+			reference.IfInstanceIs<IStartable>(x => x.Start());
 		}
 
 		/// <summary>
 		/// Stops the specified instance.
 		/// </summary>
 		/// <param name="context">The context.</param>
-		/// <param name="instance">The instance.</param>
-		public override void Deactivate(IContext context, IStartable instance)
+		/// <param name="reference">A reference to the instance being deactivated.</param>
+		public override void Deactivate(IContext context, InstanceReference reference)
 		{
-			instance.Stop();
+			reference.IfInstanceIs<IStartable>(x => x.Stop());
 		}
 	}
 }

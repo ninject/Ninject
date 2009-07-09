@@ -237,9 +237,9 @@ namespace Ninject
 			var context = CreateContext(request, binding);
 
 			context.Plan = planner.GetPlan(service);
-			context.Instance = instance;
 
-			pipeline.Activate(context);
+			var reference = new InstanceReference { Instance = instance };
+			pipeline.Activate(context, reference);
 		}
 
 		/// <summary>

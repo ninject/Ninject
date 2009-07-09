@@ -68,9 +68,7 @@ namespace Ninject.Activation.Providers
 				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
 
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
-			context.Instance = directive.Injector(arguments);
-
-			return context.Instance;
+			return directive.Injector(arguments);
 		}
 
 		/// <summary>
