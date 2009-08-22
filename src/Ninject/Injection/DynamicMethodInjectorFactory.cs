@@ -7,16 +7,12 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
+#if !NO_LCG
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Injection
@@ -33,7 +29,12 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public ConstructorInjector Create(ConstructorInfo constructor)
 		{
+			#if SILVERLIGHT
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) });
+			#else
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) }, true);
+			#endif
+
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			EmitLoadMethodArguments(il, constructor);
@@ -54,7 +55,12 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public PropertyInjector Create(PropertyInfo property)
 		{
+			#if SILVERLIGHT
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
+			#else
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
+			#endif
+			
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			il.Emit(OpCodes.Ldarg_0);
@@ -77,7 +83,12 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public MethodInjector Create(MethodInfo method)
 		{
+			#if SILVERLIGHT
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
+			#else
+			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, true);
+			#endif
+
 			ILGenerator il = dynamicMethod.GetILGenerator();
 
 			il.Emit(OpCodes.Ldarg_0);
@@ -127,3 +138,4 @@ namespace Ninject.Injection
 		}
 	}
 }
+#endif //!NO_LCG

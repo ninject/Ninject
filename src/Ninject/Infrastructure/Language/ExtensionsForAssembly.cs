@@ -7,6 +7,7 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
+#if !NO_ASSEMBLY_SCANNING
 #region Using Directives
 using System;
 using System.Collections.Generic;
@@ -39,3 +40,4 @@ namespace Ninject.Infrastructure.Language
 		}
 	}
 }
+#endif //!NO_ASSEMBLY_SCANNING

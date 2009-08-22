@@ -111,7 +111,6 @@
     <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
-    <Compile Include="Infrastructure\Language\ExtensionsForIDictionary.cs" />
     <Compile Include="Injection\ConstructorInjector.cs" />
     <Compile Include="Injection\ReflectionInjectorFactory.cs" />
     <Compile Include="Injection\DynamicMethodInjectorFactory.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="Planning\Bindings\BindingBuilder.cs" />
     <Compile Include="Planning\Bindings\Binding.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
-    <Compile Include="Infrastructure\Language\ExtensionsForICollection.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />

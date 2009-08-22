@@ -56,7 +56,7 @@ namespace Ninject
 		/// <param name="modules">The modules to load.</param>
 		void Load(IEnumerable<INinjectModule> modules);
 
-		#if !SILVERLIGHT
+		#if !NO_ASSEMBLY_SCANNING
 		/// <summary>
 		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>

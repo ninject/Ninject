@@ -43,7 +43,7 @@ namespace Ninject
 			kernel.Load(modules);
 		}
 
-		#if !SILVERLIGHT
+		#if !NO_ASSEMBLY_SCANNING
 		/// <summary>
 		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>

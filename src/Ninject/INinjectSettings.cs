@@ -28,6 +28,7 @@ namespace Ninject
 		/// </summary>
 		TimeSpan CachePruningInterval { get; }
 
+		#if !NO_ASSEMBLY_SCANNING
 		/// <summary>
 		/// Gets a value indicating whether the kernel should automatically load extensions at startup.
 		/// </summary>
@@ -37,12 +38,15 @@ namespace Ninject
 		/// Gets the path that should be searched for extensions.
 		/// </summary>
 		string ExtensionSearchPattern { get; }
+		#endif //!NO_ASSEMBLY_SCANNING
 
+		#if !NO_LCG
 		/// <summary>
 		/// Gets a value indicating whether Ninject should use reflection-based injection instead of
 		/// the (usually faster) lightweight code generation system.
 		/// </summary>
 		bool UseReflectionBasedInjection { get; }
+		#endif //!NO_LCG
 
 		/// <summary>
 		/// Gets the value for the specified key.

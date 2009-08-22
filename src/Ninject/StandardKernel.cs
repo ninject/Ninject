@@ -73,7 +73,7 @@ namespace Ninject
 			Components.Add<ICache, Cache>();
 			Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 
-			#if !SILVERLIGHT
+			#if !NO_ASSEMBLY_SCANNING
 			Components.Add<IModuleLoader, ModuleLoader>();
 			Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
 			#endif

@@ -39,6 +39,7 @@ namespace Ninject
 			set { Set("CachePruningInterval", value); }
 		}
 
+		#if !NO_ASSEMBLY_SCANNING
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
 		/// </summary>
@@ -56,7 +57,9 @@ namespace Ninject
 			get { return Get("ExtensionSearchPattern", "Ninject.Extensions.*.dll"); }
 			set { Set("ExtensionSearchPattern", value); }
 		}
+		#endif //!NO_ASSEMBLY_SCANNING
 
+		#if !NO_LCG
 		/// <summary>
 		/// Gets a value indicating whether Ninject should use reflection-based injection instead of
 		/// the (usually faster) lightweight code generation system.
@@ -66,6 +69,7 @@ namespace Ninject
 			get { return Get("UseReflectionBasedInjection", false); }
 			set { Set("UseReflectionBasedInjection", value); }
 		}
+		#endif //!NO_LCG
 
 		/// <summary>
 		/// Gets the value for the specified key.

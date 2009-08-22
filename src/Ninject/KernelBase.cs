@@ -87,7 +87,7 @@ namespace Ninject
 
 			AddComponents();
 
-			#if !SILVERLIGHT
+			#if !NO_ASSEMBLY_SCANNING
 			if (Settings.LoadExtensions)
 				Load(new[] { Settings.ExtensionSearchPattern });
 			#endif
@@ -177,7 +177,7 @@ namespace Ninject
 			}
 		}
 
-		#if !SILVERLIGHT
+		#if !NO_ASSEMBLY_SCANNING
 		/// <summary>
 		/// Loads modules from the files that match the specified pattern(s).
 		/// </summary>
@@ -197,7 +197,7 @@ namespace Ninject
 			foreach (Assembly assembly in assemblies)
 				Load(assembly.GetNinjectModules());
 		}
-		#endif
+		#endif //!NO_ASSEMBLY_SCANNING
 
 		/// <summary>
 		/// Unloads the plugin with the specified name.

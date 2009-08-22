@@ -7,7 +7,7 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#if !SILVERLIGHT
+#if !NO_ASSEMBLY_SCANNING
 #region License
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2009, Enkari, Ltd.
@@ -106,4 +106,4 @@ namespace Ninject.Modules
 		}
 	}
 }
-#endif //!SILVERLIGHT
+#endif //!NO_ASSEMBLY_SCANNING

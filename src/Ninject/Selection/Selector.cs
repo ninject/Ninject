@@ -62,7 +62,7 @@ namespace Ninject.Selection
 			ConstructorInfo constructor = type.GetConstructors(Flags).OrderByDescending(c => ConstructorScorer.Score(c)).FirstOrDefault();
 
 			if (constructor == null)
-				constructor = type.GetConstructor(Type.EmptyTypes);
+				constructor = type.GetConstructor(new Type[0]);
 
 			return constructor;
 		}
