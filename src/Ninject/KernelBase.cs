@@ -251,10 +251,10 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(request, "request");
 
-			if (_bindings.ContainsKey(request.Service))
+			if (_bindings[request.Service].Count > 0)
 				return true;
 
-			if (request.Service.IsGenericType && _bindings.ContainsKey(request.Service.GetGenericTypeDefinition()))
+			if (request.Service.IsGenericType && _bindings[request.Service.GetGenericTypeDefinition()].Count > 0)
 				return true;
 
 			return false;
