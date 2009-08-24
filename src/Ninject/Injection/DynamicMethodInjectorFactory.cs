@@ -69,7 +69,7 @@ namespace Ninject.Injection
 			il.Emit(OpCodes.Ldarg_1);
 			EmitUnboxOrCast(il, property.PropertyType);
 
-			EmitMethodCall(il, property.GetSetMethod());
+		    EmitMethodCall(il, property.GetSetMethod(Settings.InjectNonPublic));
 
 			il.Emit(OpCodes.Ret);
 

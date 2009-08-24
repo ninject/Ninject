@@ -69,9 +69,18 @@ namespace Ninject
 			get { return Get("UseReflectionBasedInjection", false); }
 			set { Set("UseReflectionBasedInjection", value); }
 		}
-		#endif //!NO_LCG
 
-		/// <summary>
+        /// <summary>
+        /// Gets a value indicating whether Ninject should inject non public members.
+        /// </summary>
+	    public bool InjectNonPublic
+        {
+            get { return Get("InjectNonPublic", false); }
+            set { Set("InjectNonPublic", value); }
+        }
+        #endif //!NO_LCG
+
+        /// <summary>
 		/// Gets the value for the specified key.
 		/// </summary>
 		/// <typeparam name="T">The type of value to return.</typeparam>

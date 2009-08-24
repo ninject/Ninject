@@ -93,6 +93,7 @@
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
     <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
+    <Compile Include="Unit\PropertyInjectionSelectorTests.cs" />
     <Compile Include="Unit\StartableStrategyTests.cs" />
     <Compile Include="Unit\InitializableStrategyTests.cs" />
     <Compile Include="Unit\DisposableStrategyTests.cs" />
