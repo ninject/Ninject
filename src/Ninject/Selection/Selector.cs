@@ -24,15 +24,12 @@ namespace Ninject.Selection
 	/// </summary>
 	public class Selector : NinjectComponent, ISelector
 	{
-        private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
+		private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
-	    private BindingFlags Flags
-	    {
-	        get
-	        {
-	            return Settings.InjectNonPublic ? ( DefaultFlags | BindingFlags.NonPublic ) : DefaultFlags;
-	        }
-	    }
+		private BindingFlags Flags
+		{
+			get { return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags; }
+		}
 
 		/// <summary>
 		/// Gets or sets the constructor scorer.
