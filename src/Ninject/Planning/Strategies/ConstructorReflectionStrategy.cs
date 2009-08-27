@@ -9,6 +9,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
@@ -57,10 +58,14 @@ namespace Ninject.Planning.Strategies
 		{
 			Ensure.ArgumentNotNull(plan, "plan");
 
-			ConstructorInfo constructor = Selector.SelectConstructor(plan.Type);
+			IEnumerable<ConstructorInfo> constructors = Selector.SelectConstructorsForInjection(plan.Type);
+			if(constructors == null)
+				return;
 
-			if (constructor != null)
+			foreach(ConstructorInfo constructor in constructors)
+			{
 				plan.Add(new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)));
+			}
 		}
 	}
 }

@@ -63,16 +63,12 @@ namespace Ninject.Selection
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
-		public ConstructorInfo SelectConstructor(Type type)
+		public IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
 		{
 			Ensure.ArgumentNotNull(type, "type");
 
-			ConstructorInfo constructor = type.GetConstructors(Flags).OrderByDescending(c => ConstructorScorer.Score(c)).FirstOrDefault();
-
-			if (constructor == null)
-				constructor = type.GetConstructor(new Type[0]);
-
-			return constructor;
+			var constructors = type.GetConstructors( Flags );
+			return constructors.Length == 0 ? null : constructors;
 		}
 
 		/// <summary>

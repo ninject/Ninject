@@ -12,11 +12,14 @@ using System;
 using System.Linq;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
+using Ninject.Infrastructure.Language;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
+using Ninject.Selection;
+
 #endregion
 
 namespace Ninject.Activation.Providers
@@ -37,17 +40,25 @@ namespace Ninject.Activation.Providers
 		public IPlanner Planner { get; private set; }
 
 		/// <summary>
+		/// Gets or sets the selector component.
+		/// </summary>
+		public ISelector Selector { get; private set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="StandardProvider"/> class.
 		/// </summary>
 		/// <param name="type">The type (or prototype) of instances the provider creates.</param>
 		/// <param name="planner">The planner component.</param>
-		public StandardProvider(Type type, IPlanner planner)
+		/// <param name="selector">The selector component.</param>
+		public StandardProvider(Type type, IPlanner planner, ISelector selector)
 		{
 			Ensure.ArgumentNotNull(type, "type");
 			Ensure.ArgumentNotNull(planner, "planner");
+			Ensure.ArgumentNotNull(selector, "selector");
 
 			Type = type;
 			Planner = planner;
+			Selector = selector;
 		}
 
 		/// <summary>
@@ -62,11 +73,11 @@ namespace Ninject.Activation.Providers
 			if (context.Plan == null)
 				context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
 
-			var directive = context.Plan.GetOne<ConstructorInjectionDirective>();
-
-			if (directive == null)
+			if (!context.Plan.Has<ConstructorInjectionDirective>())
 				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
 
+			var directives = context.Plan.GetAll<ConstructorInjectionDirective>();
+			var directive = directives.OrderByDescending(option => Selector.ConstructorScorer.Score(context, option)).First();
 			object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
 			return directive.Injector(arguments);
 		}
@@ -107,7 +118,7 @@ namespace Ninject.Activation.Providers
 		public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
 		{
 			Ensure.ArgumentNotNull(prototype, "prototype");
-			return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>());
+			return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<ISelector>());
 		}
 	}
 }

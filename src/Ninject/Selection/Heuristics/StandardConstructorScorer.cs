@@ -9,10 +9,15 @@
 #endregion
 #region Using Directives
 using System;
+using System.Linq;
 using System.Reflection;
+using Ninject.Activation;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
+using Ninject.Planning.Directives;
+using Ninject.Planning.Targets;
+
 #endregion
 
 namespace Ninject.Selection.Heuristics
@@ -26,12 +31,25 @@ namespace Ninject.Selection.Heuristics
 		/// <summary>
 		/// Gets the score for the specified constructor.
 		/// </summary>
-		/// <param name="constructor">The constructor.</param>
+		/// <param name="context">The injection context.</param>
+		/// <param name="directive">The constructor.</param>
 		/// <returns>The constructor's score.</returns>
-		public int Score(ConstructorInfo constructor)
+		public int Score(IContext context, ConstructorInjectionDirective directive)
 		{
-			Ensure.ArgumentNotNull(constructor, "constructor");
-			return constructor.HasAttribute(Settings.InjectAttribute) ? Int32.MaxValue : constructor.GetParameters().Length;
+			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(directive, "constructor");
+
+			if(directive.Constructor.HasAttribute(Settings.InjectAttribute))
+				return Int32.MaxValue;
+			int score = 1;
+			foreach(ITarget target in directive.Targets)
+			{
+				if(context.Kernel.GetBindings(target.Type).Count() > 0)
+				{
+					score++;
+				}
+			}
+			return score;
 		}
 	}
 }
