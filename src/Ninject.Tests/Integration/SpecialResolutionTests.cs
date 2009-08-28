@@ -28,6 +28,16 @@ namespace Ninject.Tests.Integration.SpecialResolutionTests
 		}
 	}
 
+	public class WhenServiceRequestsString : SpecialResolutionContext
+	{
+		[Fact]
+		public void InstanceOfStringIsInjected()
+		{
+			kernel.Bind<RequestsString>().ToSelf();
+			Assert.Throws<ActivationException>(() => kernel.Get<RequestsString>());
+		}
+	}
+
 	public class RequestsKernel
 	{
 		public IKernel Kernel { get; set; }
@@ -35,6 +45,16 @@ namespace Ninject.Tests.Integration.SpecialResolutionTests
 		public RequestsKernel(IKernel kernel)
 		{
 			Kernel = kernel;
+		}
+	}
+
+	public class RequestsString
+	{
+		public string StringValue { get; set; }
+
+		public RequestsString(string stringValue)
+		{
+			StringValue = stringValue;
 		}
 	}
 }
