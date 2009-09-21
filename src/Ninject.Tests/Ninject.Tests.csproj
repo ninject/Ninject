@@ -89,6 +89,7 @@
     <Compile Include="Unit\ActivationBlockTests.cs" />
     <Compile Include="Unit\BindingActionStrategyTests.cs" />
     <Compile Include="Unit\CompiledModuleLoaderPluginTests.cs" />
+    <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
     <Compile Include="Unit\ModuleLoaderTests.cs" />
     <Compile Include="Unit\NamedAttributeTests.cs" />
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />

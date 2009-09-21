@@ -169,6 +169,11 @@
 				<include name="Moq.dll"/>
 			</fileset>
 		</copy>
+		<copy todir="${current.path.test}/TestModules">
+			<fileset basedir="${path.src}/Ninject.Tests/TestModules">
+				<include name="Ninject.Tests.TestModule.dll"/>
+			</fileset>
+		</copy>
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.test}/Ninject.Tests.dll">
 			<sources basedir="${path.src}">
