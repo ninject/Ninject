@@ -28,7 +28,14 @@ namespace Ninject.Selection
 
 		private BindingFlags Flags
 		{
-			get { return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags; }
+			get
+			{
+				#if !NO_LCG
+				return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
+				#else
+				return DefaultFlags;
+				#endif
+			}
 		}
 
 		/// <summary>
