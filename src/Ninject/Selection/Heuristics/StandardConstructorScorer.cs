@@ -9,6 +9,8 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
@@ -38,17 +40,24 @@ namespace Ninject.Selection.Heuristics
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.ArgumentNotNull(directive, "constructor");
-
+			
 			if(directive.Constructor.HasAttribute(Settings.InjectAttribute))
 				return Int32.MaxValue;
+			
 			int score = 1;
 			foreach(ITarget target in directive.Targets)
 			{
-				if(context.Kernel.GetBindings(target.Type).Count() > 0)
-				{
+				Type targetType = target.Type;
+				if(targetType.IsArray)
+					targetType = targetType.GetElementType();
+				
+				if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
+					targetType = targetType.GetGenericArguments()[0];
+				
+				if(context.Kernel.GetBindings(targetType).Count() > 0)
 					score++;
-				}
 			}
+			
 			return score;
 		}
 	}

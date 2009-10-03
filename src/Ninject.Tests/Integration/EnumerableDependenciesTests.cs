@@ -69,6 +69,18 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 
 			VerifyInjection(parent);
 		}
+
+		[Fact]
+		public void ServiceIsInjectedWithListOfAllAvailableDependenciesWhenDefaultCtorIsAvailable()
+		{
+			kernel.Bind<IParent>().To<RequestsListWithDefaultCtor>();
+			kernel.Bind<IChild>().To<ChildA>();
+			kernel.Bind<IChild>().To<ChildB>();
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
+		}
 	}
 
 	public class WhenServiceRequestsUnconstrainedArrayOfDependencies : UnconstrainedDependenciesContext
@@ -77,6 +89,18 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 		public void ServiceIsInjectedWithArrayOfAllAvailableDependencies()
 		{
 			kernel.Bind<IParent>().To<RequestsArray>();
+			kernel.Bind<IChild>().To<ChildA>();
+			kernel.Bind<IChild>().To<ChildB>();
+
+			var parent = kernel.Get<IParent>();
+
+			VerifyInjection(parent);
+		}
+
+		[Fact]
+		public void ServiceIsInjectedWithArrayOfAllAvailableDependenciesWhenDefaultCtorIsAvailable()
+		{
+			kernel.Bind<IParent>().To<RequestsArrayWithDefaultCtor>();
 			kernel.Bind<IChild>().To<ChildA>();
 			kernel.Bind<IChild>().To<ChildB>();
 
@@ -161,6 +185,19 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 		}
 	}
 
+	public class RequestsListWithDefaultCtor : RequestsList
+	{
+		public RequestsListWithDefaultCtor()
+			: base(new List<IChild>())
+		{
+		}
+
+		public RequestsListWithDefaultCtor(List<IChild> children)
+			: base(children)
+		{
+		}
+	}
+
 	public class RequestsArray : IParent
 	{
 		public IList<IChild> Children { get; private set; }
@@ -168,6 +205,19 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 		public RequestsArray(IChild[] children)
 		{
 			Children = children;
+		}
+	}
+
+	public class RequestsArrayWithDefaultCtor : RequestsArray
+	{
+		public RequestsArrayWithDefaultCtor()
+			:base(new IChild[0])
+		{
+		}
+
+		public RequestsArrayWithDefaultCtor(IChild[] children)
+			:base(children)
+		{
 		}
 	}
 
