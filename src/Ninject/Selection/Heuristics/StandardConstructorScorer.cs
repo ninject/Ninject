@@ -17,6 +17,7 @@ using Ninject.Activation;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
+using Ninject.Parameters;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 
@@ -47,10 +48,19 @@ namespace Ninject.Selection.Heuristics
 			int score = 1;
 			foreach(ITarget target in directive.Targets)
 			{
+				foreach(IParameter parameter in context.Parameters)
+				{
+					if(string.Equals(target.Name, parameter.Name))
+					{
+						score++;
+						continue;
+					}
+				}
+				
 				Type targetType = target.Type;
 				if(targetType.IsArray)
 					targetType = targetType.GetElementType();
-				
+
 				if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
 					targetType = targetType.GetGenericArguments()[0];
 				

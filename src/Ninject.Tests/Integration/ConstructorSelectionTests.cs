@@ -1,3 +1,4 @@
+using Ninject.Parameters;
 using Ninject.Tests.Fakes;
 using Xunit;
 
@@ -66,6 +67,22 @@ namespace Ninject.Tests.Integration
 				Assert.NotNull( barracks );
 				Assert.Null( barracks.Warrior );
 				Assert.Null( barracks.Weapon );
+			}
+		}
+
+		[Fact]
+		public void CtorIsUsedWhenParameterIsSupplied()
+		{
+			using(IKernel kernel = new StandardKernel())
+			{
+				kernel.Bind<Barracks>().ToSelf();
+				var constructorArgument = new ConstructorArgument("warrior", new Samurai(new Sword()));
+				var barracks = kernel.Get<Barracks>(constructorArgument);
+				
+				Assert.NotNull(barracks);
+				Assert.NotNull(barracks.Warrior);
+				Assert.NotNull(barracks.Warrior.Weapon);
+				Assert.Null(barracks.Weapon);
 			}
 		}
 
