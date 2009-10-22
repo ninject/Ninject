@@ -20,7 +20,7 @@ using Ninject.Syntax;
 
 namespace Ninject.Planning.Bindings
 {
-	/// <summary>
+    /// <summary>
 	/// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
 	/// </summary>
 	public class BindingBuilder<T> : IHaveBinding, IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
@@ -164,7 +164,7 @@ namespace Ninject.Planning.Bindings
 		/// <param name="parent">The type.</param>
 		public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
 		{
-			Binding.Condition = r => r.Target.Member.ReflectedType == parent;
+			Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
 			return this;
 		}
 
@@ -208,7 +208,7 @@ namespace Ninject.Planning.Bindings
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenClassHas", attributeType));
 
-			Binding.Condition = r => r.Target.Member.ReflectedType.HasAttribute(attributeType);
+            Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType.HasAttribute(attributeType);
 
 			return this;
 		}
@@ -223,7 +223,7 @@ namespace Ninject.Planning.Bindings
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenMemberHas", attributeType));
 
-			Binding.Condition = r => r.Target.Member.HasAttribute(attributeType);
+            Binding.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
 
 			return this;
 		}
@@ -238,7 +238,7 @@ namespace Ninject.Planning.Bindings
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenTargetHas", attributeType));
 
-			Binding.Condition = r => r.Target.HasAttribute(attributeType);
+			Binding.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
 
 			return this;
 		}
