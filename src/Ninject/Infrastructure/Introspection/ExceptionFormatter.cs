@@ -35,7 +35,7 @@ namespace Ninject.Infrastructure.Introspection
 				sw.WriteLine("  1) Ensure that you have not accidentally loaded the same module twice.");
 				#if !SILVERLIGHT
 				sw.WriteLine("  2) If you are using automatic module loading, ensure you have not manually loaded a module");
-				sw.WriteLine("     that may be found by the module loader.");
+				sw.WriteLine("	 that may be found by the module loader.");
 				#endif
 
 				return sw.ToString();
@@ -93,7 +93,7 @@ namespace Ninject.Infrastructure.Introspection
 				sw.WriteLine("  1) Ensure that you have not declared a dependency for {0} on any implementations of the service.", context.Request.Service.Format());
 				sw.WriteLine("  2) Consider combining the services into a single one to remove the cycle.");
 				sw.WriteLine("  3) Use property injection instead of constructor injection, and implement IInitializable");
-				sw.WriteLine("     if you need initialization logic to be run after property values have been injected.");
+				sw.WriteLine("	 if you need initialization logic to be run after property values have been injected.");
 
 				return sw.ToString();
 			}
@@ -111,7 +111,7 @@ namespace Ninject.Infrastructure.Introspection
 				sw.WriteLine("  1) Ensure that you have passed the correct type.");
 				sw.WriteLine("  2) If you have defined your own attribute type, ensure that it extends System.Attribute.");
 				sw.WriteLine("  3) To avoid problems with type-safety, use the generic version of the the method instead,");
-				sw.WriteLine("     such as {0}<SomeAttribute>().", methodName);
+				sw.WriteLine("	 such as {0}<SomeAttribute>().", methodName);
 
 				return sw.ToString();
 			}
@@ -161,9 +161,26 @@ namespace Ninject.Infrastructure.Introspection
 
 				sw.WriteLine("Suggestions:");
 				sw.WriteLine("  1) If you have created a custom subclass for KernelBase, ensure that you have properly");
-				sw.WriteLine("     implemented the AddComponents() method.");
+				sw.WriteLine("	 implemented the AddComponents() method.");
 				sw.WriteLine("  2) Ensure that you have not removed the component from the container via a call to RemoveAll().");
 				sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
+
+				return sw.ToString();
+			}
+		}
+
+		public static string CouldNotResolveProperyForValueInjection(IRequest request, string propertyName)
+		{
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Error activating {0}", request.Service.Format());
+				sw.WriteLine("No matching property {0}.", propertyName);
+
+				sw.WriteLine("Activation path:");
+				sw.WriteLine(request.FormatActivationPath());
+
+				sw.WriteLine("Suggestions:");
+				sw.WriteLine("  1) Ensure that you have the correct property name.");
 
 				return sw.ToString();
 			}

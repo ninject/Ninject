@@ -4,56 +4,6 @@ using Xunit;
 
 namespace Ninject.Tests.Integration
 {
-	public class NinjaBarracks : Barracks
-	{
-		public NinjaBarracks()
-		{
-		}
-
-		public NinjaBarracks( IWarrior warrior )
-		{
-			Warrior = warrior;
-		}
-
-		public NinjaBarracks( IWeapon weapon )
-		{
-			Weapon = weapon;
-		}
-
-		[Inject]
-		public NinjaBarracks( IWarrior warrior, IWeapon weapon )
-		{
-			Warrior = warrior;
-			Weapon = weapon;
-		}
-	}
-
-	public class Barracks
-	{
-		public Barracks()
-		{
-		}
-
-		public Barracks( IWarrior warrior )
-		{
-			Warrior = warrior;
-		}
-
-		public Barracks( IWeapon weapon )
-		{
-			Weapon = weapon;
-		}
-
-		public Barracks( IWarrior warrior, IWeapon weapon )
-		{
-			Warrior = warrior;
-			Weapon = weapon;
-		}
-
-		public IWeapon Weapon { get; set; }
-		public IWarrior Warrior { get; set; }
-	}
-
 	public class ConstructorSelectionTests
 	{
 		[Fact]

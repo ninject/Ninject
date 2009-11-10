@@ -1,5 +1,4 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Xunit;

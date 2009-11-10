@@ -65,9 +65,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FootSoldier.cs" />
+    <Compile Include="Fakes\Barracks.cs" />
     <Compile Include="Integration\ConditionalAttributeBindingTests.cs" />
     <Compile Include="Integration\ConstructorSelectionTests.cs" />
     <Compile Include="Integration\ModuleLoadingTests.cs" />
+    <Compile Include="Fakes\NinjaBarracks.cs" />
+    <Compile Include="Integration\PropertyInjectionTests.cs" />
     <Compile Include="Integration\RequestScopeTests.cs" />
     <Compile Include="Integration\ExternalInjectionTests.cs" />
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
@@ -93,6 +97,7 @@
     <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
     <Compile Include="Unit\ModuleLoaderTests.cs" />
     <Compile Include="Unit\NamedAttributeTests.cs" />
+    <Compile Include="Fakes\Ninja.cs" />
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
     <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />

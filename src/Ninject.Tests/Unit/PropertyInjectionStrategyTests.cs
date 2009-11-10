@@ -19,7 +19,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
 		public PropertyInjectionDirectiveContext()
 		{
-			strategy = new PropertyInjectionStrategy();
+			strategy = new PropertyInjectionStrategy(null) {Settings = new NinjectSettings()};
 		}
 	}
 
