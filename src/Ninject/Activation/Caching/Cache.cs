@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
@@ -75,15 +76,24 @@ namespace Ninject.Activation.Caching
 		{
 			Ensure.ArgumentNotNull(context, "context");
 
+			var scope = context.GetScope();
+
+			#if !NO_WEB
+			// TODO: Scope-aware cache strategies should be pluggable to avoid problems like this
+			var httpScope = scope as HttpContext;
+			if (httpScope != null)
+				httpScope.Items.Add(context.Binding, reference.Instance);
+			#endif
+
 			lock (_entries)
 			{
 				var entry = new CacheEntry(context, reference);
 				_entries[context.Binding].Add(entry);
 
-				var scope = context.GetScope() as INotifyWhenDisposed;
+				var notifyScope = context.GetScope() as INotifyWhenDisposed;
 
-				if (scope != null)
-					scope.Disposed += (o, e) => Forget(entry);
+				if (notifyScope != null)
+					notifyScope.Disposed += (o, e) => Forget(entry);
 			}
 		}
 
@@ -99,6 +109,13 @@ namespace Ninject.Activation.Caching
 			lock (_entries)
 			{
 				var scope = context.GetScope();
+
+				#if !NO_WEB
+				// TODO: Scope-aware cache strategies should be pluggable to avoid problems like this
+				var httpScope = scope as HttpContext;
+				if (httpScope != null)
+					return httpScope.Items[context.Binding];
+				#endif
 
 				foreach (CacheEntry entry in _entries[context.Binding])
 				{
@@ -151,9 +168,9 @@ namespace Ninject.Activation.Caching
 
 		private class CacheEntry
 		{
-			public IContext Context { get; set; }
-			public InstanceReference Reference { get; set; }
-			public WeakReference Scope { get; set; }
+			public IContext Context { get; private set; }
+			public InstanceReference Reference { get; private set; }
+			public WeakReference Scope { get; private set; }
 
 			public CacheEntry(IContext context, InstanceReference reference)
 			{
