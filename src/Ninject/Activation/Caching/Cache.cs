@@ -76,25 +76,17 @@ namespace Ninject.Activation.Caching
 		{
 			Ensure.ArgumentNotNull(context, "context");
 
-			var scope = context.GetScope();
-
-			#if !NO_WEB
-			// TODO: Scope-aware cache strategies should be pluggable to avoid problems like this
-			var httpScope = scope as HttpContext;
-			if (httpScope != null)
-				httpScope.Items.Add(context.Binding, reference.Instance);
-			#endif
-
+			var entry = new CacheEntry(context, reference);
+		
 			lock (_entries)
 			{
-				var entry = new CacheEntry(context, reference);
 				_entries[context.Binding].Add(entry);
-
-				var notifyScope = context.GetScope() as INotifyWhenDisposed;
-
-				if (notifyScope != null)
-					notifyScope.Disposed += (o, e) => Forget(entry);
 			}
+
+			var notifyScope = context.GetScope() as INotifyWhenDisposed;
+
+			if (notifyScope != null)
+				notifyScope.Disposed += (o, e) => Forget(entry);
 		}
 
 		/// <summary>
@@ -109,13 +101,6 @@ namespace Ninject.Activation.Caching
 			lock (_entries)
 			{
 				var scope = context.GetScope();
-
-				#if !NO_WEB
-				// TODO: Scope-aware cache strategies should be pluggable to avoid problems like this
-				var httpScope = scope as HttpContext;
-				if (httpScope != null)
-					return httpScope.Items[context.Binding];
-				#endif
 
 				foreach (CacheEntry entry in _entries[context.Binding])
 				{
