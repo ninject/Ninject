@@ -251,7 +251,7 @@ namespace Ninject.Planning.Bindings
 		public IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name)
 		{
 			String.Intern(name);
-			Binding.Condition = r => r.ParentContext.Binding.Metadata.Name == name;
+			Binding.Condition = r => r.ParentContext != null && string.Equals(r.ParentContext.Binding.Metadata.Name, name, StringComparison.Ordinal);
 			return this;
 		}
 
