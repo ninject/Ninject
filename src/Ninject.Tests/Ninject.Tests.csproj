@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Fakes\FootSoldier.cs" />
     <Compile Include="Fakes\Barracks.cs" />
+    <Compile Include="Integration\ActivationStrategyTests.cs" />
     <Compile Include="Integration\ConditionalAttributeBindingTests.cs" />
     <Compile Include="Integration\ConditionalBindingWhenParentTests.cs" />
     <Compile Include="Integration\ConstructorSelectionTests.cs" />
