@@ -9,9 +9,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
