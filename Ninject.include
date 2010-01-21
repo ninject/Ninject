@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="NinjectIncludes">
+
+	<property name="path.base" value="${project::get-base-directory()}"/>
+	<property name="path.build" value="${path.base}/build"/>
+	<property name="path.lib" value="${path.base}/lib"/>
+	<property name="path.dist" value="${path.base}/dist"/>
+	<property name="path.docs" value="${path.base}/docs"/>
+	<property name="path.src" value="${path.base}/src"/>
+	<property name="path.tools" value="${path.base}/tools"/>
+	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
+	<property name="path.tools.moq" value="${path.tools}/moq"/>
+	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
+
+	<property name="product.name" value="Ninject" overwrite="false"/>
+	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
+	<property name="product.duration" value="2007-2009" overwrite="false"/>
+	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
+	<property name="product.keyfile" value="${product.name}.snk" overwrite="false"/>
+	<property name="product.assembly" value="${product.name}.dll" overwrite="false"/>
+	<property name="product.assembly.test" value="${product.name}.Tests.dll" overwrite="false"/>
+
+	<property name="version" value="2.0.0.0" overwrite="false"/>
+	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
+	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
+	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
+	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
+	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
+	<property name="build.config" value="debug" overwrite="false"/>
+	<property name="build.platform" value="net-3.5" overwrite="false"/>
+	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
+
+	<property name="package" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
+
+	<target name="rebuild" depends="clean, all"/>
+
+	<target name="clean">
+		<delete dir="${path.build}" if="${directory::exists(path.build)}"/>
+		<delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+	</target>
+
+	<target name="create-assembly-info">
+		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
+			<imports>
+				<import namespace="System"/>
+				<import namespace="System.Reflection"/>
+				<import namespace="System.Runtime.InteropServices"/>
+			</imports>
+			<attributes>
+				<attribute type="AssemblyProductAttribute" value="${product.name}: ${product.description}"/>
+				<attribute type="AssemblyCompanyAttribute" value="${product.company}"/>
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright © ${product.duration} ${product.company} and contributors"/>
+				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
+				<attribute type="ComVisibleAttribute" value="false"/>
+				<attribute type="CLSCompliantAttribute" value="true"/>
+			</attributes>
+		</asminfo>
+	</target>
+
+	<target name="init" depends="create-assembly-info">
+		<mkdir dir="${path.build}" if="${not(directory::exists(path.build))}"/>
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+
+		<call target="config-build-${build.config}"/>
+		<call target="config-platform-${build.platform}"/>
+
+		<property name="current.path.build" value="${path.build}/${build.platform}/${build.config}"/>
+		<property name="current.path.build.lib" value="${path.build}/${build.platform}/${build.config}/lib"/>
+		<property name="current.path.build.extensions" value="${path.build}/${build.platform}/${build.config}/extensions"/>
+		<property name="current.path.test" value="${path.build}/${build.platform}/tests" />
+
+		<mkdir dir="${current.path.build}" if="${not(directory::exists(current.path.build))}"/>
+		<mkdir dir="${current.path.build.lib}" if="${not(directory::exists(current.path.build.lib))}"/>
+		<mkdir dir="${current.path.build.extensions}" if="${not(directory::exists(current.path.build.extensions))}"/>
+
+		<copy todir="${current.path.build.lib}">
+			<fileset basedir="${path.lib}">
+				<include name="*.dll"/>
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+		
+	</target>
+
+	<target name="config-build-debug">
+		<property name="build.debug" value="true"/>
+		<property name="build.optimize" value="false" overwrite="false"/>
+		<property name="global.build.defines" value="DEBUG,TRACE"/>
+	</target>
+
+	<target name="config-build-release">
+		<property name="build.debug" value="false"/>
+		<property name="build.optimize" value="true" overwrite="false"/>
+		<property name="global.build.defines" value="TRACE,STRONG"/>
+	</target>
+
+	<target name="config-platform-net-3.5">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
+	</target>
+
+	<target name="config-platform-silverlight-2.0">
+		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+	</target>
+
+	<target name="config-platform-silverlight-3.0">
+		<property name="nant.settings.currentframework" value="silverlight-3.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+	</target>
+
+	<target name="config-platform-netcf-3.5">
+		<property name="nant.settings.currentframework" value="netcf-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_35,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+	</target>
+
+	<target name="config-platform-mono-2.0">
+		<property name="nant.settings.currentframework" value="mono-2.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO"/>
+	</target>
+
+	<target name="test" depends="compile-tests" if="${build.platform == 'net-3.5'}" unless="${skip.tests}">
+		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html"/>
+		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
+			commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
+	</target>
+
+	<target name="package-all" depends="all package-bin package-source" />
+
+	<target name="package-bin" depends="all">
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+		<zip zipfile="${path.dist}\${product.name}-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
+			<fileset basedir="${current.path.build}">
+				<include name="**/*.*"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="package-source">
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+		<zip zipfile="${path.dist}\${product.name}-${build.version}-source.zip" ziplevel="9">
+			<fileset basedir="${path.base}">
+				<include name="lib/*.*"/>
+				<include name="**/*.cs"/>
+				<include name="**/*.csproj"/>
+				<include name="**/*.sln"/>
+				<include name="**/*.txt"/>
+				<include name="**/*.build"/>
+				<include name="**/*.snk"/>
+			</fileset>
+		</zip>
+	</target>
+
+</project>
