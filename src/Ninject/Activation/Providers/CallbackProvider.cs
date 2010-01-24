@@ -29,12 +29,13 @@ namespace Ninject.Activation.Providers
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
+		/// <param name="method">The callback method that will be called to create instances.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Ninject.Activation.Providers.CallbackProvider{T}"/> class.
 		/// </summary>
-#endif
 		/// <param name="method">The callback method that will be called to create instances.</param>
+#endif
 		public CallbackProvider(Func<IContext, T> method)
 		{
 			Ensure.ArgumentNotNull(method, "method");

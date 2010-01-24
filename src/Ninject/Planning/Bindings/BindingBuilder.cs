@@ -20,7 +20,7 @@ using Ninject.Syntax;
 
 namespace Ninject.Planning.Bindings
 {
-    /// <summary>
+	/// <summary>
 	/// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
 	/// </summary>
 	public class BindingBuilder<T> : IHaveBinding, IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
@@ -34,12 +34,13 @@ namespace Ninject.Planning.Bindings
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
+		/// <param name="binding">The binding to build.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BindingBuilder{T}"/> class.
 		/// </summary>
-#endif
 		/// <param name="binding">The binding to build.</param>
+#endif
 		public BindingBuilder(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");

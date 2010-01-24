@@ -29,12 +29,13 @@ namespace Ninject.Activation.Providers
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
+		/// <param name="value">The value that the provider should return.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ConstantProvider{T}"/> class.
 		/// </summary>
-#endif
 		/// <param name="value">The value that the provider should return.</param>
+#endif
 		public ConstantProvider(T value)
 		{
 			Value = value;

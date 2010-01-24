@@ -49,12 +49,13 @@ namespace Ninject.Infrastructure
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
+		/// <param name="callback">The callback that will be triggered to read the value.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Future{T}"/> class.
 		/// </summary>
-#endif
 		/// <param name="callback">The callback that will be triggered to read the value.</param>
+#endif
 		public Future(Func<T> callback)
 		{
 			Callback = callback;

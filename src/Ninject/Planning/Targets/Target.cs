@@ -70,13 +70,15 @@ namespace Ninject.Planning.Targets
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
+		/// <param name="member">The member that contains the target.</param>
+		/// <param name="site">The site represented by the target.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Target{T}"/> class.
 		/// </summary>
-#endif
 		/// <param name="member">The member that contains the target.</param>
 		/// <param name="site">The site represented by the target.</param>
+#endif
 		protected Target(MemberInfo member, T site)
 		{
 			Ensure.ArgumentNotNull(member, "member");
