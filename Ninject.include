@@ -17,6 +17,7 @@
 	<property name="product.duration" value="2007-2009" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
 	<property name="product.keyfile" value="${product.name}.snk" overwrite="false"/>
+	<property name="product.docfile" value="${product.name}.xml" overwrite="false"/>
 	<property name="product.assembly" value="${product.name}.dll" overwrite="false"/>
 	<property name="product.assembly.test" value="${product.name}.Tests.dll" overwrite="false"/>
 

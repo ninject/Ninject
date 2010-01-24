@@ -6,7 +6,7 @@
 
 	<target name="core" depends="init">
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         keyfile="${path.src}/${product.keyfile}" output="${current.path.build}/${product.assembly}">
+         keyfile="${path.src}/${product.keyfile}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}">
 			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
