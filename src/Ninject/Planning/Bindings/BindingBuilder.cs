@@ -30,9 +30,15 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBinding Binding { get; private set; }
 
+#if MONO
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BindingBuilder&lt;T&gt;"/> class.
+		/// Initializes a new instance of the class.
 		/// </summary>
+#else
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BindingBuilder{T}"/> class.
+		/// </summary>
+#endif
 		/// <param name="binding">The binding to build.</param>
 		public BindingBuilder(IBinding binding)
 		{

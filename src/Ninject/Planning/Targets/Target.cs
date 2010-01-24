@@ -66,9 +66,15 @@ namespace Ninject.Planning.Targets
 			get { return _isOptional; }
 		}
 
-			/// <summary>
-		/// Initializes a new instance of the <see cref="Target&lt;T&gt;"/> class.
+#if MONO
+		/// <summary>
+		/// Initializes a new instance of the class.
 		/// </summary>
+#else
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Target{T}"/> class.
+		/// </summary>
+#endif
 		/// <param name="member">The member that contains the target.</param>
 		/// <param name="site">The site represented by the target.</param>
 		protected Target(MemberInfo member, T site)
