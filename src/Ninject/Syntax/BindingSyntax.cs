@@ -10,16 +10,24 @@
 #region Using Directives
 using System;
 using Ninject.Activation;
+using Ninject.Infrastructure;
 using Ninject.Parameters;
 #endregion
 
 namespace Ninject.Syntax
 {
 	/// <summary>
+	/// Used to define a basic binding syntax builder.
+	/// </summary>
+	public interface IBindingSyntax : IFluentSyntax, IHaveBinding, IHaveKernel
+	{
+	}
+
+	/// <summary>
 	/// Used to define the target of a binding.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingToSyntax<T> : IFluentSyntax
+	public interface IBindingToSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that the service should be self-bound.
@@ -75,7 +83,7 @@ namespace Ninject.Syntax
 	/// Used to define the conditions under which a binding should be used.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingWhenSyntax<T> : IFluentSyntax
+	public interface IBindingWhenSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that the binding should be used only for requests that support the specified condition.
@@ -149,7 +157,7 @@ namespace Ninject.Syntax
 	/// Used to define the scope in which instances activated via a binding should be re-used.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingInSyntax<T> : IFluentSyntax
+	public interface IBindingInSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that only a single instance of the binding should be created, and then
@@ -188,7 +196,7 @@ namespace Ninject.Syntax
 	/// Used to define the name of a binding.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingNamedSyntax<T> : IFluentSyntax
+	public interface IBindingNamedSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that the binding should be registered with the specified name. Names are not
@@ -202,7 +210,7 @@ namespace Ninject.Syntax
 	/// Used to add additional information to a binding.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingWithSyntax<T> : IFluentSyntax
+	public interface IBindingWithSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that the specified constructor argument should be overridden with the specified value.
@@ -250,7 +258,7 @@ namespace Ninject.Syntax
 	/// Used to add additional actions to be performed during activation or deactivation of instances via a binding.
 	/// </summary>
 	/// <typeparam name="T">The service being bound.</typeparam>
-	public interface IBindingOnSyntax<T> : IFluentSyntax
+	public interface IBindingOnSyntax<T> : IBindingSyntax
 	{
 		/// <summary>
 		/// Indicates that the specified callback should be invoked when instances are activated.

@@ -9,6 +9,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 #endregion
 
@@ -17,7 +18,7 @@ namespace Ninject.Syntax
 	/// <summary>
 	/// Provides a path to register bindings.
 	/// </summary>
-	public interface IBindingRoot
+	public interface IBindingRoot : IHaveKernel
 	{
 		/// <summary>
 		/// Declares a binding for the specified service.

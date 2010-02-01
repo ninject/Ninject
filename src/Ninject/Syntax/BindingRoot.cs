@@ -91,7 +91,12 @@ namespace Ninject.Syntax
 		{
 			var binding = new Binding(service);
 			AddBinding(binding);
-			return new BindingBuilder<T>(binding);
+			return new BindingBuilder<T>(binding, Kernel);
 		}
+
+		/// <summary>
+		/// Gets the kernel.
+		/// </summary>
+		public abstract IKernel Kernel { get; protected set; }
 	}
 }

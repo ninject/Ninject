@@ -38,6 +38,16 @@ namespace Ninject
 		private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
 
 		/// <summary>
+		/// Gets the kernel.
+		/// </summary>
+		/// <value></value>
+		public override IKernel Kernel
+		{
+			get { return this; }
+			protected set{}
+		}
+
+		/// <summary>
 		/// Gets the kernel settings.
 		/// </summary>
 		public INinjectSettings Settings { get; private set; }

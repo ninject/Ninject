@@ -26,7 +26,7 @@ namespace Ninject.Modules
 		/// <summary>
 		/// Gets the kernel that the module is loaded into.
 		/// </summary>
-		public IKernel Kernel { get; private set; }
+		public override IKernel Kernel { get; protected set; }
 
 		/// <summary>
 		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
