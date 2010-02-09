@@ -22,6 +22,11 @@ namespace Ninject.Syntax
 	public abstract class BindingRoot : DisposableObject, IBindingRoot
 	{
 		/// <summary>
+		/// Gets the kernel.
+		/// </summary>
+		public abstract IKernel Kernel { get; protected set; }
+
+		/// <summary>
 		/// Declares a binding for the specified service.
 		/// </summary>
 		/// <typeparam name="T">The service to bind.</typeparam>
@@ -91,7 +96,7 @@ namespace Ninject.Syntax
 		{
 			var binding = new Binding(service);
 			AddBinding(binding);
-			return new BindingBuilder<T>(binding);
+			return new BindingBuilder<T>(binding, Kernel);
 		}
 	}
 }

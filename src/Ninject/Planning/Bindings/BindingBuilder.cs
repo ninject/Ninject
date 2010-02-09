@@ -30,21 +30,30 @@ namespace Ninject.Planning.Bindings
 		/// </summary>
 		public IBinding Binding { get; private set; }
 
+		/// <summary>
+		/// Gets the kernel.
+		/// </summary>
+		public IKernel Kernel { get; private set; }
+
 #if MONO
 		/// <summary>
 		/// Initializes a new instance of the class.
 		/// </summary>
 		/// <param name="binding">The binding to build.</param>
+		/// <param name="kernel">The kernel.</param>
 #else
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BindingBuilder{T}"/> class.
 		/// </summary>
 		/// <param name="binding">The binding to build.</param>
+		/// <param name="kernel">The kernel.</param>
 #endif
-		public BindingBuilder(IBinding binding)
+		public BindingBuilder(IBinding binding, IKernel kernel)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
+			Ensure.ArgumentNotNull(kernel, "kernel");
 			Binding = binding;
+			Kernel = kernel;
 		}
 
 		/// <summary>
@@ -215,7 +224,7 @@ namespace Ninject.Planning.Bindings
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenClassHas", attributeType));
 
-            Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType.HasAttribute(attributeType);
+			Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType.HasAttribute(attributeType);
 
 			return this;
 		}
@@ -230,7 +239,7 @@ namespace Ninject.Planning.Bindings
 			if (!typeof(Attribute).IsAssignableFrom(attributeType))
 				throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenMemberHas", attributeType));
 
-            Binding.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
+			Binding.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
 
 			return this;
 		}

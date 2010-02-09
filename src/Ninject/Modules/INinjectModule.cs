@@ -18,13 +18,8 @@ namespace Ninject.Modules
 	/// <summary>
 	/// A pluggable unit that can be loaded into an <see cref="IKernel"/>.
 	/// </summary>
-	public interface INinjectModule
+	public interface INinjectModule : IHaveKernel
 	{
-		/// <summary>
-		/// Gets or the kernel that the module is loaded into.
-		/// </summary>
-		IKernel Kernel { get; }
-
 		/// <summary>
 		/// Gets the module's name.
 		/// </summary>
