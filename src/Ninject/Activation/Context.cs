@@ -139,21 +139,19 @@ namespace Ninject.Activation
 				if (Request.ActiveBindings.Contains(Binding))
 					throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
 
+				var cachedInstance = Cache.TryGet(this);
+
+				if (cachedInstance != null)
+					return cachedInstance;
+
 				Request.ActiveBindings.Push(Binding);
 
-				var reference = new InstanceReference();
+				var reference = new InstanceReference { Instance = GetProvider().Create(this) };
 
-				reference.Instance = Cache.TryGet(this);
-
-				if (reference.Instance != null)
-					return reference.Instance;
-
-				reference.Instance = GetProvider().Create(this);
+				Request.ActiveBindings.Pop();
 
 				if (GetScope() != null)
 					Cache.Remember(this, reference);
-
-				Request.ActiveBindings.Pop();
 
 				if (Plan == null)
 					Plan = Planner.GetPlan(reference.Instance.GetType());
