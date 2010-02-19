@@ -133,6 +133,19 @@ namespace Ninject.Activation.Caching
 		}
 
 		/// <summary>
+		/// Immediately deactivates and removes all instances in the cache that are owned by
+		/// the specified scope.
+		/// </summary>
+		/// <param name="scope">The scope whose instances should be deactivated.</param>
+		public void Clear(object scope)
+		{
+			lock (_entries)
+			{
+				_entries.SelectMany(e => e.Value).Where(e => ReferenceEquals(scope, e.Scope.Target)).ToArray().Map(Forget);
+			}
+		}
+
+		/// <summary>
 		/// Immediately deactivates and removes all instances in the cache, regardless of scope.
 		/// </summary>
 		public void Clear()

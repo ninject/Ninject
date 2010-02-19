@@ -1,0 +1,8 @@
+﻿<var documentedProperties="properties.Where(p => p.IsDocumented())" />
+<if condition="documentedProperties.Count() > 0">
+  <h3 class="section">${title}</h3>
+
+  <ul>
+    <li each="var property in documentedProperties"><strong>${h(property.Name)}</strong> - ${Format(property.Summary)}</li>
+  </ul>
+</if>

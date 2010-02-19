@@ -97,6 +97,10 @@ namespace Ninject
 
 			AddComponents();
 
+			#if !NO_WEB
+			OnePerRequestModule.StartManaging(this);
+			#endif
+
 			#if !NO_ASSEMBLY_SCANNING
 			if (Settings.LoadExtensions)
 				Load(new[] { Settings.ExtensionSearchPattern });
@@ -110,8 +114,15 @@ namespace Ninject
 		/// </summary>
 		public override void Dispose(bool disposing)
 		{
-			if (disposing && !IsDisposed && Components != null)
-				Components.Dispose();
+			if (disposing && !IsDisposed)
+			{
+				#if !NO_WEB
+				OnePerRequestModule.StopManaging(this);
+				#endif
+
+				if (Components != null)
+					Components.Dispose();
+			}
 
 			base.Dispose(disposing);
 		}

@@ -79,5 +79,22 @@ namespace Ninject.Tests.Integration.RequestScopeTests
 
 			instance.IsDisposed.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void InstancesAreDisposedViaOnePerRequestModule()
+		{
+			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InRequestScope();
+
+			BeginNewFakeWebRequest();
+
+			var instance = kernel.Get<INotifyWhenDisposed>();
+
+			instance.ShouldNotBeNull();
+			instance.ShouldBeInstanceOf<NotifiesWhenDisposed>();
+
+			OnePerRequestModule.DeactivateInstancesForCurrentHttpRequest();
+
+			instance.IsDisposed.ShouldBeTrue();
+		}
 	}
 }

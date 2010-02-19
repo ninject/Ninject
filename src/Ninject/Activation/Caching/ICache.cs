@@ -44,6 +44,13 @@ namespace Ninject.Activation.Caching
 		void Prune();
 
 		/// <summary>
+		/// Immediately deactivates and removes all instances in the cache that are owned by
+		/// the specified scope.
+		/// </summary>
+		/// <param name="scope">The scope whose instances should be deactivated.</param>
+		void Clear(object scope);
+
+		/// <summary>
 		/// Immediately deactivates and removes all instances in the cache, regardless of scope.
 		/// </summary>
 		void Clear();
