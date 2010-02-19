@@ -24,7 +24,7 @@ namespace Ninject
 	/// </summary>
 	public class OnePerRequestModule : IHttpModule
 	{
-		private static List<IKernel> _kernels = new List<IKernel>();
+		private static readonly List<IKernel> Kernels = new List<IKernel>();
 
 		/// <summary>
 		/// Initializes the module.
@@ -48,7 +48,7 @@ namespace Ninject
 		/// <param name="kernel">The kernel.</param>
 		public static void StartManaging(IKernel kernel)
 		{
-			_kernels.Add(kernel);
+			Kernels.Add(kernel);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace Ninject
 		/// <param name="kernel">The kernel.</param>
 		public static void StopManaging(IKernel kernel)
 		{
-			_kernels.Remove(kernel);
+			Kernels.Remove(kernel);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace Ninject
 		public static void DeactivateInstancesForCurrentHttpRequest()
 		{
 			var context = HttpContext.Current;
-			_kernels.Select(kernel => kernel.Components.Get<ICache>()).Map(cache => cache.Clear(context));
+			Kernels.Select(kernel => kernel.Components.Get<ICache>()).Map(cache => cache.Clear(context));
 		}
 	}
 }
