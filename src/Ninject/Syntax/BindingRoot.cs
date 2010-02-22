@@ -22,17 +22,14 @@ namespace Ninject.Syntax
 	public abstract class BindingRoot : DisposableObject, IBindingRoot
 	{
 		/// <summary>
-		/// Gets the kernel.
-		/// </summary>
-		public abstract IKernel Kernel { get; protected set; }
-
-		/// <summary>
 		/// Declares a binding for the specified service.
 		/// </summary>
 		/// <typeparam name="T">The service to bind.</typeparam>
 		public IBindingToSyntax<T> Bind<T>()
 		{
-			return RegisterBindingAndCreateBuilder<T>(typeof(T));
+			Type service = typeof(T);
+			IBinding binding = RegisterNewBinding(service);
+			return CreateBindingBuilder<T>(binding);
 		}
 
 		/// <summary>
@@ -42,7 +39,30 @@ namespace Ninject.Syntax
 		public IBindingToSyntax<object> Bind(Type service)
 		{
 			Ensure.ArgumentNotNull(service, "service");
-			return RegisterBindingAndCreateBuilder<object>(service);
+			IBinding binding = RegisterNewBinding(service);
+			return CreateBindingBuilder<object>(binding);
+		}
+
+		/// <summary>
+		/// Declares a binding from the service to itself.
+		/// </summary>
+		/// <typeparam name="T">The service to bind.</typeparam>
+		public IBindingWhenInNamedWithOrOnSyntax<T> BindTo<T>() where T : class
+		{
+			Type service = typeof(T);
+			IBinding binding = RegisterNewBinding(service);
+			return CreateBindingBuilder<T>(binding).ToSelf();
+		}
+
+		/// <summary>
+		/// Declares a binding from the service to itself.
+		/// </summary>
+		/// <param name="service">The service to bind.</param>
+		public IBindingWhenInNamedWithOrOnSyntax<object> BindTo(Type service)
+		{
+			Ensure.ArgumentNotNull(service, "service");
+			IBinding binding = RegisterNewBinding(service);
+			return CreateBindingBuilder<object>(binding).AutoBound();
 		}
 
 		/// <summary>
@@ -92,11 +112,19 @@ namespace Ninject.Syntax
 		/// <param name="binding">The binding to remove.</param>
 		public abstract void RemoveBinding(IBinding binding);
 
-		private BindingBuilder<T> RegisterBindingAndCreateBuilder<T>(Type service)
+		private IBinding RegisterNewBinding(Type service)
 		{
 			var binding = new Binding(service);
 			AddBinding(binding);
-			return new BindingBuilder<T>(binding, Kernel);
+			return binding;
 		}
+
+		/// <summary>
+		/// Creates a new builder for the specified binding.
+		/// </summary>
+		/// <typeparam name="T">The type restriction to apply to the binding builder.</typeparam>
+		/// <param name="binding">The binding that will be built.</param>
+		/// <returns>The created builder.</returns>
+		protected abstract BindingBuilder<T> CreateBindingBuilder<T>(IBinding binding);
 	}
 }

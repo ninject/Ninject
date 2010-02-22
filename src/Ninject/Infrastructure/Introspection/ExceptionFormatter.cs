@@ -56,6 +56,23 @@ namespace Ninject.Infrastructure.Introspection
 			}
 		}
 
+		public static string CouldNotUniquelyResolveBinding(IRequest request)
+		{
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Error activating {0}", request.Service.Format());
+				sw.WriteLine("More than one matching bindings are available.");
+
+				sw.WriteLine("Activation path:");
+				sw.WriteLine(request.FormatActivationPath());
+
+				sw.WriteLine("Suggestions:");
+				sw.WriteLine("  1) Ensure that you have defined a binding for {0} only once.", request.Service.Format());
+
+				return sw.ToString();
+			}
+		}
+
 		public static string CouldNotResolveBinding(IRequest request)
 		{
 			using (var sw = new StringWriter())

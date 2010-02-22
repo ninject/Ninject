@@ -7,12 +7,6 @@ namespace Ninject.Tests.Integration
 {
 	public class WithPropertyValueTests : PropertyInjectionTests
 	{
-		public WithPropertyValueTests()
-		{
-			_kernel.Bind<IWeapon>().To<Shuriken>();
-
-		}
-
 		[Fact]
 		public void PropertyValueIsAssignedWhenNoInjectAttributeIsSuppliedUsingCallback()
 		{
@@ -45,11 +39,6 @@ namespace Ninject.Tests.Integration
 
 	public class WithParameterTests : PropertyInjectionTests
 	{
-		public WithParameterTests()
-		{
-			_kernel.Bind<IWeapon>().To<Shuriken>();
-		}
-
 		[Fact]
 		public void PropertyValueIsAssignedWhenNoInjectAttributeIsSuppliedUsingCallback()
 		{

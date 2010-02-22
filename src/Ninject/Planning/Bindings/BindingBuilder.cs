@@ -23,7 +23,7 @@ namespace Ninject.Planning.Bindings
 	/// <summary>
 	/// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
 	/// </summary>
-	public class BindingBuilder<T> : IHaveBinding, IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
+	public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
 	{
 		/// <summary>
 		/// Gets the binding being built.
@@ -54,6 +54,15 @@ namespace Ninject.Planning.Bindings
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Binding = binding;
 			Kernel = kernel;
+		}
+
+		/// <summary>
+		/// Indicates that the service should be auto-bound.
+		/// </summary>
+		public IBindingWhenInNamedWithOrOnSyntax<T> AutoBound()
+		{
+			Binding.IsAutoBound = true;
+			return this;
 		}
 
 		/// <summary>

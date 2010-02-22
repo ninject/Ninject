@@ -70,12 +70,13 @@ namespace Ninject.Activation.Blocks
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
+		/// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
 		/// <returns>The created request.</returns>
-		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
 		{
 			Ensure.ArgumentNotNull(service, "service");
 			Ensure.ArgumentNotNull(parameters, "parameters");
-			return new Request(service, constraint, parameters, () => this, isOptional);
+			return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
 		}
 	}
 }

@@ -121,6 +121,10 @@
     <Compile Include="Modules\IModuleLoaderPlugin.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
     <Compile Include="Infrastructure\IHaveBinding.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\ImpliedBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />

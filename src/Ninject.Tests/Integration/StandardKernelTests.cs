@@ -31,15 +31,12 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 		}
 
 		[Fact]
-		public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
+		public void ActivationExceptionThrownWhenMultipleBindingsAreRegistered()
 		{
 			kernel.Bind<IWeapon>().To<Sword>();
 			kernel.Bind<IWeapon>().To<Shuriken>();
 
-			var weapon = kernel.Get<IWeapon>();
-
-			weapon.ShouldNotBeNull();
-			weapon.ShouldBeInstanceOf<Sword>();
+			Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
 		}
 
 		[Fact]

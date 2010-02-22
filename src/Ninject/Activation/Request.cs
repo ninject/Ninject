@@ -70,6 +70,14 @@ namespace Ninject.Activation
 		public bool IsOptional { get; set; }
 
 		/// <summary>
+		/// Gets or sets value indicating whether the request is for a single service.
+		/// </summary>
+		public bool IsUnique
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// Gets the callback that resolves the scope for the request, if an external scope was provided.
 		/// </summary>
 		public Func<object> ScopeCallback { get; private set; }
@@ -82,7 +90,8 @@ namespace Ninject.Activation
 		/// <param name="parameters">The parameters that affect the resolution.</param>
 		/// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional)
+		/// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+		public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
 		{
 			Ensure.ArgumentNotNull(service, "service");
 			Ensure.ArgumentNotNull(parameters, "parameters");
@@ -94,6 +103,7 @@ namespace Ninject.Activation
 			ActiveBindings = new Stack<IBinding>();
 			Depth = 0;
 			IsOptional = isOptional;
+			IsUnique = isUnique;
 		}
 
 		/// <summary>

@@ -69,6 +69,11 @@ namespace Ninject.Activation
 		bool IsOptional { get; set; }
 
 		/// <summary>
+		/// Gets or sets value indicating whether the request should return a unique result.
+		/// </summary>
+		bool IsUnique { get; set; }
+
+		/// <summary>
 		/// Determines whether the specified binding satisfies the constraint defined on this request.
 		/// </summary>
 		/// <param name="binding">The binding.</param>

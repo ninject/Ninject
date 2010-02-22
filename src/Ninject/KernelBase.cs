@@ -1,7 +1,7 @@
 #region License
 // 
 // Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+// Copyright (c) 2007-2009, Enkari, Ltd.
 // 
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
@@ -24,6 +24,7 @@ using Ninject.Modules;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
+using Ninject.Planning.Bindings.Resolvers;
 using Ninject.Syntax;
 #endregion
 
@@ -35,17 +36,8 @@ namespace Ninject
 	public abstract class KernelBase : BindingRoot, IKernel
 	{
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
+		private readonly Multimap<Type, IBinding> _bindingCache = new Multimap<Type, IBinding>();
 		private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
-
-		/// <summary>
-		/// Gets the kernel.
-		/// </summary>
-		/// <value></value>
-		public override IKernel Kernel
-		{
-			get { return this; }
-			protected set{}
-		}
 
 		/// <summary>
 		/// Gets the kernel settings.
@@ -134,7 +126,11 @@ namespace Ninject
 		public override void Unbind(Type service)
 		{
 			Ensure.ArgumentNotNull(service, "service");
+
 			_bindings.RemoveAll(service);
+
+			lock (_bindingCache)
+				_bindingCache.Clear();
 		}
 
 		/// <summary>
@@ -144,7 +140,11 @@ namespace Ninject
 		public override void AddBinding(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
+
 			_bindings.Add(binding.Service, binding);
+
+			lock (_bindingCache)
+				_bindingCache.Clear();
 		}
 
 		/// <summary>
@@ -154,7 +154,11 @@ namespace Ninject
 		public override void RemoveBinding(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
+
 			_bindings.Remove(binding.Service, binding);
+
+			lock (_bindingCache)
+				_bindingCache.Clear();
 		}
 
 		/// <summary>
@@ -254,7 +258,7 @@ namespace Ninject
 			var pipeline = Components.Get<IPipeline>();
 
 			var binding = new Binding(service);
-			var request = CreateRequest(service, null, parameters, false);
+			var request = CreateRequest(service, null, parameters, false, false);
 			var context = CreateContext(request, binding);
 
 			context.Plan = planner.GetPlan(service);
@@ -271,14 +275,8 @@ namespace Ninject
 		public virtual bool CanResolve(IRequest request)
 		{
 			Ensure.ArgumentNotNull(request, "request");
-
-			if (_bindings[request.Service].Count > 0)
-				return true;
-
-			if (request.Service.IsGenericType && _bindings[request.Service.GetGenericTypeDefinition()].Count > 0)
-				return true;
-
-			return false;
+			var resolvers = Components.GetAll<IBindingResolver>();
+			return resolvers.SelectMany(r => r.Resolve(_bindings, request.Service)).Any();
 		}
 
 		/// <summary>
@@ -302,9 +300,16 @@ namespace Ninject
 					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
-			return GetBindings(request.Service)
+			var bindings = GetBindings(request.Service)
 				.OrderBy(binding => binding.IsConditional ? 0 : 1)
-				.Where(binding => binding.Matches(request) && request.Matches(binding))
+				.Where(binding => binding.Matches(request) && request.Matches(binding));
+
+			if (request.IsUnique && bindings.Count() > 1)
+			{
+				throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+			}
+
+			return bindings
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
 		}
@@ -316,13 +321,14 @@ namespace Ninject
 		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
 		/// <param name="parameters">The parameters to pass to the resolution.</param>
 		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
+		/// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
 		/// <returns>The created request.</returns>
-		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional)
+		public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
 		{
 			Ensure.ArgumentNotNull(service, "service");
 			Ensure.ArgumentNotNull(parameters, "parameters");
 
-			return new Request(service, constraint, parameters, null, isOptional);
+			return new Request(service, constraint, parameters, null, isOptional, isUnique);
 		}
 
 		/// <summary>
@@ -334,15 +340,18 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(service, "service");
 
-			foreach (IBinding binding in _bindings[service])
-				yield return binding;
-
-			if (service.IsGenericType)
+			lock (_bindingCache)
 			{
-				Type gtd = service.GetGenericTypeDefinition();
+				if (!_bindingCache.ContainsKey(service))
+				{
+					var resolvers = Components.GetAll<IBindingResolver>();
 
-				foreach (IBinding binding in _bindings[gtd])
-					yield return binding;
+					resolvers
+						.SelectMany(resolver => resolver.Resolve(_bindings, service))
+						.Map(binding => _bindingCache.Add(service, binding));
+				}
+
+				return _bindingCache[service];
 			}
 		}
 
@@ -353,6 +362,17 @@ namespace Ninject
 		public virtual IActivationBlock BeginBlock()
 		{
 			return new ActivationBlock(this);
+		}
+
+		/// <summary>
+		/// Creates a new builder for the specified binding.
+		/// </summary>
+		/// <typeparam name="T">The type restriction to apply to the binding builder.</typeparam>
+		/// <param name="binding">The binding that will be built.</param>
+		/// <returns>The created builder.</returns>
+		protected override BindingBuilder<T> CreateBindingBuilder<T>(IBinding binding)
+		{
+			return new BindingBuilder<T>(binding, this);
 		}
 
 		/// <summary>

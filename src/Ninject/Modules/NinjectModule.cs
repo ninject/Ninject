@@ -26,7 +26,7 @@ namespace Ninject.Modules
 		/// <summary>
 		/// Gets the kernel that the module is loaded into.
 		/// </summary>
-		public override IKernel Kernel { get; protected set; }
+		public IKernel Kernel { get; protected set; }
 
 		/// <summary>
 		/// Gets the module's name. Only a single module with a given name can be loaded at one time.
@@ -113,6 +113,17 @@ namespace Ninject.Modules
 
 			Kernel.RemoveBinding(binding);
 			Bindings.Remove(binding);
+		}
+
+		/// <summary>
+		/// Creates a new builder for the specified binding.
+		/// </summary>
+		/// <typeparam name="T">The type restriction to apply to the binding builder.</typeparam>
+		/// <param name="binding">The binding that will be built.</param>
+		/// <returns>The created builder.</returns>
+		protected override BindingBuilder<T> CreateBindingBuilder<T>(IBinding binding)
+		{
+			return new BindingBuilder<T>(binding, Kernel);
 		}
 	}
 }

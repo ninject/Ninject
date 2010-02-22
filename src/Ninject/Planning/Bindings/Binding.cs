@@ -81,6 +81,14 @@ namespace Ninject.Planning.Bindings
 		public ICollection<Action<object>> DeactivationActions { get; private set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether or not this service binding will resolve for all implemented interfaces and base classes
+		/// </summary>
+		public bool IsAutoBound
+		{
+			get; set;
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Binding"/> class.
 		/// </summary>
 		/// <param name="service">The service that is controlled by the binding.</param>
@@ -102,6 +110,7 @@ namespace Ninject.Planning.Bindings
 			ActivationActions = new List<Action<object>>();
 			DeactivationActions = new List<Action<object>>();
 			ScopeCallback = StandardScopeCallbacks.Transient;
+			IsAutoBound = true;
 		}
 
 		/// <summary>
