@@ -168,7 +168,7 @@ namespace Ninject.Planning.Targets
 		/// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
 		protected virtual bool ReadOptionalFromTarget()
 		{
-			return Site.HasAttribute<OptionalAttribute>();
+			return Site.HasAttribute(typeof(OptionalAttribute));
 		}
 
 		/// <summary>
@@ -177,10 +177,13 @@ namespace Ninject.Planning.Targets
 		/// <returns>The resolution constraint.</returns>
 		protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
 		{
-			ConstraintAttribute[] attributes = Site.GetAttributes<ConstraintAttribute>().ToArray();
+			var attributes = Site.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
 
-			if (attributes.Length == 0) return null;
-			if (attributes.Length == 1) return attributes[0].Matches;
+			if (attributes == null || attributes.Length == 0)
+				return null;
+
+			if (attributes.Length == 1)
+				return attributes[0].Matches;
 
 			return metadata => attributes.All(attribute => attribute.Matches(metadata));
 		}

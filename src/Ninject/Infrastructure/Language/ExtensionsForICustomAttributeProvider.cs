@@ -17,18 +17,6 @@ namespace Ninject.Infrastructure.Language
 {
 	internal static class ExtensionsForICustomAttributeProvider
 	{
-		public static IEnumerable<T> GetAttributes<T>(this ICustomAttributeProvider member)
-			where T : Attribute
-		{
-			return member.GetCustomAttributes(typeof(T), true) as T[];
-		}
-
-		public static bool HasAttribute<T>(this ICustomAttributeProvider member)
-			where T : Attribute
-		{
-			return member.IsDefined(typeof(T), true);
-		}
-
 		public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
 		{
 			return member.IsDefined(type, true);

@@ -180,7 +180,7 @@ namespace Ninject.Components
 			}
 		}
 
-		private ConstructorInfo SelectConstructor(Type component, Type implementation)
+		private static ConstructorInfo SelectConstructor(Type component, Type implementation)
 		{
 			var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 

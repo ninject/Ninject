@@ -39,6 +39,13 @@ namespace Ninject.Activation.Caching
 		object TryGet(IContext context);
 
 		/// <summary>
+		/// Deactivates and releases the specified instance from the cache.
+		/// </summary>
+		/// <param name="instance">The instance to release.</param>
+		/// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+		bool Release(object instance);
+
+		/// <summary>
 		/// Removes instances from the cache which should no longer be re-used.
 		/// </summary>
 		void Prune();

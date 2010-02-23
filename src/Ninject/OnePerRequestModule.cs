@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Disposal;
 using Ninject.Infrastructure.Language;
 #endregion
 
@@ -22,7 +23,7 @@ namespace Ninject
 	/// <summary>
 	/// Provides callbacks to more aggressively collect objects scoped to HTTP requests.
 	/// </summary>
-	public class OnePerRequestModule : IHttpModule
+	public class OnePerRequestModule : DisposableObject, IHttpModule
 	{
 		private static readonly List<IKernel> Kernels = new List<IKernel>();
 
@@ -33,13 +34,6 @@ namespace Ninject
 		public void Init(HttpApplication application)
 		{
 			application.EndRequest += (o,e) => DeactivateInstancesForCurrentHttpRequest();
-		}
-
-		/// <summary>
-		/// Disposes resources held by the object.
-		/// </summary>
-		public void Dispose()
-		{
 		}
 
 		/// <summary>

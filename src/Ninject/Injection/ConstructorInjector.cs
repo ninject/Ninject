@@ -7,6 +7,7 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
+
 namespace Ninject.Injection
 {
 	/// <summary>

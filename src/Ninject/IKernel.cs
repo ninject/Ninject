@@ -84,6 +84,13 @@ namespace Ninject
 		void Inject(object instance, params IParameter[] parameters);
 
 		/// <summary>
+		/// Deactivates and releases the specified instance if it is currently managed by Ninject.
+		/// </summary>
+		/// <param name="instance">The instance to release.</param>
+		/// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+		bool Release(object instance);
+
+		/// <summary>
 		/// Gets the bindings registered for the specified service.
 		/// </summary>
 		/// <param name="service">The service in question.</param>

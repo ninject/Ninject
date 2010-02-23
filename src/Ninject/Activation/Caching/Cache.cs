@@ -77,9 +77,7 @@ namespace Ninject.Activation.Caching
 			var entry = new CacheEntry(context, reference);
 		
 			lock (_entries)
-			{
 				_entries[context.Binding].Add(entry);
-			}
 
 			var notifyScope = context.GetScope() as INotifyWhenDisposed;
 
@@ -122,14 +120,21 @@ namespace Ninject.Activation.Caching
 		}
 
 		/// <summary>
+		/// Deactivates and releases the specified instance from the cache.
+		/// </summary>
+		/// <param name="instance">The instance to release.</param>
+		/// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+		public bool Release(object instance)
+		{
+			return ForgetAllWhere(e => ReferenceEquals(instance, e.Reference.Instance));
+		}
+
+		/// <summary>
 		/// Removes instances from the cache which should no longer be re-used.
 		/// </summary>
 		public void Prune()
 		{
-			lock (_entries)
-			{
-				_entries.SelectMany(e => e.Value).Where(e => !e.Scope.IsAlive).ToArray().Map(Forget);
-			}
+			ForgetAllWhere(e => !e.Scope.IsAlive);
 		}
 
 		/// <summary>
@@ -139,10 +144,7 @@ namespace Ninject.Activation.Caching
 		/// <param name="scope">The scope whose instances should be deactivated.</param>
 		public void Clear(object scope)
 		{
-			lock (_entries)
-			{
-				_entries.SelectMany(e => e.Value).Where(e => ReferenceEquals(scope, e.Scope.Target)).ToArray().Map(Forget);
-			}
+			ForgetAllWhere(e => ReferenceEquals(scope, e.Scope.Target));
 		}
 
 		/// <summary>
@@ -150,9 +152,16 @@ namespace Ninject.Activation.Caching
 		/// </summary>
 		public void Clear()
 		{
+			ForgetAllWhere(e => true);
+		}
+
+		private bool ForgetAllWhere(Func<CacheEntry, bool> predicate)
+		{
 			lock (_entries)
 			{
-				_entries.SelectMany(e => e.Value).ToArray().Map(Forget);
+				var matchingEntries = _entries.SelectMany(e => e.Value).Where(predicate).ToArray();
+				matchingEntries.Map(Forget);
+				return matchingEntries.Any();
 			}
 		}
 

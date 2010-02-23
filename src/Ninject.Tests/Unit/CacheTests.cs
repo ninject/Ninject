@@ -2,7 +2,6 @@
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Tests.Fakes;
 using Xunit;
@@ -134,6 +133,66 @@ namespace Ninject.Tests.Unit.CacheTests
 			object instance = cache.TryGet(contextMock2.Object);
 
 			instance.ShouldBeNull();
+		}
+	}
+
+	public class WhenReleaseIsCalled : CacheContext
+	{
+		[Fact]
+		public void ReturnsFalseIfInstanceIsNotTracked()
+		{
+			bool result = cache.Release(new object());
+			result.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void ReturnsTrueIfInstanceIsTracked()
+		{
+			var scope = new object();
+			var instance = new Sword();
+			var reference = new InstanceReference { Instance = instance };
+
+			var writeContext = new Mock<IContext>();
+			writeContext.SetupGet(x => x.Binding).Returns(bindingMock.Object);
+			writeContext.SetupGet(x => x.HasInferredGenericArguments).Returns(true);
+			writeContext.SetupGet(x => x.GenericArguments).Returns(new[] { typeof(int) });
+			writeContext.Setup(x => x.GetScope()).Returns(scope);
+
+			cache.Remember(writeContext.Object, reference);
+
+			bool result = cache.Release(instance);
+			result.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void InstanceIsRemovedFromCache()
+		{
+			var scope = new object();
+			var sword = new Sword();
+			var reference = new InstanceReference { Instance = sword };
+
+			var writeContext = new Mock<IContext>();
+			writeContext.SetupGet(x => x.Binding).Returns(bindingMock.Object);
+			writeContext.SetupGet(x => x.HasInferredGenericArguments).Returns(true);
+			writeContext.SetupGet(x => x.GenericArguments).Returns(new[] { typeof(int) });
+			writeContext.Setup(x => x.GetScope()).Returns(scope);
+
+			cache.Remember(writeContext.Object, reference);
+
+			var readContext = new Mock<IContext>();
+			readContext.SetupGet(x => x.Binding).Returns(bindingMock.Object);
+			readContext.SetupGet(x => x.HasInferredGenericArguments).Returns(true);
+			readContext.SetupGet(x => x.GenericArguments).Returns(new[] { typeof(int) });
+			readContext.Setup(x => x.GetScope()).Returns(scope);
+
+			object instance1 = cache.TryGet(readContext.Object);
+			instance1.ShouldBeSameAs(reference.Instance);
+
+			bool result = cache.Release(instance1);
+			result.ShouldBeTrue();
+
+			object instance2 = cache.TryGet(readContext.Object);
+			instance2.ShouldBeNull();
 		}
 	}
 }
