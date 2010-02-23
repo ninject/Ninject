@@ -33,19 +33,11 @@ namespace Ninject.Planning.Directives
 		/// </summary>
 		public ITarget[] Targets { get; private set; }
 
-#if MONO
 		/// <summary>
-		/// Initializes a new instance of the class.
+		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;TMethod, TInjector&gt;"/> class.
 		/// </summary>
 		/// <param name="method">The method this directive represents.</param>
 		/// <param name="injector">The injector that will be triggered.</param>
-#else
-		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase{TMethod, TInjector}"/> class.
-		/// </summary>
-		/// <param name="method">The method this directive represents.</param>
-		/// <param name="injector">The injector that will be triggered.</param>
-#endif
 		protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
 		{
 			Ensure.ArgumentNotNull(method, "method");

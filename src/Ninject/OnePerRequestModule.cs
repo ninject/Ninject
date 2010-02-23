@@ -1,5 +1,4 @@
-﻿#if !NO_WEB
-#region License
+﻿#region License
 // 
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
@@ -8,6 +7,7 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
+#if !NO_WEB
 #region Using Directives
 using System;
 using System.Collections.Generic;

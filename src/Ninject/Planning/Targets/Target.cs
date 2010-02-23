@@ -66,19 +66,11 @@ namespace Ninject.Planning.Targets
 			get { return _isOptional; }
 		}
 
-#if MONO
 		/// <summary>
-		/// Initializes a new instance of the class.
+		/// Initializes a new instance of the <see cref="Target&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="member">The member that contains the target.</param>
 		/// <param name="site">The site represented by the target.</param>
-#else
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Target{T}"/> class.
-		/// </summary>
-		/// <param name="member">The member that contains the target.</param>
-		/// <param name="site">The site represented by the target.</param>
-#endif
 		protected Target(MemberInfo member, T site)
 		{
 			Ensure.ArgumentNotNull(member, "member");
