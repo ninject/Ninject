@@ -77,11 +77,6 @@ namespace Ninject.Planning.Bindings
 		ICollection<Action<object>> DeactivationActions { get; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether or not this service binding will resolve for all implemented interfaces and base classes
-		/// </summary>
-		bool IsAutoBound { get; set; }
-
-		/// <summary>
 		/// Gets the provider for the binding.
 		/// </summary>
 		/// <param name="context">The context.</param>

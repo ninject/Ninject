@@ -73,7 +73,6 @@
     <Compile Include="Integration\ConditionalAttributeBindingTests.cs" />
     <Compile Include="Integration\ConditionalBindingWhenParentTests.cs" />
     <Compile Include="Integration\ConstructorSelectionTests.cs" />
-    <Compile Include="Integration\AutoBoundTests.cs" />
     <Compile Include="Integration\ModuleLoadingTests.cs" />
     <Compile Include="Fakes\NinjaBarracks.cs" />
     <Compile Include="Integration\PropertyInjectionTests.cs" />

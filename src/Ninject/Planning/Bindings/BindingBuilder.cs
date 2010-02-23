@@ -57,15 +57,6 @@ namespace Ninject.Planning.Bindings
 		}
 
 		/// <summary>
-		/// Indicates that the service should be auto-bound.
-		/// </summary>
-		public IBindingWhenInNamedWithOrOnSyntax<T> AutoBound()
-		{
-			Binding.IsAutoBound = true;
-			return this;
-		}
-
-		/// <summary>
 		/// Indicates that the service should be self-bound.
 		/// </summary>
 		public IBindingWhenInNamedWithOrOnSyntax<T> ToSelf()

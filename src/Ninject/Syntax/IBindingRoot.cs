@@ -27,18 +27,6 @@ namespace Ninject.Syntax
 		IBindingToSyntax<T> Bind<T>();
 
 		/// <summary>
-		/// Declares a binding for the specified service.
-		/// </summary>
-		/// <param name="service">The service to bind.</param>
-		IBindingWhenInNamedWithOrOnSyntax<object> BindTo(Type service);
-
-		/// <summary>
-		/// Declares a binding from the service to itself.
-		/// </summary>
-		/// <typeparam name="T">The service to bind.</typeparam>
-		IBindingWhenInNamedWithOrOnSyntax<T> BindTo<T>() where T : class;
-
-		/// <summary>
 		/// Declares a binding from the service to itself.
 		/// </summary>
 		/// <param name="service">The service to bind.</param>

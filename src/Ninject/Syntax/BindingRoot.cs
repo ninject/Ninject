@@ -28,7 +28,10 @@ namespace Ninject.Syntax
 		public IBindingToSyntax<T> Bind<T>()
 		{
 			Type service = typeof(T);
-			IBinding binding = RegisterNewBinding(service);
+
+			var binding = new Binding(service);
+			AddBinding(binding);
+
 			return CreateBindingBuilder<T>(binding);
 		}
 
@@ -39,30 +42,11 @@ namespace Ninject.Syntax
 		public IBindingToSyntax<object> Bind(Type service)
 		{
 			Ensure.ArgumentNotNull(service, "service");
-			IBinding binding = RegisterNewBinding(service);
+
+			var binding = new Binding(service);
+			AddBinding(binding);
+
 			return CreateBindingBuilder<object>(binding);
-		}
-
-		/// <summary>
-		/// Declares a binding from the service to itself.
-		/// </summary>
-		/// <typeparam name="T">The service to bind.</typeparam>
-		public IBindingWhenInNamedWithOrOnSyntax<T> BindTo<T>() where T : class
-		{
-			Type service = typeof(T);
-			IBinding binding = RegisterNewBinding(service);
-			return CreateBindingBuilder<T>(binding).ToSelf();
-		}
-
-		/// <summary>
-		/// Declares a binding from the service to itself.
-		/// </summary>
-		/// <param name="service">The service to bind.</param>
-		public IBindingWhenInNamedWithOrOnSyntax<object> BindTo(Type service)
-		{
-			Ensure.ArgumentNotNull(service, "service");
-			IBinding binding = RegisterNewBinding(service);
-			return CreateBindingBuilder<object>(binding).AutoBound();
 		}
 
 		/// <summary>
@@ -111,13 +95,6 @@ namespace Ninject.Syntax
 		/// </summary>
 		/// <param name="binding">The binding to remove.</param>
 		public abstract void RemoveBinding(IBinding binding);
-
-		private IBinding RegisterNewBinding(Type service)
-		{
-			var binding = new Binding(service);
-			AddBinding(binding);
-			return binding;
-		}
 
 		/// <summary>
 		/// Creates a new builder for the specified binding.
