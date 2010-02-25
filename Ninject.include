@@ -148,6 +148,7 @@
 				<include name="**/*.sln"/>
 				<include name="**/*.txt"/>
 				<include name="**/*.build"/>
+				<include name="**/*.include"/>
 				<include name="**/*.snk"/>
 			</fileset>
 		</zip>
