@@ -59,6 +59,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
     <Compile Include="OnePerRequestModule.cs" />
     <Compile Include="Activation\InstanceReference.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />

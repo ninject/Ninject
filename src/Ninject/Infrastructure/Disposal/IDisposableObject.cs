@@ -14,13 +14,13 @@ using System;
 namespace Ninject.Infrastructure.Disposal
 {
 	/// <summary>
-	/// An object that fires an event when it is disposed.
+	/// An object that can report whether or not it is disposed.
 	/// </summary>
-	public interface INotifyWhenDisposed : IDisposableObject
+	public interface IDisposableObject : IDisposable
 	{
 		/// <summary>
-		/// Occurs when the object is disposed.
+		/// Gets a value indicating whether this instance is disposed.
 		/// </summary>
-		event EventHandler Disposed;
+		bool IsDisposed { get; }
 	}
 }

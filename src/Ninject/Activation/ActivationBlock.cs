@@ -17,23 +17,18 @@ using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 #endregion
 
-namespace Ninject.Activation.Blocks
+namespace Ninject.Activation
 {
 	/// <summary>
 	/// A block used for deterministic disposal of activated instances. When the block is
 	/// disposed, all instances activated via it will be deactivated.
 	/// </summary>
-	public class ActivationBlock : DisposableObject, IActivationBlock
+	public class ActivationBlock : DisposableObject, IResolutionRoot
 	{
 		/// <summary>
 		/// Gets or sets the parent resolution root (usually the kernel).
 		/// </summary>
 		public IResolutionRoot Parent { get; private set; }
-
-		/// <summary>
-		/// Occurs when the object is disposed.
-		/// </summary>
-		public event EventHandler Disposed;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ActivationBlock"/> class.
@@ -43,24 +38,6 @@ namespace Ninject.Activation.Blocks
 		{
 			Ensure.ArgumentNotNull(parent, "parent");
 			Parent = parent;
-		}
-
-		/// <summary>
-		/// Releases resources held by the object.
-		/// </summary>
-		public override void Dispose(bool disposing)
-		{
-			lock (this)
-			{
-				if (disposing && !IsDisposed)
-				{
-					var evt = Disposed;
-					if (evt != null) evt(this, EventArgs.Empty);
-					Disposed = null;
-				}
-
-				base.Dispose(disposing);
-			}
 		}
 
 		/// <summary>

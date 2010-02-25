@@ -159,5 +159,5 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 	internal class TestServiceA : NinjectComponent, ITestService { }
 	internal class TestServiceB : NinjectComponent, ITestService { }
 
-	internal interface ITestService : INinjectComponent, INotifyWhenDisposed { }
+	internal interface ITestService : INinjectComponent, IDisposableObject { }
 }
