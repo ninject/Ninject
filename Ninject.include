@@ -14,7 +14,7 @@
 
 	<property name="product.name" value="Ninject" overwrite="false"/>
 	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
-	<property name="product.duration" value="2007-2009" overwrite="false"/>
+	<property name="product.duration" value="2007-2010" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
 	<property name="product.keyfile" value="${product.name}.snk" overwrite="false"/>
 	<property name="product.docfile" value="${product.name}.xml" overwrite="false"/>
