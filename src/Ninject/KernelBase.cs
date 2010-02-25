@@ -113,7 +113,13 @@ namespace Ninject
 				#endif
 
 				if (Components != null)
+				{
+					// Deactivate all cached instances before shutting down the kernel.
+					var cache = Components.Get<ICache>();
+					cache.Clear();
+
 					Components.Dispose();
+				}
 			}
 
 			base.Dispose(disposing);
