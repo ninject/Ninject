@@ -34,7 +34,7 @@ namespace Ninject.Planning.Directives
 		public ITarget[] Targets { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodInjectionDirectiveBase&lt;TMethod, TInjector&gt;"/> class.
+		/// Initializes a new instance of the MethodInjectionDirectiveBase&lt;TMethod, TInjector&gt; class.
 		/// </summary>
 		/// <param name="method">The method this directive represents.</param>
 		/// <param name="injector">The injector that will be triggered.</param>

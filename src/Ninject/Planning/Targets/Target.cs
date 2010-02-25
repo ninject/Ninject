@@ -67,7 +67,7 @@ namespace Ninject.Planning.Targets
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Target&lt;T&gt;"/> class.
+		/// Initializes a new instance of the Target&lt;T&gt; class.
 		/// </summary>
 		/// <param name="member">The member that contains the target.</param>
 		/// <param name="site">The site represented by the target.</param>

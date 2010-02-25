@@ -36,11 +36,11 @@ namespace Ninject.Planning.Bindings
 		public IKernel Kernel { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BindingBuilder&lt;T&gt;"/> class.
+		/// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
 		/// </summary>
 		/// <param name="binding">The binding to build.</param>
 		/// <param name="kernel">The kernel.</param>
-		public BindingBuilder(IBinding binding, IKernel kernel)
+        public BindingBuilder(IBinding binding, IKernel kernel)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
 			Ensure.ArgumentNotNull(kernel, "kernel");

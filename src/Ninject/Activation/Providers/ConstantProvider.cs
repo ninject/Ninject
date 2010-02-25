@@ -26,7 +26,7 @@ namespace Ninject.Activation.Providers
 		public T Value { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConstantProvider&lt;T&gt;"/> class.
+        /// Initializes a new instance of the ConstantProvider&lt;T&gt; class.
 		/// </summary>
 		/// <param name="value">The value that the provider should return.</param>
 		public ConstantProvider(T value)

@@ -26,7 +26,7 @@ namespace Ninject.Activation.Providers
 		public Func<IContext, T> Method { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CallbackProvider&lt;T&gt;"/> class.
+        /// Initializes a new instance of the CallbackProvider&lt;T&gt; class.
 		/// </summary>
 		/// <param name="method">The callback method that will be called to create instances.</param>
 		public CallbackProvider(Func<IContext, T> method)
