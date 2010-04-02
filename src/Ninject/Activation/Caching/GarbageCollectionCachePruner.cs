@@ -70,13 +70,18 @@ namespace Ninject.Activation.Caching
 
 		private void PruneCacheIfGarbageCollectorHasRun(object state)
 		{
-			if (_indicator.IsAlive)
-				return;
+			try
+			{
+				if (_indicator.IsAlive)
+					return;
 
-			Cache.Prune();
-			_indicator.Target = new object();
-
-			_timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
+				Cache.Prune();
+				_indicator.Target = new object();
+			}
+			finally
+			{
+				_timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
+			}
 		}
 
 		private int GetTimeoutInMilliseconds()
