@@ -2,6 +2,8 @@
 <project name="Ninject" default="all">
 	<include buildfile="Ninject.include" />
 
+	<property name="version" value="2.0.1.0" overwrite="true"/>
+	
 	<target name="all" depends="core csl test"/>
 
 	<target name="core" depends="init">
