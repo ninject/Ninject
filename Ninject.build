@@ -2,14 +2,13 @@
 <project name="Ninject" default="all">
 	<include buildfile="Ninject.include" />
 
-	<property name="version" value="2.0.1.0" overwrite="true"/>
+	<property name="version" value="2.0.2.0" overwrite="true"/>
 	
 	<target name="all" depends="core csl test"/>
 
 	<target name="core" depends="init">
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         keyfile="${path.src}/${product.keyfile}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}">
-			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}">
+			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="${product.name}/**/*.cs"/>
@@ -24,9 +23,8 @@
 	</target>
 
 	<target name="csl" depends="init core">
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         keyfile="${path.src}/${product.keyfile}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
-			<arg line="/filealign:512" unless="${build.platform == 'mono-2.0'}"/>
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
+			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>

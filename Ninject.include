@@ -101,6 +101,11 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
 	</target>
 
+		<target name="config-platform-net-3.5-no-web">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB"/>
+	</target>
+	
 	<target name="config-platform-silverlight-2.0">
 		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
@@ -109,6 +114,16 @@
 	<target name="config-platform-silverlight-3.0">
 		<property name="nant.settings.currentframework" value="silverlight-3.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+	</target>
+
+	<target name="config-platform-silverlight-4.0">
+		<property name="nant.settings.currentframework" value="silverlight-4.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+	</target>
+	
+	<target name="config-platform-wp-7.0">
+		<property name="nant.settings.currentframework" value="wp-7.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_OPEN_GENERICS"/>
 	</target>
 
 	<target name="config-platform-netcf-3.5">
@@ -121,6 +136,11 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO"/>
 	</target>
 
+	<target name="config-platform-mono-2.0-no-web">
+		<property name="nant.settings.currentframework" value="mono-2.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB,MONO"/>
+	</target>
+	
 	<target name="test" depends="compile-tests" if="${build.platform == 'net-3.5'}" unless="${skip.tests}">
 		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html"/>
 		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
