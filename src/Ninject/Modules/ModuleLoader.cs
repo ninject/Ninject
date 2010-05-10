@@ -65,28 +65,47 @@ namespace Ninject.Modules
 			}
 		}
 
-		private static string[] GetFilesMatchingPattern(string pattern)
+		private static IEnumerable<string> GetFilesMatchingPattern(string pattern)
 		{
-			string path = NormalizePath(Path.GetDirectoryName(pattern));
-			string glob = Path.GetFileName(pattern);
-
-			return Directory.GetFiles(path, glob);
+			foreach (var path in NormalizePaths(Path.GetDirectoryName(pattern)))
+			{
+				string glob = Path.GetFileName(pattern);
+				foreach (var file in Directory.GetFiles(path, glob))
+				{
+					yield return file;
+				}
+			}
 		}
 
-		private static string NormalizePath(string path)
+		private static IEnumerable<string> NormalizePaths(string path)
 		{
 			if (!Path.IsPathRooted(path))
-				path = Path.Combine(GetBaseDirectory(), path);
+			{
+				foreach (var baseDirectory in GetBaseDirectories().ToList())
+				{
+					yield return Path.Combine(baseDirectory, path);
+				}
+				yield break;
+			}
 
-			return Path.GetFullPath(path);
+			yield return Path.GetFullPath(path);
 		}
 
-		private static string GetBaseDirectory()
+		private static IEnumerable<string> GetBaseDirectories()
 		{
 			string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 			string searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
-			return String.IsNullOrEmpty(searchPath) ? baseDirectory : Path.Combine(baseDirectory, searchPath);
+			if (!string.IsNullOrEmpty(searchPath))
+			{
+				var paths = searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries);
+				foreach (var path in paths)
+				{
+					yield return Path.Combine(baseDirectory, path);
+				}
+				yield break;
+			}
+			yield return baseDirectory;
 		}
 	}
 }
