@@ -268,7 +268,7 @@ namespace Ninject.Planning.Bindings
 		/// necessarily unique; multiple bindings for a given service may be registered with the same name.
 		/// </summary>
 		/// <param name="name">The name to give the binding.</param>
-		public IBindingWithSyntax<T> Named(string name)
+		public IBindingWithOrOnSyntax<T> Named(string name)
 		{
 			String.Intern(name);
 			Binding.Metadata.Name = name;
