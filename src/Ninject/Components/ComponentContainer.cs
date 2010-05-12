@@ -157,7 +157,8 @@ namespace Ninject.Components
 
 		private object ResolveInstance(Type component, Type implementation)
 		{
-			return _instances.ContainsKey(implementation) ? _instances[implementation] : CreateNewInstance(component, implementation);
+			lock (_instances)
+				return _instances.ContainsKey(implementation) ? _instances[implementation] : CreateNewInstance(component, implementation);
 		}
 
 		private object CreateNewInstance(Type component, Type implementation)
