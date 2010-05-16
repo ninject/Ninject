@@ -73,6 +73,24 @@ namespace Ninject.Infrastructure.Introspection
 			}
 		}
 
+		public static string CouldNotUniquelyResolveConditionalBinding(IRequest request)
+		{
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Error activating {0}", request.Service.Format());
+				sw.WriteLine("More than one matching conditional binding can satisfy this request.");
+
+				sw.WriteLine("Activation path:");
+				sw.WriteLine(request.FormatActivationPath());
+
+				sw.WriteLine("Suggestions:");
+				sw.WriteLine("  1) Ensure that you have defined exclusive binding conditions for {0}.", request.Service.Format());
+				sw.WriteLine("  2) Create a non-conditional binding to catch failed conditionals for {0}.", request.Service.Format());
+
+				return sw.ToString();
+			}
+		}
+
 		public static string CouldNotResolveBinding(IRequest request)
 		{
 			using (var sw = new StringWriter())

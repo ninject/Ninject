@@ -294,7 +294,9 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(request, "request");
 			var resolvers = Components.GetAll<IBindingResolver>();
-			return resolvers.SelectMany(r => r.Resolve(_bindings, request.Service)).Any();
+			return resolvers
+				.SelectMany(r => r.Resolve(_bindings, request.Service))
+				.Any(SatifiesRequest(request));
 		}
 
 		/// <summary>
@@ -314,22 +316,48 @@ namespace Ninject
 			{
 				if (request.IsOptional)
 					return Enumerable.Empty<object>();
-				else
-					throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
 			var bindings = GetBindings(request.Service)
 				.OrderBy(binding => binding.IsConditional ? 0 : 1)
-				.Where(binding => binding.Matches(request) && request.Matches(binding));
+				.Where(SatifiesRequest(request));
 
 			if (request.IsUnique && bindings.Count() > 1)
 			{
-				throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+				var conditionalBindings = bindings.Where(binding => binding.IsConditional);
+				if (conditionalBindings.Any())
+				{
+					if (conditionalBindings.Count() > 1)
+					{
+						throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveConditionalBinding(request));
+					}
+					bindings = conditionalBindings;
+				}
+				else
+				{
+					var nonImplicitBindings = bindings.Where(binding => !binding.IsImplicit);
+					if (nonImplicitBindings.Count() != 1)
+					{
+						throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+					}
+					bindings = nonImplicitBindings;
+				}
 			}
-
+			
 			return bindings
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
+		}
+
+		/// <summary>
+		/// Returns a predicate that can determine if a given IBinding matches the request.
+		/// </summary>
+		/// <param name="request">The request/</param>
+		/// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
+		protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
+		{
+			return binding => binding.Matches(request) && request.Matches(binding);
 		}
 
 		/// <summary>

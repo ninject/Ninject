@@ -144,7 +144,7 @@ namespace Ninject.Planning.Targets
 					return GetValues(service, parent).CastSlow(service);
 			}
 
-			return GetValues(Type, parent).FirstOrDefault();
+			return GetValue(Type, parent);
 		}
 
 		/// <summary>
@@ -160,6 +160,22 @@ namespace Ninject.Planning.Targets
 
 			var request = parent.Request.CreateChild(service, parent, this);
 			return parent.Kernel.Resolve(request);
+		}
+
+		/// <summary>
+		/// Gets the value that should be injected into the target.
+		/// </summary>
+		/// <param name="service">The service that the target is requesting.</param>
+		/// <param name="parent">The parent context in which the target is being injected.</param>
+		/// <returns>The value that is to be injected.</returns>
+		protected virtual object GetValue(Type service, IContext parent)
+		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(parent, "parent");
+
+			var request = parent.Request.CreateChild(service, parent, this);
+			request.IsUnique = true;
+			return parent.Kernel.Resolve(request).Single();
 		}
 
 		/// <summary>
