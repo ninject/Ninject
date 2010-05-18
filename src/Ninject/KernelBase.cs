@@ -293,9 +293,7 @@ namespace Ninject
 		public virtual bool CanResolve(IRequest request)
 		{
 			Ensure.ArgumentNotNull(request, "request");
-			var resolvers = Components.GetAll<IBindingResolver>();
-			return resolvers
-				.SelectMany(r => r.Resolve(_bindings, request.Service))
+			return GetBindings(request.Service)
 				.Any(SatifiesRequest(request));
 		}
 
