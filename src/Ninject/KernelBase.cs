@@ -319,32 +319,32 @@ namespace Ninject
 				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
-			var bindings = GetBindings(request.Service)
+			IEnumerable<IBinding> bindings = GetBindings(request.Service)
+				.Where(SatifiesRequest(request))
 				.OrderBy(binding => binding.IsConditional ? 0 : 1)
-				.Where(SatifiesRequest(request));
+				.ToList();
+
+			var conditionalBindings = bindings.Where(binding => binding.IsConditional);
+			var explicitBindings = bindings.Where(binding => !binding.IsImplicit);
+			if (conditionalBindings.Any())
+			{
+				bindings = conditionalBindings;
+			}
+			else if (explicitBindings.Any())
+			{
+				bindings = explicitBindings;
+			}
 
 			if (request.IsUnique && bindings.Count() > 1)
 			{
-				var conditionalBindings = bindings.Where(binding => binding.IsConditional);
-				if (conditionalBindings.Any())
-				{
-					if (conditionalBindings.Count() > 1)
-					{
-						throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveConditionalBinding(request));
-					}
-					bindings = conditionalBindings;
-				}
-				else
-				{
-					var nonImplicitBindings = bindings.Where(binding => !binding.IsImplicit);
-					if (nonImplicitBindings.Count() != 1)
-					{
-						throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
-					}
-					bindings = nonImplicitBindings;
-				}
+				throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
 			}
 			
+			if (!bindings.Any() && !request.IsOptional)
+			{
+				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+			}
+
 			return bindings
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
