@@ -320,15 +320,16 @@ namespace Ninject
 			IEnumerable<IBinding> bindings = GetBindings(request.Service)
 				.Where(SatifiesRequest(request))
 				.OrderBy(binding => binding.IsConditional ? 0 : 1)
+				.ThenBy(binding => !binding.IsImplicit ? 0 : 1)
 				.ToList();
 
 			var conditionalBindings = bindings.Where(binding => binding.IsConditional);
-			var explicitBindings = bindings.Where(binding => !binding.IsImplicit);
 			if (conditionalBindings.Any())
 			{
 				bindings = conditionalBindings;
 			}
-			else if (explicitBindings.Any())
+			var explicitBindings = bindings.Where(binding => !binding.IsImplicit);
+			if (explicitBindings.Any())
 			{
 				bindings = explicitBindings;
 			}

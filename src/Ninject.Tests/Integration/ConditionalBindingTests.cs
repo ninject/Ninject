@@ -1,6 +1,7 @@
 using Ninject.Tests.Fakes;
 using Ninject.Tests.Integration.StandardKernelTests;
 using Xunit;
+using System.Linq;
 
 namespace Ninject.Tests.Integration
 {
@@ -54,13 +55,39 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void GivenBindingIsMadeAfterImplictBinding_ThenNonImplicitBindingWillResolve()
+        public void GivenBindingIsMadeAfterImplictBinding_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
             Assert.IsType<Sword>(weapon);
             kernel.Bind<Sword>().To<ShortSword>();
             weapon = kernel.Get<Sword>();
             Assert.IsType<ShortSword>(weapon);
+        }
+
+        [Fact]
+        public void GivenBothImplicitAndExplicitConditionalBindings_ThenExplicitBindingWillResolve()
+        {
+            IWeapon weapon = kernel.Get<Sword>();
+            // make the binding conditional
+            kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
+            Assert.IsType<Sword>(weapon);
+
+            kernel.Bind<Sword>().To<ShortSword>().When(_ => true);
+            weapon = kernel.Get<Sword>();
+            Assert.IsType<ShortSword>(weapon);
+        }
+
+        [Fact]
+        public void GivenADefaultAndAConditionalImplicitBinding_ThenConditionalBindingWillResolve()
+        {
+            IWeapon weapon = kernel.Get<Sword>();
+            // make the binding conditional
+            kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
+            Assert.IsType<Sword>(weapon);
+
+            kernel.Bind<Sword>().To<ShortSword>();
+            weapon = kernel.Get<Sword>();
+            Assert.IsType<Sword>(weapon);
         }
     }
 }
