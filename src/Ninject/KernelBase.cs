@@ -317,36 +317,38 @@ namespace Ninject
 				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
 
+			IComparer<IBinding> bindingPrecedenceComparer = GetBindingPrecedenceComparer();
 			IEnumerable<IBinding> bindings = GetBindings(request.Service)
 				.Where(SatifiesRequest(request))
-				.OrderBy(binding => binding.IsConditional ? 0 : 1)
-				.ThenBy(binding => !binding.IsImplicit ? 0 : 1)
+				.OrderByDescending(b => b, bindingPrecedenceComparer)
 				.ToList();
 
-			var conditionalBindings = bindings.Where(binding => binding.IsConditional);
-			if (conditionalBindings.Any())
+			if (!bindings.Any() && !request.IsOptional)
 			{
-				bindings = conditionalBindings;
+				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
 			}
-			var explicitBindings = bindings.Where(binding => !binding.IsImplicit);
-			if (explicitBindings.Any())
-			{
-				bindings = explicitBindings;
-			}
+
+			var model = bindings.First();
+			bindings = bindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
 
 			if (request.IsUnique && bindings.Count() > 1)
 			{
 				throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
 			}
 			
-			if (!bindings.Any() && !request.IsOptional)
-			{
-				throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
-			}
 
 			return bindings
 				.Select(binding => CreateContext(request, binding))
 				.Select(context => context.Resolve());
+		}
+
+		/// <summary>
+		/// Returns an IComparer that is used to determine resolution precedence.
+		/// </summary>
+		/// <returns>An IComparer that is used to determine resolution precedence.</returns>
+		protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
+		{
+			return new BindingPrecedenceComparer();
 		}
 
 		/// <summary>
@@ -479,6 +481,34 @@ namespace Ninject
 		object IServiceProvider.GetService(Type service)
 		{
 			return this.Get(service);
+		}
+
+		private class BindingPrecedenceComparer : IComparer<IBinding>
+		{
+			public int Compare(IBinding x, IBinding y)
+			{
+				if(x == y)
+				{
+					return 0;
+				}
+
+				// Each function represents a level of precedence.
+				var funcs = new List<Func<IBinding, bool>>
+							{
+								b => b != null,       // null bindings should never happen, but just in case
+								b => b.IsConditional, // conditional bindings > unconditional
+								b => !b.IsImplicit,   // explicit bindings > implicit
+							};
+
+				var q = from func in funcs
+						let xVal = func(x)
+						where xVal != func(y) 
+						select xVal ? 1 : -1;
+
+				// returns the value of the first function that represents a difference
+				// between the bindings, or else returns 0 (equal)
+				return q.FirstOrDefault();
+			}
 		}
 	}
 }
