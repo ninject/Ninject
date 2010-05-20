@@ -59,6 +59,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
     <Compile Include="OnePerRequestModule.cs" />
     <Compile Include="Activation\InstanceReference.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
     <Compile Include="Infrastructure\IHaveBinding.cs" />
     <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />

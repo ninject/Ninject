@@ -15,7 +15,6 @@ using System.Reflection;
 using Ninject.Activation;
 using Ninject.Activation.Blocks;
 using Ninject.Activation.Caching;
-using Ninject.Activation.Providers;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
@@ -147,7 +146,12 @@ namespace Ninject
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
 
-			_bindings.Add(binding.Service, binding);
+			AddBindings(new[]{binding});
+		}
+
+		private void AddBindings(IEnumerable<IBinding> bindings)
+		{
+			bindings.Map(binding => _bindings.Add(binding.Service, binding));
 
 			lock (_bindingCache)
 				_bindingCache.Clear();
@@ -435,24 +439,11 @@ namespace Ninject
 		[Obsolete]
 		protected virtual bool HandleMissingBinding(Type service)
 		{
-			Ensure.ArgumentNotNull(service, "service");
-
-			if (!TypeIsSelfBindable(service))
-				return false;
-
-			var binding = new Binding(service)
-			{
-				ProviderCallback = StandardProvider.GetCreationCallback(service),
-				IsImplicit = true
-			};
-
-			AddBinding(binding);
-
-			return true;
+			return false;
 		}
 
 		/// <summary>
-		/// Attempts to handle a missing binding for a service.
+		/// Attempts to handle a missing binding for a request.
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
@@ -461,8 +452,26 @@ namespace Ninject
 			Ensure.ArgumentNotNull(request, "request");
 
 #pragma warning disable 612,618
-			return HandleMissingBinding(request.Service);
+			if(HandleMissingBinding(request.Service))
+			{
+				return true;
+			}
 #pragma warning restore 612,618
+
+			var components = Components.GetAll<IMissingBindingResolver>();
+			// Take the first set of bindings that resolve.
+			var bindings = components
+				.Select(c => c.Resolve(_bindings, request).ToList())
+				.FirstOrDefault(b => b.Any());
+
+			if (bindings != null)
+			{
+				bindings.Map(binding => binding.IsImplicit = true);
+				AddBindings(bindings);
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -470,6 +479,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="service">The service.</param>
 		/// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
+		[Obsolete]
 		protected virtual bool TypeIsSelfBindable(Type service)
 		{
 			return !service.IsInterface
