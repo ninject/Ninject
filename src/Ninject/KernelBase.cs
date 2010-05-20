@@ -310,7 +310,7 @@ namespace Ninject
 			if (request.Service == typeof(IKernel))
 				return new[] { this };
 
-			if (!CanResolve(request) && !HandleMissingBinding(request.Service))
+			if (!CanResolve(request) && !HandleMissingBinding(request))
 			{
 				if (request.IsOptional)
 					return Enumerable.Empty<object>();
@@ -432,6 +432,7 @@ namespace Ninject
 		/// </summary>
 		/// <param name="service">The service.</param>
 		/// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
+		[Obsolete]
 		protected virtual bool HandleMissingBinding(Type service)
 		{
 			Ensure.ArgumentNotNull(service, "service");
@@ -448,6 +449,20 @@ namespace Ninject
 			AddBinding(binding);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Attempts to handle a missing binding for a service.
+		/// </summary>
+		/// <param name="request">The request.</param>
+		/// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
+		protected virtual bool HandleMissingBinding(IRequest request)
+		{
+			Ensure.ArgumentNotNull(request, "request");
+
+#pragma warning disable 612,618
+			return HandleMissingBinding(request.Service);
+#pragma warning restore 612,618
 		}
 
 		/// <summary>
@@ -495,7 +510,7 @@ namespace Ninject
 				// Each function represents a level of precedence.
 				var funcs = new List<Func<IBinding, bool>>
 							{
-								b => b != null,       // null bindings should never happen, but just in case
+								b => b != null,	   // null bindings should never happen, but just in case
 								b => b.IsConditional, // conditional bindings > unconditional
 								b => !b.IsImplicit,   // explicit bindings > implicit
 							};
