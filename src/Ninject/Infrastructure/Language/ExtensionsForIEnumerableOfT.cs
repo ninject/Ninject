@@ -22,5 +22,10 @@ namespace Ninject.Infrastructure.Language
 			foreach (T item in series)
 				action(item);
 		}
+
+		public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<T> series)
+		{
+			return series.Select(x => x);
+		}
 	}
 }

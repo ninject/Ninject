@@ -10,8 +10,11 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ninject.Components;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Language;
+
 #endregion
 
 namespace Ninject.Planning.Bindings.Resolvers
@@ -30,12 +33,9 @@ namespace Ninject.Planning.Bindings.Resolvers
 		public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
 		{
 			if (!service.IsGenericType || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
-				yield break;
+				return Enumerable.Empty<IBinding>();
 
-			Type gtd = service.GetGenericTypeDefinition();
-
-			foreach (IBinding binding in bindings[gtd])
-				yield return binding;
+			return bindings[service.GetGenericTypeDefinition()].ToEnumerable();
 		}
 	}
 }

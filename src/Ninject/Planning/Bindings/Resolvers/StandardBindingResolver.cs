@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using Ninject.Components;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Language;
+
 #endregion
 
 namespace Ninject.Planning.Bindings.Resolvers
@@ -29,8 +31,7 @@ namespace Ninject.Planning.Bindings.Resolvers
 		/// <returns>The series of matching bindings.</returns>
 		public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
 		{
-			foreach (IBinding binding in bindings[service])
-				yield return binding;
+			return bindings[service].ToEnumerable();
 		}
 	}
 }

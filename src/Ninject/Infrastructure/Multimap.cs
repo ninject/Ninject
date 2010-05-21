@@ -137,14 +137,12 @@ namespace Ninject.Infrastructure
 		/// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the multimap.</returns>
 		public IEnumerator GetEnumerator()
 		{
-			foreach (KeyValuePair<K, ICollection<V>> pair in _items)
-				yield return pair;
+			return _items.GetEnumerator();
 		}
 
 		IEnumerator<KeyValuePair<K, ICollection<V>>> IEnumerable<KeyValuePair<K, ICollection<V>>>.GetEnumerator()
 		{
-			foreach (KeyValuePair<K, ICollection<V>> pair in _items)
-				yield return pair;
+			return _items.GetEnumerator();
 		}
 	}
 }

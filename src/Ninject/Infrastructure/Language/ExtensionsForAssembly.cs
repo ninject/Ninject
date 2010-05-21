@@ -27,8 +27,9 @@ namespace Ninject.Infrastructure.Language
 
 		public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
 		{
-			foreach (Type type in assembly.GetExportedTypes().Where(IsLoadableModule))
-				yield return Activator.CreateInstance(type) as INinjectModule;
+			return assembly.GetExportedTypes()
+					.Where(IsLoadableModule)
+					.Select(type => Activator.CreateInstance(type) as INinjectModule);
 		}
 
 		private static bool IsLoadableModule(Type type)
