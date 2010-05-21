@@ -37,7 +37,11 @@ namespace Ninject
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Multimap<Type, IBinding> _bindingCache = new Multimap<Type, IBinding>();
 		private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
-		protected readonly Object _handleMissingBindingLockObject = new object();
+
+		/// <summary>
+		/// Lock used when adding missing bindings.
+		/// </summary>
+		protected readonly object HandleMissingBindingLockObject = new object();
 
 		/// <summary>
 		/// Gets the kernel settings.
@@ -470,7 +474,7 @@ namespace Ninject
 				return false;
 			}
 
-			lock(_handleMissingBindingLockObject)
+			lock(HandleMissingBindingLockObject)
 			{
 				if (!CanResolve(request))
 				{
