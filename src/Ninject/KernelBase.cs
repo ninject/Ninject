@@ -37,6 +37,7 @@ namespace Ninject
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Multimap<Type, IBinding> _bindingCache = new Multimap<Type, IBinding>();
 		private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
+		protected readonly Object _handleMissingBindingLockObject = new object();
 
 		/// <summary>
 		/// Gets the kernel settings.
@@ -464,14 +465,20 @@ namespace Ninject
 				.Select(c => c.Resolve(_bindings, request).ToList())
 				.FirstOrDefault(b => b.Any());
 
-			if (bindings != null)
+			if (bindings == null)
 			{
-				bindings.Map(binding => binding.IsImplicit = true);
-				AddBindings(bindings);
-				return true;
+				return false;
 			}
 
-			return false;
+			lock(_handleMissingBindingLockObject)
+			{
+				if (!CanResolve(request))
+				{
+					bindings.Map(binding => binding.IsImplicit = true);
+					AddBindings(bindings);
+				}
+			}
+			return true;
 		}
 
 		/// <summary>
