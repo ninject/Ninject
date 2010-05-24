@@ -9,15 +9,10 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using Ninject.Activation;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
-using Ninject.Planning.Targets;
 #endregion
 
 namespace Ninject.Infrastructure.Introspection
@@ -68,24 +63,6 @@ namespace Ninject.Infrastructure.Introspection
 
 				sw.WriteLine("Suggestions:");
 				sw.WriteLine("  1) Ensure that you have defined a binding for {0} only once.", request.Service.Format());
-
-				return sw.ToString();
-			}
-		}
-
-		public static string CouldNotUniquelyResolveConditionalBinding(IRequest request)
-		{
-			using (var sw = new StringWriter())
-			{
-				sw.WriteLine("Error activating {0}", request.Service.Format());
-				sw.WriteLine("More than one matching conditional binding can satisfy this request.");
-
-				sw.WriteLine("Activation path:");
-				sw.WriteLine(request.FormatActivationPath());
-
-				sw.WriteLine("Suggestions:");
-				sw.WriteLine("  1) Ensure that you have defined exclusive binding conditions for {0}.", request.Service.Format());
-				sw.WriteLine("  2) Create a non-conditional binding to catch failed conditionals for {0}.", request.Service.Format());
 
 				return sw.ToString();
 			}
