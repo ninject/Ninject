@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NO_WEB
+using System;
 using System.IO;
 using System.Web;
 using Ninject.Activation.Caching;
@@ -98,3 +99,4 @@ namespace Ninject.Tests.Integration.RequestScopeTests
 		}
 	}
 }
+#endif //!NO_WEB
