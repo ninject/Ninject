@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NO_LCG
+using System;
 using System.Reflection;
 using Ninject.Injection;
 using Ninject.Tests.Fakes;
@@ -121,3 +122,4 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 		}
 	}
 }
+#endif //!NO_LCG

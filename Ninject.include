@@ -123,7 +123,7 @@
 	
 	<target name="config-platform-silverlight-4.0-wp7">
 		<property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WP7,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 	</target>
 
 	<target name="config-platform-netcf-3.5">
@@ -141,8 +141,8 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB,MONO"/>
 	</target>
 	
-	<target name="test" depends="compile-tests" if="${build.platform == 'net-3.5'}" unless="${skip.tests}">
-		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html"/>
+	<target name="test" depends="compile-tests" unless="${skip.tests}">
+		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html" if="${build.platform == 'net-3.5'}"/>
 		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
 			commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
 	</target>
