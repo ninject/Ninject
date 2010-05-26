@@ -151,8 +151,8 @@ namespace Ninject.Components
 		{
 			Ensure.ArgumentNotNull(component, "component");
 
-			foreach (Type implementation in _mappings[component])
-				yield return ResolveInstance(component, implementation);
+			return _mappings[component]
+				.Select(implementation => ResolveInstance(component, implementation));
 		}
 
 		private object ResolveInstance(Type component, Type implementation)

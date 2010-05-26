@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Components;
@@ -33,13 +34,17 @@ namespace Ninject.Planning.Bindings.Resolvers
 		public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
 		{
 			var service = request.Service;
-			if (TypeIsSelfBindable(service))
+			if (!TypeIsSelfBindable(service))
 			{
-				yield return new Binding(service)
-								 {
-									 ProviderCallback = StandardProvider.GetCreationCallback(service),
-								 };
+				return Enumerable.Empty<IBinding>();
 			}
+			return new[]
+						{
+							new Binding(service)
+							{
+								ProviderCallback = StandardProvider.GetCreationCallback(service)
+							}
+						};
 		}
 
 		/// <summary>
