@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NO_ASSEMBLY_SCANNING
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -38,3 +39,4 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 		}
 	}
 }
+#endif //!NO_ASSEMBLY_SCANNING

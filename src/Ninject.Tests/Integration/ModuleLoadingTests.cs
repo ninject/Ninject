@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NO_ASSEMBLY_SCANNING
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -37,3 +38,4 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 		}
 	}
 }
+#endif //!NO_ASSEMBLY_SCANNING

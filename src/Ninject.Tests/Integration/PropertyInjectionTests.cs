@@ -25,6 +25,7 @@ namespace Ninject.Tests.Integration
 			ValidateWarrior(warrior);
 		}
 
+#if !SILVERLIGHT
 		[Fact]
 		public void PropertyValuesOverrideDefaultBinding()
 		{
@@ -35,6 +36,7 @@ namespace Ninject.Tests.Integration
 			var warrior = _kernel.Get<IWarrior>();
 			ValidateNinjaWarriorWithOverides(warrior);
 		}
+#endif //!SILVERLIGHT
 	}
 
 	public class WithParameterTests : PropertyInjectionTests
@@ -57,6 +59,7 @@ namespace Ninject.Tests.Integration
 			ValidateWarrior(warrior);
 		}
 
+#if !SILVERLIGHT
 		[Fact]
 		public void PropertyValuesOverrideDefaultBinding()
 		{
@@ -67,10 +70,12 @@ namespace Ninject.Tests.Integration
 			var warrior = _kernel.Get<IWarrior>();
 			ValidateNinjaWarriorWithOverides(warrior);
 		}
+#endif //!SILVERLIGHT
 	}
 
 	public class WhenNoPropertyOverridesAreSupplied : PropertyInjectionTests
 	{
+#if !SILVERLIGHT
 		[Fact]
 		public void DefaultBindingsAreUsed()
 		{
@@ -82,8 +87,9 @@ namespace Ninject.Tests.Integration
 			Ninja ninja = warrior as Ninja;
 			Assert.IsType<Shuriken>(ninja.SecondaryWeapon);
 			Assert.IsType<Shuriken>(ninja.SecretWeaponAccessor);
-		}
-	}
+        }
+#endif //!SILVERLIGHT
+    }
 
 	public abstract class PropertyInjectionTests : DisposableObject
 	{
