@@ -54,11 +54,11 @@ namespace Ninject.Injection
 		/// <param name="property">The property.</param>
 		/// <returns>The created injector.</returns>
 		public PropertyInjector Create(PropertyInfo property)
-		{
-			#if SILVERLIGHT
+        {
+            #if NO_SKIP_VISIBILITY
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
-			#else
-			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
+            #else
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
 			#endif
 			
 			ILGenerator il = dynamicMethod.GetILGenerator();
@@ -69,8 +69,13 @@ namespace Ninject.Injection
 			il.Emit(OpCodes.Ldarg_1);
 			EmitUnboxOrCast(il, property.PropertyType);
 
-		    EmitMethodCall(il, property.GetSetMethod(Settings.InjectNonPublic));
+			#if !SILVERLIGHT
+			bool injectNonPublic = Settings.InjectNonPublic;
+			#else
+			const bool injectNonPublic = false;
+			#endif // !SILVERLIGHT
 
+			EmitMethodCall(il, property.GetSetMethod(injectNonPublic));
 			il.Emit(OpCodes.Ret);
 
 			return (PropertyInjector) dynamicMethod.CreateDelegate(typeof(PropertyInjector));
@@ -83,7 +88,7 @@ namespace Ninject.Injection
 		/// <returns>The created injector.</returns>
 		public MethodInjector Create(MethodInfo method)
 		{
-			#if SILVERLIGHT
+			#if NO_SKIP_VISIBILITY
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
 			#else
 			var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, true);

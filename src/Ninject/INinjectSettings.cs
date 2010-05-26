@@ -46,12 +46,14 @@ namespace Ninject
 		/// the (usually faster) lightweight code generation system.
 		/// </summary>
 		bool UseReflectionBasedInjection { get; }
+		#endif //!NO_LCG
 
-        /// <summary>
-        /// Gets a value indicating whether Ninject should inject non public members.
-        /// </summary>
-	    bool InjectNonPublic { get; set; }
-#endif //!NO_LCG
+		#if !SILVERLIGHT
+		/// <summary>
+		/// Gets a value indicating whether Ninject should inject non public members.
+		/// </summary>
+		bool InjectNonPublic { get; set; }
+		#endif //!SILVERLIGHT
 
 		/// <summary>
 		/// Gets the value for the specified key.
