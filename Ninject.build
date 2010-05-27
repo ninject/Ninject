@@ -2,7 +2,7 @@
 <project name="Ninject" default="all">
 	<include buildfile="Ninject.include" />
 
-	<property name="version" value="2.0.2.0" overwrite="true"/>
+	<property name="version" value="2.1.0.0" overwrite="true"/>
 	
 	<target name="all" depends="core csl test"/>
 
@@ -40,7 +40,7 @@
 		</csc>
 	</target>
 
-	<target name="compile-tests" depends="core" unless="${skip.tests}">
+	<target name="compile-tests" depends="core" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
 		<mkdir dir="${current.path.test}"/>
 		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">

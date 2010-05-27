@@ -101,9 +101,19 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
 	</target>
 
-		<target name="config-platform-net-3.5-no-web">
+	<target name="config-platform-net-3.5-no-web">
 		<property name="nant.settings.currentframework" value="net-3.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB"/>
+	</target>
+
+	<target name="config-platform-net-4.0">
+		<property name="nant.settings.currentframework" value="net-4.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_40"/>
+	</target>
+
+	<target name="config-platform-net-4.0-no-web">
+		<property name="nant.settings.currentframework" value="net-4.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_WEB"/>
 	</target>
 	
 	<target name="config-platform-silverlight-2.0">
@@ -141,7 +151,7 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB,MONO"/>
 	</target>
 	
-	<target name="test" depends="compile-tests" unless="${skip.tests}">
+	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
 		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html" if="${build.platform == 'net-3.5'}"/>
 		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
 			commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
