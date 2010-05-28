@@ -93,5 +93,13 @@
 			</nowarn>
 		</csc>
 	</target>
+	
+	<target name="revert">
+		<echo message="Reverting version info"/>
+		<exec
+			program="${path.tools.git}/git.exe"
+			commandline='checkout "${path.build.assemblyinfo}"'
+			failonerror="false"/>
+	</target>
 
 </project>

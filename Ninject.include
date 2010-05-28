@@ -7,10 +7,12 @@
 	<property name="path.dist" value="${path.base}/dist"/>
 	<property name="path.docs" value="${path.base}/docs"/>
 	<property name="path.src" value="${path.base}/src"/>
+	<property name="path.build.assemblyinfo" value="${path.src}/${build.asminfo}" dynamic="true"/>
 	<property name="path.tools" value="${path.base}/tools"/>
 	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
 	<property name="path.tools.moq" value="${path.tools}/moq"/>
 	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
+	<property name="path.tools.git" value="${path.tools}/git"/>
 
 	<property name="product.name" value="Ninject" overwrite="false"/>
 	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
@@ -42,7 +44,7 @@
 	</target>
 
 	<target name="create-assembly-info">
-		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
+		<asminfo output="${path.build.assemblyinfo}" language="CSharp">
 			<imports>
 				<import namespace="System"/>
 				<import namespace="System.Reflection"/>
