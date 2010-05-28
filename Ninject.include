@@ -36,6 +36,68 @@
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
 
+	<property name="Is64BitOperatingSystem" value="false" />
+	<property name="Is64BitProcess" value="false" />
+	<property name="IsWow64Process" value="false" />
+	
+	<target name="DetectOperatingSystemArchitecture" depends="DetectIfWow64Process,DetectIf64BitProcess">
+		<description>
+			This will detect whether the current Operating System is running as a 32-bit or 64-bit Operating System regardless of whether this is a 32-bit or 64-bit process.
+		</description>
+		<property name="Is64BitOperatingSystem" value="${IsWow64Process or Is64BitProcess}" />
+		<if test="${Is64BitOperatingSystem}">
+			<echo message="The operating system you are running is 64-bit." />
+		</if>
+		<if test="${not Is64BitOperatingSystem}">
+			<echo message="The operating system you are running is 32-bit." />
+		</if>
+	</target>
+	
+	<script language="C#" prefix="PInvoke">
+		<references>
+			<include name="System.dll" />
+		</references>
+		<imports>
+			<import namespace="System.Diagnostics" />
+			<import namespace="System.Runtime.InteropServices" />
+		</imports>
+		<code>
+			<![CDATA[
+				[DllImport("kernel32.dll")]
+				public static extern bool IsWow64Process(System.IntPtr hProcess, out bool lpSystemInfo);
+	
+				[Function("IsWow64Process")]
+				public bool IsWow64Process()
+				{
+					bool retVal = false;
+	
+					IsWow64Process(Process.GetCurrentProcess().Handle, out retVal);
+	
+					return retVal;
+				}
+				]]>
+		</code>
+	</script>
+	
+	<target name="DetectIfWow64Process">
+		<description>
+			Detects whether we are currently in a WoW64 process or not.
+		</description>
+	
+		<property name="IsWow64Process" value="${PInvoke::IsWow64Process()}" />
+		<echo message="Setting the [IsWow64Process] property to ${IsWow64Process}." />
+	</target>
+	 
+	<target name="DetectIf64BitProcess">
+		<description>
+			Detects whether we are currently in a 32-bit or 64-bit process (not necessarily what the OS is running). Note that as of the time of this writing, this will ALWAYS return false because NAnt is compiled to run in 32-bit mode only.
+		</description>
+	
+		<!-- This can return x86, x64, AMD64, or IA64 as of the time of this writing. This works for a 32-bit process in a 64-bit OS because the OS makes the 64-bitness transparent to the process in this environment variable. -->
+		<property name="Is64BitProcess" value="${environment::get-variable('PROCESSOR_ARCHITECTURE')!='x86'}" />
+		<echo message="Setting the [Is64BitProcess] property to ${Is64BitProcess}." />
+	</target>
+
 	<target name="rebuild" depends="clean, all"/>
 
 	<target name="clean">
@@ -62,6 +124,7 @@
 	</target>
 
 	<target name="init" depends="create-assembly-info">
+		<call target="DetectOperatingSystemArchitecture"/>
 		<mkdir dir="${path.build}" if="${not(directory::exists(path.build))}"/>
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 
@@ -155,8 +218,10 @@
 	
 	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
 		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html" if="${build.platform == 'net-3.5'}"/>
-		<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
-			commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
+		<if test="${not Is64BitOperatingSystem}">
+			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
+				commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
+		</if>
 	</target>
 
 	<target name="package-all" depends="all package-bin package-source" />
