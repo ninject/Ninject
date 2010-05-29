@@ -217,7 +217,7 @@
 	</target>
 	
 	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
-		<xunit workingDir="${current.path.test}" assembly="${product.assembly.test}" html="${current.path.test}/results.html" if="${build.platform == 'net-3.5'}"/>
+		<exec program="${path.tools.xunit}/xunit.console.exe" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
 		<if test="${not Is64BitOperatingSystem}">
 			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
 				commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
