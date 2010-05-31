@@ -130,10 +130,16 @@ namespace Ninject.Components
 				Type gtd = component.GetGenericTypeDefinition();
 				Type argument = component.GetGenericArguments()[0];
 
-				if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
+#if WINDOWS_PHONE
+				Type discreteGenericType =
+					typeof (IEnumerable<>).MakeGenericType(argument);
+				if (gtd.IsInterface && discreteGenericType.IsAssignableFrom(component))
 					return GetAll(argument).CastSlow(argument);
+#else
+				if (gtd.IsInterface && typeof (IEnumerable<>).IsAssignableFrom(gtd))
+					return GetAll(argument).CastSlow(argument);
+#endif
 			}
-
 			Type implementation = _mappings[component].FirstOrDefault();
 
 			if (implementation == null)
