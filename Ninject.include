@@ -23,11 +23,12 @@
 	<property name="product.assembly" value="${product.name}.dll" overwrite="false"/>
 	<property name="product.assembly.test" value="${product.name}.Tests.dll" overwrite="false"/>
 
-	<property name="version" value="2.0.0.0" overwrite="false"/>
+	<property name="version" value="2.1.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
-	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
+	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true" unless="${environment::variable-exists('BUILD_NUMBER')}"/>
+	<property name="version.revision" value="${environment::get-variable('BUILD_NUMBER')}" dynamic="true" if="${environment::variable-exists('BUILD_NUMBER')}"/>
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
 	<property name="build.platform" value="net-3.5" overwrite="false"/>
@@ -106,6 +107,7 @@
 	</target>
 
 	<target name="create-assembly-info">
+		<echo message="##teamcity[buildNumber '${build.version}']" />
 		<asminfo output="${path.build.assemblyinfo}" language="CSharp">
 			<imports>
 				<import namespace="System"/>
