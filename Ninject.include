@@ -270,7 +270,7 @@
 		<property name="temp.revision.file" value="RevisionNr.tmp" />
 		<exec
 			program="${path.tools.git}/git.exe"
-			commandline='describe --long'
+			commandline='describe --tags --long'
 			failonerror="true" 
 			output="${temp.revision.file}"/>
 		<loadfile file="${temp.revision.file}" property="actual.git.revision" />
