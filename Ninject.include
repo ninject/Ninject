@@ -242,7 +242,7 @@
 		</zip>
 	</target>
 
-	<target name="package-source">
+	<target name="package-source" depends="create-assembly-info">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 		<zip zipfile="${path.dist}\${product.name}-${build.version}-source.zip" ziplevel="9">
 			<fileset basedir="${path.base}">
