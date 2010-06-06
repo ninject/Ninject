@@ -27,7 +27,8 @@
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
-	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true" />
+	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true" unless="${environment::variable-exists('BUILD_NUMBER')}"/>
+	<property name="version.revision" value="${environment::get-variable('BUILD_NUMBER')}" dynamic="true" if="${environment::variable-exists('BUILD_NUMBER')}"/>
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
 	<property name="build.platform" value="net-3.5" overwrite="false"/>
@@ -264,19 +265,21 @@
 			program="${path.tools.git}/git.exe"
 			commandline='checkout "${path.build.assemblyinfo}"'
 			failonerror="false"/>
-	</target>
+	</target>	
 
 	<target name="get-git-revision">
 		<property name="temp.revision.file" value="RevisionNr.tmp" />
 		<exec
 			program="${path.tools.git}/git.exe"
-			commandline='describe --tags --long'
-			failonerror="true" 
+			commandline='describe --long'
+			failonerror="false" 
 			output="${temp.revision.file}"/>
-		<loadfile file="${temp.revision.file}" property="actual.git.revision" />
-		<regex pattern=".*-(?&lt;gitrevisionnumber&gt;\d+)-.*" input="${actual.git.revision}" />
-		<property name="version.revision" value="${gitrevisionnumber}" overwrite="true"/>
-		<delete file="${temp.revision.file}" />
+		<if propertyexists="${temp.revision.file}">
+			<loadfile file="${temp.revision.file}" property="actual.git.revision"/>
+			<regex pattern=".*-(?&lt;gitrevisionnumber&gt;\d+)-.*" input="${actual.git.revision}"/>
+			<property name="version.revision" value="${gitrevisionnumber}" overwrite="true" />
+			<delete file="${temp.revision.file}" failonerror="false"/>
+		</if>
 	</target>
 	
 </project>
