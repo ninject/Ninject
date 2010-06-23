@@ -10,6 +10,7 @@
 	<property name="path.build.assemblyinfo" value="${path.src}/${build.asminfo}" dynamic="true"/>
 	<property name="path.tools" value="${path.base}/tools"/>
 	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
+	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
 	<property name="path.tools.moq" value="${path.tools}/moq"/>
 	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
 	<property name="path.tools.git" value="${path.tools}/git"/>
@@ -181,11 +182,13 @@
 	<target name="config-platform-net-4.0">
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
 	</target>
 
 	<target name="config-platform-net-4.0-no-web">
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_WEB"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
 	</target>
 	
 	<target name="config-platform-silverlight-2.0">
@@ -223,11 +226,11 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB,MONO"/>
 	</target>
 	
-	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
-		<exec program="${path.tools.xunit}/xunit.console.exe" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
+	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}">
+		<exec program="${path.tools.xunit.console}" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
 		<if test="${not Is64BitOperatingSystem}">
 			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
-				commandline="&quot;${path.tools.xunit}\xunit.console.exe&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
+				commandline="&quot;${path.tools.xunit.console}&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
 		</if>
 	</target>
 

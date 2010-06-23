@@ -40,7 +40,7 @@
 		</csc>
 	</target>
 
-	<target name="compile-tests" depends="core" unless="${skip.tests}" if="${build.platform == 'net-3.5'}">
+	<target name="compile-tests" depends="core" unless="${skip.tests}" if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}">
 		<mkdir dir="${current.path.test}"/>
 		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">
