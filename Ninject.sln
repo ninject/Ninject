@@ -1,12 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject", "src\Ninject\Ninject.csproj", "{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Ninject.Tests\Ninject.Tests.csproj", "{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter", "src\CommonServiceLocator.NinjectAdapter\CommonServiceLocator.NinjectAdapter.csproj", "{9BD94717-484B-4EB1-AF32-8D4244F02E8E}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E299B94-5F07-49DE-8226-55EDC56F13E3}"
 	ProjectSection(SolutionItems) = preProject
 		build-release.cmd = build-release.cmd
@@ -15,6 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Ninject.build = Ninject.build
 		README.markdown = README.markdown
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject", "src\Ninject\Ninject.csproj", "{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Ninject.Tests\Ninject.Tests.csproj", "{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter", "src\CommonServiceLocator.NinjectAdapter\CommonServiceLocator.NinjectAdapter.csproj", "{9BD94717-484B-4EB1-AF32-8D4244F02E8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
