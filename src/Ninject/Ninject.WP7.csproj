@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E940833E-228E-4AFD-90F4-95D386C5342F}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject</RootNamespace>
+    <AssemblyName>Ninject</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows Phone</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>e2b4d4f5-4563-4010-a364-50458c85fe0b</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\WP7\debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>false</XnaCompressContent>
+    <DocumentationFile>..\..\build\WP7\debug\Ninject.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Windows Phone' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\WP7\release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <XnaCompressContent>false</XnaCompressContent>
+    <DocumentationFile>..\..\build\WP7\release\Ninject.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActivationException.cs" />
+    <Compile Include="Activation\Blocks\ActivationBlock.cs" />
+    <Compile Include="Activation\Blocks\IActivationBlock.cs" />
+    <Compile Include="Activation\Caching\Cache.cs" />
+    <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs" />
+    <Compile Include="Activation\Caching\ICache.cs" />
+    <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Activation\Context.cs" />
+    <Compile Include="Activation\IContext.cs" />
+    <Compile Include="Activation\InstanceReference.cs" />
+    <Compile Include="Activation\IPipeline.cs" />
+    <Compile Include="Activation\IProvider.cs" />
+    <Compile Include="Activation\IRequest.cs" />
+    <Compile Include="Activation\Pipeline.cs" />
+    <Compile Include="Activation\Provider.cs" />
+    <Compile Include="Activation\Providers\CallbackProvider.cs" />
+    <Compile Include="Activation\Providers\ConstantProvider.cs" />
+    <Compile Include="Activation\Providers\StandardProvider.cs" />
+    <Compile Include="Activation\Request.cs" />
+    <Compile Include="Activation\Strategies\ActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\BindingActionStrategy.cs" />
+    <Compile Include="Activation\Strategies\DisposableStrategy.cs" />
+    <Compile Include="Activation\Strategies\IActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
+    <Compile Include="Activation\Strategies\MethodInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\StartableStrategy.cs" />
+    <Compile Include="Attributes\ConstraintAttribute.cs" />
+    <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="Attributes\NamedAttribute.cs" />
+    <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="Components\ComponentContainer.cs" />
+    <Compile Include="Components\IComponentContainer.cs" />
+    <Compile Include="Components\INinjectComponent.cs" />
+    <Compile Include="Components\NinjectComponent.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="IKernel.cs" />
+    <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
+    <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
+    <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
+    <Compile Include="Infrastructure\Ensure.cs" />
+    <Compile Include="Infrastructure\Future.cs" />
+    <Compile Include="Infrastructure\IHaveBinding.cs" />
+    <Compile Include="Infrastructure\IHaveKernel.cs" />
+    <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
+    <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
+    <Compile Include="Infrastructure\Multimap.cs" />
+    <Compile Include="Infrastructure\RequestFlags.cs" />
+    <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
+    <Compile Include="INinjectSettings.cs" />
+    <Compile Include="Injection\ConstructorInjector.cs" />
+    <Compile Include="Injection\DynamicMethodInjectorFactory.cs" />
+    <Compile Include="Injection\IInjectorFactory.cs" />
+    <Compile Include="Injection\MethodInjector.cs" />
+    <Compile Include="Injection\PropertyInjector.cs" />
+    <Compile Include="Injection\ReflectionInjectorFactory.cs" />
+    <Compile Include="IStartable.cs" />
+    <Compile Include="KernelBase.cs" />
+    <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\IModuleLoader.cs" />
+    <Compile Include="Modules\IModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\INinjectModule.cs" />
+    <Compile Include="Modules\ModuleLoader.cs" />
+    <Compile Include="Modules\NinjectModule.cs" />
+    <Compile Include="NinjectSettings.cs" />
+    <Compile Include="OnePerRequestModule.cs" />
+    <Compile Include="Parameters\ConstructorArgument.cs" />
+    <Compile Include="Parameters\IParameter.cs" />
+    <Compile Include="Parameters\Parameter.cs" />
+    <Compile Include="Parameters\PropertyValue.cs" />
+    <Compile Include="Planning\Bindings\Binding.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder.cs" />
+    <Compile Include="Planning\Bindings\BindingMetadata.cs" />
+    <Compile Include="Planning\Bindings\BindingTarget.cs" />
+    <Compile Include="Planning\Bindings\IBinding.cs" />
+    <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
+    <Compile Include="Planning\Directives\ConstructorInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\IDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirectiveBase.cs" />
+    <Compile Include="Planning\Directives\PropertyInjectionDirective.cs" />
+    <Compile Include="Planning\IPlan.cs" />
+    <Compile Include="Planning\IPlanner.cs" />
+    <Compile Include="Planning\Plan.cs" />
+    <Compile Include="Planning\Planner.cs" />
+    <Compile Include="Planning\Strategies\ConstructorReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\IPlanningStrategy.cs" />
+    <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
+    <Compile Include="Planning\Targets\ITarget.cs" />
+    <Compile Include="Planning\Targets\ParameterTarget.cs" />
+    <Compile Include="Planning\Targets\PropertyTarget.cs" />
+    <Compile Include="Planning\Targets\Target.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Selection\Heuristics\IConstructorScorer.cs" />
+    <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
+    <Compile Include="Selection\Heuristics\StandardConstructorScorer.cs" />
+    <Compile Include="Selection\Heuristics\StandardInjectionHeuristic.cs" />
+    <Compile Include="Selection\ISelector.cs" />
+    <Compile Include="Selection\Selector.cs" />
+    <Compile Include="StandardKernel.cs" />
+    <Compile Include="Syntax\BindingRoot.cs" />
+    <Compile Include="Syntax\BindingSyntax.cs" />
+    <Compile Include="Syntax\IBindingRoot.cs" />
+    <Compile Include="Syntax\IFluentSyntax.cs" />
+    <Compile Include="Syntax\IResolutionRoot.cs" />
+    <Compile Include="Syntax\ModuleLoadExtensions.cs" />
+    <Compile Include="Syntax\ResolutionExtensions.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>
