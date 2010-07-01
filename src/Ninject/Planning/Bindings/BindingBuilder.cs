@@ -398,17 +398,37 @@ namespace Ninject.Planning.Bindings
 		/// <param name="action">The action callback.</param>
 		public IBindingOnSyntax<T> OnActivation(Action<T> action)
 		{
-			Binding.ActivationActions.Add(instance => action((T)instance));
+			Binding.ActivationActions.Add((context, instance) => action((T)instance));
 			return this;
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Indicates that the specified callback should be invoked when instances are activated.
+        /// </summary>
+        /// <param name="action">The action callback.</param>
+        public IBindingOnSyntax<T> OnActivation(Action<IContext, T> action)
+        {
+            Binding.ActivationActions.Add((context, instance) => action(context, (T)instance));
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the specified callback should be invoked when instances are deactivated.
+        /// </summary>
+        /// <param name="action">The action callback.</param>
+        public IBindingOnSyntax<T> OnDeactivation(Action<T> action)
+        {
+            Binding.DeactivationActions.Add((context, instance) => action((T)instance));
+            return this;
+        }
+        
+        /// <summary>
 		/// Indicates that the specified callback should be invoked when instances are deactivated.
 		/// </summary>
 		/// <param name="action">The action callback.</param>
-		public IBindingOnSyntax<T> OnDeactivation(Action<T> action)
+		public IBindingOnSyntax<T> OnDeactivation(Action<IContext, T> action)
 		{
-			Binding.DeactivationActions.Add(instance => action((T)instance));
+            Binding.DeactivationActions.Add((context, instance) => action(context, (T)instance));
 			return this;
 		}
 	}

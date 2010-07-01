@@ -260,17 +260,28 @@ namespace Ninject.Syntax
 	/// <typeparam name="T">The service being bound.</typeparam>
 	public interface IBindingOnSyntax<T> : IBindingSyntax
 	{
-		/// <summary>
+        /// <summary>
+        /// Indicates that the specified callback should be invoked when instances are activated.
+        /// </summary>
+        /// <param name="action">The action callback.</param>
+        IBindingOnSyntax<T> OnActivation(Action<T> action);
+        /// <summary>
 		/// Indicates that the specified callback should be invoked when instances are activated.
 		/// </summary>
 		/// <param name="action">The action callback.</param>
-		IBindingOnSyntax<T> OnActivation(Action<T> action);
+		IBindingOnSyntax<T> OnActivation(Action<IContext, T> action);
 
 		/// <summary>
 		/// Indicates that the specified callback should be invoked when instances are deactivated.
 		/// </summary>
 		/// <param name="action">The action callback.</param>
 		IBindingOnSyntax<T> OnDeactivation(Action<T> action);
+
+        /// <summary>
+        /// Indicates that the specified callback should be invoked when instances are deactivated.
+        /// </summary>
+        /// <param name="action">The action callback.</param>
+        IBindingOnSyntax<T> OnDeactivation(Action<IContext, T> action);
 	}
 
 	/// <summary>

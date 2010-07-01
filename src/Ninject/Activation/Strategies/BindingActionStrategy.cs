@@ -28,7 +28,7 @@ namespace Ninject.Activation.Strategies
 		public override void Activate(IContext context, InstanceReference reference)
 		{
 			Ensure.ArgumentNotNull(context, "context");
-			context.Binding.ActivationActions.Map(action => action(reference.Instance));
+			context.Binding.ActivationActions.Map(action => action(context, reference.Instance));
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Ninject.Activation.Strategies
 		public override void Deactivate(IContext context, InstanceReference reference)
 		{
 			Ensure.ArgumentNotNull(context, "context");
-			context.Binding.DeactivationActions.Map(action => action(reference.Instance));
+			context.Binding.DeactivationActions.Map(action => action(context, reference.Instance));
 		}
 	}
 }
