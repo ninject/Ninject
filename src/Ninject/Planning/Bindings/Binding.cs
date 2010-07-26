@@ -73,12 +73,12 @@ namespace Ninject.Planning.Bindings
 		/// <summary>
 		/// Gets the actions that should be called after instances are activated via the binding.
 		/// </summary>
-		public ICollection<Action<object>> ActivationActions { get; private set; }
+		public ICollection<Action<IContext, object>> ActivationActions { get; private set; }
 
 		/// <summary>
 		/// Gets the actions that should be called before instances are deactivated via the binding.
 		/// </summary>
-		public ICollection<Action<object>> DeactivationActions { get; private set; }
+        public ICollection<Action<IContext, object>> DeactivationActions { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Binding"/> class.
@@ -99,8 +99,8 @@ namespace Ninject.Planning.Bindings
 			Service = service;
 			Metadata = metadata;
 			Parameters = new List<IParameter>();
-			ActivationActions = new List<Action<object>>();
-			DeactivationActions = new List<Action<object>>();
+			ActivationActions = new List<Action<IContext, object>>();
+            DeactivationActions = new List<Action<IContext, object>>();
 			ScopeCallback = StandardScopeCallbacks.Transient;
 		}
 

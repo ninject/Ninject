@@ -30,8 +30,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bool action1WasCalled = false;
 			bool action2WasCalled = false;
 
-			Action<object> action1 = c => action1WasCalled = true;
-			Action<object> action2 = c => action2WasCalled = true;
+			Action<IContext, object> action1 = (c, i) => action1WasCalled = true;
+            Action<IContext, object> action2 = (c, i) => action2WasCalled = true;
 			var actions = new[] { action1, action2 };
 
 			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
@@ -51,8 +51,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 			bool action1WasCalled = false;
 			bool action2WasCalled = false;
 
-			Action<object> action1 = c => action1WasCalled = true;
-			Action<object> action2 = c => action2WasCalled = true;
+            Action<IContext, object> action1 = (c, i) => action1WasCalled = true;
+            Action<IContext, object> action2 = (c, i) => action2WasCalled = true;
 			var actions = new[] { action1, action2 };
 
 			contextMock.SetupGet(x => x.Binding).Returns(bindingMock.Object);
