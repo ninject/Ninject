@@ -21,27 +21,33 @@ namespace Ninject.Selection.Heuristics
 	/// Determines whether members should be injected during activation by checking
 	/// if they are decorated with an injection marker attribute.
 	/// </summary>
-	public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
-	{
-		/// <summary>
-		/// Returns a value indicating whether the specified member should be injected.
-		/// </summary>
-		/// <param name="member">The member in question.</param>
-		/// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
-		public bool ShouldInject(MemberInfo member)
-		{
-			Ensure.ArgumentNotNull(member, "member");
+    public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
+    {
+        /// <summary>
+        /// Returns a value indicating whether the specified member should be injected.
+        /// </summary>
+        /// <param name="member">The member in question.</param>
+        /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
+        public bool ShouldInject(MemberInfo member)
+        {
+            Ensure.ArgumentNotNull(member, "member");
 
-		    var propertyInfo = member as PropertyInfo;
+            var propertyInfo = member as PropertyInfo;
 
-            if(propertyInfo != null)
+            if (propertyInfo != null)
             {
-                var setMethod = propertyInfo.GetSetMethod(Settings.InjectNonPublic);
+                #if !SILVERLIGHT
+                bool injectNonPublic = Settings.InjectNonPublic;
+                #else
+			    const bool injectNonPublic = false;
+                #endif // !SILVERLIGHT
+
+                var setMethod = propertyInfo.GetSetMethod(injectNonPublic);
 
                 return member.HasAttribute(Settings.InjectAttribute) && setMethod != null;
             }
 
-		    return member.HasAttribute(Settings.InjectAttribute);
-		}
-	}
+            return member.HasAttribute(Settings.InjectAttribute);
+        }
+    }
 }

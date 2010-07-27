@@ -19,6 +19,7 @@ namespace Ninject.Tests.Integration
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
+#if !SILVERLIGHT
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCanBeInjectedWhenEnabled()
         {
@@ -33,6 +34,7 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.ShouldNotBeNull();
             warrior.UltraSecretWeapon.ShouldBeInstanceOf(typeof(ShortSword));
         }
+#endif //!SILVERLIGHT
 
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCannotBeCreatedByDefault()
