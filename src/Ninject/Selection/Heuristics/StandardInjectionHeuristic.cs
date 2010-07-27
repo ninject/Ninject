@@ -31,7 +31,17 @@ namespace Ninject.Selection.Heuristics
 		public bool ShouldInject(MemberInfo member)
 		{
 			Ensure.ArgumentNotNull(member, "member");
-			return member.HasAttribute(Settings.InjectAttribute);
+
+		    var propertyInfo = member as PropertyInfo;
+
+            if(propertyInfo != null)
+            {
+                var setMethod = propertyInfo.GetSetMethod(Settings.InjectNonPublic);
+
+                return member.HasAttribute(Settings.InjectAttribute) && setMethod != null;
+            }
+
+		    return member.HasAttribute(Settings.InjectAttribute);
 		}
 	}
 }
