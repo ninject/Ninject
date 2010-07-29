@@ -1,6 +1,5 @@
 namespace Ninject.Tests.Integration
 {
-    using System;
     using Fakes;
     using StandardKernelTests;
     using Xunit;
@@ -11,6 +10,7 @@ namespace Ninject.Tests.Integration
         public PublicPropertyWithMoreRestrictiveSetterContext()
         {
             this.kernel.Bind<IWarrior>().To<SpecialNinja>();
+            this.kernel.Bind<UltraSpecialNinja>().ToSelf();
             this.kernel.Bind<IWeapon>().To<Shuriken>().Named("Weapon");
             this.kernel.Bind<IWeapon>().To<Sword>().Named("SecretWeapon");
             this.kernel.Bind<IWeapon>().To<ShortSword>().Named("UltraSecretWeapon");
@@ -48,6 +48,36 @@ namespace Ninject.Tests.Integration
         }
     }
 
+    public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
+    {
+#if !SILVERLIGHT
+        [Fact]
+        public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyExceptPrivateCanBeInjectedWhenEnabled()
+        {
+            this.kernel.Settings.InjectNonPublic = true;
+            var warrior = this.kernel.Get<UltraSpecialNinja>();
+
+            warrior.ShouldNotBeNull();
+            warrior.Weapon.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeInstanceOf(typeof(Shuriken));
+            warrior.SecretWeapon.ShouldNotBeNull();
+            warrior.SecretWeapon.ShouldBeInstanceOf(typeof(Sword));
+            warrior.UltraSecretWeapon.ShouldBeNull();
+        }
+#endif //!SILVERLIGHT
+
+        [Fact]
+        public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyCannotBeCreatedByDefault()
+        {
+            var warrior = this.kernel.Get<UltraSpecialNinja>();
+
+            warrior.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeNull();
+            warrior.SecretWeapon.ShouldBeNull();
+            warrior.UltraSecretWeapon.ShouldBeNull();
+        }
+    }
+
     public class SpecialNinja : IWarrior
     {
         [Inject]
@@ -61,5 +91,9 @@ namespace Ninject.Tests.Integration
         [Inject]
         [Named("UltraSecretWeapon")]
         public IWeapon UltraSecretWeapon { get; private set; }
+    }
+
+    public class UltraSpecialNinja : SpecialNinja
+    {
     }
 }
