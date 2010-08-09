@@ -258,6 +258,17 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 			weapons.Length.ShouldBe(0);
 		}
 	}
+	
+	public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
+	{
+		[Fact]
+		public void ActivationExceptionIsThrownWhenProviderReturnsNull()
+		{
+			kernel.Bind<IWeapon>().ToProvider<NullProvider>();
+			
+			Assert.Throws<Ninject.ActivationException>(() => kernel.Get<IWeapon>());
+		}
+	}
 
 	public class WhenGetIsCalledWithConstraints : StandardKernelContext
 	{
@@ -345,4 +356,12 @@ namespace Ninject.Tests.Integration.StandardKernelTests
 	public class GenericService2<T> : IGeneric<T> { }
 	public interface IGenericWithConstraints<T> where T : class { }
 	public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
+	
+	public class NullProvider : Ninject.Activation.Provider<Sword>
+	{
+		protected override Sword CreateInstance (Activation.IContext context)
+		{
+			return null;
+		}
+	}
 }

@@ -197,5 +197,22 @@ namespace Ninject.Infrastructure.Introspection
 				return sw.ToString();
 			}
 		}
+		
+		public static string ProviderReturnedNull(IContext context)
+		{
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+				sw.WriteLine("Provider returned null.");
+				
+				sw.WriteLine("Activation path:");
+				sw.WriteLine(context.Request.FormatActivationPath());
+
+				sw.WriteLine("Suggestions:");
+				sw.WriteLine("  1) Ensure that the provider handles creation requests properly.");
+				
+				return sw.ToString();
+			}
+		}
 	}
 }

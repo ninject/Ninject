@@ -149,6 +149,9 @@ namespace Ninject.Activation
 				var reference = new InstanceReference { Instance = GetProvider().Create(this) };
 
 				Request.ActiveBindings.Pop();
+				
+				if (reference.Instance == null)
+					throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
 
 				if (GetScope() != null)
 					Cache.Remember(this, reference);
