@@ -21,78 +21,78 @@ using Ninject.Infrastructure.Language;
 
 namespace Ninject.Modules
 {
-	/// <summary>
-	/// Loads modules from compiled assemblies.
-	/// </summary>
-	public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
-	{
-		private static readonly string[] Extensions = new[] { ".dll" };
+    /// <summary>
+    /// Loads modules from compiled assemblies.
+    /// </summary>
+    public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
+    {
+        private static readonly string[] Extensions = new[] { ".dll" };
 
-		/// <summary>
-		/// Gets or sets the kernel into which modules will be loaded.
-		/// </summary>
-		public IKernel Kernel { get; private set; }
+        /// <summary>
+        /// Gets or sets the kernel into which modules will be loaded.
+        /// </summary>
+        public IKernel Kernel { get; private set; }
 
-		/// <summary>
-		/// Gets the file extensions that the plugin understands how to load.
-		/// </summary>
-		public IEnumerable<string> SupportedExtensions
-		{
-			get { return Extensions; }
-		}
+        /// <summary>
+        /// Gets the file extensions that the plugin understands how to load.
+        /// </summary>
+        public IEnumerable<string> SupportedExtensions
+        {
+            get { return Extensions; }
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
-		/// </summary>
-		/// <param name="kernel">The kernel into which modules will be loaded.</param>
-		public CompiledModuleLoaderPlugin(IKernel kernel)
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			Kernel = kernel;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
+        /// </summary>
+        /// <param name="kernel">The kernel into which modules will be loaded.</param>
+        public CompiledModuleLoaderPlugin(IKernel kernel)
+        {
+            Ensure.ArgumentNotNull(kernel, "kernel");
+            Kernel = kernel;
+        }
 
-		/// <summary>
-		/// Loads modules from the specified files.
-		/// </summary>
-		/// <param name="filenames">The names of the files to load modules from.</param>
-		public void LoadModules(IEnumerable<string> filenames)
-		{
-			Kernel.Load(FindAssembliesWithModules(filenames).Select(name => Assembly.Load(name)));
-		}
+        /// <summary>
+        /// Loads modules from the specified files.
+        /// </summary>
+        /// <param name="filenames">The names of the files to load modules from.</param>
+        public void LoadModules(IEnumerable<string> filenames)
+        {
+            Kernel.Load(FindAssembliesWithModules(filenames).Select(name => Assembly.Load(name)));
+        }
 
-		private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
-		{
-			AppDomain temporaryDomain = CreateTemporaryAppDomain();
+        private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
+        {
+            AppDomain temporaryDomain = CreateTemporaryAppDomain();
 
-			foreach (string file in filenames)
-			{
-				Assembly assembly;
+            foreach (string file in filenames)
+            {
+                Assembly assembly;
 
-				try
-				{
-					var name = new AssemblyName { CodeBase = file };
-					assembly = temporaryDomain.Load(name);
-				}
-				catch (BadImageFormatException)
-				{
-					// Ignore native assemblies
-					continue;
-				}
+                try
+                {
+                    var name = new AssemblyName { CodeBase = file };
+                    assembly = temporaryDomain.Load(name);
+                }
+                catch (BadImageFormatException)
+                {
+                    // Ignore native assemblies
+                    continue;
+                }
 
-				if (assembly.HasNinjectModules())
-					yield return assembly.GetName();
-			}
+                if (assembly.HasNinjectModules())
+                    yield return assembly.GetName();
+            }
 
-			AppDomain.Unload(temporaryDomain);
-		}
+            AppDomain.Unload(temporaryDomain);
+        }
 
-		private static AppDomain CreateTemporaryAppDomain()
-		{
-			return AppDomain.CreateDomain(
-				"NinjectModuleLoader",
-				AppDomain.CurrentDomain.Evidence,
-				AppDomain.CurrentDomain.SetupInformation);
-		}
-	}
+        private static AppDomain CreateTemporaryAppDomain()
+        {
+            return AppDomain.CreateDomain(
+                "NinjectModuleLoader",
+                AppDomain.CurrentDomain.Evidence,
+                AppDomain.CurrentDomain.SetupInformation);
+        }
+    }
 }
 #endif //!NO_ASSEMBLY_SCANNING

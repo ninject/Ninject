@@ -15,9 +15,9 @@ using Ninject.Syntax;
 
 namespace Ninject.Activation.Blocks
 {
-	/// <summary>
-	/// A block used for deterministic disposal of activated instances. When the block is
-	/// disposed, all instances activated via it will be deactivated.
-	/// </summary>
-	public interface IActivationBlock : IResolutionRoot, INotifyWhenDisposed { }
+    /// <summary>
+    /// A block used for deterministic disposal of activated instances. When the block is
+    /// disposed, all instances activated via it will be deactivated.
+    /// </summary>
+    public interface IActivationBlock : IResolutionRoot, INotifyWhenDisposed { }
 }

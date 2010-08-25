@@ -14,20 +14,20 @@ using Ninject.Components;
 
 namespace Ninject.Activation.Caching
 {
-	/// <summary>
-	/// Prunes instances from an <see cref="ICache"/> based on environmental information.
-	/// </summary>
-	public interface ICachePruner : INinjectComponent
-	{
-		/// <summary>
-		/// Starts pruning the specified cache based on the rules of the pruner.
-		/// </summary>
-		/// <param name="cache">The cache that will be pruned.</param>
-		void Start(ICache cache);
+    /// <summary>
+    /// Prunes instances from an <see cref="ICache"/> based on environmental information.
+    /// </summary>
+    public interface ICachePruner : INinjectComponent
+    {
+        /// <summary>
+        /// Starts pruning the specified cache based on the rules of the pruner.
+        /// </summary>
+        /// <param name="cache">The cache that will be pruned.</param>
+        void Start(ICache cache);
 
-		/// <summary>
-		/// Stops pruning.
-		/// </summary>
-		void Stop();
-	}
+        /// <summary>
+        /// Stops pruning.
+        /// </summary>
+        void Stop();
+    }
 }

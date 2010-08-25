@@ -22,150 +22,150 @@ using Ninject.Planning.Targets;
 
 namespace Ninject.Infrastructure.Introspection
 {
-	internal static class FormatExtensions
-	{
-		public static string FormatActivationPath(this IRequest request)
-		{
-			using (var sw = new StringWriter())
-			{
-				IRequest current = request;
+    internal static class FormatExtensions
+    {
+        public static string FormatActivationPath(this IRequest request)
+        {
+            using (var sw = new StringWriter())
+            {
+                IRequest current = request;
 
-				while (current != null)
-				{
-					sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
-					current = current.ParentRequest;
-				}
+                while (current != null)
+                {
+                    sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
+                    current = current.ParentRequest;
+                }
 
-				return sw.ToString();
-			}
-		}
+                return sw.ToString();
+            }
+        }
 
-		public static string Format(this IBinding binding, IContext context)
-		{
-			using (var sw = new StringWriter())
-			{
-				if (binding.Condition != null)
-					sw.Write("conditional ");
+        public static string Format(this IBinding binding, IContext context)
+        {
+            using (var sw = new StringWriter())
+            {
+                if (binding.Condition != null)
+                    sw.Write("conditional ");
 
-				if (binding.IsImplicit)
-					sw.Write("implicit ");
+                if (binding.IsImplicit)
+                    sw.Write("implicit ");
 
-				IProvider provider = binding.GetProvider(context);
+                IProvider provider = binding.GetProvider(context);
 
-				switch (binding.Target)
-				{
-					case BindingTarget.Self:
-						sw.Write("self-binding of {0}", binding.Service.Format());
-						break;
+                switch (binding.Target)
+                {
+                    case BindingTarget.Self:
+                        sw.Write("self-binding of {0}", binding.Service.Format());
+                        break;
 
-					case BindingTarget.Type:
-						sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
-						break;
+                    case BindingTarget.Type:
+                        sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
+                        break;
 
-					case BindingTarget.Provider:
-						sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
-							provider.Type.Format(), provider.GetType().Format());
-						break;
+                    case BindingTarget.Provider:
+                        sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
+                            provider.Type.Format(), provider.GetType().Format());
+                        break;
 
-					case BindingTarget.Method:
-						sw.Write("binding from {0} to method", binding.Service.Format());
-						break;
+                    case BindingTarget.Method:
+                        sw.Write("binding from {0} to method", binding.Service.Format());
+                        break;
 
-					case BindingTarget.Constant:
-						sw.Write("binding from {0} to constant value", binding.Service.Format());
-						break;
+                    case BindingTarget.Constant:
+                        sw.Write("binding from {0} to constant value", binding.Service.Format());
+                        break;
 
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
-				return sw.ToString();
-			}
-		}
+                return sw.ToString();
+            }
+        }
 
-		public static string Format(this IRequest request)
-		{
-			using (var sw = new StringWriter())
-			{
-				if (request.Target == null)
-					sw.Write("Request for {0}", request.Service.Format());
-				else
-					sw.Write("Injection of dependency {0} into {1}", request.Service.Format(), request.Target.Format());
+        public static string Format(this IRequest request)
+        {
+            using (var sw = new StringWriter())
+            {
+                if (request.Target == null)
+                    sw.Write("Request for {0}", request.Service.Format());
+                else
+                    sw.Write("Injection of dependency {0} into {1}", request.Service.Format(), request.Target.Format());
 
-				return sw.ToString();
-			}
-		}
+                return sw.ToString();
+            }
+        }
 
-		public static string Format(this ITarget target)
-		{
-			using (var sw = new StringWriter())
-			{
-				switch (target.Member.MemberType)
-				{
-					case MemberTypes.Constructor:
-						sw.Write("parameter {0} of constructor", target.Name);
-						break;
+        public static string Format(this ITarget target)
+        {
+            using (var sw = new StringWriter())
+            {
+                switch (target.Member.MemberType)
+                {
+                    case MemberTypes.Constructor:
+                        sw.Write("parameter {0} of constructor", target.Name);
+                        break;
 
-					case MemberTypes.Method:
-						sw.Write("parameter {0} of method {1}", target.Name, target.Member.Name);
-						break;
+                    case MemberTypes.Method:
+                        sw.Write("parameter {0} of method {1}", target.Name, target.Member.Name);
+                        break;
 
-					case MemberTypes.Property:
-						sw.Write("property {0}", target.Name);
-						break;
+                    case MemberTypes.Property:
+                        sw.Write("property {0}", target.Name);
+                        break;
 
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
-				sw.Write(" of type {0}", target.Member.ReflectedType.Format());
+                sw.Write(" of type {0}", target.Member.ReflectedType.Format());
 
-				return sw.ToString();
-			}
-		}
+                return sw.ToString();
+            }
+        }
 
-		public static string Format(this Type type)
-		{
-			if (type.IsGenericType)
-			{
-				var sb = new StringBuilder();
+        public static string Format(this Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var sb = new StringBuilder();
 
-				sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
-				sb.Append("{");
+                sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
+                sb.Append("{");
 
-				foreach (Type genericArgument in type.GetGenericArguments())
-				{
-					sb.Append(genericArgument.Format());
-					sb.Append(", ");
-				}
+                foreach (Type genericArgument in type.GetGenericArguments())
+                {
+                    sb.Append(genericArgument.Format());
+                    sb.Append(", ");
+                }
 
-				sb.Remove(sb.Length - 2, 2);
-				sb.Append("}");
+                sb.Remove(sb.Length - 2, 2);
+                sb.Append("}");
 
-				return sb.ToString();
-			}
-			else
-			{
-				switch (Type.GetTypeCode(type))
-				{
-					case TypeCode.Boolean: return "bool";
-					case TypeCode.Char: return "char";
-					case TypeCode.SByte: return "sbyte";
-					case TypeCode.Byte: return "byte";
-					case TypeCode.Int16: return "short";
-					case TypeCode.UInt16: return "ushort";
-					case TypeCode.Int32: return "int";
-					case TypeCode.UInt32: return "uint";
-					case TypeCode.Int64: return "long";
-					case TypeCode.UInt64: return "ulong";
-					case TypeCode.Single: return "float";
-					case TypeCode.Double: return "double";
-					case TypeCode.Decimal: return "decimal";
-					case TypeCode.DateTime: return "DateTime";
-					case TypeCode.String: return "string";
-					default: return type.Name;
-				}
-			}
-		}
-	}
+                return sb.ToString();
+            }
+            else
+            {
+                switch (Type.GetTypeCode(type))
+                {
+                    case TypeCode.Boolean: return "bool";
+                    case TypeCode.Char: return "char";
+                    case TypeCode.SByte: return "sbyte";
+                    case TypeCode.Byte: return "byte";
+                    case TypeCode.Int16: return "short";
+                    case TypeCode.UInt16: return "ushort";
+                    case TypeCode.Int32: return "int";
+                    case TypeCode.UInt32: return "uint";
+                    case TypeCode.Int64: return "long";
+                    case TypeCode.UInt64: return "ulong";
+                    case TypeCode.Single: return "float";
+                    case TypeCode.Double: return "double";
+                    case TypeCode.Decimal: return "decimal";
+                    case TypeCode.DateTime: return "DateTime";
+                    case TypeCode.String: return "string";
+                    default: return type.Name;
+                }
+            }
+        }
+    }
 }

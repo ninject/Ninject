@@ -16,78 +16,78 @@ using Ninject.Infrastructure;
 
 namespace Ninject.Activation.Caching
 {
-	/// <summary>
-	/// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
-	/// the garbage collector to see if it has run.
-	/// </summary>
-	public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
-	{
-		private readonly WeakReference _indicator = new WeakReference(new object());
-		private Timer _timer;
+    /// <summary>
+    /// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
+    /// the garbage collector to see if it has run.
+    /// </summary>
+    public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
+    {
+        private readonly WeakReference _indicator = new WeakReference(new object());
+        private Timer _timer;
 
-		/// <summary>
-		/// Gets the cache that is being pruned.
-		/// </summary>
-		public ICache Cache { get; private set; }
+        /// <summary>
+        /// Gets the cache that is being pruned.
+        /// </summary>
+        public ICache Cache { get; private set; }
 
-		/// <summary>
-		/// Releases resources held by the object.
-		/// </summary>
-		public override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed && _timer != null)
-				Stop();
-				
+        /// <summary>
+        /// Releases resources held by the object.
+        /// </summary>
+        public override void Dispose(bool disposing)
+        {
+            if (disposing && !IsDisposed && _timer != null)
+                Stop();
+                
 
-			base.Dispose(disposing);
-		}
+            base.Dispose(disposing);
+        }
 
-		/// <summary>
-		/// Starts pruning the specified cache based on the rules of the pruner.
-		/// </summary>
-		/// <param name="cache">The cache that will be pruned.</param>
-		public void Start(ICache cache)
-		{
-			Ensure.ArgumentNotNull(cache, "cache");
+        /// <summary>
+        /// Starts pruning the specified cache based on the rules of the pruner.
+        /// </summary>
+        /// <param name="cache">The cache that will be pruned.</param>
+        public void Start(ICache cache)
+        {
+            Ensure.ArgumentNotNull(cache, "cache");
 
-			if (_timer != null)
-				Stop();
+            if (_timer != null)
+                Stop();
 
-			Cache = cache;
-			_timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, GetTimeoutInMilliseconds(), Timeout.Infinite);
-		}
+            Cache = cache;
+            _timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, GetTimeoutInMilliseconds(), Timeout.Infinite);
+        }
 
-		/// <summary>
-		/// Stops pruning.
-		/// </summary>
-		public void Stop()
-		{
-			_timer.Change(Timeout.Infinite, Timeout.Infinite);
-			_timer.Dispose();
-			_timer = null;
-			Cache = null;
-		}
+        /// <summary>
+        /// Stops pruning.
+        /// </summary>
+        public void Stop()
+        {
+            _timer.Change(Timeout.Infinite, Timeout.Infinite);
+            _timer.Dispose();
+            _timer = null;
+            Cache = null;
+        }
 
-		private void PruneCacheIfGarbageCollectorHasRun(object state)
-		{
-			try
-			{
-				if (_indicator.IsAlive)
-					return;
+        private void PruneCacheIfGarbageCollectorHasRun(object state)
+        {
+            try
+            {
+                if (_indicator.IsAlive)
+                    return;
 
-				Cache.Prune();
-				_indicator.Target = new object();
-			}
-			finally
-			{
-				_timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
-			}
-		}
+                Cache.Prune();
+                _indicator.Target = new object();
+            }
+            finally
+            {
+                _timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
+            }
+        }
 
-		private int GetTimeoutInMilliseconds()
-		{
-			TimeSpan interval = Settings.CachePruningInterval;
-			return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
-		}
-	}
+        private int GetTimeoutInMilliseconds()
+        {
+            TimeSpan interval = Settings.CachePruningInterval;
+            return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
+        }
+    }
 }

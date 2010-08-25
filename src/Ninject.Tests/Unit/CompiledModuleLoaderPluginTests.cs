@@ -12,31 +12,31 @@ using Xunit.Should;
 
 namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 {
-	public class CompiledModuleLoaderPluginContext
-	{
-		protected readonly CompiledModuleLoaderPlugin loaderPlugin;
-		protected readonly Mock<IKernel> kernelMock;
-		protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestModule.dll");
+    public class CompiledModuleLoaderPluginContext
+    {
+        protected readonly CompiledModuleLoaderPlugin loaderPlugin;
+        protected readonly Mock<IKernel> kernelMock;
+        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestModule.dll");
 
-		public CompiledModuleLoaderPluginContext()
-		{
-			kernelMock = new Mock<IKernel>();
-			loaderPlugin = new CompiledModuleLoaderPlugin(kernelMock.Object);
-		}
-	}
+        public CompiledModuleLoaderPluginContext()
+        {
+            kernelMock = new Mock<IKernel>();
+            loaderPlugin = new CompiledModuleLoaderPlugin(kernelMock.Object);
+        }
+    }
 
-	public class WhenLoadModulesIsCalled : CompiledModuleLoaderPluginContext
-	{
-		[Fact(Skip = "Need to bring TestModule assembly into git")]
-		public void CallsLoadMethodOnKernelWithAssemblies()
-		{
-			Assembly expected = Assembly.Load("Ninject.Tests.TestModule");
-			expected.ShouldNotBeNull();
+    public class WhenLoadModulesIsCalled : CompiledModuleLoaderPluginContext
+    {
+        [Fact(Skip = "Need to bring TestModule assembly into git")]
+        public void CallsLoadMethodOnKernelWithAssemblies()
+        {
+            Assembly expected = Assembly.Load("Ninject.Tests.TestModule");
+            expected.ShouldNotBeNull();
 
-			loaderPlugin.LoadModules(new[] { assemblyFilename });
+            loaderPlugin.LoadModules(new[] { assemblyFilename });
 
-			kernelMock.Verify(x => x.Load(It.Is<IEnumerable<Assembly>>(p => p.Contains(expected))));
-		}
-	}
+            kernelMock.Verify(x => x.Load(It.Is<IEnumerable<Assembly>>(p => p.Contains(expected))));
+        }
+    }
 }
 #endif //!NO_ASSEMBLY_SCANNING

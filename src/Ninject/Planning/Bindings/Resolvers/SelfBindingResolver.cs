@@ -21,44 +21,44 @@ using Ninject.Infrastructure;
 
 namespace Ninject.Planning.Bindings.Resolvers
 {
-	///<summary>
-	///</summary>
-	public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
-	{
-		/// <summary>
-		/// Returns any bindings from the specified collection that match the specified service.
-		/// </summary>
-		/// <param name="bindings">The multimap of all registered bindings.</param>
-		/// <param name="request">The service in question.</param>
-		/// <returns>The series of matching bindings.</returns>
-		public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
-		{
-			var service = request.Service;
-			if (!TypeIsSelfBindable(service))
-			{
-				return Enumerable.Empty<IBinding>();
-			}
-			return new[]
-						{
-							new Binding(service)
-							{
-								ProviderCallback = StandardProvider.GetCreationCallback(service)
-							}
-						};
-		}
+    ///<summary>
+    ///</summary>
+    public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
+    {
+        /// <summary>
+        /// Returns any bindings from the specified collection that match the specified service.
+        /// </summary>
+        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="request">The service in question.</param>
+        /// <returns>The series of matching bindings.</returns>
+        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+        {
+            var service = request.Service;
+            if (!TypeIsSelfBindable(service))
+            {
+                return Enumerable.Empty<IBinding>();
+            }
+            return new[]
+                        {
+                            new Binding(service)
+                            {
+                                ProviderCallback = StandardProvider.GetCreationCallback(service)
+                            }
+                        };
+        }
 
-		/// <summary>
-		/// Returns a value indicating whether the specified service is self-bindable.
-		/// </summary>
-		/// <param name="service">The service.</param>
-		/// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
-		protected virtual bool TypeIsSelfBindable(Type service)
-		{
-			return !service.IsInterface
-				   && !service.IsAbstract
-				   && !service.IsValueType
-				   && service != typeof(string)
-				   && !service.ContainsGenericParameters;
-		}
-	}
+        /// <summary>
+        /// Returns a value indicating whether the specified service is self-bindable.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
+        protected virtual bool TypeIsSelfBindable(Type service)
+        {
+            return !service.IsInterface
+                   && !service.IsAbstract
+                   && !service.IsValueType
+                   && service != typeof(string)
+                   && !service.ContainsGenericParameters;
+        }
+    }
 }

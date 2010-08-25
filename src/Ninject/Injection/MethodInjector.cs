@@ -9,8 +9,8 @@
 #endregion
 namespace Ninject.Injection
 {
-	/// <summary>
-	/// A delegate that can inject values into a method.
-	/// </summary>
-	public delegate void MethodInjector(object target, params object[] arguments);
+    /// <summary>
+    /// A delegate that can inject values into a method.
+    /// </summary>
+    public delegate void MethodInjector(object target, params object[] arguments);
 }

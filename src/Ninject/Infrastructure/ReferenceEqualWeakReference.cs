@@ -45,7 +45,7 @@ namespace Ninject.Infrastructure
         /// <param name="info">An object that holds all the data needed to serialize or deserialize the current <see cref="T:System.WeakReference"/> object.</param>
         /// <param name="context">(Reserved) Describes the source and destination of the serialized stream specified by <paramref name="info"/>.</param>
         /// <exception cref="T:System.ArgumentNullException">
-        /// 	<paramref name="info"/> is null.
+        ///     <paramref name="info"/> is null.
         /// </exception>
         protected ReferenceEqualWeakReference(SerializationInfo info, StreamingContext context)
             : base(info, context)
@@ -57,7 +57,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        ///     <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="T:System.NullReferenceException">
         /// The <paramref name="obj"/> parameter is null.

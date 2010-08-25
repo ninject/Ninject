@@ -17,41 +17,41 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Planning.Targets
 {
-	/// <summary>
-	/// Represents a site on a type where a value will be injected.
-	/// </summary>
-	public interface ITarget : ICustomAttributeProvider
-	{
-		/// <summary>
-		/// Gets the type of the target.
-		/// </summary>
-		Type Type { get; }
+    /// <summary>
+    /// Represents a site on a type where a value will be injected.
+    /// </summary>
+    public interface ITarget : ICustomAttributeProvider
+    {
+        /// <summary>
+        /// Gets the type of the target.
+        /// </summary>
+        Type Type { get; }
 
-		/// <summary>
-		/// Gets the name of the target.
-		/// </summary>
-		string Name { get; }
+        /// <summary>
+        /// Gets the name of the target.
+        /// </summary>
+        string Name { get; }
 
-		/// <summary>
-		/// Gets the member that contains the target.
-		/// </summary>
-		MemberInfo Member { get; }
+        /// <summary>
+        /// Gets the member that contains the target.
+        /// </summary>
+        MemberInfo Member { get; }
 
-		/// <summary>
-		/// Gets the constraint defined on the target.
-		/// </summary>
-		Func<IBindingMetadata, bool> Constraint { get; }
+        /// <summary>
+        /// Gets the constraint defined on the target.
+        /// </summary>
+        Func<IBindingMetadata, bool> Constraint { get; }
 
-		/// <summary>
-		/// Gets a value indicating whether the target represents an optional dependency.
-		/// </summary>
-		bool IsOptional { get; }
+        /// <summary>
+        /// Gets a value indicating whether the target represents an optional dependency.
+        /// </summary>
+        bool IsOptional { get; }
 
-		/// <summary>
-		/// Resolves a value for the target within the specified parent context.
-		/// </summary>
-		/// <param name="parent">The parent context.</param>
-		/// <returns>The resolved value.</returns>
-		object ResolveWithin(IContext parent);
-	}
+        /// <summary>
+        /// Resolves a value for the target within the specified parent context.
+        /// </summary>
+        /// <param name="parent">The parent context.</param>
+        /// <returns>The resolved value.</returns>
+        object ResolveWithin(IContext parent);
+    }
 }

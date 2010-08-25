@@ -2,7 +2,7 @@
 
 namespace Ninject.Tests.Fakes
 {
-	public abstract class AbstractWeapon
-	{
-	}
+    public abstract class AbstractWeapon
+    {
+    }
 }

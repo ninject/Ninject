@@ -1,96 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="Ninject" default="all">
-	<include buildfile="Ninject.include" />
+    <include buildfile="Ninject.include" />
 
-	<property name="version" value="2.1.0.0" overwrite="true"/>
+    <property name="version" value="2.1.0.0" overwrite="true"/>
 
-	<target name="all" depends="core csl test"/>
+    <target name="all" depends="core csl test"/>
 
-	<target name="core" depends="init">
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}" keyfile="${path.src}/${product.keyfile}">
-			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
-			<sources basedir="${path.src}">
-				<include name="${build.asminfo}"/>
-				<include name="${product.name}/**/*.cs"/>
-			</sources>
-			<references>
-				<include name="mscorlib.dll"/>
-				<include name="System.dll"/>
-				<include name="System.Core.dll"/>
-				<include name="System.Web.dll" unless="${build.platform == 'silverlight-2.0'}"/>
-			</references>
-		</csc>
-	</target>
+    <target name="core" depends="init">
+        <csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}" keyfile="${path.src}/${product.keyfile}">
+            <arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
+            <sources basedir="${path.src}">
+                <include name="${build.asminfo}"/>
+                <include name="${product.name}/**/*.cs"/>
+            </sources>
+            <references>
+                <include name="mscorlib.dll"/>
+                <include name="System.dll"/>
+                <include name="System.Core.dll"/>
+                <include name="System.Web.dll" unless="${build.platform == 'silverlight-2.0'}"/>
+            </references>
+        </csc>
+    </target>
 
-	<target name="csl" depends="init core">
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
-			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
-			<sources basedir="${path.src}">
-				<include name="${build.asminfo}"/>
-				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
-			</sources>
-			<references basedir="${current.path.build}">
-				<include name="mscorlib.dll"/>
-				<include name="System.dll"/>
-				<include name="System.Core.dll"/>
-				<include name="System.Web.dll"/>
-				<include name="${product.assembly}"/>
-				<include name="lib/Microsoft.Practices.ServiceLocation.dll"/>
-			</references>
-		</csc>
-	</target>
+    <target name="csl" depends="init core">
+        <csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
+            <arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
+            <sources basedir="${path.src}">
+                <include name="${build.asminfo}"/>
+                <include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
+            </sources>
+            <references basedir="${current.path.build}">
+                <include name="mscorlib.dll"/>
+                <include name="System.dll"/>
+                <include name="System.Core.dll"/>
+                <include name="System.Web.dll"/>
+                <include name="${product.assembly}"/>
+                <include name="lib/Microsoft.Practices.ServiceLocation.dll"/>
+            </references>
+        </csc>
+    </target>
 
-	<target name="compile-tests" depends="core" unless="${skip.tests}" if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}">
-		<mkdir dir="${current.path.test}"/>
-		<copy todir="${current.path.test}" flatten="true">
-			<fileset basedir="${current.path.build}">
-				<include name="**/*.dll"/>
-			</fileset>
-		</copy>
-		<copy todir="${current.path.test}">
-			<fileset basedir="${path.tools.xunit}">
-				<include name="xunit.dll"/>
-				<include name="xunit.should.dll"/>
-			</fileset>
-		</copy>
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight')}">
-			<fileset basedir="${path.tools.moq}/silverlight">
-				<include name="Moq.Silverlight.dll"/>
-				<include name="Castle.DynamicProxy-Silverlight.dll"/>
-				<include name="Castle.Core-Silverlight.dll"/>
-			</fileset>
-		</copy>
-		<copy todir="${current.path.test}" if="${not (string::contains(build.platform, 'silverlight'))}">
-			<fileset basedir="${path.tools.moq}/net-3.5">
-				<include name="Moq.dll"/>
-			</fileset>
-		</copy>
-		<copy todir="${current.path.test}/TestModules">
-			<fileset basedir="${path.src}/Ninject.Tests/TestModules">
-				<include name="Ninject.Tests.TestModule.dll"/>
-			</fileset>
-		</copy>
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+    <target name="compile-tests" depends="core" unless="${skip.tests}" if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}">
+        <mkdir dir="${current.path.test}"/>
+        <copy todir="${current.path.test}" flatten="true">
+            <fileset basedir="${current.path.build}">
+                <include name="**/*.dll"/>
+            </fileset>
+        </copy>
+        <copy todir="${current.path.test}">
+            <fileset basedir="${path.tools.xunit}">
+                <include name="xunit.dll"/>
+                <include name="xunit.should.dll"/>
+            </fileset>
+        </copy>
+        <copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight')}">
+            <fileset basedir="${path.tools.moq}/silverlight">
+                <include name="Moq.Silverlight.dll"/>
+                <include name="Castle.DynamicProxy-Silverlight.dll"/>
+                <include name="Castle.Core-Silverlight.dll"/>
+            </fileset>
+        </copy>
+        <copy todir="${current.path.test}" if="${not (string::contains(build.platform, 'silverlight'))}">
+            <fileset basedir="${path.tools.moq}/net-3.5">
+                <include name="Moq.dll"/>
+            </fileset>
+        </copy>
+        <copy todir="${current.path.test}/TestModules">
+            <fileset basedir="${path.src}/Ninject.Tests/TestModules">
+                <include name="Ninject.Tests.TestModule.dll"/>
+            </fileset>
+        </copy>
+        <csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.test}/Ninject.Tests.dll">
-			<sources basedir="${path.src}">
-				<include name="Ninject.Tests/**/*.cs"/>
-			</sources>
-			<references basedir="${current.path.test}">
-				<include name="mscorlib.dll"/>
-				<include name="System.dll"/>
-				<include name="System.Core.dll"/>
-				<include name="System.Web.dll"/>
-				<include name="Moq.dll" if="${not (string::contains(build.platform, 'silverlight'))}"/>
-				<include name="Moq.Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
-				<include name="Castle.DynamicProxy-Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
-				<include name="Castle.Core-Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
-				<include name="xunit.dll"/>
-				<include name="xunit.should.dll"/>
-				<include name="Ninject.dll"/>
-			</references>
-			<nowarn>
-				<warning number="1584"/>
-			</nowarn>
-		</csc>
-	</target>
+            <sources basedir="${path.src}">
+                <include name="Ninject.Tests/**/*.cs"/>
+            </sources>
+            <references basedir="${current.path.test}">
+                <include name="mscorlib.dll"/>
+                <include name="System.dll"/>
+                <include name="System.Core.dll"/>
+                <include name="System.Web.dll"/>
+                <include name="Moq.dll" if="${not (string::contains(build.platform, 'silverlight'))}"/>
+                <include name="Moq.Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
+                <include name="Castle.DynamicProxy-Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
+                <include name="Castle.Core-Silverlight.dll" if="${string::contains(build.platform, 'silverlight')}"/>
+                <include name="xunit.dll"/>
+                <include name="xunit.should.dll"/>
+                <include name="Ninject.dll"/>
+            </references>
+            <nowarn>
+                <warning number="1584"/>
+            </nowarn>
+        </csc>
+    </target>
 </project>

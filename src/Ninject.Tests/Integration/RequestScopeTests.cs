@@ -10,93 +10,93 @@ using Xunit.Should;
 
 namespace Ninject.Tests.Integration.RequestScopeTests
 {
-	public class RequestScopeContext
-	{
-		protected readonly StandardKernel kernel;
+    public class RequestScopeContext
+    {
+        protected readonly StandardKernel kernel;
 
-		public RequestScopeContext()
-		{
-			var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
-			kernel = new StandardKernel(settings);
-		}
+        public RequestScopeContext()
+        {
+            var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
+            kernel = new StandardKernel(settings);
+        }
 
-		public void BeginNewFakeWebRequest()
-		{
-			HttpContext.Current = GetFakeHttpContext();
-		}
+        public void BeginNewFakeWebRequest()
+        {
+            HttpContext.Current = GetFakeHttpContext();
+        }
 
-		public HttpContext GetFakeHttpContext()
-		{
-			var request = new HttpRequest("index.html", "http://example.org/index.html", String.Empty);
-			var response = new HttpResponse(new StringWriter());
-			return new HttpContext(request, response);
-		}
-	}
+        public HttpContext GetFakeHttpContext()
+        {
+            var request = new HttpRequest("index.html", "http://example.org/index.html", String.Empty);
+            var response = new HttpResponse(new StringWriter());
+            return new HttpContext(request, response);
+        }
+    }
 
-	public class WhenServiceIsBoundWithRequestScope : RequestScopeContext
-	{
-		[Fact]
-		public void InstancesAreReusedWithinSameHttpContext()
-		{
-			kernel.Bind<IWeapon>().To<Sword>().InRequestScope();
+    public class WhenServiceIsBoundWithRequestScope : RequestScopeContext
+    {
+        [Fact]
+        public void InstancesAreReusedWithinSameHttpContext()
+        {
+            kernel.Bind<IWeapon>().To<Sword>().InRequestScope();
 
-			BeginNewFakeWebRequest();
+            BeginNewFakeWebRequest();
 
-			var weapon1 = kernel.Get<IWeapon>();
-			var weapon2 = kernel.Get<IWeapon>();
+            var weapon1 = kernel.Get<IWeapon>();
+            var weapon2 = kernel.Get<IWeapon>();
 
-			weapon1.ShouldBeSameAs(weapon2);
+            weapon1.ShouldBeSameAs(weapon2);
 
-			BeginNewFakeWebRequest();
+            BeginNewFakeWebRequest();
 
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-			var weapon3 = kernel.Get<IWeapon>();
+            var weapon3 = kernel.Get<IWeapon>();
 
-			weapon3.ShouldNotBeSameAs(weapon1);
-			weapon3.ShouldNotBeSameAs(weapon2);
-		}
+            weapon3.ShouldNotBeSameAs(weapon1);
+            weapon3.ShouldNotBeSameAs(weapon2);
+        }
 
-		[Fact]
-		public void InstancesAreDisposedWhenRequestEndsAndCacheIsPruned()
-		{
-			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InRequestScope();
-			var cache = kernel.Components.Get<ICache>();
+        [Fact]
+        public void InstancesAreDisposedWhenRequestEndsAndCacheIsPruned()
+        {
+            kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InRequestScope();
+            var cache = kernel.Components.Get<ICache>();
 
-			BeginNewFakeWebRequest();
+            BeginNewFakeWebRequest();
 
-			var instance = kernel.Get<INotifyWhenDisposed>();
+            var instance = kernel.Get<INotifyWhenDisposed>();
 
-			instance.ShouldNotBeNull();
-			instance.ShouldBeInstanceOf<NotifiesWhenDisposed>();
+            instance.ShouldNotBeNull();
+            instance.ShouldBeInstanceOf<NotifiesWhenDisposed>();
 
-			BeginNewFakeWebRequest();
+            BeginNewFakeWebRequest();
 
-			GC.Collect();
-			GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-			cache.Prune();
+            cache.Prune();
 
-			instance.IsDisposed.ShouldBeTrue();
-		}
+            instance.IsDisposed.ShouldBeTrue();
+        }
 
-		[Fact]
-		public void InstancesAreDisposedViaOnePerRequestModule()
-		{
-			kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InRequestScope();
+        [Fact]
+        public void InstancesAreDisposedViaOnePerRequestModule()
+        {
+            kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InRequestScope();
 
-			BeginNewFakeWebRequest();
+            BeginNewFakeWebRequest();
 
-			var instance = kernel.Get<INotifyWhenDisposed>();
+            var instance = kernel.Get<INotifyWhenDisposed>();
 
-			instance.ShouldNotBeNull();
-			instance.ShouldBeInstanceOf<NotifiesWhenDisposed>();
+            instance.ShouldNotBeNull();
+            instance.ShouldBeInstanceOf<NotifiesWhenDisposed>();
 
-			OnePerRequestModule.DeactivateInstancesForCurrentHttpRequest();
+            OnePerRequestModule.DeactivateInstancesForCurrentHttpRequest();
 
-			instance.IsDisposed.ShouldBeTrue();
-		}
-	}
+            instance.IsDisposed.ShouldBeTrue();
+        }
+    }
 }
 #endif //!NO_WEB

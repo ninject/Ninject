@@ -17,10 +17,10 @@ using Ninject.Infrastructure.Language;
 
 namespace Ninject.Selection.Heuristics
 {
-	/// <summary>
-	/// Determines whether members should be injected during activation by checking
-	/// if they are decorated with an injection marker attribute.
-	/// </summary>
+    /// <summary>
+    /// Determines whether members should be injected during activation by checking
+    /// if they are decorated with an injection marker attribute.
+    /// </summary>
     public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
     {
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ninject.Selection.Heuristics
                 #if !SILVERLIGHT
                 bool injectNonPublic = Settings.InjectNonPublic;
                 #else
-			    const bool injectNonPublic = false;
+                const bool injectNonPublic = false;
                 #endif // !SILVERLIGHT
 
                 var setMethod = propertyInfo.GetSetMethod(injectNonPublic);

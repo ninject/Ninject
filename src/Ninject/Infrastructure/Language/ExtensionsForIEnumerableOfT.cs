@@ -15,17 +15,17 @@ using System.Linq;
 
 namespace Ninject.Infrastructure.Language
 {
-	internal static class ExtensionsForIEnumerableOfT
-	{
-		public static void Map<T>(this IEnumerable<T> series, Action<T> action)
-		{
-			foreach (T item in series)
-				action(item);
-		}
+    internal static class ExtensionsForIEnumerableOfT
+    {
+        public static void Map<T>(this IEnumerable<T> series, Action<T> action)
+        {
+            foreach (T item in series)
+                action(item);
+        }
 
-		public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<T> series)
-		{
-			return series.Select(x => x);
-		}
-	}
+        public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<T> series)
+        {
+            return series.Select(x => x);
+        }
+    }
 }

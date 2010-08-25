@@ -16,21 +16,21 @@ using Ninject.Components;
 
 namespace Ninject.Modules
 {
-	/// <summary>
-	/// Loads modules at runtime by searching external files.
-	/// </summary>
-	public interface IModuleLoaderPlugin : INinjectComponent
-	{
-		/// <summary>
-		/// Gets the file extensions that the plugin understands how to load.
-		/// </summary>
-		IEnumerable<string> SupportedExtensions { get; }
+    /// <summary>
+    /// Loads modules at runtime by searching external files.
+    /// </summary>
+    public interface IModuleLoaderPlugin : INinjectComponent
+    {
+        /// <summary>
+        /// Gets the file extensions that the plugin understands how to load.
+        /// </summary>
+        IEnumerable<string> SupportedExtensions { get; }
 
-		/// <summary>
-		/// Loads modules from the specified files.
-		/// </summary>
-		/// <param name="filenames">The names of the files to load modules from.</param>
-		void LoadModules(IEnumerable<string> filenames);
-	}
+        /// <summary>
+        /// Loads modules from the specified files.
+        /// </summary>
+        /// <param name="filenames">The names of the files to load modules from.</param>
+        void LoadModules(IEnumerable<string> filenames);
+    }
 }
 #endif

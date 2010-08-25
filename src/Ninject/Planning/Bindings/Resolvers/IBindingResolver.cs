@@ -18,17 +18,17 @@ using Ninject.Parameters;
 
 namespace Ninject.Planning.Bindings.Resolvers
 {
-	/// <summary>
-	/// Contains logic about which bindings to use for a given service request.
-	/// </summary>
-	public interface IBindingResolver : INinjectComponent
-	{
-		/// <summary>
-		/// Returns any bindings from the specified collection that match the specified service.
-		/// </summary>
-		/// <param name="bindings">The multimap of all registered bindings.</param>
-		/// <param name="service">The service in question.</param>
-		/// <returns>The series of matching bindings.</returns>
-		IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service);
-	}
+    /// <summary>
+    /// Contains logic about which bindings to use for a given service request.
+    /// </summary>
+    public interface IBindingResolver : INinjectComponent
+    {
+        /// <summary>
+        /// Returns any bindings from the specified collection that match the specified service.
+        /// </summary>
+        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="service">The service in question.</param>
+        /// <returns>The series of matching bindings.</returns>
+        IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service);
+    }
 }

@@ -16,23 +16,23 @@ using Ninject;
 
 namespace CommonServiceLocator.NinjectAdapter
 {
-	public class NinjectServiceLocator : ServiceLocatorImplBase
-	{
-		public IKernel Kernel { get; private set; }
+    public class NinjectServiceLocator : ServiceLocatorImplBase
+    {
+        public IKernel Kernel { get; private set; }
 
-		public NinjectServiceLocator(IKernel kernel)
-		{
-			Kernel = kernel;
-		}
+        public NinjectServiceLocator(IKernel kernel)
+        {
+            Kernel = kernel;
+        }
 
-		protected override object DoGetInstance(Type serviceType, string key)
-		{
-			return Kernel.Get(serviceType, key);
-		}
+        protected override object DoGetInstance(Type serviceType, string key)
+        {
+            return Kernel.Get(serviceType, key);
+        }
 
-		protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
-		{
-			return Kernel.GetAll(serviceType);
-		}
-	}
+        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        {
+            return Kernel.GetAll(serviceType);
+        }
+    }
 }

@@ -14,14 +14,14 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Infrastructure
 {
-	/// <summary>
-	/// Indicates the object has a reference to a <see cref="IBinding"/>.
-	/// </summary>
-	public interface IHaveBinding
-	{
-		/// <summary>
-		/// Gets the binding.
-		/// </summary>
-		IBinding Binding { get; }
-	}
+    /// <summary>
+    /// Indicates the object has a reference to a <see cref="IBinding"/>.
+    /// </summary>
+    public interface IHaveBinding
+    {
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
+        IBinding Binding { get; }
+    }
 }

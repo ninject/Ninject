@@ -9,8 +9,8 @@
 #endregion
 namespace Ninject.Injection
 {
-	/// <summary>
-	/// A delegate that can inject values into a property.
-	/// </summary>
-	public delegate void PropertyInjector(object target, object value);
+    /// <summary>
+    /// A delegate that can inject values into a property.
+    /// </summary>
+    public delegate void PropertyInjector(object target, object value);
 }

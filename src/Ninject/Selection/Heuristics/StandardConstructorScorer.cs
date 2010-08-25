@@ -25,50 +25,50 @@ using Ninject.Planning.Targets;
 
 namespace Ninject.Selection.Heuristics
 {
-	/// <summary>
-	/// Scores constructors by either looking for the existence of an injection marker
-	/// attribute, or by counting the number of parameters.
-	/// </summary>
-	public class StandardConstructorScorer : NinjectComponent, IConstructorScorer
-	{
-		/// <summary>
-		/// Gets the score for the specified constructor.
-		/// </summary>
-		/// <param name="context">The injection context.</param>
-		/// <param name="directive">The constructor.</param>
-		/// <returns>The constructor's score.</returns>
-		public int Score(IContext context, ConstructorInjectionDirective directive)
-		{
-			Ensure.ArgumentNotNull(context, "context");
-			Ensure.ArgumentNotNull(directive, "constructor");
-			
-			if(directive.Constructor.HasAttribute(Settings.InjectAttribute))
-				return Int32.MaxValue;
-			
-			int score = 1;
-			foreach(ITarget target in directive.Targets)
-			{
-				foreach(IParameter parameter in context.Parameters)
-				{
-					if(string.Equals(target.Name, parameter.Name))
-					{
-						score++;
-						continue;
-					}
-				}
-				
-				Type targetType = target.Type;
-				if(targetType.IsArray)
-					targetType = targetType.GetElementType();
+    /// <summary>
+    /// Scores constructors by either looking for the existence of an injection marker
+    /// attribute, or by counting the number of parameters.
+    /// </summary>
+    public class StandardConstructorScorer : NinjectComponent, IConstructorScorer
+    {
+        /// <summary>
+        /// Gets the score for the specified constructor.
+        /// </summary>
+        /// <param name="context">The injection context.</param>
+        /// <param name="directive">The constructor.</param>
+        /// <returns>The constructor's score.</returns>
+        public int Score(IContext context, ConstructorInjectionDirective directive)
+        {
+            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(directive, "constructor");
+            
+            if(directive.Constructor.HasAttribute(Settings.InjectAttribute))
+                return Int32.MaxValue;
+            
+            int score = 1;
+            foreach(ITarget target in directive.Targets)
+            {
+                foreach(IParameter parameter in context.Parameters)
+                {
+                    if(string.Equals(target.Name, parameter.Name))
+                    {
+                        score++;
+                        continue;
+                    }
+                }
+                
+                Type targetType = target.Type;
+                if(targetType.IsArray)
+                    targetType = targetType.GetElementType();
 
-				if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
-					targetType = targetType.GetGenericArguments()[0];
-				
-				if(context.Kernel.GetBindings(targetType).Count() > 0)
-					score++;
-			}
-			
-			return score;
-		}
-	}
+                if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
+                    targetType = targetType.GetGenericArguments()[0];
+                
+                if(context.Kernel.GetBindings(targetType).Count() > 0)
+                    score++;
+            }
+            
+            return score;
+        }
+    }
 }

@@ -17,35 +17,35 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Syntax
 {
-	/// <summary>
-	/// Provides a path to resolve instances.
-	/// </summary>
-	public interface IResolutionRoot
-	{
-		/// <summary>
-		/// Determines whether the specified request can be resolved.
-		/// </summary>
-		/// <param name="request">The request.</param>
-		/// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
-		bool CanResolve(IRequest request);
+    /// <summary>
+    /// Provides a path to resolve instances.
+    /// </summary>
+    public interface IResolutionRoot
+    {
+        /// <summary>
+        /// Determines whether the specified request can be resolved.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        bool CanResolve(IRequest request);
 
-		/// <summary>
-		/// Resolves instances for the specified request. The instances are not actually resolved
-		/// until a consumer iterates over the enumerator.
-		/// </summary>
-		/// <param name="request">The request to resolve.</param>
-		/// <returns>An enumerator of instances that match the request.</returns>
-		IEnumerable<object> Resolve(IRequest request);
+        /// <summary>
+        /// Resolves instances for the specified request. The instances are not actually resolved
+        /// until a consumer iterates over the enumerator.
+        /// </summary>
+        /// <param name="request">The request to resolve.</param>
+        /// <returns>An enumerator of instances that match the request.</returns>
+        IEnumerable<object> Resolve(IRequest request);
 
-		/// <summary>
-		/// Creates a request for the specified service.
-		/// </summary>
-		/// <param name="service">The service that is being requested.</param>
-		/// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
-		/// <param name="parameters">The parameters to pass to the resolution.</param>
-		/// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-		/// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
-		/// <returns>The created request.</returns>
-		IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
-	}
+        /// <summary>
+        /// Creates a request for the specified service.
+        /// </summary>
+        /// <param name="service">The service that is being requested.</param>
+        /// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
+        /// <param name="parameters">The parameters to pass to the resolution.</param>
+        /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
+        /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <returns>The created request.</returns>
+        IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
+    }
 }

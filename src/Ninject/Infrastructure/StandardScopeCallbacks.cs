@@ -17,31 +17,31 @@ using Ninject.Activation;
 
 namespace Ninject.Infrastructure
 {
-	/// <summary>
-	/// Scope callbacks for standard scopes.
-	/// </summary>
-	public class StandardScopeCallbacks
-	{
-		/// <summary>
-		/// Gets the callback for transient scope.
-		/// </summary>
-		public static readonly Func<IContext, object> Transient = ctx => null;
+    /// <summary>
+    /// Scope callbacks for standard scopes.
+    /// </summary>
+    public class StandardScopeCallbacks
+    {
+        /// <summary>
+        /// Gets the callback for transient scope.
+        /// </summary>
+        public static readonly Func<IContext, object> Transient = ctx => null;
 
-		/// <summary>
-		/// Gets the callback for singleton scope.
-		/// </summary>
-		public static readonly Func<IContext, object> Singleton = ctx => ctx.Kernel;
+        /// <summary>
+        /// Gets the callback for singleton scope.
+        /// </summary>
+        public static readonly Func<IContext, object> Singleton = ctx => ctx.Kernel;
 
-		/// <summary>
-		/// Gets the callback for thread scope.
-		/// </summary>
-		public static readonly Func<IContext, object> Thread = ctx => System.Threading.Thread.CurrentThread;
+        /// <summary>
+        /// Gets the callback for thread scope.
+        /// </summary>
+        public static readonly Func<IContext, object> Thread = ctx => System.Threading.Thread.CurrentThread;
 
-		#if !NO_WEB
-		/// <summary>
-		/// Gets the callback for request scope.
-		/// </summary>
-		public static readonly Func<IContext, object> Request = ctx => HttpContext.Current;
-		#endif
-	}
+        #if !NO_WEB
+        /// <summary>
+        /// Gets the callback for request scope.
+        /// </summary>
+        public static readonly Func<IContext, object> Request = ctx => HttpContext.Current;
+        #endif
+    }
 }

@@ -1,28 +1,28 @@
 namespace Ninject.Tests.Fakes
 {
-	internal class Ninja : IWarrior
-	{
-		public Ninja(IWeapon weapon)
-		{
-			Weapon = weapon;
-		}
+    internal class Ninja : IWarrior
+    {
+        public Ninja(IWeapon weapon)
+        {
+            Weapon = weapon;
+        }
 
-		[Inject]
-		internal IWeapon SecondaryWeapon { get; set; }
+        [Inject]
+        internal IWeapon SecondaryWeapon { get; set; }
 
-		[Inject]
-		private IWeapon SecretWeapon { get; set; }
+        [Inject]
+        private IWeapon SecretWeapon { get; set; }
 
-		public IWeapon SecretWeaponAccessor
-		{
-			get { return SecretWeapon; }
-			set { SecretWeapon = value; }
-		}
+        public IWeapon SecretWeaponAccessor
+        {
+            get { return SecretWeapon; }
+            set { SecretWeapon = value; }
+        }
 
-		#region IWarrior Members
+        #region IWarrior Members
 
-		public IWeapon Weapon { get; set; }
+        public IWeapon Weapon { get; set; }
 
-		#endregion
-	}
+        #endregion
+    }
 }

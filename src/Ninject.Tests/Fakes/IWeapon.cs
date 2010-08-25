@@ -2,8 +2,8 @@
 
 namespace Ninject.Tests.Fakes
 {
-	public interface IWeapon
-	{
-		string Name { get; }
-	}
+    public interface IWeapon
+    {
+        string Name { get; }
+    }
 }

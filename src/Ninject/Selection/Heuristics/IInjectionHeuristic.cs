@@ -15,16 +15,16 @@ using Ninject.Components;
 
 namespace Ninject.Selection.Heuristics
 {
-	/// <summary>
-	/// Determines whether members should be injected during activation.
-	/// </summary>
-	public interface IInjectionHeuristic : INinjectComponent
-	{
-		/// <summary>
-		/// Returns a value indicating whether the specified member should be injected.
-		/// </summary>
-		/// <param name="member">The member in question.</param>
-		/// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
-		bool ShouldInject(MemberInfo member);
-	}
+    /// <summary>
+    /// Determines whether members should be injected during activation.
+    /// </summary>
+    public interface IInjectionHeuristic : INinjectComponent
+    {
+        /// <summary>
+        /// Returns a value indicating whether the specified member should be injected.
+        /// </summary>
+        /// <param name="member">The member in question.</param>
+        /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
+        bool ShouldInject(MemberInfo member);
+    }
 }

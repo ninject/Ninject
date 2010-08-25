@@ -4,28 +4,28 @@ using Xunit.Should;
 
 namespace Ninject.Tests.Integration
 {
-	public class ActivationStrategyTests
-	{
-		[Fact]
-		public void InstanceIsActivatedOnCreation()
-		{
-			using ( var kernel = new StandardKernel() )
-			{
-				kernel.Bind<Barracks>()
-					.ToSelf()
-					.OnActivation(instance =>
-									{
-										instance.Warrior = new FootSoldier();
-										instance.Weapon = new Shuriken();
-									});
+    public class ActivationStrategyTests
+    {
+        [Fact]
+        public void InstanceIsActivatedOnCreation()
+        {
+            using ( var kernel = new StandardKernel() )
+            {
+                kernel.Bind<Barracks>()
+                    .ToSelf()
+                    .OnActivation(instance =>
+                                    {
+                                        instance.Warrior = new FootSoldier();
+                                        instance.Weapon = new Shuriken();
+                                    });
 
-				var barracks = kernel.Get<Barracks>();
-				barracks.Warrior.ShouldNotBeNull();
-				barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-				barracks.Weapon.ShouldNotBeNull();
-				barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
-			}
-		}
+                var barracks = kernel.Get<Barracks>();
+                barracks.Warrior.ShouldNotBeNull();
+                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
+                barracks.Weapon.ShouldNotBeNull();
+                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+            }
+        }
 
         [Fact]
         public void InstanceIsActivatedOnCreationWithContext()
@@ -48,35 +48,35 @@ namespace Ninject.Tests.Integration
             }
         }
 
-		[Fact]
-		public void InstanceIsDeactivatedWhenItLeavesScope()
-		{
-			Barracks barracks;
-			using ( var kernel = new StandardKernel() )
-			{
-				kernel.Bind<Barracks>()
-					.ToSelf()
-					.InSingletonScope()
-					.OnActivation(instance =>
-									{
-										instance.Warrior = new FootSoldier();
-										instance.Weapon = new Shuriken();
-									})
-					.OnDeactivation(instance =>
-									{
-										instance.Warrior = null;
-										instance.Weapon = null;
-									});
+        [Fact]
+        public void InstanceIsDeactivatedWhenItLeavesScope()
+        {
+            Barracks barracks;
+            using ( var kernel = new StandardKernel() )
+            {
+                kernel.Bind<Barracks>()
+                    .ToSelf()
+                    .InSingletonScope()
+                    .OnActivation(instance =>
+                                    {
+                                        instance.Warrior = new FootSoldier();
+                                        instance.Weapon = new Shuriken();
+                                    })
+                    .OnDeactivation(instance =>
+                                    {
+                                        instance.Warrior = null;
+                                        instance.Weapon = null;
+                                    });
 
-				barracks = kernel.Get<Barracks>();
-				barracks.Warrior.ShouldNotBeNull();
-				barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-				barracks.Weapon.ShouldNotBeNull();
-				barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
-			}
-			barracks.Warrior.ShouldBeNull();
-			barracks.Weapon.ShouldBeNull();
-		}
+                barracks = kernel.Get<Barracks>();
+                barracks.Warrior.ShouldNotBeNull();
+                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
+                barracks.Weapon.ShouldNotBeNull();
+                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+            }
+            barracks.Warrior.ShouldBeNull();
+            barracks.Weapon.ShouldBeNull();
+        }
 
         [Fact]
         public void InstanceIsDeactivatedWhenItLeavesScopeWithContext()
@@ -107,5 +107,5 @@ namespace Ninject.Tests.Integration
             barracks.Warrior.ShouldBeNull();
             barracks.Weapon.ShouldBeNull();
         }
-	}
+    }
 }
