@@ -21,148 +21,156 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Activation
 {
-	/// <summary>
-	/// Contains information about the activation of a single instance.
-	/// </summary>
-	public class Context : IContext
-	{
-		/// <summary>
-		/// Gets the kernel that is driving the activation.
-		/// </summary>
-		public IKernel Kernel { get; set; }
+    /// <summary>
+    /// Contains information about the activation of a single instance.
+    /// </summary>
+    public class Context : IContext
+    {
+        private WeakReference cachedScope;
 
-		/// <summary>
-		/// Gets the request.
-		/// </summary>
-		public IRequest Request { get; set; }
+        /// <summary>
+        /// Gets the kernel that is driving the activation.
+        /// </summary>
+        public IKernel Kernel { get; set; }
 
-		/// <summary>
-		/// Gets the binding.
-		/// </summary>
-		public IBinding Binding { get; set; }
+        /// <summary>
+        /// Gets the request.
+        /// </summary>
+        public IRequest Request { get; set; }
 
-		/// <summary>
-		/// Gets or sets the activation plan.
-		/// </summary>
-		public IPlan Plan { get; set; }
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
+        public IBinding Binding { get; set; }
 
-		/// <summary>
-		/// Gets the parameters that were passed to manipulate the activation process.
-		/// </summary>
-		public ICollection<IParameter> Parameters { get; set; }
+        /// <summary>
+        /// Gets or sets the activation plan.
+        /// </summary>
+        public IPlan Plan { get; set; }
 
-		/// <summary>
-		/// Gets the generic arguments for the request, if any.
-		/// </summary>
-		public Type[] GenericArguments { get; private set; }
+        /// <summary>
+        /// Gets the parameters that were passed to manipulate the activation process.
+        /// </summary>
+        public ICollection<IParameter> Parameters { get; set; }
 
-		/// <summary>
-		/// Gets a value indicating whether the request involves inferred generic arguments.
-		/// </summary>
-		public bool HasInferredGenericArguments { get; private set; }
+        /// <summary>
+        /// Gets the generic arguments for the request, if any.
+        /// </summary>
+        public Type[] GenericArguments { get; private set; }
 
-		/// <summary>
-		/// Gets or sets the cache component.
-		/// </summary>
-		public ICache Cache { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether the request involves inferred generic arguments.
+        /// </summary>
+        public bool HasInferredGenericArguments { get; private set; }
 
-		/// <summary>
-		/// Gets or sets the planner component.
-		/// </summary>
-		public IPlanner Planner { get; private set; }
+        /// <summary>
+        /// Gets or sets the cache component.
+        /// </summary>
+        public ICache Cache { get; private set; }
 
-		/// <summary>
-		/// Gets or sets the pipeline component.
-		/// </summary>
-		public IPipeline Pipeline { get; private set; }
+        /// <summary>
+        /// Gets or sets the planner component.
+        /// </summary>
+        public IPlanner Planner { get; private set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Context"/> class.
-		/// </summary>
-		/// <param name="kernel">The kernel managing the resolution.</param>
-		/// <param name="request">The context's request.</param>
-		/// <param name="binding">The context's binding.</param>
-		/// <param name="cache">The cache component.</param>
-		/// <param name="planner">The planner component.</param>
-		/// <param name="pipeline">The pipeline component.</param>
-		public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			Ensure.ArgumentNotNull(request, "request");
-			Ensure.ArgumentNotNull(binding, "binding");
-			Ensure.ArgumentNotNull(cache, "cache");
-			Ensure.ArgumentNotNull(planner, "planner");
-			Ensure.ArgumentNotNull(pipeline, "pipeline");
+        /// <summary>
+        /// Gets or sets the pipeline component.
+        /// </summary>
+        public IPipeline Pipeline { get; private set; }
 
-			Kernel = kernel;
-			Request = request;
-			Binding = binding;
-			Parameters = request.Parameters.Union(binding.Parameters).ToList();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Context"/> class.
+        /// </summary>
+        /// <param name="kernel">The kernel managing the resolution.</param>
+        /// <param name="request">The context's request.</param>
+        /// <param name="binding">The context's binding.</param>
+        /// <param name="cache">The cache component.</param>
+        /// <param name="planner">The planner component.</param>
+        /// <param name="pipeline">The pipeline component.</param>
+        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        {
+            Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(cache, "cache");
+            Ensure.ArgumentNotNull(planner, "planner");
+            Ensure.ArgumentNotNull(pipeline, "pipeline");
 
-			Cache = cache;
-			Planner = planner;
-			Pipeline = pipeline;
+            Kernel = kernel;
+            Request = request;
+            Binding = binding;
+            Parameters = request.Parameters.Union(binding.Parameters).ToList();
 
-			if (binding.Service.IsGenericTypeDefinition)
-			{
-				HasInferredGenericArguments = true;
-				GenericArguments = request.Service.GetGenericArguments();
-			}
-		}
+            Cache = cache;
+            Planner = planner;
+            Pipeline = pipeline;
 
-		/// <summary>
-		/// Gets the scope for the context that "owns" the instance activated therein.
-		/// </summary>
-		/// <returns>The object that acts as the scope.</returns>
-		public object GetScope()
-		{
-			return Request.GetScope() ?? Binding.GetScope(this);
-		}
+            if (binding.Service.IsGenericTypeDefinition)
+            {
+                HasInferredGenericArguments = true;
+                GenericArguments = request.Service.GetGenericArguments();
+            }
+        }
 
-		/// <summary>
-		/// Gets the provider that should be used to create the instance for this context.
-		/// </summary>
-		/// <returns>The provider that should be used.</returns>
-		public IProvider GetProvider()
-		{
-			return Binding.GetProvider(this);
-		}
+        /// <summary>
+        /// Gets the scope for the context that "owns" the instance activated therein.
+        /// </summary>
+        /// <returns>The object that acts as the scope.</returns>
+        public object GetScope()
+        {
+            if (this.cachedScope == null)
+            {
+                var scope = this.Request.GetScope() ?? this.Binding.GetScope(this);
+                this.cachedScope = new WeakReference(scope);
+            }
+            
+            return this.cachedScope.IsAlive ? this.cachedScope.Target : null;
+        }
 
-		/// <summary>
-		/// Resolves the instance associated with this hook.
-		/// </summary>
-		/// <returns>The resolved instance.</returns>
-		public object Resolve()
-		{
-			lock (Binding)
-			{
-				if (Request.ActiveBindings.Contains(Binding))
-					throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+        /// <summary>
+        /// Gets the provider that should be used to create the instance for this context.
+        /// </summary>
+        /// <returns>The provider that should be used.</returns>
+        public IProvider GetProvider()
+        {
+            return Binding.GetProvider(this);
+        }
 
-				var cachedInstance = Cache.TryGet(this);
+        /// <summary>
+        /// Resolves the instance associated with this hook.
+        /// </summary>
+        /// <returns>The resolved instance.</returns>
+        public object Resolve()
+        {
+            lock (Binding)
+            {
+                if (Request.ActiveBindings.Contains(Binding))
+                    throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
 
-				if (cachedInstance != null)
-					return cachedInstance;
+                var cachedInstance = Cache.TryGet(this);
 
-				Request.ActiveBindings.Push(Binding);
+                if (cachedInstance != null)
+                    return cachedInstance;
 
-				var reference = new InstanceReference { Instance = GetProvider().Create(this) };
+                Request.ActiveBindings.Push(Binding);
 
-				Request.ActiveBindings.Pop();
-				
-				if (reference.Instance == null)
-					throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                var reference = new InstanceReference { Instance = GetProvider().Create(this) };
 
-				if (GetScope() != null)
-					Cache.Remember(this, reference);
+                Request.ActiveBindings.Pop();
+                
+                if (reference.Instance == null)
+                    throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
 
-				if (Plan == null)
-					Plan = Planner.GetPlan(reference.Instance.GetType());
+                if (GetScope() != null)
+                    Cache.Remember(this, reference);
 
-				Pipeline.Activate(this, reference);
+                if (Plan == null)
+                    Plan = Planner.GetPlan(reference.Instance.GetType());
 
-				return reference.Instance;
-			}
-		}
-	}
+                Pipeline.Activate(this, reference);
+
+                return reference.Instance;
+            }
+        }
+    }
 }
