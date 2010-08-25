@@ -1,0 +1,150 @@
+namespace Ninject.Tests.Unit.CacheTests
+{
+    using System;
+    using System.Collections.Generic;
+
+    using Moq;
+
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Activation.Strategies;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+    using Ninject.Tests.Fakes;
+    using Xunit;
+    using Xunit.Should;
+
+    public class WhenPruneIsCalled
+    {
+        private Mock<ICachePruner> cachePrunerMock;
+        private Mock<IBinding> bindingMock;
+        private Cache cache;
+
+        public WhenPruneIsCalled()
+        {
+            this.cachePrunerMock = new Mock<ICachePruner>();
+            this.bindingMock = new Mock<IBinding>();
+            this.cache = new Cache(new PipelineMock(), this.cachePrunerMock.Object);
+        }
+
+        [Fact]
+        public void CollectedScopeInstancesAreRemoved()
+        {
+            var sword = new Sword();
+            var swordWeakReference = new WeakReference(sword);
+            var context = CreateContextMock(new object(), bindingMock.Object);
+
+            this.Execute(sword, context);
+            sword = null;
+            context = null;
+            GC.Collect();
+            cache.Prune();
+            GC.Collect();
+            bool swordCollected = !swordWeakReference.IsAlive;
+
+            swordCollected.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void UncollectedScopeInstancesAreNotRemoved()
+        {
+            var sword = new Sword();
+            var swordWeakReference = new WeakReference(sword);
+            var context = CreateContextMock(new object(), bindingMock.Object);
+
+            this.Execute(sword, context);
+            GC.Collect();
+            bool swordCollected = !swordWeakReference.IsAlive;
+
+            swordCollected.ShouldBeFalse();
+        }
+
+        private static IContext CreateContextMock(object scope, IBinding binding, params Type[] genericArguments)
+        {
+            return new ContextMock(scope, binding, genericArguments);
+        }
+
+        private void Execute(Sword sword, IContext context)
+        {
+            this.cache.Remember(context, new InstanceReference { Instance = sword });
+        }
+    }
+
+    public class PipelineMock : IPipeline
+    {
+        public void Dispose()
+        {
+        }
+
+        public INinjectSettings Settings
+        {
+            get;
+            set;
+        }
+
+        public void Activate(IContext context, InstanceReference reference)
+        {
+        }
+
+        public void Deactivate(IContext context, InstanceReference reference)
+        {
+        }
+
+        public IList<IActivationStrategy> Strategies
+        {
+            get;
+            set;
+        }
+    }
+
+    public class ContextMock : IContext
+    {
+        private WeakReference scope;
+        public ContextMock(object scope, IBinding binding, Type[] genericArguments)
+        {
+            this.scope = new WeakReference(scope);
+            this.Binding = binding;
+            this.GenericArguments = genericArguments;
+        }
+
+        public IProvider GetProvider()
+        {
+            throw new NotImplementedException();
+        }
+
+        public object GetScope()
+        {
+            return this.scope.Target;
+        }
+
+        public object Resolve()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IKernel Kernel { get; set; }
+
+        public IRequest Request { get; set; }
+
+        public IBinding Binding { get; private set; }
+
+        public IPlan Plan { get; set; }
+
+        public ICollection<IParameter> Parameters { get; set; }
+
+        public Type[] GenericArguments
+        {
+            get;
+            private set;
+        }
+
+        public bool HasInferredGenericArguments
+        {
+            get
+            {
+                return this.GenericArguments != null;
+            }
+        }
+    }
+}

@@ -119,6 +119,7 @@
     <None Include="TestModules\test.foo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Unit\CachePruningTests.cs" />
     <Compile Include="Unit\CallbackProviderTests.cs" />
     <Compile Include="Unit\ConstantProviderTests.cs" />
     <Compile Include="Unit\ActivationBlockTests.cs" />
