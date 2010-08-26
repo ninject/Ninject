@@ -17,7 +17,7 @@ namespace Ninject.Activation.Caching
     /// <summary>
     /// Tracks instances for re-use in certain scopes.
     /// </summary>
-    public interface ICache : INinjectComponent
+    public interface ICache : INinjectComponent, IPruneable
     {
         /// <summary>
         /// Gets the number of entries currently stored in the cache.
@@ -44,11 +44,6 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to release.</param>
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         bool Release(object instance);
-
-        /// <summary>
-        /// Removes instances from the cache which should no longer be re-used.
-        /// </summary>
-        void Prune();
 
         /// <summary>
         /// Immediately deactivates and removes all instances in the cache that are owned by

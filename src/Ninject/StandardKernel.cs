@@ -58,6 +58,7 @@ namespace Ninject
             Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
 
             Components.Add<IPipeline, Pipeline>();
+            Components.Add<IActivationStrategy, ActivationCacheStrategy>();
             Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
             Components.Add<IActivationStrategy, MethodInjectionStrategy>();
             Components.Add<IActivationStrategy, InitializableStrategy>();
@@ -79,6 +80,7 @@ namespace Ninject
                 Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
 
             Components.Add<ICache, Cache>();
+            Components.Add<IActivationCache, ActivationCache>();
             Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 
             #if !NO_ASSEMBLY_SCANNING

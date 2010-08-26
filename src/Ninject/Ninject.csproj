@@ -77,10 +77,14 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Activation\Caching\ActivationCache.cs" />
     <Compile Include="Activation\Caching\Cache.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Activation\Caching\IActivationCache.cs" />
     <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Activation\Caching\IPruneable.cs" />
+    <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />

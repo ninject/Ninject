@@ -7,54 +7,57 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#region Using Directives
-using System;
-using System.Threading;
-using Ninject.Components;
-using Ninject.Infrastructure;
-#endregion
 
 namespace Ninject.Activation.Caching
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using Ninject.Components;
+    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
     /// the garbage collector to see if it has run.
     /// </summary>
     public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
     {
-        private readonly WeakReference _indicator = new WeakReference(new object());
-        private Timer _timer;
-
+        private readonly WeakReference indicator = new WeakReference(new object());
+        
         /// <summary>
-        /// Gets the cache that is being pruned.
+        /// The caches that are being pruned.
         /// </summary>
-        public ICache Cache { get; private set; }
+        private readonly List<IPruneable> caches = new List<IPruneable>();
+
+        private Timer timer;
 
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
         public override void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed && _timer != null)
-                Stop();
-                
+            if (disposing && !IsDisposed && this.timer != null)
+            {
+                this.Stop();
+            }
 
             base.Dispose(disposing);
         }
 
         /// <summary>
-        /// Starts pruning the specified cache based on the rules of the pruner.
+        /// Starts pruning the specified pruneable based on the rules of the pruner.
         /// </summary>
-        /// <param name="cache">The cache that will be pruned.</param>
-        public void Start(ICache cache)
+        /// <param name="pruneable">The pruneable that will be pruned.</param>
+        public void Start(IPruneable pruneable)
         {
-            Ensure.ArgumentNotNull(cache, "cache");
+            Ensure.ArgumentNotNull(pruneable, "pruneable");
 
-            if (_timer != null)
-                Stop();
-
-            Cache = cache;
-            _timer = new Timer(PruneCacheIfGarbageCollectorHasRun, null, GetTimeoutInMilliseconds(), Timeout.Infinite);
+            this.caches.Add(pruneable);
+            if (this.timer == null)
+            {
+                this.timer = new Timer(this.PruneCacheIfGarbageCollectorHasRun, null, this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+            }
         }
 
         /// <summary>
@@ -62,25 +65,27 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Stop()
         {
-            _timer.Change(Timeout.Infinite, Timeout.Infinite);
-            _timer.Dispose();
-            _timer = null;
-            Cache = null;
+            this.timer.Change(Timeout.Infinite, Timeout.Infinite);
+            this.timer.Dispose();
+            this.timer = null;
+            this.caches.Clear();
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
         {
             try
             {
-                if (_indicator.IsAlive)
+                if (this.indicator.IsAlive)
+                {
                     return;
+                }
 
-                Cache.Prune();
-                _indicator.Target = new object();
+                this.caches.Map(cache => cache.Prune());
+                this.indicator.Target = new object();
             }
             finally
             {
-                _timer.Change(GetTimeoutInMilliseconds(), Timeout.Infinite);
+                this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
             }
         }
 

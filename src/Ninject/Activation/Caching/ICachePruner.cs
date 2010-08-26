@@ -23,7 +23,7 @@ namespace Ninject.Activation.Caching
         /// Starts pruning the specified cache based on the rules of the pruner.
         /// </summary>
         /// <param name="cache">The cache that will be pruned.</param>
-        void Start(ICache cache);
+        void Start(IPruneable cache);
 
         /// <summary>
         /// Stops pruning.

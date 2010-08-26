@@ -7,37 +7,43 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Ninject.Activation.Strategies;
-using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
-#endregion
 
 namespace Ninject.Activation
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Ninject.Activation.Caching;
+    using Ninject.Activation.Strategies;
+    using Ninject.Components;
+    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Drives the activation (injection, etc.) of an instance.
     /// </summary>
     public class Pipeline : NinjectComponent, IPipeline
     {
         /// <summary>
-        /// Gets the strategies that contribute to the activation and deactivation processes.
+        /// The activation cache.
         /// </summary>
-        public IList<IActivationStrategy> Strategies { get; private set; }
+        private readonly IActivationCache activationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pipeline"/> class.
         /// </summary>
         /// <param name="strategies">The strategies to execute during activation and deactivation.</param>
-        public Pipeline(IEnumerable<IActivationStrategy> strategies)
+        /// <param name="activationCache">The activation cache.</param>
+        public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
             Ensure.ArgumentNotNull(strategies, "strategies");
-            Strategies = strategies.ToList();
+            this.Strategies = strategies.ToList();
+            this.activationCache = activationCache;
         }
+
+        /// <summary>
+        /// Gets the strategies that contribute to the activation and deactivation processes.
+        /// </summary>
+        public IList<IActivationStrategy> Strategies { get; private set; }
 
         /// <summary>
         /// Activates the instance in the specified context.
@@ -47,7 +53,10 @@ namespace Ninject.Activation
         public void Activate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, "context");
-            Strategies.Map(s => s.Activate(context, reference));
+            if (!this.activationCache.IsActivated(reference.Instance))
+            {
+                this.Strategies.Map(s => s.Activate(context, reference));
+            }
         }
 
         /// <summary>
@@ -58,7 +67,10 @@ namespace Ninject.Activation
         public void Deactivate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, "context");
-            Strategies.Map(s => s.Deactivate(context, reference));
+            if (!this.activationCache.IsDeactivated(reference.Instance))
+            {
+                this.Strategies.Map(s => s.Deactivate(context, reference));
+            }
         }
     }
 }

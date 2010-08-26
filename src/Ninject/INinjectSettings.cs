@@ -56,6 +56,18 @@ namespace Ninject
         #endif //!SILVERLIGHT
 
         /// <summary>
+        /// Gets or sets a value indicating whether the activation cache is disabled.
+        /// If the activation cache is disabled less memory is used. But in some cases
+        /// instances are activated or deactivated multiple times. e.g. in the following scenario:
+        /// Bind{A}().ToSelf();
+        /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
+        /// </value>
+        bool ActivationCacheDisabled { get; set; }
+
+        /// <summary>
         /// Gets the value for the specified key.
         /// </summary>
         /// <typeparam name="T">The type of value to return.</typeparam>

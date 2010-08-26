@@ -39,6 +39,7 @@ namespace Ninject.Infrastructure
         {
         }
 
+#if !NO_EXCEPTION_SERIALIZATION
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
         /// </summary>
@@ -51,6 +52,7 @@ namespace Ninject.Infrastructure
             : base(info, context)
         {
         }
+#endif
 
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.

@@ -4,6 +4,9 @@ using Xunit.Should;
 
 namespace Ninject.Tests.Integration
 {
+    using System.Linq;
+    using Ninject.Activation.Strategies;
+
     public class ActivationStrategyTests
     {
         [Fact]
@@ -106,6 +109,42 @@ namespace Ninject.Tests.Integration
             }
             barracks.Warrior.ShouldBeNull();
             barracks.Weapon.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ObjectsActivatedOnlyOnce()
+        {
+            using (var kernel = new StandardKernel())
+            {
+                kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+                kernel.Bind<Sword>().ToSelf();
+                kernel.Bind<IWeapon>().ToMethod(ctx => ctx.Kernel.Get<Sword>());
+                var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
+
+                var warrior = kernel.Get<IWarrior>();
+                
+                testActivationStrategy.ActivationCount.ShouldBe(2);
+            }            
+        }
+
+        private class TestActivationStrategy : ActivationStrategy
+        {
+            private int activationCount = 0;
+
+            public int ActivationCount
+            {
+                get
+                {
+                    return this.activationCount;
+                }
+            }
+
+            public override void Activate(Activation.IContext context, Activation.InstanceReference reference)
+            {
+                this.activationCount++;
+                base.Activate(context, reference);
+            }
         }
     }
 }

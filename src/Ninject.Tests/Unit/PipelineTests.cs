@@ -1,25 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Unit.PipelineTests
+﻿namespace Ninject.Tests.Unit.PipelineTests
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;    
+    using Ninject.Activation.Strategies;
+    using Xunit;
+    using Xunit.Should;    
+
     public class PipelineContext
     {
-        protected readonly List<Mock<IActivationStrategy>> strategyMocks = new List<Mock<IActivationStrategy>>();
-        protected readonly Pipeline pipeline;
+        protected readonly List<Mock<IActivationStrategy>> StrategyMocks = new List<Mock<IActivationStrategy>>();
+        protected readonly Mock<IActivationCache> ActivationCacheMock;
+        protected readonly Pipeline Pipeline;
 
         public PipelineContext()
         {
-            strategyMocks.Add(new Mock<IActivationStrategy>());
-            strategyMocks.Add(new Mock<IActivationStrategy>());
-            strategyMocks.Add(new Mock<IActivationStrategy>());
-            pipeline = new Pipeline(strategyMocks.Select(mock => mock.Object));
+            this.StrategyMocks.Add(new Mock<IActivationStrategy>());
+            this.StrategyMocks.Add(new Mock<IActivationStrategy>());
+            this.StrategyMocks.Add(new Mock<IActivationStrategy>());
+            this.ActivationCacheMock = new Mock<IActivationCache>();
+            this.Pipeline = new Pipeline(this.StrategyMocks.Select(mock => mock.Object), this.ActivationCacheMock.Object);
         }
     }
 
@@ -28,10 +30,12 @@ namespace Ninject.Tests.Unit.PipelineTests
         [Fact]
         public void HasListOfStrategies()
         {
-            pipeline.Strategies.ShouldNotBeNull();
+            this.Pipeline.Strategies.ShouldNotBeNull();
 
-            for (int idx = 0; idx < strategyMocks.Count; idx++)
-                pipeline.Strategies[idx].ShouldBeSameAs(strategyMocks[idx].Object);
+            for (int idx = 0; idx < this.StrategyMocks.Count; idx++)
+            {
+                this.Pipeline.Strategies[idx].ShouldBeSameAs(this.StrategyMocks[idx].Object);
+            }
         }
     }
 
@@ -43,9 +47,21 @@ namespace Ninject.Tests.Unit.PipelineTests
             var contextMock = new Mock<IContext>();
             var reference = new InstanceReference();
 
-            pipeline.Activate(contextMock.Object, reference);
+            this.Pipeline.Activate(contextMock.Object, reference);
 
-            strategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object, reference)));
+            this.StrategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object, reference)));
+        }
+
+        [Fact]
+        public void WhenAlreadyActiavatedNothingHappens()
+        {
+            var contextMock = new Mock<IContext>();
+            var reference = new InstanceReference();
+            this.ActivationCacheMock.Setup(activationCache => activationCache.IsActivated(It.IsAny<object>())).Returns(true);
+
+            this.Pipeline.Activate(contextMock.Object, reference);
+
+            this.StrategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object, reference), Times.Never()));
         }
     }
 
@@ -57,9 +73,21 @@ namespace Ninject.Tests.Unit.PipelineTests
             var contextMock = new Mock<IContext>();
             var reference = new InstanceReference();
 
-            pipeline.Deactivate(contextMock.Object, reference);
+            this.Pipeline.Deactivate(contextMock.Object, reference);
 
-            strategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object, reference)));
+            this.StrategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object, reference)));
+        }
+
+        [Fact]
+        public void WhenAlreadyDeactiavatedNothingHappens()
+        {
+            var contextMock = new Mock<IContext>();
+            var reference = new InstanceReference();
+            this.ActivationCacheMock.Setup(activationCache => activationCache.IsDeactivated(It.IsAny<object>())).Returns(true);
+
+            this.Pipeline.Deactivate(contextMock.Object, reference);
+
+            this.StrategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object, reference), Times.Never()));
         }
     }
 }
