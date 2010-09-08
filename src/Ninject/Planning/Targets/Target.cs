@@ -92,7 +92,7 @@ namespace Ninject.Planning.Targets
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
-            return Site.GetCustomAttributes(attributeType, inherit);
+            return Site.GetCustomAttributesExtended(attributeType, inherit);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolution constraint.</returns>
         protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
         {
-            var attributes = Site.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
+            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
 
             if (attributes == null || attributes.Length == 0)
                 return null;

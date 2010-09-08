@@ -246,7 +246,7 @@ namespace Ninject.Planning.Bindings
             if (!typeof(Attribute).IsAssignableFrom(attributeType))
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenTargetHas", attributeType));
 
-            Binding.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
+            this.Binding.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
 
             return this;
         }

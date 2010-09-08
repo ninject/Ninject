@@ -19,6 +19,8 @@ using Ninject.Selection.Heuristics;
 
 namespace Ninject.Selection
 {
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Selects members for injection.
     /// </summary>
@@ -83,7 +85,27 @@ namespace Ninject.Selection
         public IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
-            return type.GetProperties(Flags).Where(p => InjectionHeuristics.Any(h => h.ShouldInject(p)));
+            List<PropertyInfo> properties = new List<PropertyInfo>();
+            properties.AddRange(
+                type.GetProperties(this.Flags)
+                       .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
+                       .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
+#if !SILVERLIGHT
+            if (this.Settings.InjectParentPrivateProperties)
+            {
+                for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
+                {
+                    properties.AddRange(this.GetPrivateProperties(type.BaseType));
+                }
+            }
+#endif
+
+            return properties;
+        }
+
+        private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
+        {
+            return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
         }
 
         /// <summary>

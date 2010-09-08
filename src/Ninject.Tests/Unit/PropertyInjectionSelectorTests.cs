@@ -46,8 +46,8 @@ namespace Ninject.Tests.Unit
             Assert.NotNull(instance.SecondaryWeapon);
             Assert.IsType<Shuriken>(instance.SecondaryWeapon);
 
-            Assert.NotNull(instance.SecretWeaponAccessor);
-            Assert.IsType<Shuriken>(instance.SecretWeaponAccessor);
+            Assert.NotNull(instance.VerySecretWeaponAccessor);
+            Assert.IsType<Shuriken>(instance.VerySecretWeaponAccessor);
         }
 #endif //!SILVERLIGHT
 
@@ -58,7 +58,7 @@ namespace Ninject.Tests.Unit
 
             Assert.NotNull(instance.Weapon);
             Assert.Null(instance.SecondaryWeapon);
-            Assert.Null(instance.SecretWeaponAccessor);
+            Assert.Null(instance.VerySecretWeaponAccessor);
         }
     }
 }

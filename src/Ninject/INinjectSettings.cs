@@ -53,6 +53,15 @@ namespace Ninject
         /// Gets a value indicating whether Ninject should inject non public members.
         /// </summary>
         bool InjectNonPublic { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether Ninject should inject private properties of base classes.
+        /// </summary>
+        /// <remarks>
+        /// Activating this setting has an impact on the performance. It is recomended not
+        /// to use this feature and use constructor injection instead.
+        /// </remarks>
+        bool InjectParentPrivateProperties { get; set; }
         #endif //!SILVERLIGHT
 
         /// <summary>
