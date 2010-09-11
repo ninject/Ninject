@@ -262,11 +262,22 @@ namespace Ninject.Tests.Integration.StandardKernelTests
     public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
     {
         [Fact]
-        public void ActivationExceptionIsThrownWhenProviderReturnsNull()
+        public void WhenProviderReturnsNullThenActivationExceptionIsThrown()
         {
             kernel.Bind<IWeapon>().ToProvider<NullProvider>();
             
             Assert.Throws<Ninject.ActivationException>(() => kernel.Get<IWeapon>());
+        }
+    
+        [Fact]
+        public void WhenProviderReturnsNullButAllowedInSettingsThenNullIsResolved()
+        {
+            kernel.Settings.AllowNullInjection = true;
+            kernel.Bind<IWeapon>().ToProvider<NullProvider>();
+
+            var weapon = kernel.Get<IWeapon>();
+
+            weapon.ShouldBeNull();
         }
     }
 

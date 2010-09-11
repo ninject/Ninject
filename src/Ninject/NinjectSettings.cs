@@ -112,6 +112,19 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether Null is a valid value for injection.
+        /// By defualt this is disabled and whenever a provider returns null an eception is thrown.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if null is allowed as injected value otherwise false.
+        /// </value>
+        public bool AllowNullInjection
+        {
+            get { return this.Get("AllowNullInjection", false); }
+            set { this.Set("AllowNullInjection", value); }
+        }
+
+        /// <summary>
         /// Gets the value for the specified key.
         /// </summary>
         /// <typeparam name="T">The type of value to return.</typeparam>

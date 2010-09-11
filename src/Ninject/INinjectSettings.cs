@@ -77,6 +77,13 @@ namespace Ninject
         bool ActivationCacheDisabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether Null is a valid value for injection.
+        /// By defualt this is disabled and whenever a provider returns null an eception is thrown.
+        /// </summary>
+        /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
+        bool AllowNullInjection { get; set; }
+
+        /// <summary>
         /// Gets the value for the specified key.
         /// </summary>
         /// <typeparam name="T">The type of value to return.</typeparam>

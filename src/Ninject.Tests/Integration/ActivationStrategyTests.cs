@@ -127,6 +127,22 @@ namespace Ninject.Tests.Integration
                 testActivationStrategy.ActivationCount.ShouldBe(2);
             }            
         }
+        
+        [Fact]
+        public void NullIsNotActivated()
+        {
+            using (var kernel = new StandardKernel(new NinjectSettings { AllowNullInjection = true }))
+            {
+                kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+                kernel.Bind<IWeapon>().ToConstant(null);
+                var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
+
+                var warrior = kernel.Get<IWarrior>();
+
+                testActivationStrategy.ActivationCount.ShouldBe(1);
+            }
+        }
 
         private class TestActivationStrategy : ActivationStrategy
         {
