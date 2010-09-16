@@ -31,7 +31,7 @@
 	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
-	<property name="build.platform" value="net-3.5" overwrite="false"/>
+	<property name="build.platform" value="net-3.5" dynamic="true"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
@@ -233,8 +233,33 @@
 				commandline="&quot;${path.tools.xunit.console}&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;"/>
 		</if>
 	</target>
-
+	
 	<target name="package-all" depends="all package-bin package-source" />
+
+	<target name="allPlatforms">
+		<property name="build.platform" value="net-3.5"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="net-3.5-no-web"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="net-4.0"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="net-4.0-no-web"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="silverlight-2.0"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="silverlight-3.0"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="silverlight-4.0"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="silverlight-4.0-wp7"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="mono-2.0"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="mono-2.0-no-web"/>
+		<call target="package-all"/>
+		<property name="build.platform" value="netcf-3.5"/>
+		<call target="package-all"/>
+	</target>
 
 	<target name="package-bin" depends="all">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
