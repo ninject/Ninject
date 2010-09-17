@@ -276,7 +276,10 @@ namespace Ninject
             var request = CreateRequest(service, null, parameters, false, false);
             var context = CreateContext(request, binding);
 
-            context.Plan = planner.GetPlan(service);
+            lock (planner)
+            {
+                context.Plan = planner.GetPlan(service);
+            }
 
             var reference = new InstanceReference { Instance = instance };
             pipeline.Activate(context, reference);
