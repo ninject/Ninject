@@ -235,6 +235,8 @@
 	</target>
 	
 	<target name="package-all" depends="all package-bin package-source" />
+	
+	<target name="UnzipDependencies" />
 
 	<target name="buildServerPlatforms">
 		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
