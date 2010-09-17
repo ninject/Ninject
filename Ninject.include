@@ -236,29 +236,18 @@
 	
 	<target name="package-all" depends="all package-bin package-source" />
 
+	<target name="buildServerPlatforms">
+		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
+			<property name="build.platform" value="${platform}"/>
+			<call target="package-all"/>
+		</foreach>
+	</target>
+
 	<target name="allPlatforms">
-		<property name="build.platform" value="net-3.5"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="net-3.5-no-web"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="net-4.0"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="net-4.0-no-web"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="silverlight-2.0"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="silverlight-3.0"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="silverlight-4.0"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="silverlight-4.0-wp7"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="mono-2.0"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="mono-2.0-no-web"/>
-		<call target="package-all"/>
-		<property name="build.platform" value="netcf-3.5"/>
-		<call target="package-all"/>
+		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
+			<property name="build.platform" value="${platform}"/>
+			<call target="package-all"/>
+		</foreach>
 	</target>
 
 	<target name="package-bin" depends="all">
