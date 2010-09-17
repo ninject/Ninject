@@ -235,7 +235,7 @@ namespace Ninject.Activation.Caching
         /// <param name="cacheEntries">The cache entries.</param>
         private void Forget(IEnumerable<CacheEntry> cacheEntries)
         {
-            foreach (var entry in cacheEntries)
+            foreach (var entry in cacheEntries.ToList())
             {
                 this.Forget(entry);
             }
