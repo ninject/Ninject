@@ -1,0 +1,4 @@
+Before building the first time you have to profrom the following steps:
+1. Run cmd.exe as Administrator.
+2. Enter the following command in the command prompt.
+   netsh http add urlacl url=http://+:8887/ user=DOMAIN\user
