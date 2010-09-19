@@ -39,6 +39,7 @@
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.silverlightTests" value="false" readonly="false" overwrite="false"/>
 
 	<property name="Is64BitOperatingSystem" value="false" />
 	<property name="Is64BitProcess" value="false" />
@@ -238,7 +239,7 @@
 		</if>
 	</target>
 	
-	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests}" if="${string::contains(build.platform, 'silverlight')}">
+	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight')}">
 		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline='-x"${product.assembly.silverlighttest}" -o=UnitDriven --teamcity' failonerror="true"/>
 	</target>
 
