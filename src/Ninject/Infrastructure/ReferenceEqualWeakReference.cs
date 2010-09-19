@@ -11,22 +11,24 @@ namespace Ninject.Infrastructure
 {
     using System;
     using System.Runtime.Serialization;
+    using System.Security;
 
     /// <summary>
     /// Weak reference that can be used in collections. It is equal to the
     /// object it references and has the same hash code.
     /// </summary>
-    public class ReferenceEqualWeakReference : WeakReference
+    public class ReferenceEqualWeakReference
     {
         private int cashedHashCode;
+        private WeakReference weakReference;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
         /// </summary>
         /// <param name="target">The target.</param>
         public ReferenceEqualWeakReference(object target)
-            : base(target)
         {
+            this.weakReference = new WeakReference(target);
         }
 
         /// <summary>
@@ -35,25 +37,39 @@ namespace Ninject.Infrastructure
         /// <param name="target">The target.</param>
         /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
         public ReferenceEqualWeakReference(object target, bool trackResurrection)
-            : base(target, trackResurrection)
         {
+            this.weakReference = new WeakReference(target, trackResurrection);
         }
 
-#if !NO_EXCEPTION_SERIALIZATION
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
+        /// Gets a value indicating whether this instance is alive.
         /// </summary>
-        /// <param name="info">An object that holds all the data needed to serialize or deserialize the current <see cref="T:System.WeakReference"/> object.</param>
-        /// <param name="context">(Reserved) Describes the source and destination of the serialized stream specified by <paramref name="info"/>.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        ///     <paramref name="info"/> is null.
-        /// </exception>
-        protected ReferenceEqualWeakReference(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
+        public bool IsAlive
         {
+            get
+            {
+                return this.weakReference.IsAlive;
+            }
         }
-#endif
 
+        /// <summary>
+        /// Gets or sets the target of this weak reference.
+        /// </summary>
+        /// <value>The targe of this weak reference.</value>
+        public object Target
+        {
+            get
+            {
+                return this.weakReference.Target;
+            }
+
+            set
+            {
+                this.weakReference.Target = value;
+            }
+        }
+        
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
@@ -71,15 +87,28 @@ namespace Ninject.Infrastructure
                 return base.Equals(obj);
             }
 
-            var weakReference = obj as WeakReference;
-            if (weakReference != null)
+            var referenceEqualWeakReference = obj as ReferenceEqualWeakReference;
+            if (referenceEqualWeakReference != null)
             {
-                if (!weakReference.IsAlive)
+                if (!referenceEqualWeakReference.IsAlive)
                 {
                     return false;
                 }
 
-                obj = weakReference.Target;
+                obj = referenceEqualWeakReference.Target;
+            }
+            else
+            {
+                var weakReference = obj as WeakReference;
+                if (weakReference != null)
+                {
+                    if (!weakReference.IsAlive)
+                    {
+                        return false;
+                    }
+
+                    obj = weakReference.Target;
+                }
             }
 
             return ReferenceEquals(this.Target, obj);

@@ -169,7 +169,7 @@ namespace Ninject.Activation.Caching
         /// <param name="objects">The objects collection to be freed of dead objects.</param>
         private static void RemoveDeadObjects(IDictionary<object, bool> objects)
         {
-            var deadObjects = objects.Where(entry => !((WeakReference)entry.Key).IsAlive).ToList();
+            var deadObjects = objects.Where(entry => !((ReferenceEqualWeakReference)entry.Key).IsAlive).ToList();
             foreach (var deadObject in deadObjects)
             {
                 objects.Remove(deadObject);
@@ -182,7 +182,7 @@ namespace Ninject.Activation.Caching
         /// <param name="objects">The objects collection to be freed of dead objects.</param>
         private static void RemoveDeadObjects(HashSet<object> objects)
         {
-            objects.RemoveWhere(reference => !((WeakReference)reference).IsAlive);
+            objects.RemoveWhere(reference => !((ReferenceEqualWeakReference)reference).IsAlive);
         }
 #endif
     }
