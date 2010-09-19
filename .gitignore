@@ -7,3 +7,4 @@ dist
 *resharper*
 *.user
 *.cache
+/src/Ninject.SilverlightTests/Bin

@@ -1,23 +1,37 @@
-﻿using System;
-using Ninject.Activation.Blocks;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.ActivationBlockTests
+﻿namespace Ninject.Tests.Integration.ActivationBlockTests
 {
+    using System;
+    using Ninject.Activation.Blocks;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class ActivationBlockContext
     {
-        protected readonly StandardKernel kernel;
-        protected readonly ActivationBlock block;
+        protected StandardKernel kernel;
+        protected ActivationBlock block;
 
         public ActivationBlockContext()
         {
-            kernel = new StandardKernel();
-            block = new ActivationBlock(kernel);
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
+            this.block = new ActivationBlock(kernel);
         }
     }
 
+    [TestClass]
     public class WhenBlockIsCreated : ActivationBlockContext
     {
         [Fact]
@@ -56,6 +70,7 @@ namespace Ninject.Tests.Integration.ActivationBlockTests
         }
     }
 
+    [TestClass]
     public class WhenBlockIsDisposed : ActivationBlockContext
     {
         [Fact]

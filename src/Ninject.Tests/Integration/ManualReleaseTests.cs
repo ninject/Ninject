@@ -1,20 +1,33 @@
-﻿using System;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.ManualReleaseTests
+﻿namespace Ninject.Tests.Integration.ManualReleaseTests
 {
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+    
     public class ManualReleaseContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public ManualReleaseContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();            
         }
     }
 
+    [TestClass]
     public class WhenReleaseIsCalled : ManualReleaseContext
     {
         [Fact]

@@ -12,6 +12,8 @@
 	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
 	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
 	<property name="path.tools.moq" value="${path.tools}/moq"/>
+	<property name="path.tools.statlight" value="${path.tools}/statlight/statlight.exe"/>
+	<property name="path.tools.unitdriven" value="${path.tools}/unitdriven"/>
 	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
 	<property name="path.tools.git" value="${path.tools}/git"/>
 
@@ -23,6 +25,7 @@
 	<property name="product.docfile" value="${product.name}.xml" overwrite="false"/>
 	<property name="product.assembly" value="${product.name}.dll" overwrite="false"/>
 	<property name="product.assembly.test" value="${product.name}.Tests.dll" overwrite="false"/>
+	<property name="product.assembly.silverlighttest" value="${product.name}.SilverlightTests.xap" overwrite="false"/>
 
 	<property name="version" value="2.1.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
@@ -226,7 +229,8 @@
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB,MONO"/>
 	</target>
 	
-	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}">
+	<!--if="${build.platform == 'net-3.5' or build.platform == 'net-4.0'}"-->
+	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5' or build.platform == 'mono-2.0' or build.platform == 'mono-2.0-no-web')}">
 		<exec program="${path.tools.xunit.console}" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
 		<if test="${not Is64BitOperatingSystem}">
 			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
@@ -234,6 +238,10 @@
 		</if>
 	</target>
 	
+	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests}" if="${string::contains(build.platform, 'silverlight')}">
+		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline='-x"${product.assembly.silverlighttest}" -o=UnitDriven --teamcity' failonerror="true"/>
+	</target>
+
 	<target name="package-all" depends="all package-bin package-source" />
 	
 	<target name="UnzipDependencies" />
@@ -241,15 +249,19 @@
 	<target name="buildServerPlatforms">
 		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
-			<call target="package-all"/>
+			<call target="all"/>
+			<call target="package-bin"/>
 		</foreach>
+		<call target="package-source"/>
 	</target>
 
 	<target name="allPlatforms">
 		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
-			<call target="package-all"/>
+			<call target="all"/>
+			<call target="package-bin"/>
 		</foreach>
+		<call target="package-source"/>
 	</target>
 
 	<target name="package-bin" depends="all">

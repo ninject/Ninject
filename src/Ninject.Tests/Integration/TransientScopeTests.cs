@@ -1,22 +1,36 @@
-﻿using System;
-using Ninject.Activation;
-using Ninject.Activation.Caching;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.TransientScopeTests
+﻿namespace Ninject.Tests.Integration.TransientScopeTests
 {
+    using System;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class TransientScopeContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public TransientScopeContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();            
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToInterfaceInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -47,6 +61,7 @@ namespace Ninject.Tests.Integration.TransientScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -82,6 +97,7 @@ namespace Ninject.Tests.Integration.TransientScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -112,6 +128,7 @@ namespace Ninject.Tests.Integration.TransientScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
     {
         [Fact]

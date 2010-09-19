@@ -1,9 +1,17 @@
-﻿using System;
-using Ninject.Infrastructure.Disposal;
-using Xunit;
-
-namespace Ninject.Tests.Integration
+﻿namespace Ninject.Tests.Integration
 {
+    using System;
+    using Ninject.Infrastructure.Disposal;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class WeakAttribute : Attribute
     {
     }
@@ -84,42 +92,49 @@ namespace Ninject.Tests.Integration
         #endregion
     }
 
+    [TestClass]
     public class ConditionalAttributeBindingTests : DisposableObject
     {
-        protected IKernel _kernel;
+        protected IKernel kernel;
 
         public ConditionalAttributeBindingTests()
         {
-            _kernel = new StandardKernel();
-            _kernel.Bind<IVarialbeWeapon>().To<Hammer>();
-            _kernel.Bind<IAttackAbility>().To<UnknownAttack>();
-            _kernel.Bind<IAttackAbility>().To<StrongAttack>().WhenTargetHas<StrongAttribute>();
-            _kernel.Bind<IAttackAbility>().To<WeakAttack>().WhenTargetHas<WeakAttribute>();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
+            this.kernel.Bind<IVarialbeWeapon>().To<Hammer>();
+            this.kernel.Bind<IAttackAbility>().To<UnknownAttack>();
+            this.kernel.Bind<IAttackAbility>().To<StrongAttack>().WhenTargetHas<StrongAttribute>();
+            this.kernel.Bind<IAttackAbility>().To<WeakAttack>().WhenTargetHas<WeakAttribute>();
         }
 
         [Fact]
         public void DefaultInstanceIsResolvedWhenNoAttributesMatch()
         {
-            var attackAbility = _kernel.Get<IAttackAbility>();
-            Assert.IsType<UnknownAttack>( attackAbility );
+            var attackAbility = this.kernel.Get<IAttackAbility>();
+            attackAbility.ShouldBeInstanceOf<UnknownAttack>();
         }
 
         [Fact]
         public void PropertiesAreInjectMatchingAttributeBindings()
         {
-            var hammer = _kernel.Get<IVarialbeWeapon>();
-            Assert.NotNull( hammer );
-            Assert.IsType<StrongAttack>( hammer.StrongAttack );
-            Assert.IsType<WeakAttack>( hammer.WeakAttack );
-            Assert.IsType<UnknownAttack>( hammer.WtfAttack );
+            var hammer = this.kernel.Get<IVarialbeWeapon>();
+            hammer.ShouldNotBeNull();
+            hammer.StrongAttack.ShouldBeInstanceOf<StrongAttack>();
+            hammer.WeakAttack.ShouldBeInstanceOf<WeakAttack>();
+            hammer.WtfAttack.ShouldBeInstanceOf<UnknownAttack>();
         }
 
         public override void Dispose( bool disposing )
         {
             if ( disposing && !IsDisposed )
             {
-                _kernel.Dispose();
-                _kernel = null;
+                this.kernel.Dispose();
+                this.kernel = null;
             }
             base.Dispose( disposing );
         }

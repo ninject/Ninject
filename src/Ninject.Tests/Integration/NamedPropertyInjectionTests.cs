@@ -1,11 +1,10 @@
 namespace Ninject.Tests.Integration
 {
+#if !SILVERLIGHT
     using Ninject.Tests.Fakes;
     using Xunit;
     using Xunit.Should;
-
-
-#if !SILVERLIGHT
+    
     public class NamedPropertyInjectionTests
     {
         private readonly IKernel kernel;

@@ -1,19 +1,33 @@
-﻿using System;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.SpecialResolutionTests
+﻿namespace Ninject.Tests.Integration.SpecialResolutionTests
 {
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class SpecialResolutionContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public SpecialResolutionContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
         [Fact]
@@ -28,6 +42,7 @@ namespace Ninject.Tests.Integration.SpecialResolutionTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
         [Fact]

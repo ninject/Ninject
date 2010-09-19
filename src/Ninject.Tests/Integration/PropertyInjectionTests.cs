@@ -3,9 +3,17 @@ namespace Ninject.Tests.Integration
     using Ninject.Infrastructure.Disposal;
     using Ninject.Parameters;
     using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
+#endif
 
+    [TestClass]
     public class WithPropertyValueTests : PropertyInjectionTests
     {
         [Fact]
@@ -41,6 +49,7 @@ namespace Ninject.Tests.Integration
 #endif //!SILVERLIGHT
     }
 
+    [TestClass]
     public class WithParameterTests : PropertyInjectionTests
     {
         [Fact]
@@ -150,24 +159,30 @@ namespace Ninject.Tests.Integration
 
         public PropertyInjectionTests()
         {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IWeapon>().To<Shuriken>();
         }
 
         protected void ValidateWarrior(IWarrior warrior)
         {
-            Assert.IsType<FootSoldier>(warrior);
-            Assert.NotNull(warrior.Weapon);
-            Assert.IsType<Shuriken>(warrior.Weapon);
+            warrior.ShouldBeInstanceOf<FootSoldier>();
+            warrior.Weapon.ShouldNotBeNull();
+            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
         }
 
         protected void ValidateNinjaWarriorWithOverides(IWarrior warrior)
         {
-            Assert.IsType<Ninja>(warrior);
-            Assert.IsType<Shuriken>(warrior.Weapon);
+            warrior.ShouldBeInstanceOf<Ninja>();
+            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
             Ninja ninja = warrior as Ninja;
-            Assert.IsType<Sword>(ninja.SecondaryWeapon);
-            Assert.IsType<Sword>(ninja.VerySecretWeaponAccessor);
+            ninja.SecondaryWeapon.ShouldBeInstanceOf<Sword>();
+            ninja.VerySecretWeaponAccessor.ShouldBeInstanceOf<Sword>();
         }
 
         public override void Dispose(bool disposing)

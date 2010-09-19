@@ -1,23 +1,37 @@
-﻿using System;
-using System.Threading;
-using Ninject.Activation.Caching;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.ThreadScopeTests
+﻿namespace Ninject.Tests.Integration.ThreadScopeTests
 {
+    using System;
+    using System.Threading;
+    using Ninject.Activation.Caching;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class ThreadScopeContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public ThreadScopeContext()
         {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
             var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
-            kernel = new StandardKernel(settings);
+            this.kernel = new StandardKernel(settings);
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundWithThreadScope : ThreadScopeContext
     {
         [Fact]

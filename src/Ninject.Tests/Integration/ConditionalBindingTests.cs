@@ -1,10 +1,20 @@
-using Ninject.Tests.Fakes;
-using Ninject.Tests.Integration.StandardKernelTests;
-using Xunit;
-using System.Linq;
-
 namespace Ninject.Tests.Integration
 {
+    using System.Linq;
+    using Ninject.Tests.Fakes;
+    using Ninject.Tests.Integration.StandardKernelTests;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
+    [TestClass]
     public class ConditionalBindingTests: StandardKernelContext
     {
         [Fact]
@@ -14,7 +24,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            Assert.IsType<Shuriken>(warrior.Weapon);
+            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
         }
 
         [Fact]
@@ -24,7 +34,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            Assert.IsType<Sword>(warrior.Weapon);
+            warrior.Weapon.ShouldBeInstanceOf<Sword>();
         }
 
         [Fact]
@@ -34,7 +44,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            Assert.IsType<Sword>(warrior.Weapon);
+            warrior.Weapon.ShouldBeInstanceOf<Sword>();
         }
 
         [Fact]
@@ -51,17 +61,17 @@ namespace Ninject.Tests.Integration
         public void GivenNoBinding_ThenASelfBindableTypeWillResolve()
         {
             var weapon = kernel.Get<Sword>();
-            Assert.IsType<Sword>(weapon);
+            weapon.ShouldBeInstanceOf<Sword>();
         }
 
         [Fact]
         public void GivenBindingIsMadeAfterImplictBinding_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
-            Assert.IsType<Sword>(weapon);
+            weapon.ShouldBeInstanceOf<Sword>();
             kernel.Bind<Sword>().To<ShortSword>();
             weapon = kernel.Get<Sword>();
-            Assert.IsType<ShortSword>(weapon);
+            weapon.ShouldBeInstanceOf<ShortSword>();
         }
 
         [Fact]
@@ -70,11 +80,11 @@ namespace Ninject.Tests.Integration
             IWeapon weapon = kernel.Get<Sword>();
             // make the binding conditional
             kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            Assert.IsType<Sword>(weapon);
+            weapon.ShouldBeInstanceOf<Sword>();
 
             kernel.Bind<Sword>().To<ShortSword>().When(_ => true);
             weapon = kernel.Get<Sword>();
-            Assert.IsType<ShortSword>(weapon);
+            weapon.ShouldBeInstanceOf<ShortSword>();
         }
 
         [Fact]
@@ -83,11 +93,11 @@ namespace Ninject.Tests.Integration
             IWeapon weapon = kernel.Get<Sword>();
             // make the binding conditional
             kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            Assert.IsType<Sword>(weapon);
+            weapon.ShouldBeInstanceOf<Sword>();
 
             kernel.Bind<Sword>().To<ShortSword>();
             weapon = kernel.Get<Sword>();
-            Assert.IsType<Sword>(weapon);
+            weapon.ShouldBeInstanceOf<Sword>();
         }
     }
 }

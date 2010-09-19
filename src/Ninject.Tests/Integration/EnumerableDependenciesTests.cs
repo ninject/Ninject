@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.EnumerableDependenciesTests
+﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
+    using System.Collections.Generic;
+    using System.Linq;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+    
     public abstract class EnumerableDependenciesContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         protected EnumerableDependenciesContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
         }
 
         protected abstract void VerifyInjection(IParent parent);
@@ -41,6 +53,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsUnconstrainedEnumerableOfDependencies : UnconstrainedDependenciesContext
     {
         [Fact]
@@ -56,6 +69,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsUnconstrainedListOfDependencies : UnconstrainedDependenciesContext
     {
         [Fact]
@@ -83,6 +97,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsUnconstrainedArrayOfDependencies : UnconstrainedDependenciesContext
     {
         [Fact]
@@ -110,6 +125,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsConstrainedEnumerableOfDependencies : ConstrainedDependenciesContext
     {
         [Fact]
@@ -125,6 +141,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsConstrainedListOfDependencies : ConstrainedDependenciesContext
     {
         [Fact]
@@ -140,6 +157,7 @@ namespace Ninject.Tests.Integration.EnumerableDependenciesTests
         }
     }
 
+    [TestClass]
     public class WhenServiceRequestsConstrainedArrayOfDependencies : ConstrainedDependenciesContext
     {
         [Fact]

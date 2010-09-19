@@ -1,22 +1,36 @@
-﻿using System;
-using System.Linq;
-using Ninject.Activation;
-using Ninject.Parameters;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.CircularDependenciesTests
+﻿namespace Ninject.Tests.Integration.CircularDependenciesTests
 {
+    using System.Linq;
+    using Ninject.Activation;
+    using Ninject.Parameters;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class CircularDependenciesContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public CircularDependenciesContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
         }
     }
 
+    //[TestClass]
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors()
@@ -39,6 +53,7 @@ namespace Ninject.Tests.Integration.CircularDependenciesTests
         }
     }
 
+    //[TestClass]
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties()
@@ -64,6 +79,7 @@ namespace Ninject.Tests.Integration.CircularDependenciesTests
         }
     }
 
+    //[TestClass]
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
@@ -87,6 +103,7 @@ namespace Ninject.Tests.Integration.CircularDependenciesTests
         }
     }
 
+    //[TestClass]
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties()

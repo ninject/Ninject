@@ -6,7 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-release.cmd = build-release.cmd
 		build.cmd = build.cmd
 		LICENSE.txt = LICENSE.txt
-		Ninject.build = Ninject.build
 		README.markdown = README.markdown
 	EndProjectSection
 EndProject
@@ -15,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Ninject.Tests\Ninject.Tests.csproj", "{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter", "src\CommonServiceLocator.NinjectAdapter\CommonServiceLocator.NinjectAdapter.csproj", "{9BD94717-484B-4EB1-AF32-8D4244F02E8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SilverlightTests", "src\Ninject.SilverlightTests\Ninject.SilverlightTests.csproj", "{033B09D3-8532-419A-B906-36F8EB605B30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +42,12 @@ Global
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

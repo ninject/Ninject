@@ -1,22 +1,36 @@
-﻿using System;
-using Ninject.Activation;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.SingletonScopeTests
+﻿namespace Ninject.Tests.Integration.SingletonScopeTests
 {
+    using System;
+    using Ninject.Activation;
+    using Ninject.Infrastructure.Disposal;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class SingletonScopeContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public SingletonScopeContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToInterfaceInSingletonScope : SingletonScopeContext
     {
         [Fact]
@@ -58,6 +72,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToSelfInSingletonScope : SingletonScopeContext
     {
         [Fact]
@@ -99,6 +114,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToProviderInSingletonScope : SingletonScopeContext
     {
         [Fact]
@@ -140,6 +156,7 @@ namespace Ninject.Tests.Integration.SingletonScopeTests
         }
     }
 
+    [TestClass]
     public class WhenServiceIsBoundToMethodInSingletonScope : SingletonScopeContext
     {
         [Fact]

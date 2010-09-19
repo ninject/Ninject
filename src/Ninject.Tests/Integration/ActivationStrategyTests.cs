@@ -1,12 +1,19 @@
-﻿using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration
+﻿namespace Ninject.Tests.Integration
 {
     using System.Linq;
     using Ninject.Activation.Strategies;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
 
+    [TestClass]
     public class ActivationStrategyTests
     {
         [Fact]
@@ -122,7 +129,7 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWeapon>().ToMethod(ctx => ctx.Kernel.Get<Sword>());
                 var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
 
-                var warrior = kernel.Get<IWarrior>();
+                kernel.Get<IWarrior>();
                 
                 testActivationStrategy.ActivationCount.ShouldBe(2);
             }            
@@ -138,13 +145,13 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWeapon>().ToConstant(null);
                 var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
 
-                var warrior = kernel.Get<IWarrior>();
+                kernel.Get<IWarrior>();
 
                 testActivationStrategy.ActivationCount.ShouldBe(1);
             }
         }
 
-        private class TestActivationStrategy : ActivationStrategy
+        public class TestActivationStrategy : ActivationStrategy
         {
             private int activationCount = 0;
 

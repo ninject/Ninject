@@ -1,9 +1,17 @@
 namespace Ninject.Tests.Integration
 {
     using Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using StandardKernelTests;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
     using StandardKernelTests;
     using Xunit;
     using Xunit.Should;
+#endif
 
     public class PublicPropertyWithMoreRestrictiveSetterContext : StandardKernelContext
     {
@@ -17,6 +25,7 @@ namespace Ninject.Tests.Integration
         }
     }
 
+    [TestClass]
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT
@@ -48,6 +57,7 @@ namespace Ninject.Tests.Integration
         }
     }
 
+    [TestClass]
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT

@@ -1,22 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Integration.StandardKernelTests
+﻿namespace Ninject.Tests.Integration.StandardKernelTests
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class StandardKernelContext
     {
-        protected readonly StandardKernel kernel;
+        protected StandardKernel kernel;
 
         public StandardKernelContext()
         {
-            kernel = new StandardKernel();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.kernel = new StandardKernel();
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -54,6 +68,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalledForSelfBoundService : StandardKernelContext
     {
         [Fact]
@@ -81,6 +96,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalledForUnboundService : StandardKernelContext
     {
         [Fact]
@@ -132,6 +148,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
         [Fact]
@@ -187,6 +204,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -222,6 +240,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetAllIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
         [Fact]
@@ -258,7 +277,8 @@ namespace Ninject.Tests.Integration.StandardKernelTests
             weapons.Length.ShouldBe(0);
         }
     }
-    
+
+    [TestClass]
     public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
     {
         [Fact]
@@ -281,6 +301,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalledWithConstraints : StandardKernelContext
     {
         [Fact]
@@ -308,6 +329,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenUnbindIsCalled : StandardKernelContext
     {
         [Fact]
@@ -325,6 +347,7 @@ namespace Ninject.Tests.Integration.StandardKernelTests
         }
     }
 
+    [TestClass]
     public class WhenRebindIsCalled : StandardKernelContext
     {
         [Fact]

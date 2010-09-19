@@ -1,9 +1,19 @@
-using Ninject.Parameters;
-using Ninject.Tests.Fakes;
-using Xunit;
-
 namespace Ninject.Tests.Integration
 {
+    using Ninject.Parameters;
+    using Ninject.Tests.Fakes;
+#if SILVERLIGHT
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
+    [TestClass]
     public class ConstructorSelectionTests
     {
         [Fact]
@@ -14,9 +24,9 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<Barracks>().ToSelf();
 
                 var barracks = kernel.Get<Barracks>();
-                Assert.NotNull( barracks );
-                Assert.Null( barracks.Warrior );
-                Assert.Null( barracks.Weapon );
+                barracks.ShouldNotBeNull();
+                barracks.Warrior.ShouldBeNull();
+                barracks.Weapon.ShouldBeNull();
             }
         }
 
@@ -28,11 +38,11 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<Barracks>().ToSelf();
                 var constructorArgument = new ConstructorArgument("warrior", new Samurai(new Sword()));
                 var barracks = kernel.Get<Barracks>(constructorArgument);
-                
-                Assert.NotNull(barracks);
-                Assert.NotNull(barracks.Warrior);
-                Assert.NotNull(barracks.Warrior.Weapon);
-                Assert.Null(barracks.Weapon);
+
+                barracks.ShouldNotBeNull();
+                barracks.Warrior.ShouldNotBeNull(); 
+                barracks.Warrior.Weapon.ShouldNotBeNull();
+                barracks.Weapon.ShouldBeNull(); 
             }
         }
 
@@ -45,9 +55,9 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWeapon>().To<Sword>();
 
                 var barracks = kernel.Get<Barracks>();
-                Assert.NotNull( barracks );
-                Assert.Null( barracks.Warrior );
-                Assert.NotNull( barracks.Weapon );
+                barracks.ShouldNotBeNull();
+                barracks.Warrior.ShouldBeNull();
+                barracks.Weapon.ShouldNotBeNull(); 
             }
         }
 
@@ -61,10 +71,10 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWarrior>().To<Samurai>();
 
                 var barracks = kernel.Get<Barracks>();
-                Assert.NotNull( barracks );
-                Assert.NotNull( barracks.Warrior );
-                Assert.NotNull( barracks.Warrior.Weapon );
-                Assert.NotNull( barracks.Weapon );
+                barracks.ShouldNotBeNull();
+                barracks.Warrior.ShouldNotBeNull();
+                barracks.Warrior.Weapon.ShouldNotBeNull();
+                barracks.Weapon.ShouldNotBeNull(); 
             }
         }
 
