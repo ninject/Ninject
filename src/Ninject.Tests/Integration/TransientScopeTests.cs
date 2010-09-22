@@ -5,9 +5,17 @@
     using Ninject.Activation.Caching;
     using Ninject.Tests.Fakes;
 #if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
     using UnitDriven;
     using UnitDriven.Should;
+    using Assert = Ninject.SilverlightTests.AssertWithThrows;
     using Fact = UnitDriven.TestMethodAttribute;
+#endif
 #else
     using Ninject.Tests.MSTestAttributes;
     using Xunit;

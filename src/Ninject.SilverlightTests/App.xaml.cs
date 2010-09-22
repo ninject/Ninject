@@ -1,8 +1,11 @@
-﻿using System;
-using System.Windows;
-
-namespace Ninject.SilverlightTests
+﻿namespace Ninject.SilverlightTests
 {
+    using System;
+    using System.Windows;
+#if SILVERLIGHT_MSTEST
+    using Microsoft.Silverlight.Testing;
+#endif
+
     public partial class App : Application
     {
 
@@ -32,6 +35,9 @@ namespace Ninject.SilverlightTests
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+#if SILVERLIGHT_MSTEST
+            RootVisual = UnitTestSystem.CreateTestPage();
+#endif
         }
 
         private void Application_Exit(object sender, EventArgs e)

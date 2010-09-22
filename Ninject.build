@@ -116,6 +116,7 @@
                 <include name="Ninject.Tests/Fakes/**/*.cs"/>
                 <include name="Ninject.Tests/Integration/**/*.cs"/>
                 <include name="Ninject.SilverlightTests/*.cs"/>
+                <exclude name="Ninject.SilverlightTests/MsTestShouldExtensions.cs"/>
             </sources>
             <references basedir="${current.path.test}">
                 <include name="mscorlib.dll"/>

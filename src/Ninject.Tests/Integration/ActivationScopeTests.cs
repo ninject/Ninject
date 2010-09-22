@@ -4,9 +4,15 @@
     using Ninject.Activation.Blocks;
     using Ninject.Tests.Fakes;
 #if SILVERLIGHT
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
+    #if SILVERLIGHT_MSTEST
+        using MsTest.Should;
+        using Microsoft.VisualStudio.TestTools.UnitTesting;
+        using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+    #else
+        using UnitDriven;
+        using UnitDriven.Should;
+        using Fact = UnitDriven.TestMethodAttribute;
+    #endif
 #else
     using Ninject.Tests.MSTestAttributes;
     using Xunit;

@@ -7,7 +7,7 @@
     using System.Linq;
     using UnitDriven;
 
-    public static class ShouldExtensions
+    public static class UnitDrivenShouldExtensions
     {
         public static void ShouldContain(this string self, string str)
         {
