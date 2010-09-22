@@ -250,7 +250,6 @@
 	<target name="buildServerPlatforms">
 		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
-			<call target="all"/>
 			<call target="package-bin"/>
 		</foreach>
 		<call target="package-source"/>
@@ -259,7 +258,6 @@
 	<target name="allPlatforms">
 		<foreach item="String" in="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-2.0,silverlight-3.0,silverlight-4.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
-			<call target="all"/>
 			<call target="package-bin"/>
 		</foreach>
 		<call target="package-source"/>
