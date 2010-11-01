@@ -7,12 +7,12 @@
 #if SILVERLIGHT_MSTEST
     using MsTest.Should;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Assert = AssertWithThrows;
     using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
 #else
     using UnitDriven;
     using UnitDriven.Should;
-    using Assert = Ninject.SilverlightTests.AssertWithThrows;
+    using Assert = AssertWithThrows;
     using Fact = UnitDriven.TestMethodAttribute;
 #endif
 #else

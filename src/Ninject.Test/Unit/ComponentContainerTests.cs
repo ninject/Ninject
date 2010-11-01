@@ -1,28 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Moq;
-using Ninject.Components;
-using Ninject.Infrastructure.Disposal;
-using Xunit;
-using Xunit.Should;
-
-namespace Ninject.Tests.Unit.ComponentContainerTests
+﻿namespace Ninject.Tests.Unit.ComponentContainerTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Moq;
+    using Ninject.Components;
+    using Ninject.Infrastructure.Disposal;
+#if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Assert = AssertWithThrows;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Assert = AssertWithThrows;
+    using Fact = UnitDriven.TestMethodAttribute;
+#endif
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class ComponentContainerContext
     {
-        protected readonly ComponentContainer container;
-        protected readonly Mock<IKernel> kernelMock;
+        protected ComponentContainer container;
+        protected Mock<IKernel> kernelMock;
 
         public ComponentContainerContext()
         {
-            container = new ComponentContainer();
-            kernelMock = new Mock<IKernel>();
+            this.SetUp();
+        }
 
-            container.Kernel = kernelMock.Object;
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.container = new ComponentContainer();
+            this.kernelMock = new Mock<IKernel>();
+
+            this.container.Kernel = this.kernelMock.Object;
         }
     }
 
+    [TestClass]
     public class WhenGetIsCalled : ComponentContainerContext
     {
         [Fact]
@@ -69,6 +91,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
         }
     }
 
+    [TestClass]
     public class WhenGetAllIsCalledOnComponentContainer : ComponentContainerContext
     {
         [Fact]
@@ -110,6 +133,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
         }
     }
 
+    [TestClass]
     public class WhenRemoveAllIsCalled : ComponentContainerContext
     {
         [Fact]

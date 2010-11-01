@@ -1,17 +1,17 @@
 ﻿#if !NO_ASSEMBLY_SCANNING
-using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Moq;
-using Ninject.Modules;
-using Xunit;
-using Xunit.Should;
-
 namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using Moq;
+    using Ninject.Modules;
+    using Xunit;
+    using Xunit.Should;
+
     public class CompiledModuleLoaderPluginContext
     {
         protected readonly CompiledModuleLoaderPlugin loaderPlugin;

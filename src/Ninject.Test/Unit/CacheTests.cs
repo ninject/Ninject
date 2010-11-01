@@ -7,8 +7,22 @@
     using Ninject.Infrastructure.Disposal;
     using Ninject.Planning.Bindings;
     using Ninject.Tests.Fakes;
+
+#if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#endif
+#else
+    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
+#endif
 
     public class CacheContext
     {
@@ -18,6 +32,12 @@
         protected Mock<IPipeline> pipelineMock;
 
         public CacheContext()
+        {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
         {
             this.cachePrunerMock = new Mock<ICachePruner>();
             this.bindingMock = new Mock<IBinding>();
@@ -36,6 +56,7 @@
         }
     }
 
+    [TestClass]
     public class WhenTryGetInstanceIsCalled : CacheContext
     {
         [Fact]
@@ -90,6 +111,7 @@
         }
     }
 
+    [TestClass]
     public class WhenTryGetInstanceIsCalledForContextWithGenericInference : CacheContext
     {
         [Fact]
@@ -121,6 +143,7 @@
         }
     }
 
+    [TestClass]
     public class WhenReleaseIsCalled : CacheContext
     {
         [Fact]
@@ -164,6 +187,7 @@
         }
     }
 
+    [TestClass]
     public class WhenClearIsCalled : CacheContext
     {
         [Fact]
@@ -204,6 +228,7 @@
          }
     }
 
+    [TestClass]
     public class WhenNotifiesWhenDisposedScopeIsDisposed : CacheContext
     {
         [Fact]
@@ -223,6 +248,7 @@
         }
     }
 
+    [TestClass]
     public class WhenScopeIsReleasedFormCache : CacheContext
     {
         [Fact]

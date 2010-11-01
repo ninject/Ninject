@@ -2,10 +2,17 @@ namespace Ninject.Tests.Integration
 {
     using Fakes;
 #if SILVERLIGHT
-    using UnitDriven;
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
     using StandardKernelTests;
+#else
+    using UnitDriven;
     using UnitDriven.Should;
+    using StandardKernelTests;
     using Fact = UnitDriven.TestMethodAttribute;
+#endif
 #else
     using Ninject.Tests.MSTestAttributes;
     using StandardKernelTests;

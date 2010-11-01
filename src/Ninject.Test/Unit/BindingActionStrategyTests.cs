@@ -1,27 +1,49 @@
-﻿using System;
-using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Ninject.Planning.Bindings;
-using Xunit;
-using Xunit.Should;
+﻿
 
 namespace Ninject.Tests.Unit.BindingActionStrategyTests
 {
+    using System;
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Strategies;
+    using Ninject.Planning.Bindings;
+#if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#endif
+#else
+    using Ninject.Tests.MSTestAttributes;
+    using Xunit;
+    using Xunit.Should;
+#endif
+
     public class BindingActionStrategyContext
     {
-        protected readonly BindingActionStrategy strategy;
-        protected readonly Mock<IContext> contextMock;
-        protected readonly Mock<IBinding> bindingMock;
+        protected BindingActionStrategy strategy;
+        protected Mock<IContext> contextMock;
+        protected Mock<IBinding> bindingMock;
 
         public BindingActionStrategyContext()
         {
-            contextMock = new Mock<IContext>();
-            bindingMock = new Mock<IBinding>();
-            strategy = new BindingActionStrategy();
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
+        {
+            this.contextMock = new Mock<IContext>();
+            this.bindingMock = new Mock<IBinding>();
+            this.strategy = new BindingActionStrategy();
         }
     }
 
+    [TestClass]
     public class WhenActivateIsCalled : BindingActionStrategyContext
     {
         [Fact]
@@ -43,6 +65,7 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
         }
     }
 
+    [TestClass]
     public class WhenDeactivateIsCalled : BindingActionStrategyContext
     {
         [Fact]

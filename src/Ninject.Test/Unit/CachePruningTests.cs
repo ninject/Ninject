@@ -2,9 +2,7 @@ namespace Ninject.Tests.Unit.CacheTests
 {
     using System;
     using System.Collections.Generic;
-
     using Moq;
-
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Activation.Strategies;
@@ -12,9 +10,24 @@ namespace Ninject.Tests.Unit.CacheTests
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
     using Ninject.Tests.Fakes;
+
+#if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#endif
+#else
+    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
+#endif
 
+    [TestClass]
     public class WhenPruneIsCalled
     {
         private Mock<ICachePruner> cachePrunerMock;
@@ -22,6 +35,12 @@ namespace Ninject.Tests.Unit.CacheTests
         private Cache cache;
 
         public WhenPruneIsCalled()
+        {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
         {
             this.cachePrunerMock = new Mock<ICachePruner>();
             this.bindingMock = new Mock<IBinding>();

@@ -1,18 +1,36 @@
 namespace Ninject.Tests.Unit
 {
     using System;
-
     using Moq;
-
     using Ninject.Activation.Caching;
+#if SILVERLIGHT
+#if SILVERLIGHT_MSTEST
+    using MsTest.Should;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
+#else
+    using UnitDriven;
+    using UnitDriven.Should;
+    using Fact = UnitDriven.TestMethodAttribute;
+#endif
+#else
+    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
+#endif
 
+    [TestClass]
     public class ActivationCacheTests
     {
-        private readonly ActivationCache testee;
+        private ActivationCache testee;
 
         public ActivationCacheTests()
+        {
+            this.SetUp();
+        }
+
+        [TestInitialize]
+        public void SetUp()
         {
             this.testee = new ActivationCache(new Mock<ICachePruner>().Object);
         }
