@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject.Tests</RootNamespace>
+    <AssemblyName>Ninject.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AutomatedRelease|AnyCPU' ">
+    <OutputPath>bin\AutomatedRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Moq, Version=3.1.416.3, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\tools\moq\net-3.5\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Abstractions.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="UnitDrivenNet">
+      <HintPath>..\..\tools\unitdriven\UnitDrivenNet.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit, Version=1.1.0.1323, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\tools\xunit.net\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.should, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\tools\xunit.net\xunit.should.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MSTestAttributes\TestClassAttribute.cs" />
+    <Compile Include="Fakes\Dagger.cs" />
+    <Compile Include="Fakes\FootSoldier.cs" />
+    <Compile Include="Fakes\Barracks.cs" />
+    <Compile Include="Fakes\ShortSword.cs" />
+    <Compile Include="Integration\ActivationStrategyTests.cs" />
+    <Compile Include="Integration\ConditionalAttributeBindingTests.cs" />
+    <Compile Include="Integration\ConditionalBindingTests.cs" />
+    <Compile Include="Integration\ConditionalBindingWhenParentTests.cs" />
+    <Compile Include="Integration\ConstructorSelectionTests.cs" />
+    <Compile Include="Integration\ManualReleaseTests.cs" />
+    <Compile Include="Integration\ModuleLoadingTests.cs" />
+    <Compile Include="Fakes\NinjaBarracks.cs" />
+    <Compile Include="Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs" />
+    <Compile Include="Integration\NamedPropertyInjectionTests.cs" />
+    <Compile Include="Integration\PropertyInjectionTests.cs" />
+    <Compile Include="Integration\RequestScopeTests.cs" />
+    <Compile Include="Integration\ExternalInjectionTests.cs" />
+    <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
+    <Compile Include="ExtensionsForIEnumerable.cs" />
+    <Compile Include="Integration\CircularDependenciesTests.cs" />
+    <Compile Include="Integration\TransientScopeTests.cs" />
+    <Compile Include="Integration\ThreadScopeTests.cs" />
+    <Compile Include="Integration\SpecialResolutionTests.cs" />
+    <Compile Include="Integration\SingletonScopeTests.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests.cs" />
+    <Compile Include="Integration\ActivationScopeTests.cs" />
+    <None Include="TestModules\test.bar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestModules\test.foo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="MSTestAttributes\TestInitialize.cs" />
+    <Compile Include="Unit\ActivationCacheStrategyTest.cs" />
+    <Compile Include="Unit\ActivationCacheTests.cs" />
+    <Compile Include="Unit\CachePruningTests.cs" />
+    <Compile Include="Unit\CallbackProviderTests.cs" />
+    <Compile Include="Unit\ConstantProviderTests.cs" />
+    <Compile Include="Unit\ActivationBlockTests.cs" />
+    <Compile Include="Unit\BindingActionStrategyTests.cs" />
+    <Compile Include="Unit\CompiledModuleLoaderPluginTests.cs" />
+    <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
+    <Compile Include="Unit\ExtensionsForMemberInfoTest.cs" />
+    <Compile Include="Unit\ModuleLoaderTests.cs" />
+    <Compile Include="Unit\NamedAttributeTests.cs" />
+    <Compile Include="Fakes\Ninja.cs" />
+    <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
+    <Compile Include="Unit\PropertyInjectionDirectiveTests.cs" />
+    <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
+    <Compile Include="Unit\PropertyInjectionSelectorTests.cs" />
+    <Compile Include="Unit\StartableStrategyTests.cs" />
+    <Compile Include="Unit\InitializableStrategyTests.cs" />
+    <Compile Include="Unit\DisposableStrategyTests.cs" />
+    <Compile Include="Unit\MethodInjectionStrategyTests.cs" />
+    <Compile Include="Unit\PipelineTests.cs" />
+    <Compile Include="Fakes\AbstractWeapon.cs" />
+    <Compile Include="Fakes\Shuriken.cs" />
+    <Compile Include="Unit\CacheTests.cs" />
+    <Compile Include="Integration\StandardKernelTests.cs" />
+    <Compile Include="Unit\ComponentContainerTests.cs" />
+    <Compile Include="Fakes\IWarrior.cs" />
+    <Compile Include="Fakes\Samurai.cs" />
+    <Compile Include="Fakes\Sword.cs" />
+    <Compile Include="Fakes\IWeapon.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ninject\Ninject.csproj">
+      <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
+      <Name>Ninject</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestModules\Ninject.Tests.TestModule.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
