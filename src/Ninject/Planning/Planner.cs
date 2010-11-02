@@ -24,7 +24,7 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-        private readonly Dictionary<Type, IPlan> _plans = new Dictionary<Type, IPlan>();
+        private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
 
         /// <summary>
         /// Gets the strategies that contribute to the planning process.
@@ -50,11 +50,14 @@ namespace Ninject.Planning
         {
             Ensure.ArgumentNotNull(type, "type");
 
-            if (_plans.ContainsKey(type))
-                return _plans[type];
+            if (this.plans.ContainsKey(type))
+                return this.plans[type];
 
             var plan = CreateEmptyPlan(type);
-            _plans.Add(type, plan);
+            lock (this.plans)
+            {
+                this.plans.Add(type, plan);                
+            }
 
             Strategies.Map(s => s.Execute(plan));
 
