@@ -170,8 +170,10 @@
         }
     }
 
+    [TestClass]
     public class WhenTryGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
+        [Fact]
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -182,20 +184,22 @@
             weapon.ShouldBeInstanceOf<Sword>();
         }
 
-        public void FirstInstanceIsReturnedWhenMultipleBindingsAreRegistered()
+        [Fact]
+        public void NullIsReturnedWhenMultipleBindingsAreRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
             kernel.Bind<IWeapon>().To<Shuriken>();
 
             var weapon = kernel.TryGet<IWeapon>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.ShouldBeNull();
         }
     }
 
+    [TestClass]
     public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
     {
+        [Fact]
         public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
         {
             var weapon = kernel.TryGet<Sword>();
@@ -204,10 +208,50 @@
             weapon.ShouldBeInstanceOf<Sword>();
         }
 
+        [Fact]
         public void ReturnsNullIfTypeIsNotSelfBindable()
         {
             var weapon = kernel.TryGet<IWeapon>();
             weapon.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var weapon = kernel.TryGet<IWeapon>();
+            weapon.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ReturnsNullIfNoBindingForADependencyExists()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+
+            var warrior = kernel.TryGet<IWarrior>();
+            warrior.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ReturnsNullIfMultipleBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var warrior = kernel.TryGet<IWarrior>();
+            warrior.ShouldBeNull();
+        }
+
+        [Fact]
+        public void ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var warrior = kernel.TryGet<IWarrior>();
+            warrior.ShouldBeNull();
         }
     }
 
@@ -265,8 +309,10 @@
         }
     }
 
+    [TestClass]
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
     {
+        [Fact]
         public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
         {
             var weapons = kernel.GetAll<Sword>().ToArray();
@@ -276,6 +322,7 @@
             weapons[0].ShouldBeInstanceOf<Sword>();
         }
 
+        [Fact]
         public void ReturnsEmptyEnumerableIfTypeIsNotSelfBindable()
         {
             var weapons = kernel.GetAll<IWeapon>().ToArray();

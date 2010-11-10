@@ -344,8 +344,13 @@ namespace Ninject
             IEnumerable<IBinding> bindings =
                 this.GetBindings(request.Service).Where(this.SatifiesRequest(request)).OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
 
-            if (!bindings.Any() && !request.IsOptional)
+            if (!bindings.Any())
             {
+                if (request.IsOptional)
+                {
+                    return Enumerable.Empty<object>();
+                }
+
                 throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
             }
 
@@ -354,7 +359,12 @@ namespace Ninject
 
             if (request.IsUnique && bindings.Count() > 1)
             {
-                throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+                if (request.IsOptional)
+                {
+                    return Enumerable.Empty<object>();
+                }
+
+                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
             }
 
             return bindings.Select(binding => this.CreateContext(request, binding)).Select(context => context.Resolve());
