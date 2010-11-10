@@ -1,4 +1,3 @@
-#region License
 // 
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
@@ -6,65 +5,59 @@
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
 // 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Ninject.Activation;
-using Ninject.Activation.Blocks;
-using Ninject.Activation.Caching;
-using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Infrastructure.Language;
-using Ninject.Modules;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Bindings;
-using Ninject.Planning.Bindings.Resolvers;
-using Ninject.Syntax;
-#endregion
 
 namespace Ninject
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Ninject.Activation;
+    using Ninject.Activation.Blocks;
+    using Ninject.Activation.Caching;
+    using Ninject.Components;
+    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Infrastructure.Language;
+    using Ninject.Modules;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+    using Ninject.Planning.Bindings.Resolvers;
+    using Ninject.Syntax;
+
     /// <summary>
     /// The base implementation of an <see cref="IKernel"/>.
     /// </summary>
     public abstract class KernelBase : BindingRoot, IKernel
     {
-        private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
-        private readonly Multimap<Type, IBinding> _bindingCache = new Multimap<Type, IBinding>();
-        private readonly Dictionary<string, INinjectModule> _modules = new Dictionary<string, INinjectModule>();
-
         /// <summary>
         /// Lock used when adding missing bindings.
         /// </summary>
-        protected readonly object HandleMissingBindingLockObject = new object();
+        protected readonly object HandleMissingBindingLockObject = new object();        
+        
+        private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
-        /// <summary>
-        /// Gets the kernel settings.
-        /// </summary>
-        public INinjectSettings Settings { get; private set; }
+        private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
 
-        /// <summary>
-        /// Gets the component container, which holds components that contribute to Ninject.
-        /// </summary>
-        public IComponentContainer Components { get; private set; }
+        private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
         protected KernelBase()
-            : this(new ComponentContainer(), new NinjectSettings(), new INinjectModule[0]) { }
+            : this(new ComponentContainer(), new NinjectSettings(), new INinjectModule[0])
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(params INinjectModule[] modules)
-            : this(new ComponentContainer(), new NinjectSettings(), modules) { }
+            : this(new ComponentContainer(), new NinjectSettings(), modules)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -72,7 +65,9 @@ namespace Ninject
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(), settings, modules) { }
+            : this(new ComponentContainer(), settings, modules)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -86,24 +81,36 @@ namespace Ninject
             Ensure.ArgumentNotNull(settings, "settings");
             Ensure.ArgumentNotNull(modules, "modules");
 
-            Settings = settings;
+            this.Settings = settings;
 
-            Components = components;
+            this.Components = components;
             components.Kernel = this;
 
-            AddComponents();
+            this.AddComponents();
 
-            #if !NO_WEB
+#if !NO_WEB
             OnePerRequestModule.StartManaging(this);
-            #endif
+#endif
 
-            #if !NO_ASSEMBLY_SCANNING
-            if (Settings.LoadExtensions)
-                Load(new[] { Settings.ExtensionSearchPattern });
-            #endif
+#if !NO_ASSEMBLY_SCANNING
+            if (this.Settings.LoadExtensions)
+            {
+                this.Load(new[] { this.Settings.ExtensionSearchPattern });
+            }
+#endif
 
-            Load(modules);
+            this.Load(modules);
         }
+
+        /// <summary>
+        /// Gets the kernel settings.
+        /// </summary>
+        public INinjectSettings Settings { get; private set; }
+
+        /// <summary>
+        /// Gets the component container, which holds components that contribute to Ninject.
+        /// </summary>
+        public IComponentContainer Components { get; private set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -112,17 +119,17 @@ namespace Ninject
         {
             if (disposing && !IsDisposed)
             {
-                #if !NO_WEB
+#if !NO_WEB
                 OnePerRequestModule.StopManaging(this);
-                #endif
+#endif
 
-                if (Components != null)
+                if (this.Components != null)
                 {
                     // Deactivate all cached instances before shutting down the kernel.
-                    var cache = Components.Get<ICache>();
+                    var cache = this.Components.Get<ICache>();
                     cache.Clear();
 
-                    Components.Dispose();
+                    this.Components.Dispose();
                 }
             }
 
@@ -137,10 +144,12 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            _bindings.RemoveAll(service);
+            this.bindings.RemoveAll(service);
 
-            lock (_bindingCache)
-                _bindingCache.Clear();
+            lock (this.bindingCache)
+            {
+                this.bindingCache.Clear();
+            }
         }
 
         /// <summary>
@@ -151,15 +160,7 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            AddBindings(new[]{binding});
-        }
-
-        private void AddBindings(IEnumerable<IBinding> bindings)
-        {
-            bindings.Map(binding => _bindings.Add(binding.Service, binding));
-
-            lock (_bindingCache)
-                _bindingCache.Clear();
+            this.AddBindings(new[] { binding });
         }
 
         /// <summary>
@@ -170,10 +171,10 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            _bindings.Remove(binding.Service, binding);
+            this.bindings.Remove(binding.Service, binding);
 
-            lock (_bindingCache)
-                _bindingCache.Clear();
+            lock (this.bindingCache)
+                this.bindingCache.Clear();
         }
 
         /// <summary>
@@ -184,7 +185,7 @@ namespace Ninject
         public bool HasModule(string name)
         {
             Ensure.ArgumentNotNullOrEmpty(name, "name");
-            return _modules.ContainsKey(name);
+            return this.modules.ContainsKey(name);
         }
 
         /// <summary>
@@ -193,7 +194,7 @@ namespace Ninject
         /// <returns>A series of loaded modules.</returns>
         public IEnumerable<INinjectModule> GetModules()
         {
-            return _modules.Values.ToArray();
+            return this.modules.Values.ToArray();
         }
 
         /// <summary>
@@ -208,23 +209,25 @@ namespace Ninject
             {
                 INinjectModule existingModule;
 
-                if (_modules.TryGetValue(module.Name, out existingModule))
+                if (this.modules.TryGetValue(module.Name, out existingModule))
+                {
                     throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
+                }
 
                 module.OnLoad(this);
 
-                _modules.Add(module.Name, module);
+                this.modules.Add(module.Name, module);
             }
         }
 
-        #if !NO_ASSEMBLY_SCANNING
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
-            var moduleLoader = Components.Get<IModuleLoader>();
+            var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
         }
 
@@ -235,9 +238,11 @@ namespace Ninject
         public void Load(IEnumerable<Assembly> assemblies)
         {
             foreach (Assembly assembly in assemblies)
-                Load(assembly.GetNinjectModules());
+            {
+                this.Load(assembly.GetNinjectModules());
+            }
         }
-        #endif //!NO_ASSEMBLY_SCANNING
+#endif //!NO_ASSEMBLY_SCANNING
 
         /// <summary>
         /// Unloads the plugin with the specified name.
@@ -249,12 +254,14 @@ namespace Ninject
 
             INinjectModule module;
 
-            if (!_modules.TryGetValue(name, out module))
+            if (!this.modules.TryGetValue(name, out module))
+            {
                 throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
+            }
 
             module.OnUnload(this);
 
-            _modules.Remove(name);
+            this.modules.Remove(name);
         }
 
         /// <summary>
@@ -269,12 +276,12 @@ namespace Ninject
 
             Type service = instance.GetType();
 
-            var planner = Components.Get<IPlanner>();
-            var pipeline = Components.Get<IPipeline>();
+            var planner = this.Components.Get<IPlanner>();
+            var pipeline = this.Components.Get<IPipeline>();
 
             var binding = new Binding(service);
-            var request = CreateRequest(service, null, parameters, false, false);
-            var context = CreateContext(request, binding);
+            var request = this.CreateRequest(service, null, parameters, false, false);
+            var context = this.CreateContext(request, binding);
 
             lock (planner)
             {
@@ -293,7 +300,7 @@ namespace Ninject
         public virtual bool Release(object instance)
         {
             Ensure.ArgumentNotNull(instance, "instance");
-            var cache = Components.Get<ICache>();
+            var cache = this.Components.Get<ICache>();
             return cache.Release(instance);
         }
 
@@ -305,8 +312,7 @@ namespace Ninject
         public virtual bool CanResolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return GetBindings(request.Service)
-                .Any(SatifiesRequest(request));
+            return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
         }
 
         /// <summary>
@@ -320,20 +326,23 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
 
             if (request.Service == typeof(IKernel))
+            {
                 return new[] { this };
+            }
 
-            if (!CanResolve(request) && !HandleMissingBinding(request))
+            if (!this.CanResolve(request) && !this.HandleMissingBinding(request))
             {
                 if (request.IsOptional)
+                {
                     return Enumerable.Empty<object>();
+                }
+
                 throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
             }
 
-            IComparer<IBinding> bindingPrecedenceComparer = GetBindingPrecedenceComparer();
-            IEnumerable<IBinding> bindings = GetBindings(request.Service)
-                .Where(SatifiesRequest(request))
-                .OrderByDescending(b => b, bindingPrecedenceComparer)
-                .ToList();
+            IComparer<IBinding> bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
+            IEnumerable<IBinding> bindings =
+                this.GetBindings(request.Service).Where(this.SatifiesRequest(request)).OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
 
             if (!bindings.Any() && !request.IsOptional)
             {
@@ -347,30 +356,8 @@ namespace Ninject
             {
                 throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
             }
-            
 
-            return bindings
-                .Select(binding => CreateContext(request, binding))
-                .Select(context => context.Resolve());
-        }
-
-        /// <summary>
-        /// Returns an IComparer that is used to determine resolution precedence.
-        /// </summary>
-        /// <returns>An IComparer that is used to determine resolution precedence.</returns>
-        protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
-        {
-            return new BindingPrecedenceComparer();
-        }
-
-        /// <summary>
-        /// Returns a predicate that can determine if a given IBinding matches the request.
-        /// </summary>
-        /// <param name="request">The request/</param>
-        /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
-        protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
-        {
-            return binding => binding.Matches(request) && request.Matches(binding);
+            return bindings.Select(binding => this.CreateContext(request, binding)).Select(context => context.Resolve());
         }
 
         /// <summary>
@@ -391,6 +378,15 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Begins a new activation block, which can be used to deterministically dispose resolved instances.
+        /// </summary>
+        /// <returns>The new activation block.</returns>
+        public virtual IActivationBlock BeginBlock()
+        {
+            return new ActivationBlock(this);
+        }
+
+        /// <summary>
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
@@ -399,28 +395,38 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            lock (_bindingCache)
+            lock (this.bindingCache)
             {
-                if (!_bindingCache.ContainsKey(service))
+                if (!this.bindingCache.ContainsKey(service))
                 {
-                    var resolvers = Components.GetAll<IBindingResolver>();
+                    var resolvers = this.Components.GetAll<IBindingResolver>();
 
                     resolvers
-                        .SelectMany(resolver => resolver.Resolve(_bindings, service))
-                        .Map(binding => _bindingCache.Add(service, binding));
+                        .SelectMany(resolver => resolver.Resolve(this.bindings, service))
+                        .Map(binding => this.bindingCache.Add(service, binding));
                 }
 
-                return _bindingCache[service];
+                return this.bindingCache[service];
             }
         }
 
         /// <summary>
-        /// Begins a new activation block, which can be used to deterministically dispose resolved instances.
+        /// Returns an IComparer that is used to determine resolution precedence.
         /// </summary>
-        /// <returns>The new activation block.</returns>
-        public virtual IActivationBlock BeginBlock()
+        /// <returns>An IComparer that is used to determine resolution precedence.</returns>
+        protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
         {
-            return new ActivationBlock(this);
+            return new BindingPrecedenceComparer();
+        }
+
+        /// <summary>
+        /// Returns a predicate that can determine if a given IBinding matches the request.
+        /// </summary>
+        /// <param name="request">The request/</param>
+        /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
+        protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
+        {
+            return binding => binding.Matches(request) && request.Matches(binding);
         }
 
         /// <summary>
@@ -460,16 +466,17 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
 
 #pragma warning disable 612,618
-            if(HandleMissingBinding(request.Service))
+            if (this.HandleMissingBinding(request.Service))
             {
                 return true;
             }
 #pragma warning restore 612,618
 
-            var components = Components.GetAll<IMissingBindingResolver>();
+            var components = this.Components.GetAll<IMissingBindingResolver>();
+            
             // Take the first set of bindings that resolve.
             var bindings = components
-                .Select(c => c.Resolve(_bindings, request).ToList())
+                .Select(c => c.Resolve(this.bindings, request).ToList())
                 .FirstOrDefault(b => b.Any());
 
             if (bindings == null)
@@ -477,14 +484,15 @@ namespace Ninject
                 return false;
             }
 
-            lock(HandleMissingBindingLockObject)
+            lock (this.HandleMissingBindingLockObject)
             {
-                if (!CanResolve(request))
+                if (!this.CanResolve(request))
                 {
                     bindings.Map(binding => binding.IsImplicit = true);
-                    AddBindings(bindings);
+                    this.AddBindings(bindings);
                 }
             }
+
             return true;
         }
 
@@ -514,7 +522,15 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
             Ensure.ArgumentNotNull(binding, "binding");
 
-            return new Context(this, request, binding, Components.Get<ICache>(), Components.Get<IPlanner>(), Components.Get<IPipeline>());
+            return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
+        }
+
+        private void AddBindings(IEnumerable<IBinding> bindings)
+        {
+            bindings.Map(binding => this.bindings.Add(binding.Service, binding));
+
+            lock (this.bindingCache)
+                this.bindingCache.Clear();
         }
 
         object IServiceProvider.GetService(Type service)
@@ -526,7 +542,7 @@ namespace Ninject
         {
             public int Compare(IBinding x, IBinding y)
             {
-                if(x == y)
+                if (x == y)
                 {
                     return 0;
                 }
