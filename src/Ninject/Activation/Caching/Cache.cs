@@ -148,19 +148,22 @@ namespace Ninject.Activation.Caching
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         public bool Release(object instance)
         {
-            var instanceFound = false;
-            foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values))
+            lock(this.entries)
             {
-                var instanceEntries = bindingEntry.Where(cacheEntry => ReferenceEquals(instance, cacheEntry.Reference.Instance)).ToList();
-                foreach (var cacheEntry in instanceEntries)
+                var instanceFound = false;
+                foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values))
                 {
-                    this.Forget(cacheEntry);
-                    bindingEntry.Remove(cacheEntry);
-                    instanceFound = true;
+                    var instanceEntries = bindingEntry.Where(cacheEntry => ReferenceEquals(instance, cacheEntry.Reference.Instance)).ToList();
+                    foreach (var cacheEntry in instanceEntries)
+                    {
+                        this.Forget(cacheEntry);
+                        bindingEntry.Remove(cacheEntry);
+                        instanceFound = true;
+                    }
                 }
-            }
 
-            return instanceFound;
+                return instanceFound;
+            }
         }
 
         /// <summary>
