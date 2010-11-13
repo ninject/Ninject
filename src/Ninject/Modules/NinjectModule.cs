@@ -33,7 +33,7 @@ namespace Ninject.Modules
         /// </summary>
         public virtual string Name
         {
-            get { return GetType().Name; }
+            get { return GetType().FullName; }
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
 SET NoPause="true"
-cd ..
-goto MVC
 call build-release.cmd
 cd ..
 
