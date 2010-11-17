@@ -364,7 +364,7 @@ namespace Ninject
                     return Enumerable.Empty<object>();
                 }
 
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+                throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
             }
 
             return bindings.Select(binding => this.CreateContext(request, binding)).Select(context => context.Resolve());
