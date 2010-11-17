@@ -157,8 +157,68 @@
     <Compile Include="..\Ninject.Test\Integration\ConstructorSelectionTests.cs">
       <Link>Integration\ConstructorSelectionTests.cs</Link>
     </Compile>
-    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests.cs">
-      <Link>Integration\EnumerableDependenciesTests.cs</Link>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildA.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildA.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildB.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildB.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IChild.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IParent.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IParent.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs</Link>
     </Compile>
     <Compile Include="..\Ninject.Test\Integration\ExternalInjectionTests.cs">
       <Link>Integration\ExternalInjectionTests.cs</Link>

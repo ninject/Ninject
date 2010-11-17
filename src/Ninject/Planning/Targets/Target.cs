@@ -159,6 +159,7 @@ namespace Ninject.Planning.Targets
             Ensure.ArgumentNotNull(parent, "parent");
 
             var request = parent.Request.CreateChild(service, parent, this);
+            request.IsOptional = true;
             return parent.Kernel.Resolve(request);
         }
 

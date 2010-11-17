@@ -93,6 +93,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildA.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\IChild.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\IParent.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
+    <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
     <Compile Include="MSTestAttributes\TestClassAttribute.cs" />
     <Compile Include="Fakes\Dagger.cs" />
     <Compile Include="Fakes\FootSoldier.cs" />
@@ -118,7 +139,6 @@
     <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
-    <Compile Include="Integration\EnumerableDependenciesTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
     <None Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
