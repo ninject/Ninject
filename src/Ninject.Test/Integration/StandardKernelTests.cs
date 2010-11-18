@@ -56,18 +56,9 @@
         {
             kernel.Bind<IWeapon>().To<Sword>();
             kernel.Bind<IWeapon>().To<Shuriken>();
-            ActivationException exception = null;
 
-            try
-            {
-                kernel.Get<IWeapon>();
-            }
-            catch (ActivationException e)
-            {
-                exception = e;
-            }
-
-            exception.ShouldNotBeNull();
+            var exception = Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
+            
             exception.Message.ShouldContain("More than one matching bindings are available.");
         }
 

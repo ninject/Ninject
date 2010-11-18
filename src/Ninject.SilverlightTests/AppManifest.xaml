@@ -3,5 +3,8 @@
     <AssemblyPart x:Name="Ninject.SilverlightTests" Source="Ninject.SilverlightTests.dll" />
     <AssemblyPart x:Name="Ninject" Source="Ninject.dll" />
     <AssemblyPart x:Name="UnitDrivenLight" Source="UnitDrivenLight.dll" />
+    <AssemblyPart x:Name="Moq.Silverlight" Source="Moq.Silverlight.dll" />
+    <AssemblyPart x:Name="Castle.Core-Silverlight" Source="Castle.Core-Silverlight.dll" />
+    <AssemblyPart x:Name="Castle.DynamicProxy-Silverlight" Source="Castle.DynamicProxy-Silverlight.dll" />
   </Deployment.Parts>
 </Deployment>

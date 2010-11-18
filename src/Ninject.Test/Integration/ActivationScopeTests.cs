@@ -2,7 +2,7 @@
 {
     using System;
     using Ninject.Activation.Blocks;
-    using Ninject.Tests.Fakes;
+    using Ninject.Tests.Fakes; 
 #if SILVERLIGHT
     #if SILVERLIGHT_MSTEST
         using MsTest.Should;

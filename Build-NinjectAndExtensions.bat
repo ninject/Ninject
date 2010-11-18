@@ -1,4 +1,4 @@
-SET NoPause="true"
+SET NoPause=true
 call build-release.cmd
 cd ..
 

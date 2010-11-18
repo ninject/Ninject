@@ -19,6 +19,11 @@ namespace Ninject.Infrastructure.Introspection
 {
     internal static class ExceptionFormatter
     {
+		public static string ModulesWithNullOrEmptyNamesAreNotSupported()
+		{
+			return "Modules with null or empty names are not supported";
+		}
+
         public static string ModuleWithSameNameIsAlreadyLoaded(INinjectModule newModule, INinjectModule existingModule)
         {
             using (var sw = new StringWriter())

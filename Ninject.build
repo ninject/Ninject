@@ -114,6 +114,7 @@
         <csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.test}/${product.assembly.silverlighttestdll}">
             <sources basedir="${path.src}">
+                <include name="${product.name}.Test/*.cs"/>
                 <include name="${product.name}.Test/Fakes/**/*.cs"/>
                 <include name="${product.name}.Test/Integration/**/*.cs"/>
                 <include name="${product.name}.SilverlightTests/*.cs"/>

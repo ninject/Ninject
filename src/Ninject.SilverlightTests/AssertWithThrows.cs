@@ -53,7 +53,8 @@ namespace Ninject
         /// </summary>
         /// <typeparam name="T">The type of exception that is expected to be thrown.</typeparam>
         /// <param name="action">The action.</param>
-        public static void Throws<T>(Action action)
+        /// <returns>The exception</returns>
+        public static T Throws<T>(Action action)
             where T : Exception
         {
             try
@@ -61,9 +62,12 @@ namespace Ninject
                 action();
                 Assert.Fail(string.Format(CultureInfo.InvariantCulture, "Expected excpetion {0} did not occur!", typeof(T).Name));
             }
-            catch (T)
+            catch (T e)
             {
+                return e;
             }
+
+            return null;
         }
     }
 }

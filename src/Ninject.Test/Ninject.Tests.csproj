@@ -114,6 +114,12 @@
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\ModuleLoadingContext.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule2.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\OtherFakes\TestModule.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs" />
     <Compile Include="MSTestAttributes\TestClassAttribute.cs" />
     <Compile Include="Fakes\Dagger.cs" />
     <Compile Include="Fakes\FootSoldier.cs" />
@@ -125,7 +131,6 @@
     <Compile Include="Integration\ConditionalBindingWhenParentTests.cs" />
     <Compile Include="Integration\ConstructorSelectionTests.cs" />
     <Compile Include="Integration\ManualReleaseTests.cs" />
-    <Compile Include="Integration\ModuleLoadingTests.cs" />
     <Compile Include="Fakes\NinjaBarracks.cs" />
     <Compile Include="Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs" />
     <Compile Include="Integration\NamedPropertyInjectionTests.cs" />

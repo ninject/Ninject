@@ -97,6 +97,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Ninject.Test\ExtensionsForIEnumerable.cs">
+      <Link>ExtensionsForIEnumerable.cs</Link>
+    </Compile>
     <Compile Include="..\Ninject.Test\Fakes\AbstractWeapon.cs">
       <Link>Fakes\AbstractWeapon.cs</Link>
     </Compile>
@@ -229,8 +232,23 @@
     <Compile Include="..\Ninject.Test\Integration\ManualReleaseTests.cs">
       <Link>Integration\ManualReleaseTests.cs</Link>
     </Compile>
-    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests.cs">
-      <Link>Integration\ModuleLoadingTests.cs</Link>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule2.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule2.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\ModuleLoadingContext.cs">
+      <Link>Integration\ModuleLoadingTests\ModuleLoadingContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\OtherFakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\OtherFakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs</Link>
     </Compile>
     <Compile Include="..\Ninject.Test\Integration\NamedPropertyInjectionTests.cs">
       <Link>Integration\NamedPropertyInjectionTests.cs</Link>
