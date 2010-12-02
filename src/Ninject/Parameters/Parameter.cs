@@ -15,6 +15,8 @@ using Ninject.Infrastructure;
 
 namespace Ninject.Parameters
 {
+    using Ninject.Planning.Targets;
+
     /// <summary>
     /// Modifies an activation process in some way.
     /// </summary>
@@ -33,7 +35,7 @@ namespace Ninject.Parameters
         /// <summary>
         /// Gets or sets the callback that will be triggered to get the parameter's value.
         /// </summary>
-        public Func<IContext, object> ValueCallback { get; private set; }
+        public Func<IContext, ITarget, object> ValueCallback { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -41,7 +43,7 @@ namespace Ninject.Parameters
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
-        public Parameter(string name, object value, bool shouldInherit) : this(name, ctx => value, shouldInherit) { }
+        public Parameter(string name, object value, bool shouldInherit) : this(name, (ctx, target) => value, shouldInherit) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -55,19 +57,36 @@ namespace Ninject.Parameters
             Ensure.ArgumentNotNull(valueCallback, "valueCallback");
 
             Name = name;
-            ValueCallback = valueCallback;
+            ValueCallback = (ctx, target) => valueCallback(ctx);
             ShouldInherit = shouldInherit;
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Parameter"/> class.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="valueCallback">The callback that will be triggered to get the parameter's value.</param>
+        /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
+        public Parameter(string name, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
+        {
+            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+
+            Name = name;
+            ValueCallback = valueCallback;
+            ShouldInherit = shouldInherit;
+        }
+        
+        /// <summary>
         /// Gets the value for the parameter within the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
         /// <returns>The value for the parameter.</returns>
-        public object GetValue(IContext context)
+        public object GetValue(IContext context, ITarget target)
         {
             Ensure.ArgumentNotNull(context, "context");
-            return ValueCallback(context);
+            return ValueCallback(context, target);
         }
 
         /// <summary>

@@ -16,6 +16,8 @@ using Ninject.Parameters;
 
 namespace Ninject.Syntax
 {
+    using Ninject.Planning.Targets;
+
     /// <summary>
     /// Used to define a basic binding syntax builder.
     /// </summary>
@@ -227,6 +229,13 @@ namespace Ninject.Syntax
         IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> callback);
 
         /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="name">The name of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, ITarget, object> callback);
+
+        /// <summary>
         /// Indicates that the specified property should be injected with the specified value.
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
@@ -239,6 +248,13 @@ namespace Ninject.Syntax
         /// <param name="name">The name of the property to override.</param>
         /// <param name="callback">The callback to invoke to get the value for the property.</param>
         IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> callback);
+
+        /// <summary>
+        /// Indicates that the specified property should be injected with the specified value.
+        /// </summary>
+        /// <param name="name">The name of the property to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the property.</param>
+        IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, ITarget, object> callback);
 
         /// <summary>
         /// Adds a custom parameter to the binding.

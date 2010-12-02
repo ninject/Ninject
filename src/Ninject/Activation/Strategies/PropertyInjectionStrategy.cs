@@ -120,7 +120,7 @@ namespace Ninject.Activation.Strategies
             Ensure.ArgumentNotNull(target, "target");
 
             var parameter = context.Parameters.OfType<PropertyValue>().Where(p => p.Name == target.Name).SingleOrDefault();
-            return parameter != null ? parameter.GetValue(context) : target.ResolveWithin(context);
+            return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }
     }
 }

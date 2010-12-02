@@ -14,6 +14,8 @@ using Ninject.Activation;
 
 namespace Ninject.Parameters
 {
+    using Ninject.Planning.Targets;
+
     /// <summary>
     /// Overrides the injected value of a constructor argument.
     /// </summary>
@@ -32,5 +34,12 @@ namespace Ninject.Parameters
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
         public ConstructorArgument(string name, Func<IContext, object> valueCallback) : base(name, valueCallback, false) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConstructorArgument"/> class.
+        /// </summary>
+        /// <param name="name">The name of the argument to override.</param>
+        /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
+        public ConstructorArgument(string name, Func<IContext, ITarget, object> valueCallback) : base(name, valueCallback, false) { }
     }
 }
