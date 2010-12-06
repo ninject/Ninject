@@ -176,7 +176,7 @@ namespace Ninject.Planning.Targets
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
-            return parent.Kernel.Resolve(request).Single();
+            return parent.Kernel.Resolve(request).SingleOrDefault();
         }
 
         /// <summary>

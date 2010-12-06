@@ -120,6 +120,7 @@
     <Compile Include="Integration\ModuleLoadingTests\OtherFakes\TestModule.cs" />
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs" />
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs" />
+    <Compile Include="Integration\OptionalTest.cs" />
     <Compile Include="MSTestAttributes\TestClassAttribute.cs" />
     <Compile Include="Fakes\Dagger.cs" />
     <Compile Include="Fakes\FootSoldier.cs" />

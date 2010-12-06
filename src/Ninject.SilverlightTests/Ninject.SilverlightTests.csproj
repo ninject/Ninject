@@ -253,6 +253,9 @@
     <Compile Include="..\Ninject.Test\Integration\NamedPropertyInjectionTests.cs">
       <Link>Integration\NamedPropertyInjectionTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ninject.Test\Integration\OptionalTest.cs">
+      <Link>Integration\OptionalTest.cs</Link>
+    </Compile>
     <Compile Include="..\Ninject.Test\Integration\PropertyInjectionTests.cs">
       <Link>Integration\PropertyInjectionTests.cs</Link>
     </Compile>
