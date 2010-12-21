@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\CustomScopeTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildA.cs" />
