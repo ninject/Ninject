@@ -66,12 +66,11 @@
 		{
 			kernel.Bind<IWarrior>().To<Samurai>().InScope(ctx => {
 				return new Object();
-			});
+			}).WithConstructorArgument("weapon", new Dagger());
 
 			// we expect different objects, even if the constructor arguments are the same
-			IWeapon weapon = new Dagger();
-			var instance1 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", weapon));
-			var instance2 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", weapon));
+			var instance1 = kernel.Get<IWarrior>();
+			var instance2 = kernel.Get<IWarrior>();
 
 			instance1.ShouldNotBeSameAs(instance2);
 			instance1.Weapon.ShouldBeSameAs(instance2.Weapon);
@@ -94,11 +93,42 @@
 			var instance1 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", dagger));
 			var instance2 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", new Shuriken()));
 			var instance3 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", new Dagger()));
-			var instance4 = kernel.Get<IWarrior> (new ConstructorArgument("weapon", dagger));
+			var instance4 = kernel.Get<IWarrior>(new ConstructorArgument("weapon", dagger));
 
 			instance1.ShouldNotBeSameAs(instance2);
 			instance1.ShouldNotBeSameAs(instance3);
 			instance1.ShouldBeSameAs(instance4);
+		}
+	}
+
+	[TestClass]
+	public class CustomScopeBasedOnMetadataArgument : CustomScopeContext
+	{
+		public class ScopeMetadata : Parameter
+		{
+			public ScopeMetadata(string name) : base(name, "", false) { }
+		}
+
+		[Fact]
+		public void MatchedMetadataInstanceIsReused()
+		{
+			kernel.Bind<IWarrior>().To<Samurai>().InScope(ctx => {
+				var parameter = ctx.Parameters.OfType<ScopeMetadata>().SingleOrDefault();
+				return parameter != null ? parameter.Name : "default";
+			}).WithConstructorArgument("weapon", new Dagger());
+
+			// instance will only be the same when metadata argument is exactly the same, or the default is used
+			IWeapon dagger = new Dagger();
+			var instance1 = kernel.Get<IWarrior>(new ScopeMetadata("a"));
+			var instance2 = kernel.Get<IWarrior>(new ScopeMetadata("b"));
+			var instance3 = kernel.Get<IWarrior>(new ScopeMetadata("a"));
+			var instance4 = kernel.Get<IWarrior>();
+			var instance5 = kernel.Get<IWarrior>();
+
+			instance1.ShouldNotBeSameAs(instance2);
+			instance1.ShouldBeSameAs(instance3);
+			instance1.ShouldNotBeSameAs(instance4);
+			instance4.ShouldBeSameAs(instance4);
 		}
 	}
 
