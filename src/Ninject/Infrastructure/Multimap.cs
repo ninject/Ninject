@@ -27,17 +27,19 @@ namespace Ninject.Infrastructure
         private readonly Dictionary<K, ICollection<V>> _items = new Dictionary<K, ICollection<V>>();
 
 
-        private TResult ActOn<TResult>(K key, Func<ICollection<V>, TResult> act) 
+        private TResult ActOn<TResult>(K key, Func<ICollection<V>, TResult> act, bool ignoreAbsent = false) 
         {
             ICollection<V> values;
             if (_items.TryGetValue(key, out values))
                 return act(values);
 
+            if (ignoreAbsent)
+                return default(TResult);
+
             // Only lock when we must create
-            lock(_items) 
-            {
+            lock (_items) {
                 if (!_items.TryGetValue(key, out values))
-                    _items[key] = values = new HashSet<V>();                
+                    _items[key] = values = new HashSet<V>();
             }
             return act(values);
         }
@@ -96,7 +98,7 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            return ActOn(key, x => x.Remove(value));            
+            return ActOn(key, x => x.Remove(value), ignoreAbsent: true);            
         }
 
         /// <summary>
@@ -139,7 +141,7 @@ namespace Ninject.Infrastructure
         {
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
-            return ActOn(key, x => x.Contains(value));
+            return ActOn(key, x => x.Contains(value), ignoreAbsent: true);
         }
 
         /// <summary>
