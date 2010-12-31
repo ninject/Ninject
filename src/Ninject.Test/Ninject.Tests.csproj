@@ -115,6 +115,7 @@
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
+    <Compile Include="Integration\FactoryInterfaceTests.cs" />
     <Compile Include="Integration\ModuleLoadingTests\ModuleLoadingContext.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule2.cs" />
