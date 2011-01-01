@@ -17,13 +17,26 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Infrastructure.Introspection
 {
-    internal static class ExceptionFormatter
+    /// <summary>
+    /// Provides meaningful exception messages.
+    /// </summary>
+    public static class ExceptionFormatter
     {
+        /// <summary>
+        /// Generates a message saying that modules without names are not supported.
+        /// </summary>
+        /// <returns>The exception message.</returns>
 		public static string ModulesWithNullOrEmptyNamesAreNotSupported()
 		{
 			return "Modules with null or empty names are not supported";
 		}
 
+        /// <summary>
+        /// Generates a message saying that a module with the same name is already loaded.
+        /// </summary>
+        /// <param name="newModule">The new module.</param>
+        /// <param name="existingModule">The existing module.</param>
+        /// <returns>The exception message.</returns>
         public static string ModuleWithSameNameIsAlreadyLoaded(INinjectModule newModule, INinjectModule existingModule)
         {
             using (var sw = new StringWriter())
@@ -42,6 +55,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that no module has been loaded with the specified name.
+        /// </summary>
+        /// <param name="name">The module name.</param>
+        /// <returns>The exception message.</returns>
         public static string NoModuleLoadedWithTheSpecifiedName(string name)
         {
             using (var sw = new StringWriter())
@@ -56,6 +74,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that the binding could not be uniquely resolved.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The exception message.</returns>
         public static string CouldNotUniquelyResolveBinding(IRequest request)
         {
             using (var sw = new StringWriter())
@@ -73,6 +96,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that the binding could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The exception message.</returns>
         public static string CouldNotResolveBinding(IRequest request)
         {
             using (var sw = new StringWriter())
@@ -95,6 +123,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that the specified context has cyclic dependencies.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
         public static string CyclicalDependenciesDetected(IContext context)
         {
             using (var sw = new StringWriter())
@@ -116,6 +149,13 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that an invalid attribute type is used in the binding condition.
+        /// </summary>
+        /// <param name="binding">The binding.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>The exception message.</returns>
         public static string InvalidAttributeTypeUsedInBindingCondition(IBinding binding, string methodName, Type type)
         {
             using (var sw = new StringWriter())
@@ -134,6 +174,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that no constructors are available on the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
         public static string NoConstructorsAvailable(IContext context)
         {
             using (var sw = new StringWriter())
@@ -152,7 +197,13 @@ namespace Ninject.Infrastructure.Introspection
                 return sw.ToString();
             }
         }
-
+        
+        /// <summary>
+        /// Generates a message saying that no constructors are available for the given component.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="implementation">The implementation.</param>
+        /// <returns>The exception message.</returns>
         public static string NoConstructorsAvailableForComponent(Type component, Type implementation)
         {
             using (var sw = new StringWriter())
@@ -168,6 +219,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Generates a message saying that the specified component is not registered.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <returns>The exception message.</returns>
         public static string NoSuchComponentRegistered(Type component)
         {
             using (var sw = new StringWriter())
@@ -186,7 +242,13 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
-        public static string CouldNotResolveProperyForValueInjection(IRequest request, string propertyName)
+        /// <summary>
+        /// Generates a message saying that the specified property could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The exception message.</returns>
+        public static string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName)
         {
             using (var sw = new StringWriter())
             {
@@ -202,7 +264,12 @@ namespace Ninject.Infrastructure.Introspection
                 return sw.ToString();
             }
         }
-        
+
+        /// <summary>
+        /// Generates a message saying that the provider on the specified context returned null.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
         public static string ProviderReturnedNull(IContext context)
         {
             using (var sw = new StringWriter())

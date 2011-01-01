@@ -22,8 +22,16 @@ using Ninject.Planning.Targets;
 
 namespace Ninject.Infrastructure.Introspection
 {
-    internal static class FormatExtensions
+    /// <summary>
+    /// Provides extension methods for string formatting
+    /// </summary>
+    public static class FormatExtensions
     {
+        /// <summary>
+        /// Formats the activation path into a meaningful string representation.
+        /// </summary>
+        /// <param name="request">The request to be formatted.</param>
+        /// <returns>The activation path formatted as string.</returns>
         public static string FormatActivationPath(this IRequest request)
         {
             using (var sw = new StringWriter())
@@ -40,6 +48,12 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Formats the given binding into a meaningful string representation. 
+        /// </summary>
+        /// <param name="binding">The binding to be formatted.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The binding formatted as string</returns>
         public static string Format(this IBinding binding, IContext context)
         {
             using (var sw = new StringWriter())
@@ -83,6 +97,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Formats the specified request into a meaningful string representation.
+        /// </summary>
+        /// <param name="request">The request to be formatted.</param>
+        /// <returns>The request formatted as string.</returns>
         public static string Format(this IRequest request)
         {
             using (var sw = new StringWriter())
@@ -96,6 +115,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Formats the specified target into a meaningful string representation..
+        /// </summary>
+        /// <param name="target">The target to be formatted.</param>
+        /// <returns>The target formatted as string.</returns>
         public static string Format(this ITarget target)
         {
             using (var sw = new StringWriter())
@@ -124,6 +148,11 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+        /// <summary>
+        /// Formats the specified type into a meaningful string representation..
+        /// </summary>
+        /// <param name="type">The type to be formatted.</param>
+        /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
             if (type.IsGenericType)
@@ -144,27 +173,25 @@ namespace Ninject.Infrastructure.Introspection
 
                 return sb.ToString();
             }
-            else
+
+            switch (Type.GetTypeCode(type))
             {
-                switch (Type.GetTypeCode(type))
-                {
-                    case TypeCode.Boolean: return "bool";
-                    case TypeCode.Char: return "char";
-                    case TypeCode.SByte: return "sbyte";
-                    case TypeCode.Byte: return "byte";
-                    case TypeCode.Int16: return "short";
-                    case TypeCode.UInt16: return "ushort";
-                    case TypeCode.Int32: return "int";
-                    case TypeCode.UInt32: return "uint";
-                    case TypeCode.Int64: return "long";
-                    case TypeCode.UInt64: return "ulong";
-                    case TypeCode.Single: return "float";
-                    case TypeCode.Double: return "double";
-                    case TypeCode.Decimal: return "decimal";
-                    case TypeCode.DateTime: return "DateTime";
-                    case TypeCode.String: return "string";
-                    default: return type.Name;
-                }
+                case TypeCode.Boolean: return "bool";
+                case TypeCode.Char: return "char";
+                case TypeCode.SByte: return "sbyte";
+                case TypeCode.Byte: return "byte";
+                case TypeCode.Int16: return "short";
+                case TypeCode.UInt16: return "ushort";
+                case TypeCode.Int32: return "int";
+                case TypeCode.UInt32: return "uint";
+                case TypeCode.Int64: return "long";
+                case TypeCode.UInt64: return "ulong";
+                case TypeCode.Single: return "float";
+                case TypeCode.Double: return "double";
+                case TypeCode.Decimal: return "decimal";
+                case TypeCode.DateTime: return "DateTime";
+                case TypeCode.String: return "string";
+                default: return type.Name;
             }
         }
     }
