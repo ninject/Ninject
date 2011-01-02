@@ -43,12 +43,12 @@
 		[Fact]
 		public void RequestAFactoryObject()
 		{
-			// Bind ToSelf is implicit, so the following two lines are optional
-			// kernel.Bind (typeof (Dagger)).ToSelf ();
-			// kernel.Bind (typeof (Factory<>)).ToSelf ();
+			// Bind ToSelf is implicit, so the following line is optional
+			// kernel.Bind(typeof(Dagger)).ToSelf();
+			kernel.Bind (typeof (IFactory<>)).To (typeof (Factory<>));
 
-			var factoryInstance1 = kernel.Get<Factory<Dagger>> ();
-			var factoryInstance2 = kernel.Get<Factory<Dagger>> ();
+			var factoryInstance1 = kernel.Get<IFactory<Dagger>> ();
+			var factoryInstance2 = kernel.Get<IFactory<Dagger>> ();
 
 			factoryInstance1.ShouldNotBeNull ();
 			factoryInstance1.ShouldNotBeSameAs (factoryInstance2);
@@ -67,9 +67,10 @@
 		public void RequestASingletonFactoryObject ()
 		{
 			kernel.Bind<Dagger> ().ToSelf ().InSingletonScope ();
+			kernel.Bind (typeof (IFactory<>)).To (typeof (Factory<>));
 
-			var factoryInstance1 = kernel.Get<Factory<Dagger>> ();
-			var factoryInstance2 = kernel.Get<Factory<Dagger>> ();
+			var factoryInstance1 = kernel.Get<IFactory<Dagger>> ();
+			var factoryInstance2 = kernel.Get<IFactory<Dagger>> ();
 
 			factoryInstance1.ShouldNotBeNull ();
 			// the factory itself does not need to be a singleton, and it is not in this case
@@ -94,9 +95,10 @@
 				var parameter = ctx.Parameters.OfType<ConstructorArgument> ().Where (p => p.Name == "weapon").SingleOrDefault ();
 				return parameter != null ? parameter.GetValue (ctx, null) : "";
 			});
+			kernel.Bind<IFactory<Samurai, IWeapon>> ().To<Factory<Samurai, IWeapon>> ();
 
-			var factoryInstance1 = kernel.Get<Factory<Samurai, IWeapon>> ();
-			var factoryInstance2 = kernel.Get<Factory<Samurai, IWeapon>> ();
+			var factoryInstance1 = kernel.Get<IFactory<Samurai, IWeapon>> ();
+			var factoryInstance2 = kernel.Get<IFactory<Samurai, IWeapon>> ();
 
 			factoryInstance1.ShouldNotBeNull ();
 			factoryInstance1.ShouldNotBeSameAs (factoryInstance2);
@@ -118,7 +120,17 @@
 
 	}
 
-	public class Factory<T> 
+	interface IFactory<T> where T : class
+	{
+		T Get ();
+	}
+
+	interface IFactory<T, Argument1Type> where T : class
+	{
+		T Get (Argument1Type Argument1);
+	}
+
+	public class Factory<T> : IFactory<T> where T : class
 	{
 		private readonly IKernel Kernel;
 
@@ -133,7 +145,7 @@
 		}
 	}
 
-	public class Factory<T, Argument1Type> where T : class
+	public class Factory<T, Argument1Type> : IFactory<T, Argument1Type> where T : class
 	{
 		private readonly IKernel Kernel;
 		private readonly string Argument1Name;
