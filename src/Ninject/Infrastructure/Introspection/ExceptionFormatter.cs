@@ -115,8 +115,9 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("  1) Ensure that you have defined a binding for {0}.", request.Service.Format());
                 sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
                 sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
+                sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
                 #if !SILVERLIGHT
-                sw.WriteLine("  4) If you are using automatic module loading, ensure the search path and filters are correct.");
+                sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
                 #endif
 
                 return sw.ToString();
