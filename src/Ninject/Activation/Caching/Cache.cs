@@ -195,9 +195,8 @@ namespace Ninject.Activation.Caching
                 if (this.entries.TryGetValue(scope, out bindings))
                 {
                     this.Forget(GetAllBindingEntries(bindings));
+                    this.entries.Remove(scope);
                 }
-
-                this.entries.Remove(scope);
             }
         }
 
