@@ -6,7 +6,7 @@ This is the master repository for Ninject, the lightweight and lightning-fast .N
 
 Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications. It helps you split your
 application into a collection of loosely-coupled, highly-cohesive pieces, and then glue them back together in a
-flexible manner. By using Ninject to support your software's architecture, your code will become easier to write,
+flexible manner. By using ninject to support your software's architecture, your code will become easier to write,
 reuse, test, and modify.
 
 Ninject is:
@@ -37,8 +37,6 @@ Ninject is:
    contextual binding, in which a different concrete implementation of a service may be injected depending on the context in
    which it is requested.
 
-Extensions (this will move to a better list soon):
+Extensions:
 
-- [Ninject.Dynamic](http://github.com/casualjim/ninject-dynamic): Support for module loaders for Ruby (DSL) and (eventually) other DLR languages
-- [Ninject.Web.Mvc](http://github.com/enkari/ninject.web.mvc): Integration between Ninject and ASP.NET MVC
-- [Ninject.Moq](http://github.com/enkari/ninject.moq): Integration between Ninject and Moq
+Yes, sounds slim and focused, but where's the support for all the stuff the competitors have? Generally, they're maintained as specific focused extensions with owners who keep them in sync and pull in new ideas and fixes fast. These are summarized on the [extensions](http://ninject.org/extensions) section of the project website. Most are hosted alongside the core project.
