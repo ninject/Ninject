@@ -1,6 +1,6 @@
 This is the master repository for Ninject, the lightweight and lightning-fast .NET dependency injection framework. Ninject is currently in version 2.
 
-//If you're reading blog posts or books from before 2010, they're likely to be regarding version 1, which has [some key improvements, summarised in the wiki](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-2)//
+_If you're reading blog posts or books from before 2010, they're likely to be regarding version 1, which has [some key improvements, summarised in the wiki](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-2)_
 
 - [Project website](http://ninject.org/)
 - [Documentation](http://dojo.ninject.org/)
@@ -39,6 +39,8 @@ Ninject is:
    contextual binding, in which a different concrete implementation of a service may be injected depending on the context in
    which it is requested.
 
-==Extensions==
+Everything else is Extensions
+----------------
+Yes, sounds slim and focused, but where's the support for all the stuff the competitors have? 
 
-Yes, sounds slim and focused, but where's the support for all the stuff the competitors have? Generally, they're maintained as specific focused extensions with owners who keep them in sync and pull in new ideas and fixes fast. These are summarized on the [extensions](http://ninject.org/extensions) section of the project website. Most are hosted alongside the core project.
+Generally, they're maintained as specific focused extensions with owners who keep them in sync and pull in new ideas and fixes fast. These are summarized on the [extensions](http://ninject.org/extensions) section of the project website. Most are hosted alongside the core project right here.
