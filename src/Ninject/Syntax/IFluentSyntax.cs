@@ -15,7 +15,7 @@ using System.ComponentModel;
 namespace Ninject.Syntax
 {
     /// <summary>
-    /// A hack to hide methods defined on <see cref="System.Object"/> for IntelliSense
+    /// A hack to hide methods defined on <see cref="object"/> for IntelliSense
     /// on fluent interfaces. Credit to Daniel Cazzulino.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
