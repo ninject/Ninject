@@ -100,7 +100,7 @@ namespace Ninject.Activation.Strategies
                     .FirstOrDefault();
 
                 if(propertyInfo == null)
-                    throw new ActivationException(ExceptionFormatter.CouldNotResolveProperyForValueInjection(context.Request, propertyName));
+                    throw new ActivationException(ExceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyName));
                 
                 var target = new PropertyInjectionDirective( propertyInfo, InjectorFactory.Create( propertyInfo ) );
                 object value = GetValue(context, target.Target);

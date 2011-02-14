@@ -50,18 +50,25 @@ namespace Ninject.Planning
         {
             Ensure.ArgumentNotNull(type, "type");
 
-            if (this.plans.ContainsKey(type))
-                return this.plans[type];
-
-            var plan = CreateEmptyPlan(type);
-            lock (this.plans)
+            IPlan plan;
+            if (plans.TryGetValue(type, out plan))
             {
-                this.plans.Add(type, plan);                
+                return plan;
             }
+            lock (plans)
+            {
+                if (plans.TryGetValue(type, out plan))
+                {
+                    return plan;
+                }
 
-            Strategies.Map(s => s.Execute(plan));
+                plan = CreateEmptyPlan(type);
 
-            return plan;
+                plans.Add(type, plan);
+                Strategies.Map(s => s.Execute(plan));
+
+                return plan;
+            }
         }
 
         /// <summary>

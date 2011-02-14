@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>UnitDrivenNet</name>
+        <name>UnitDrivenPhone</name>
     </assembly>
     <members>
+        <member name="F:UnitDriven.Commanding.CommandBase.DefaultTimeout">
+            <summary>
+            Default timeout is 30 seconds.
+            </summary>
+        </member>
         <member name="T:UnitDriven.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -122,10 +127,19 @@
         </member>
         <member name="M:UnitDriven.TestBase.GetContext">
             <summary>
-            In .net NUnit will create a single intance and run all of the tests on that one instance.
-            Each call to get context must return a unique instance.
+            Unit Driven will create a separate instance of the test object for each test. You only need a single instance.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:UnitDriven.TestEngine.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:UnitDriven.ErrorDetails.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
         </member>
     </members>
 </doc>

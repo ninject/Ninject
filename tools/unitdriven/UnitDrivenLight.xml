@@ -125,11 +125,6 @@
               Looks up a localized string similar to &apos;{0}&apos; does not inherit from System.Exception..
             </summary>
         </member>
-        <member name="P:UnitDriven.Properties.Resources.TestCommandErrorMessage">
-            <summary>
-              Looks up a localized string similar to {0}: {1}.
-            </summary>
-        </member>
         <member name="M:UnitDriven.TestBase.GetContext">
             <summary>
             Unit Driven will create a separate instance of the test object for each test. You only need a single instance.

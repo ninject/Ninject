@@ -13,7 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject", "src\Ninject\Ninj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter", "src\CommonServiceLocator.NinjectAdapter\CommonServiceLocator.NinjectAdapter.csproj", "{9BD94717-484B-4EB1-AF32-8D4244F02E8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SilverlightTests", "src\Ninject.SilverlightTests\Ninject.SilverlightTests.csproj", "{033B09D3-8532-419A-B906-36F8EB605B30}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Ninject.Test\Ninject.Tests.csproj", "{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WindowsPhone7Tests", "src\Ninject.WindowsPhone7Tests\Ninject.WindowsPhone7Tests.csproj", "{F7314647-1C1F-4960-A693-AA773C54C13D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug .NET 4.0|Any CPU
@@ -47,6 +59,18 @@ Global
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.Deploy.0 = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug .NET 4.0|Any CPU.Deploy.0 = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
