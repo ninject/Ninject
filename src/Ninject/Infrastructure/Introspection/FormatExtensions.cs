@@ -174,6 +174,7 @@ namespace Ninject.Infrastructure.Introspection
                 return sb.ToString();
             }
 
+#if !WINDOWS_PHONE
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Boolean: return "bool";
@@ -193,6 +194,9 @@ namespace Ninject.Infrastructure.Introspection
                 case TypeCode.String: return "string";
                 default: return type.Name;
             }
+#else
+            return type.Name;
+#endif
         }
     }
 }

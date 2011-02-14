@@ -1,4 +1,5 @@
-﻿namespace Ninject.Tests.Integration.ModuleLoadingTests
+﻿#if !WINDOWS_PHONE
+namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using Moq;
     using Ninject.Modules;
@@ -46,3 +47,4 @@
         }
     }
 }
+#endif

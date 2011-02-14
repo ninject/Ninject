@@ -1,6 +1,7 @@
 ﻿namespace Ninject.Tests.Integration.ActivationBlockTests
 {
     using System;
+
     using Ninject.Activation.Blocks;
     using Ninject.Tests.Fakes; 
 #if SILVERLIGHT

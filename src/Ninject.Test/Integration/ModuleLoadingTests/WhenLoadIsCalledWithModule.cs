@@ -1,4 +1,5 @@
-﻿namespace Ninject.Tests.Integration.ModuleLoadingTests
+﻿#if !WINDOWS_PHONE
+namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
     using System.Linq;
@@ -107,3 +108,4 @@
         }
     }
 }
+#endif
