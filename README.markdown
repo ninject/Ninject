@@ -1,10 +1,13 @@
-This is the master repository for Ninject, the lightweight and lightning-fast .NET dependency injection framework. Ninject is currently in version 2.
+This is the master repository for Ninject, the lightweight and lightning-fast .NET dependency injection framework. Ninject is currently in version 2.2.
 
 _If you're reading blog posts or books from before 2010, they're likely to be regarding version 1, which has [some key improvements, summarised in the wiki](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-2)_
 
 - [Project website](http://ninject.org/)
 - [Documentation](http://ninject.org/learn)
+
 - [Nate's blog](http://kohari.org/)
+- [Ian's blog](http://innovatian.com/)
+- [Remo's blog](http://www.planetgeek.ch/author/remo-gloor/)
 
 Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications. It helps you split your
 application into a collection of loosely-coupled, highly-cohesive pieces, and then glue them back together in a
@@ -39,8 +42,8 @@ Ninject is:
    contextual binding, in which a different concrete implementation of a service may be injected depending on the context in
    which it is requested.
 
-Everything else is Extensions
+Everything else is in Extensions
 ----------------
-Yes, sounds slim and focused, but where's the support for all the stuff the competitors have? 
+Yes, sounds slim and focused, but where is the support for all the features that the competitors have? 
 
-Generally, they're maintained as specific focused extensions with owners who keep them in sync and pull in new ideas and fixes fast. These are summarized on the [extensions](http://ninject.org/extensions) section of the project website. Most are hosted alongside the core project right here.
+Generally, they are maintained as specific focused extensions with owners who keep them in sync and pull in new ideas and fixes fast. These are summarized on the [extensions](http://ninject.org/extensions) section of the project website. Most are hosted alongside the core project right here.
