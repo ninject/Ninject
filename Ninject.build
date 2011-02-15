@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="Ninject" default="build">
-	<property name="version" value="2.1.0.0" overwrite="true"/>
+	<property name="version" value="2.2.0.0" overwrite="true"/>
 	<property name="product.name" value="Ninject" overwrite="false"/>
 	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
-	<property name="product.duration" value="2007-2010" overwrite="false"/>
+	<property name="product.duration" value="2007-2011" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
 	<property name="product.platforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5"  overwrite="false"/>
 	<property name="product.buildserverPlatforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,mono-2.0-no-web,netcf-3.5"  overwrite="false"/>
