@@ -97,6 +97,15 @@ IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
 	cd ..
 :ENDWCF
 
+IF NOT EXIST .\ninject.extensions.wf GOTO ENDWF
+	cd ninject.extensions.wf
+	del lib\Ninject\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	call UnzipDependencies.cmd
+	call build-release.cmd
+	cd ..
+:ENDWF
+
 IF NOT EXIST .\ninject.extensions.weakeventmessagebroker GOTO ENDWEAKEB
 	cd ninject.extensions.weakeventmessagebroker
 	del lib\Ninject\*.zip
