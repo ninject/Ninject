@@ -1,6 +1,7 @@
 namespace Ninject.Tests.Unit
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using Ninject.Infrastructure.Language;
     using Xunit;
@@ -41,6 +42,29 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("PublicProperty");
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("InternalProperty");
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("ProtectedProperty");
+        }
+
+        [Fact]
+        public void IndexerHasAttribute()
+        {
+            this.TestIndexerHasAttribute(typeof(PropertyAttributeTest), typeof(string), typeof(InjectAttribute), true);
+            this.TestIndexerHasAttribute(typeof(PropertyAttributeTest), typeof(int), typeof(InjectAttribute), false);
+            this.TestIndexerHasAttribute(typeof(PropertyAttributeTest), typeof(string), typeof(NotInheritedInjectAttribute), true);
+            this.TestIndexerHasAttribute(typeof(PropertyAttributeTest), typeof(int), typeof(NotInheritedInjectAttribute), false);
+            this.TestIndexerHasAttribute(typeof(InheritedPropertyAttributeTest), typeof(string), typeof(InjectAttribute), true);
+            this.TestIndexerHasAttribute(typeof(InheritedPropertyAttributeTest), typeof(int), typeof(InjectAttribute), false);
+            this.TestIndexerHasAttribute(typeof(InheritedPropertyAttributeTest), typeof(string), typeof(NotInheritedInjectAttribute), false);
+            this.TestIndexerHasAttribute(typeof(InheritedPropertyAttributeTest), typeof(int), typeof(NotInheritedInjectAttribute), false);
+        }
+
+        public void TestIndexerHasAttribute(Type testObjectType, Type indexerType, Type attributeType, bool expectedResult)
+        {
+            var propertyInfo =
+                testObjectType.GetProperties()
+                    .First(pi => pi.Name == "Item" && pi.GetIndexParameters().Single().ParameterType == indexerType);
+            var hasInjectAttribute = propertyInfo.HasAttribute(attributeType);
+
+            hasInjectAttribute.ShouldBe(expectedResult);
         }
 
         private void TestGetCustomAttributesExtended(string propertyName)
@@ -130,6 +154,32 @@ namespace Ninject.Tests.Unit
             [Inject]
             [NotInheritedInject]
             private object PrivateProperty { get; set; }
+
+            [Inject]
+            [NotInheritedInject]
+            public virtual object this[string name]
+            {
+                get
+                {
+                    return string.Empty;
+                }
+
+                set
+                {
+                }
+            }
+
+            public virtual object this[int name]
+            {
+                get
+                {
+                    return string.Empty;
+                }
+
+                set
+                {
+                }
+            }
         }
 
         public class InheritedPropertyAttributeTest : PropertyAttributeTest
@@ -141,6 +191,30 @@ namespace Ninject.Tests.Unit
             protected internal override object InternalProtectedProperty { get; set; }
 
             protected override object ProtectedProperty { get; set; }
+
+            public override object this[string name]
+            {
+                get
+                {
+                    return string.Empty;
+                }
+
+                set
+                {
+                }
+            }
+
+            public override object this[int name]
+            {
+                get
+                {
+                    return string.Empty;
+                }
+
+                set
+                {
+                }
+            }
         }    
     }
 #endif

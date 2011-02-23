@@ -44,9 +44,6 @@ namespace Ninject.Infrastructure.Language
         /// </returns>
         public static bool HasAttribute(this MemberInfo member, Type type)
         {
-#if !NET_35
-            return Attribute.IsDefined(member, type);
-#else
             var propertyInfo = member as PropertyInfo;
             if (propertyInfo != null)
             {
@@ -54,7 +51,6 @@ namespace Ninject.Infrastructure.Language
             }
 
             return member.IsDefined(type, true);
-#endif
         }
 
         /// <summary>
@@ -139,7 +135,8 @@ namespace Ninject.Infrastructure.Language
 
         private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
         {
-            var getParentDefinitionMethodInfo = typeof(MethodInfo).GetMethod("GetParentDefinition", flags);
+            var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
+            var getParentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", flags);
             if (getParentDefinitionMethodInfo == null)
             {
                 return null;
