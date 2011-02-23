@@ -1,6 +1,8 @@
-﻿#if NET_40
+﻿#if !SILVERLIGHT
 namespace Ninject.Tests.Fakes
 {
+    using System.Runtime.InteropServices;
+
     public enum ShieldColor
     {
         Red,
@@ -11,7 +13,7 @@ namespace Ninject.Tests.Fakes
 
     public class Shield
     {
-        public Shield(ShieldColor color = ShieldColor.Red)
+        public Shield([DefaultParameterValue(ShieldColor.Red)] ShieldColor color)
         {
             Color = color;
         }

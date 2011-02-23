@@ -1,4 +1,4 @@
-﻿#if NET_40
+﻿#if !SILVERLIGHT
 namespace Ninject.Tests.Integration
 {
     using Ninject.Tests.Fakes;
