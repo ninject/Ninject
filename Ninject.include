@@ -31,6 +31,7 @@
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
 	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
+	<property name="build.assemblyversion" value="${version.major}.${version.minor}.0.0" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
 	<property name="build.platform" value="net-3.5" overwrite="false"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
@@ -109,10 +110,13 @@
 	</target>
 
 	<target name="build" depends="InitializeBuildSystem all"/>
-	<target name="InitializeBuildSystem" depends="DetectOperatingSystemArchitecture create-assembly-info"/>
+	<target name="InitializeBuildSystem" depends="DetectOperatingSystemArchitecture"/>
 	
 	<target name="create-assembly-info" depends="get-git-revision">
-		<echo message="##teamcity[buildNumber '${build.version}']" />
+		<echo message="##teamcity[buildVersionNumber '${build.version}']" />
+		<echo message="##assembly[assemblyVersionNumber '${build.assemblyversion}']" />
+		<echo message="##assembly[buildPlatform '${build.platform}']" />
+		
 		<asminfo output="${path.build.assemblyinfo}" language="CSharp">
 			<imports>
 				<import namespace="System"/>
@@ -123,7 +127,8 @@
 				<attribute type="AssemblyProductAttribute" value="${product.name}: ${product.description}"/>
 				<attribute type="AssemblyCompanyAttribute" value="${product.company}"/>
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright © ${product.duration} ${product.company} and contributors"/>
-				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
+				<attribute type="AssemblyVersionAttribute" value="${build.assemblyversion}"/>
+				<attribute type="AssemblyFileVersionAttribute" value="${build.version}" unless="${build.platform == 'netcf-3.5'}"/>
 				<attribute type="ComVisibleAttribute" value="false"/>
 				<attribute type="CLSCompliantAttribute" value="true"/>
 			</attributes>
@@ -260,7 +265,7 @@
 		<property name="nuget.add" value="false"/>
 	</target>
 	
-	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5' or string::contains(build.platform, 'mono'))}">
+	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5')}">
 		<exec program="${path.tools.xunit.console}" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
 		<if test="${not Is64BitOperatingSystem}">
 			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
@@ -274,6 +279,13 @@
 
 	<target name="UnzipDependencies">
 		<foreach item="String" in="${dependencies}" delim="," property="dependency">
+			<delete>
+				<fileset>
+					<include name="${path.lib}/${dependency}/**/*" />
+					<exclude name="${path.lib}/${dependency}/*.txt" />
+					<exclude name="${path.lib}/${dependency}/*.zip" />
+				</fileset>
+			</delete>
 			<foreach item="File" property="filepath">
 				<in>
 					<items>
@@ -310,7 +322,7 @@
 		<call target="nuget"/>
 	</target>
 	
-	<target name="package-bin" depends="all">
+	<target name="package-bin" depends="create-assembly-info all">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 		<zip zipfile="${path.dist}\${product.name}-${build.version}-${product.additionalVersionTag}${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.build}">
@@ -319,7 +331,7 @@
 		</zip>
 	</target>
 
-	<target name="package-source" depends="create-assembly-info">
+	<target name="package-source">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 		<zip zipfile="${path.dist}\${product.name}-${build.version}-${product.additionalVersionTag}source.zip" ziplevel="9">
 			<fileset basedir="${path.base}">
