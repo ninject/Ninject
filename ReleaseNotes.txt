@@ -1,0 +1,3 @@
+Version 2.2.1.0
+---------------
+- Bug Fix: For classes that have several virtual indexers and at least one of them overridden an ambiguous match exception was thrown when they were injected.
