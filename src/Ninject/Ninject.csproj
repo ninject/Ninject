@@ -89,6 +89,7 @@
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
     <Compile Include="OnePerRequestModule.cs" />

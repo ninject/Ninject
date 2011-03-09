@@ -13,6 +13,7 @@ using System.IO;
 using Ninject.Activation;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
+using Ninject.Planning.Targets;
 #endregion
 
 namespace Ninject.Infrastructure.Introspection
@@ -26,10 +27,19 @@ namespace Ninject.Infrastructure.Introspection
         /// Generates a message saying that modules without names are not supported.
         /// </summary>
         /// <returns>The exception message.</returns>
-		public static string ModulesWithNullOrEmptyNamesAreNotSupported()
-		{
-			return "Modules with null or empty names are not supported";
-		}
+        public static string ModulesWithNullOrEmptyNamesAreNotSupported()
+        {
+            return "Modules with null or empty names are not supported";
+        }
+
+        /// <summary>
+        /// Generates a message saying that modules without names are not supported.
+        /// </summary>
+        /// <returns>The exception message.</returns>
+        public static string TargetDoesNotHaveADefaultValue(ITarget target)
+        {
+            return String.Format("Target '{0}' at site '{1}' does not have a default value.", target.Member, target.Name);
+        }
 
         /// <summary>
         /// Generates a message saying that a module with the same name is already loaded.

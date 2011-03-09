@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 #endregion
@@ -64,6 +65,23 @@ namespace Ninject.Planning.Targets
         public bool IsOptional
         {
             get { return _isOptional; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the target has a default value.
+        /// </summary>
+        public virtual bool HasDefaultValue
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets the default value for the target.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">If the item does not have a default value.</exception>
+        public virtual object DefaultValue
+        {
+            get { throw new InvalidOperationException(ExceptionFormatter.TargetDoesNotHaveADefaultValue(this)); }
         }
 
         /// <summary>

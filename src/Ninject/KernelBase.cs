@@ -335,7 +335,19 @@ namespace Ninject
                 return new[] { this };
             }
 
-            if (!this.CanResolve(request) && !this.HandleMissingBinding(request))
+            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
+            var resolveBindings = Enumerable.Empty<IBinding>();
+
+            if (this.CanResolve(request) || this.HandleMissingBinding(request))
+            {
+                resolveBindings = this.GetBindings(request.Service)
+                                      .Where(this.SatifiesRequest(request))
+                                      .OrderByDescending(b => b, bindingPrecedenceComparer)
+                                      .ToList();
+
+            }
+
+            if (!resolveBindings.Any())
             {
                 if (request.IsOptional)
                 {
@@ -345,24 +357,10 @@ namespace Ninject
                 throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
             }
 
-            IComparer<IBinding> bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            IEnumerable<IBinding> bindings =
-                this.GetBindings(request.Service).Where(this.SatifiesRequest(request)).OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+            var model = resolveBindings.First();
+            resolveBindings = resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
 
-            if (!bindings.Any())
-            {
-                if (request.IsOptional)
-                {
-                    return Enumerable.Empty<object>();
-                }
-
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
-            }
-
-            var model = bindings.First();
-            bindings = bindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
-
-            if (request.IsUnique && bindings.Count() > 1)
+            if (request.IsUnique && resolveBindings.Count() > 1)
             {
                 if (request.IsOptional)
                 {
@@ -372,7 +370,7 @@ namespace Ninject
                 throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
             }
 
-            return bindings.Select(binding => this.CreateContext(request, binding)).Select(context => context.Resolve());
+            return resolveBindings.Select(binding => this.CreateContext(request, binding).Resolve());
         }
 
         /// <summary>

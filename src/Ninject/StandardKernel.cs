@@ -67,6 +67,7 @@ namespace Ninject
             Components.Add<IBindingResolver, StandardBindingResolver>();
             Components.Add<IBindingResolver, OpenGenericBindingResolver>();
 
+            Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
             Components.Add<IMissingBindingResolver, SelfBindingResolver>();
 
 #if !NO_LCG

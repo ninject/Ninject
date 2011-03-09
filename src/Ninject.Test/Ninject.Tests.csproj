@@ -93,6 +93,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\Shield.cs" />
+    <Compile Include="Integration\DefaultParameterTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildA.cs" />

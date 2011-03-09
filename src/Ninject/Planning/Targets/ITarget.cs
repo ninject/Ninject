@@ -9,7 +9,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Activation;
 using Ninject.Planning.Bindings;
@@ -46,6 +45,17 @@ namespace Ninject.Planning.Targets
         /// Gets a value indicating whether the target represents an optional dependency.
         /// </summary>
         bool IsOptional { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the target has a default value.
+        /// </summary>
+        bool HasDefaultValue { get; }
+
+        /// <summary>
+        /// Gets the default value for the target.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">If the item does not have a default value.</exception>
+        object DefaultValue { get; }
 
         /// <summary>
         /// Resolves a value for the target within the specified parent context.
