@@ -15,7 +15,7 @@ namespace Ninject.Tests.Fakes
     {
         public Shield([DefaultParameterValue(ShieldColor.Red)] ShieldColor color)
         {
-            Color = color;
+            this.Color = color;
         }
 
         public ShieldColor Color { get; set; }

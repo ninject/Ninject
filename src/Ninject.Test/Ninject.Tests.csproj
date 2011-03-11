@@ -32,9 +32,10 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -116,6 +117,7 @@
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
+    <Compile Include="Fakes\KiteShield.cs" />
     <Compile Include="Integration\ModuleLoadingTests\ModuleLoadingContext.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule2.cs" />

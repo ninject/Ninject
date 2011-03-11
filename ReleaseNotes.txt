@@ -1,3 +1,6 @@
+Version 2.4.0.0
+- Added: Support for default parameters. If not explicit binding exists for a debendency but there is default value defined it is uesd instead.
+
 Version 2.2.1.0
 ---------------
 - Bug Fix: For classes that have several virtual indexers and at least one of them overridden an ambiguous match exception was thrown when they were injected.

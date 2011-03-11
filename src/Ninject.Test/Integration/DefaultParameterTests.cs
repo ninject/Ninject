@@ -1,7 +1,6 @@
 ﻿#if !SILVERLIGHT
 namespace Ninject.Tests.Integration
 {
-    using System.Runtime.InteropServices;
     using Ninject.Tests.Fakes;
 #if SILVERLIGHT
 #if SILVERLIGHT_MSTEST
@@ -70,10 +69,10 @@ namespace Ninject.Tests.Integration
             using (IKernel kernel = new StandardKernel())
             {
                 kernel.Bind<Shield>().ToSelf();
-                kernel.Bind<Shield2>().ToSelf();
+                kernel.Bind<KiteShield>().ToSelf();
 
                 var shield1 = kernel.Get<Shield>();
-                var shield2 = kernel.Get<Shield2>();
+                var shield2 = kernel.Get<KiteShield>();
 
                 shield1.ShouldNotBeNull();
                 shield1.Color.ShouldBe(ShieldColor.Red);
@@ -81,16 +80,6 @@ namespace Ninject.Tests.Integration
                 shield2.ShouldNotBeNull();
                 shield2.Color.ShouldBe(ShieldColor.Orange);
             }
-        }
-
-        public class Shield2
-        {
-            public Shield2([DefaultParameterValue(ShieldColor.Orange)] ShieldColor color)
-            {
-                Color = color;
-            }
-
-            public ShieldColor Color { get; set; }
         }
     }
 }
