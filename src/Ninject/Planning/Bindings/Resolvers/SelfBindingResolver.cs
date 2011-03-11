@@ -42,7 +42,8 @@ namespace Ninject.Planning.Bindings.Resolvers
                         {
                             new Binding(service)
                             {
-                                ProviderCallback = StandardProvider.GetCreationCallback(service)
+                                ProviderCallback = StandardProvider.GetCreationCallback(service),
+                                IsImplicit = true, // adds the binding to the binding map
                             }
                         };
         }

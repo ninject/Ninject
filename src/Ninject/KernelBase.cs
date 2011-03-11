@@ -34,7 +34,7 @@ namespace Ninject
         /// <summary>
         /// Lock used when adding missing bindings.
         /// </summary>
-        protected readonly object HandleMissingBindingLockObject = new object();        
+        protected readonly object HandleMissingBindingLockObject = new object();
         
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
@@ -207,11 +207,11 @@ namespace Ninject
 
             foreach (INinjectModule module in modules)
             {
-				if (string.IsNullOrEmpty(module.Name))
-				{
-					throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
-				}
-				
+                if (string.IsNullOrEmpty(module.Name))
+                {
+                    throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
+                }
+                
                 INinjectModule existingModule;
 
                 if (this.modules.TryGetValue(module.Name, out existingModule))
@@ -317,7 +317,7 @@ namespace Ninject
         public virtual bool CanResolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
+            return this.GetSatisifiedBindings(request).Any();
         }
 
         /// <summary>
@@ -336,16 +336,12 @@ namespace Ninject
             }
 
             var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            var resolveBindings = Enumerable.Empty<IBinding>();
 
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
-            {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request))
-                                      .OrderByDescending(b => b, bindingPrecedenceComparer)
-                                      .ToList();
+            var resolveBindings = this.GetSatisifiedBindings(request);
 
-            }
+            resolveBindings = (resolveBindings.Any() ? resolveBindings : this.GetMissingBindings(request))
+                              .OrderByDescending(b => b, bindingPrecedenceComparer)
+                              .ToList();
 
             if (!resolveBindings.Any())
             {
@@ -419,7 +415,9 @@ namespace Ninject
                         .Map(binding => this.bindingCache.Add(service, binding));
                 }
 
-                return this.bindingCache[service];
+                // materialize this while we're in the lock otherwise
+                // the cache can change underneath us
+                return this.bindingCache[service].ToList();
             }
         }
 
@@ -474,39 +472,48 @@ namespace Ninject
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
+        [Obsolete]
         protected virtual bool HandleMissingBinding(IRequest request)
+        {
+#pragma warning disable 612,618 // allow call to obsolete for backwards compatibility
+            return this.HandleMissingBinding(request.Service);
+#pragma warning restore 612,618
+        }
+
+        /// <summary>
+        /// Attempts to handle a missing binding for a request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A list of bindings that can satisfy the request or an empty set.</returns>
+        protected virtual IEnumerable<IBinding> GetMissingBindings(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
 
-#pragma warning disable 612,618
-            if (this.HandleMissingBinding(request.Service))
+#pragma warning disable 612,618 // allow call to obsolete for backwards compatibility
+            // old-style handling added bindings directly to the map
+            if (this.HandleMissingBinding(request))
             {
-                return true;
+                return this.GetSatisifiedBindings(request);
             }
 #pragma warning restore 612,618
 
-            var components = this.Components.GetAll<IMissingBindingResolver>();
-            
             // Take the first set of bindings that resolve.
-            var bindings = components
-                .Select(c => c.Resolve(this.bindings, request).ToList())
-                .FirstOrDefault(b => b.Any());
+            var missingBindings =  this.Components.GetAll<IMissingBindingResolver>()
+                                                  .Select(c => c.Resolve(this.bindings, request))
+                                                  .FirstOrDefault(b => b.Any(this.SatifiesRequest(request)))
+                                                  ?? Enumerable.Empty<IBinding>();
 
-            if (bindings == null)
+            // Any bindings listed as Implicit can be added to the bindings list.
+            var implicitBindings = missingBindings.Where(b => b.IsImplicit);
+            if(implicitBindings.Any())
             {
-                return false;
-            }
-
-            lock (this.HandleMissingBindingLockObject)
-            {
-                if (!this.CanResolve(request))
+                lock(HandleMissingBindingLockObject)
                 {
-                    bindings.Map(binding => binding.IsImplicit = true);
-                    this.AddBindings(bindings);
+                    this.AddBindings(implicitBindings);
                 }
             }
 
-            return true;
+            return missingBindings;
         }
 
         /// <summary>
@@ -536,6 +543,12 @@ namespace Ninject
             Ensure.ArgumentNotNull(binding, "binding");
 
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
+        }
+
+        private IEnumerable<IBinding> GetSatisifiedBindings(IRequest request)
+        {
+            return this.GetBindings(request.Service)
+                       .Where(this.SatifiesRequest(request));
         }
 
         private void AddBindings(IEnumerable<IBinding> bindings)
