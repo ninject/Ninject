@@ -33,7 +33,7 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
-        /// Generates a message saying that modules without names are not supported.
+        /// Generates a message saying that the target does not have a default value.
         /// </summary>
         /// <returns>The exception message.</returns>
         public static string TargetDoesNotHaveADefaultValue(ITarget target)
