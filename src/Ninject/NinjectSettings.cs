@@ -133,7 +133,8 @@ namespace Ninject
         /// <returns>The value, or the default value if none was found.</returns>
         public T Get<T>(string key, T defaultValue)
         {
-            return _values.ContainsKey(key) ? (T)_values[key] : defaultValue;
+            T value;
+            return _values.TryGetValue(key, out value) ? value : defaultValue;
         }
 
         /// <summary>
