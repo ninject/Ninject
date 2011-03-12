@@ -113,7 +113,7 @@ namespace Ninject
 
         /// <summary>
         /// Gets or sets a value indicating whether Null is a valid value for injection.
-        /// By defualt this is disabled and whenever a provider returns null an eception is thrown.
+        /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if null is allowed as injected value otherwise false.
