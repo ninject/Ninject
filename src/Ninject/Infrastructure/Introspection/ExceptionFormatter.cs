@@ -135,6 +135,34 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
+        /// Generates a message saying that the binding could not be resolved on the specified target.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The exception message.</returns>
+        public static string CouldNotResolveTarget(IRequest request)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0} on {1}", request.Service.Format(), request.Target.Format());
+                sw.WriteLine("No matching bindings are available, the type is not self-bindable, and no default value is defined.");
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that you have defined a binding for {0}.", request.Service.Format());
+                sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
+                sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
+                sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
+                #if !SILVERLIGHT
+                sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
+                #endif
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
         /// Generates a message saying that the specified context has cyclic dependencies.
         /// </summary>
         /// <param name="context">The context.</param>

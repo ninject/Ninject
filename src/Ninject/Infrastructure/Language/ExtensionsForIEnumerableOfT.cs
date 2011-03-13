@@ -27,5 +27,28 @@ namespace Ninject.Infrastructure.Language
         {
             return series.Select(x => x);
         }
+
+        public static Maybe<T> FirstOrNone<T>(this IEnumerable<Maybe<T>> series, Func<T, bool> predicate)
+        {
+            using (var e = series.Where(x => x.HasValue).Where(x => predicate(x.Value)).GetEnumerator())
+            {
+                return e.MoveNext() ? e.Current : Maybe<T>.None;
+            }
+        }
+
+        public static Maybe<T> FirstOrNone<T>(this IEnumerable<Maybe<T>> series)
+        {
+            return series.FirstOrNone<T>(_ => true);
+        }
+
+        public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> series, Func<T, bool> predicate)
+        {
+            return series.Select(x => new Maybe<T>(x)).FirstOrNone(predicate);
+        }
+
+        public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> series)
+        {
+            return series.Select(x => new Maybe<T>(x)).FirstOrNone();
+        }
     }
 }

@@ -89,8 +89,8 @@
     <Compile Include="Activation\Caching\IPruneable.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
+    <Compile Include="Infrastructure\Maybe.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
-    <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
     <Compile Include="OnePerRequestModule.cs" />
@@ -159,6 +159,10 @@
     <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
+    <Compile Include="Planning\Targets\Strategies\DefaultValueTargetResolutionStrategy.cs" />
+    <Compile Include="Planning\Targets\Strategies\EnumerableTargetResolutionStrategy.cs" />
+    <Compile Include="Planning\Targets\Strategies\ITargetResolutionStrategy.cs" />
+    <Compile Include="Planning\Targets\Strategies\KernelTargetResolutionStrategy.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />

@@ -150,6 +150,8 @@
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <Compile Include="Unit\DefaultValueTargetResolutionStrategyTests.cs" />
+    <Compile Include="Unit\EnumerableTargetResolutionStrategyTests.cs" />
     <None Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -167,6 +169,7 @@
     <Compile Include="Unit\CompiledModuleLoaderPluginTests.cs" />
     <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
     <Compile Include="Unit\ExtensionsForMemberInfoTest.cs" />
+    <Compile Include="Unit\KernelTargetResolutionStrategyTests.cs" />
     <Compile Include="Unit\ModuleLoaderTests.cs" />
     <Compile Include="Unit\NamedAttributeTests.cs" />
     <Compile Include="Fakes\Ninja.cs" />

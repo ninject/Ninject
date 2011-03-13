@@ -34,5 +34,22 @@ namespace Ninject.Infrastructure.Language
             var method = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(elementType);
             return method.Invoke(null, new[] { series }) as IList;
         }
+
+        public static bool Any(this IEnumerable series)
+        {
+            var enumerator = series.GetEnumerator();
+            try
+            {
+                return enumerator.MoveNext();
+            }
+            finally
+            {
+                var d = enumerator as IDisposable;
+                if(d != null)
+                {
+                    d.Dispose();
+                }
+            }
+        }
     }
 }

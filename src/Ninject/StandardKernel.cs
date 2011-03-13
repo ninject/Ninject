@@ -16,6 +16,7 @@ namespace Ninject
     using Ninject.Planning;
     using Ninject.Planning.Bindings.Resolvers;
     using Ninject.Planning.Strategies;
+    using Ninject.Planning.Targets.Strategies;
     using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
@@ -64,10 +65,13 @@ namespace Ninject
             Components.Add<IActivationStrategy, BindingActionStrategy>();
             Components.Add<IActivationStrategy, DisposableStrategy>();
 
+            Components.Add<ITargetResolutionStrategy, EnumerableTargetResolutionStrategy>();
+            Components.Add<ITargetResolutionStrategy, KernelTargetResolutionStrategy>();
+            Components.Add<ITargetResolutionStrategy, DefaultValueTargetResolutionStrategy>();
+
             Components.Add<IBindingResolver, StandardBindingResolver>();
             Components.Add<IBindingResolver, OpenGenericBindingResolver>();
 
-            Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
             Components.Add<IMissingBindingResolver, SelfBindingResolver>();
 
 #if !NO_LCG

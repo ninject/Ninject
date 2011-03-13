@@ -9,7 +9,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
@@ -17,6 +16,7 @@ using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
+using Ninject.Planning.Targets.Strategies;
 #endregion
 
 namespace Ninject.Planning.Targets
@@ -144,57 +144,21 @@ namespace Ninject.Planning.Targets
         {
             Ensure.ArgumentNotNull(parent, "parent");
 
-            if (Type.IsArray)
+            var strategies = parent.Kernel.Components.GetAll<ITargetResolutionStrategy>();
+            var result = strategies.Select(s => s.Resolve(this, parent))
+                                   .FirstOrNone();
+
+            if(result.HasValue)
             {
-                Type service = Type.GetElementType();
-                return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
+                return result.Value;
             }
 
-            if (Type.IsGenericType)
+            if(this.IsOptional)
             {
-                Type gtd = Type.GetGenericTypeDefinition();
-                Type service = Type.GetGenericArguments()[0];
-
-                if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
-                    return GetValues(service, parent).CastSlow(service).ToListSlow(service);
-
-                if (gtd == typeof(IEnumerable<>))
-                    return GetValues(service, parent).CastSlow(service);
+                return null;
             }
-
-            return GetValue(Type, parent);
-        }
-
-        /// <summary>
-        /// Gets the value(s) that should be injected into the target.
-        /// </summary>
-        /// <param name="service">The service that the target is requesting.</param>
-        /// <param name="parent">The parent context in which the target is being injected.</param>
-        /// <returns>A series of values that are available for injection.</returns>
-        protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
-        {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
-            var request = parent.Request.CreateChild(service, parent, this);
-            request.IsOptional = true;
-            return parent.Kernel.Resolve(request);
-        }
-
-        /// <summary>
-        /// Gets the value that should be injected into the target.
-        /// </summary>
-        /// <param name="service">The service that the target is requesting.</param>
-        /// <param name="parent">The parent context in which the target is being injected.</param>
-        /// <returns>The value that is to be injected.</returns>
-        protected virtual object GetValue(Type service, IContext parent)
-        {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
-            var request = parent.Request.CreateChild(service, parent, this);
-            request.IsUnique = true;
-            return parent.Kernel.Resolve(request).SingleOrDefault();
+            
+            throw new ActivationException(ExceptionFormatter.CouldNotResolveTarget(parent.Request.CreateChild(this.Type, parent, this)));
         }
 
         /// <summary>
