@@ -64,7 +64,7 @@ namespace Ninject.Selection.Heuristics
                 if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
                     targetType = targetType.GetGenericArguments()[0];
                 
-                if(context.Kernel.GetBindings(targetType).Count() > 0)
+                if(context.Kernel.GetBindings(targetType).Any())
                     score++;
             }
             
