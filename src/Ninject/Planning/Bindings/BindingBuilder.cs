@@ -306,18 +306,6 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-        #if !NO_WEB
-        /// <summary>
-        /// Indicates that instances activated via the binding should be re-used within the same
-        /// HTTP request.
-        /// </summary>
-        public IBindingNamedWithOrOnSyntax<T> InRequestScope()
-        {
-            Binding.ScopeCallback = StandardScopeCallbacks.Request;
-            return this;
-        }
-        #endif
-
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object
         /// returned by the provided callback remains alive (that is, has not been garbage collected).

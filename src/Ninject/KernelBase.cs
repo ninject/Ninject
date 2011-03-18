@@ -88,14 +88,12 @@ namespace Ninject
 
             this.AddComponents();
 
-#if !NO_WEB
-            OnePerRequestModule.StartManaging(this);
-#endif
+            GlobalKernelRegistry.StartManaging(this);
 
 #if !NO_ASSEMBLY_SCANNING
             if (this.Settings.LoadExtensions)
             {
-                this.Load(new[] { this.Settings.ExtensionSearchPattern });
+                this.Load(this.Settings.ExtensionSearchPatterns);
             }
 #endif
 
@@ -119,9 +117,7 @@ namespace Ninject
         {
             if (disposing && !IsDisposed)
             {
-#if !NO_WEB
-                OnePerRequestModule.StopManaging(this);
-#endif
+                GlobalKernelRegistry.StopManaging(this);
 
                 if (this.Components != null)
                 {

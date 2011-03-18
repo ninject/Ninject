@@ -9,9 +9,6 @@
 #endregion
 #region Using Directives
 using System;
-#if !NO_WEB
-using System.Web;
-#endif
 using Ninject.Activation;
 #endregion
 
@@ -36,12 +33,5 @@ namespace Ninject.Infrastructure
         /// Gets the callback for thread scope.
         /// </summary>
         public static readonly Func<IContext, object> Thread = ctx => System.Threading.Thread.CurrentThread;
-
-        #if !NO_WEB
-        /// <summary>
-        /// Gets the callback for request scope.
-        /// </summary>
-        public static readonly Func<IContext, object> Request = ctx => HttpContext.Current;
-        #endif
     }
 }

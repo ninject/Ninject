@@ -88,12 +88,12 @@
     <Compile Include="Activation\Caching\ICachePruner.cs" />
     <Compile Include="Activation\Caching\IPruneable.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
+    <Compile Include="GlobalKernelRegistry.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
-    <Compile Include="OnePerRequestModule.cs" />
     <Compile Include="Activation\InstanceReference.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
     <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs">

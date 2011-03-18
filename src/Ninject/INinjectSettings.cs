@@ -35,9 +35,9 @@ namespace Ninject
         bool LoadExtensions { get; }
 
         /// <summary>
-        /// Gets the path that should be searched for extensions.
+        /// Gets the paths that should be searched for extensions.
         /// </summary>
-        string ExtensionSearchPattern { get; }
+        string[] ExtensionSearchPatterns { get; }
         #endif //!NO_ASSEMBLY_SCANNING
 
         #if !NO_LCG

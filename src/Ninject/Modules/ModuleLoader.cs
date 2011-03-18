@@ -13,10 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#if !NO_WEB
-using System.Text.RegularExpressions;
-using System.Web;
-#endif
 using Ninject.Components;
 using Ninject.Infrastructure;
 #endregion

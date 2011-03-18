@@ -140,7 +140,6 @@
     <Compile Include="Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs" />
     <Compile Include="Integration\NamedPropertyInjectionTests.cs" />
     <Compile Include="Integration\PropertyInjectionTests.cs" />
-    <Compile Include="Integration\RequestScopeTests.cs" />
     <Compile Include="Integration\ExternalInjectionTests.cs" />
     <Compile Include="Fakes\NotifiesWhenDisposed.cs" />
     <Compile Include="ExtensionsForIEnumerable.cs" />
