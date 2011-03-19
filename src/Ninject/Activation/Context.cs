@@ -124,7 +124,7 @@ namespace Ninject.Activation
                 this.cachedScope = new WeakReference(scope);
             }
             
-            return this.cachedScope.IsAlive ? this.cachedScope.Target : null;
+            return this.cachedScope.Target;
         }
 
         /// <summary>
