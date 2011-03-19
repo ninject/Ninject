@@ -145,6 +145,7 @@ namespace Ninject.Planning.Bindings
         {
             Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
             Binding.Target = BindingTarget.Constant;
+            Binding.ScopeCallback = StandardScopeCallbacks.Singleton;
 
             return this;
         }
