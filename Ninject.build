@@ -5,9 +5,9 @@
 	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
 	<property name="product.duration" value="2007-2011" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
-	<property name="product.platforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5"  overwrite="false"/>
-	<property name="product.buildserverPlatforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,mono-2.0-no-web,netcf-3.5"  overwrite="false"/>
-	<property name="dependencies" value=""  overwrite="false"/>
+	<property name="product.platforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,mono-2.0-no-web,netcf-3.5"	overwrite="false"/>
+	<property name="product.buildserverPlatforms" value="net-3.5,net-3.5-no-web,net-4.0,net-4.0-no-web,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,mono-2.0-no-web,netcf-3.5"	overwrite="false"/>
+	<property name="dependencies" value=""	overwrite="false"/>
 
 	<include buildfile="Ninject.include" />
 	<target name="all" depends="core csl test silverlight-test"/>
@@ -61,9 +61,21 @@
 				<include name="xunit.should.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}">
-			<fileset basedir="${path.tools.moq}/net-3.5">
+		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.0'))}">
+			<fileset basedir="${path.tools.moq}/net35">
 				<include name="Moq.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.moq}/net40">
+				<include name="Moq.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}/TestModules">
+			<fileset basedir="${path.src}/Ninject.Test/TestModules">
+				<include name="Ninject.Tests.TestModule.dll"/>
+				<include name="test.foo"/>
+				<include name="test.bar"/>
 			</fileset>
 		</copy>
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
@@ -86,8 +98,8 @@
 			</nowarn>
 		</csc>
 	</target>
-	
-	<target name="compile-silverlight-tests" depends="core" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight')}">
+
+	<target name="compile-silverlight4-tests" depends="core" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight-4.0')}">
 		<mkdir dir="${current.path.test}"/>
 		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">
@@ -95,10 +107,9 @@
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}">
-			<fileset basedir="${path.tools.moq}/silverlight">
+			<fileset basedir="${path.tools.moq}/silverlight4">
 				<include name="Moq.Silverlight.dll"/>
-				<include name="Castle.DynamicProxy-Silverlight.dll"/>
-				<include name="Castle.Core-Silverlight.dll"/>
+				<include name="Castle.Core.dll"/>
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}">
@@ -107,7 +118,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}/TestModules">
-			<fileset basedir="${path.src}/Ninject.Tests/TestModules">
+			<fileset basedir="${path.src}/Ninject.Test/TestModules">
 				<include name="Ninject.Tests.TestModule.dll"/>
 			</fileset>
 		</copy>
@@ -128,8 +139,7 @@
 				<include name="System.Windows.Browser.dll"/>
 				<include name="System.Net.dll"/>
 				<include name="Moq.Silverlight.dll"/>
-				<include name="Castle.DynamicProxy-Silverlight.dll"/>
-				<include name="Castle.Core-Silverlight.dll"/>
+				<include name="Castle.Core.dll"/>
 				<include name="UnitDrivenLight.dll"/>
 				<include name="${product.assembly}"/>
 			</references>
@@ -145,5 +155,61 @@
 				<include name="AppManifest.xaml"/>
 			</fileset>
 		</zip>
-	</target>	
+	</target>
+
+
+	<target name="compile-silverlight3-tests" depends="core" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight-3.0') or string::contains(build.platform, 'silverlight-2.0')}">
+		<mkdir dir="${current.path.test}"/>
+		<copy todir="${current.path.test}" flatten="true">
+			<fileset basedir="${current.path.build}">
+				<include name="**/*.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.moq}/silverlight3">
+				<include name="Moq.Silverlight.dll"/>
+				<include name="Castle.Core-Silverlight.dll"/>
+				<include name="Castle.DynamicProxy-Silverlight.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.unitdriven}">
+				<include name="UnitDrivenLight.dll"/>
+			</fileset>
+		</copy>
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+		 output="${current.path.test}/${product.assembly.silverlighttestdll}">
+			<sources basedir="${path.src}">
+				<include name="${product.name}.Test/*.cs"/>
+				<include name="${product.name}.Test/Fakes/**/*.cs"/>
+				<include name="${product.name}.Test/Integration/**/*.cs"/>
+				<include name="${product.name}.SilverlightTests/*.cs"/>
+				<exclude name="${product.name}.Test/MSTestAttributes/*.cs"/>
+			</sources>
+			<references basedir="${current.path.test}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="System.Windows.dll"/>
+				<include name="System.Windows.Browser.dll"/>
+				<include name="System.Net.dll"/>
+				<include name="Moq.Silverlight.dll"/>
+				<include name="Castle.Core-Silverlight.dll"/>
+				<include name="Castle.DynamicProxy-Silverlight.dll"/>
+				<include name="UnitDrivenLight.dll"/>
+				<include name="${product.assembly}"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+		<zip zipfile="${current.path.test}/${product.assembly.silverlighttest}">
+			<fileset basedir="${current.path.test}">
+				<include name="*.dll" />
+			</fileset>
+			<fileset basedir="${path.src}/${product.name}.SilverlightTests/Silverlight3">
+				<include name="AppManifest.xaml"/>
+			</fileset>
+		</zip>
+	</target>
 </project>
