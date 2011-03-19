@@ -90,24 +90,25 @@ namespace Ninject.Infrastructure
             var referenceEqualWeakReference = obj as ReferenceEqualWeakReference;
             if (referenceEqualWeakReference != null)
             {
-                if (!referenceEqualWeakReference.IsAlive)
+                obj = referenceEqualWeakReference.Target;
+
+                if (obj == null)
                 {
                     return false;
                 }
 
-                obj = referenceEqualWeakReference.Target;
             }
             else
             {
                 var weakReference = obj as WeakReference;
                 if (weakReference != null)
                 {
-                    if (!weakReference.IsAlive)
+                    obj = weakReference.Target;
+
+                    if (obj == null)
                     {
                         return false;
                     }
-
-                    obj = weakReference.Target;
                 }
             }
 
@@ -122,9 +123,10 @@ namespace Ninject.Infrastructure
         /// </returns>
         public override int GetHashCode()
         {
-            if (this.IsAlive)
+            var target = this.Target;
+            if (target != null)
             {
-                this.cashedHashCode = this.Target.GetHashCode();
+                this.cashedHashCode = target.GetHashCode();
             }
 
             return this.cashedHashCode;
