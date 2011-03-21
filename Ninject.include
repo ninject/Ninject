@@ -277,8 +277,6 @@
 		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline='-x"${product.assembly.silverlighttest}" -o=UnitDriven --teamcity' failonerror="true"/>
 	</target>
 
-	<target name="compile-silverlight-tests" depends="compile-silverlight3-tests compile-silverlight4-tests" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight')}"/>
-
 	<target name="UnzipDependencies">
 		<foreach item="String" in="${dependencies}" delim="," property="dependency">
 			<delete>
