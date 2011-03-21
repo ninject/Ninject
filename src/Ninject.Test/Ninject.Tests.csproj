@@ -95,6 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fakes\Shield.cs" />
+    <Compile Include="Integration\ConstantTests.cs" />
+    <Compile Include="Fakes\ResolveCountingProvider.cs" />
     <Compile Include="Integration\DefaultParameterTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
