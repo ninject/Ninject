@@ -80,7 +80,7 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Toolkit\Apr10\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll</HintPath>
     </Reference>
     <Reference Include="Moq.Silverlight">
-      <HintPath>..\..\tools\moq\silverlight\Moq.Silverlight.dll</HintPath>
+      <HintPath>..\..\tools\moq\silverlight4\Moq.Silverlight.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\..\build\silverlight-4.0\release\Ninject.dll</HintPath>

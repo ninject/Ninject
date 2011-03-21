@@ -37,7 +37,7 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
 
     public class WhenLoadModulesIsCalled : ModuleLoaderContext
     {
-        [Fact(Skip = "Moq throwing exception, need to investigate")]
+        [Fact]
         public void PassesMatchingFilesToAppropriatePlugin()
         {
             moduleLoader.LoadModules(new[] { "TestModules/*" });
