@@ -1,5 +1,6 @@
 Version 2.4.0.0
 - Added: Support for default parameters. If not explicit binding exists for a debendency but there is default value defined it is uesd instead.
+- Changed: ToConstant bindings are in singleton scope by default
 
 Version 2.2.1.0
 ---------------
