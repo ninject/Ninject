@@ -97,6 +97,9 @@ namespace Ninject
             }
 #endif
 
+            this.Bind<IKernel>().ToConstant(this).InTransientScope();
+            this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
+
             this.Load(modules);
         }
 
@@ -325,11 +328,6 @@ namespace Ninject
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-
-            if (request.Service == typeof(IKernel))
-            {
-                return new[] { this };
-            }
 
             var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             var resolveBindings = Enumerable.Empty<IBinding>();

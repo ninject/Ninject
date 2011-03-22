@@ -1,5 +1,6 @@
 ﻿namespace Ninject.Tests.Integration.SpecialResolutionTests
 {
+    using Ninject.Syntax;
 #if SILVERLIGHT
 #if SILVERLIGHT_MSTEST
     using MsTest.Should;
@@ -50,6 +51,21 @@
     }
 
     [TestClass]
+    public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
+    {
+        [Fact]
+        public void InstanceOfKernelIsInjected()
+        {
+            kernel.Bind<RequestsResolutionRoot>().ToSelf();
+            var instance = kernel.Get<RequestsResolutionRoot>();
+
+            instance.ShouldNotBeNull();
+            instance.ResolutionRoot.ShouldNotBeNull();
+            instance.ResolutionRoot.ShouldBeSameAs(kernel);
+        }
+    }
+
+    [TestClass]
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
         [Fact]
@@ -67,6 +83,16 @@
         public RequestsKernel(IKernel kernel)
         {
             Kernel = kernel;
+        }
+    }
+
+    public class RequestsResolutionRoot
+    {
+        public IResolutionRoot ResolutionRoot { get; set; }
+
+        public RequestsResolutionRoot(IResolutionRoot resolutionRoot)
+        {
+            this.ResolutionRoot = resolutionRoot;
         }
     }
 

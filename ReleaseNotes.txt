@@ -3,6 +3,7 @@ Version 2.4.0.0
 - Added: Support for default parameters. If not explicit binding exists for a debendency but there is default value defined it is uesd instead.
 - Changed: ToConstant bindings are in singleton scope by default
 - Removed: No web builds. All builds are have no reference to web anymore
+- Added default binding for IResolutionRoot that returns the kernel.
 
 Version 2.2.1.0
 ---------------
