@@ -2,7 +2,6 @@
 namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -16,7 +15,8 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     {
         protected readonly CompiledModuleLoaderPlugin loaderPlugin;
         protected readonly Mock<IKernel> kernelMock;
-        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestModule.dll");
+        protected readonly string moduleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestModule.dll");
+        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestAssembly.dll");
 
         public CompiledModuleLoaderPluginContext()
         {
@@ -27,15 +27,26 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 
     public class WhenLoadModulesIsCalled : CompiledModuleLoaderPluginContext
     {
-        [Fact(Skip = "Need to bring TestModule assembly into git")]
+        [Fact]
         public void CallsLoadMethodOnKernelWithAssemblies()
         {
-            Assembly expected = Assembly.Load("Ninject.Tests.TestModule");
-            expected.ShouldNotBeNull();
+            var expected = Assembly.LoadFrom(this.moduleFilename).GetName().Name;
 
-            loaderPlugin.LoadModules(new[] { assemblyFilename });
+            IEnumerable<Assembly> actual = null;
+            kernelMock.Setup(x => x.Load(It.IsAny<IEnumerable<Assembly>>()))
+                      .Callback<IEnumerable<Assembly>>(m => actual = m);
 
-            kernelMock.Verify(x => x.Load(It.Is<IEnumerable<Assembly>>(p => p.Contains(expected))));
+            loaderPlugin.LoadModules(new[] { this.moduleFilename });
+            actual.ShouldNotBeNull();
+            actual.Count().ShouldBe(1);
+            actual.Where(a => a.GetName().Name == expected).ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public void DoesNotLoadAssembliesWithoutModules()
+        {
+            loaderPlugin.LoadModules(new[] { this.assemblyFilename });
+            kernelMock.Verify(k => k.Load(It.Is<IEnumerable<Assembly>>(p => p.Any())), Times.Never());
         }
     }
 }

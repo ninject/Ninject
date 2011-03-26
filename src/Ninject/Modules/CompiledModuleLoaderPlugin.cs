@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
+
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
@@ -62,28 +62,43 @@ namespace Ninject.Modules
 
         private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
         {
-            AppDomain temporaryDomain = CreateTemporaryAppDomain();
-
-            foreach (string file in filenames)
+            var temporaryDomain = CreateTemporaryAppDomain();
+            var moduleCheckerType = typeof(ModuleChecker);
+            try
             {
-                Assembly assembly;
+                var checker = (ModuleChecker)temporaryDomain.CreateInstanceAndUnwrap(
+                    moduleCheckerType.Assembly.FullName, moduleCheckerType.FullName ?? String.Empty);
 
+                foreach (var name in filenames.Select(file => checker.CheckModule(file)).Where(name => name != null))
+                {
+                    yield return name;
+                }
+            }
+            finally
+            {
+                AppDomain.Unload(temporaryDomain);
+            }
+        }
+
+        private class ModuleChecker : MarshalByRefObject
+        {
+            public AssemblyName CheckModule(string filename)
+            {
                 try
                 {
-                    var name = new AssemblyName { CodeBase = file };
-                    assembly = temporaryDomain.Load(name);
+                    var assembly = Assembly.LoadFrom(filename);
+                    if (assembly.HasNinjectModules())
+                    {
+                        return assembly.GetName(false);
+                    }
                 }
                 catch (BadImageFormatException)
                 {
                     // Ignore native assemblies
-                    continue;
                 }
 
-                if (assembly.HasNinjectModules())
-                    yield return assembly.GetName();
+                return null;
             }
-
-            AppDomain.Unload(temporaryDomain);
         }
 
         private static AppDomain CreateTemporaryAppDomain()

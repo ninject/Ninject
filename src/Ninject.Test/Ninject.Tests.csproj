@@ -191,11 +191,14 @@
       <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
       <Name>Ninject</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestModules\Ninject.Tests.TestModule.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\TestAssembly\TestAssembly.csproj">
+      <Project>{C9F6CFE7-44B2-4D55-9307-33C34C045468}</Project>
+      <Name>TestAssembly</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestModules\TestModules.csproj">
+      <Project>{90F46524-0716-4180-8A5F-1CD1EB5686F6}</Project>
+      <Name>TestModules</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
