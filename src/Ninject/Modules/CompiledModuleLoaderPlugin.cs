@@ -62,17 +62,14 @@ namespace Ninject.Modules
 
         private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
         {
-            var temporaryDomain = CreateTemporaryAppDomain();
             var moduleCheckerType = typeof(ModuleChecker);
+            var temporaryDomain = CreateTemporaryAppDomain();
             try
             {
                 var checker = (ModuleChecker)temporaryDomain.CreateInstanceAndUnwrap(
                     moduleCheckerType.Assembly.FullName, moduleCheckerType.FullName ?? String.Empty);
 
-                foreach (var name in filenames.Select(file => checker.CheckModule(file)).Where(name => name != null))
-                {
-                    yield return name;
-                }
+                return checker.CheckModules(filenames);
             }
             finally
             {
@@ -82,22 +79,28 @@ namespace Ninject.Modules
 
         private class ModuleChecker : MarshalByRefObject
         {
-            public AssemblyName CheckModule(string filename)
+            public IEnumerable<AssemblyName> CheckModules(IEnumerable<string> filenames)
             {
-                try
+                var result = new List<AssemblyName>();
+                foreach(var filename in filenames)
                 {
-                    var assembly = Assembly.LoadFrom(filename);
+                    Assembly assembly;
+                    try
+                    {
+                        assembly = Assembly.LoadFrom(filename);
+                    }
+                    catch (BadImageFormatException)
+                    {
+                        // Ignore native assemblies
+                        continue;
+                    }
                     if (assembly.HasNinjectModules())
                     {
-                        return assembly.GetName(false);
+                        result.Add(assembly.GetName(false));
                     }
                 }
-                catch (BadImageFormatException)
-                {
-                    // Ignore native assemblies
-                }
 
-                return null;
+                return result;
             }
         }
 
