@@ -69,7 +69,7 @@ namespace Ninject.Modules
                 var checker = (ModuleChecker)temporaryDomain.CreateInstanceAndUnwrap(
                     moduleCheckerType.Assembly.FullName, moduleCheckerType.FullName ?? String.Empty);
 
-                return checker.CheckModules(filenames);
+                return checker.CheckModules(filenames.ToArray());
             }
             finally
             {
