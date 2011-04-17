@@ -1,8 +1,7 @@
-﻿using System;
+﻿#if !NO_MOQ
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
-using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
 using Xunit.Should;
@@ -43,3 +42,4 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
         }
     }
 }
+#endif

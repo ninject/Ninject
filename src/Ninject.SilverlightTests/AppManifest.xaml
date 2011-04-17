@@ -1,9 +1,13 @@
-﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="Ninject.SilverlightTests" EntryPointType="Ninject.SilverlightTests.App" RuntimeVersion="4.0.50401.0">
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="Ninject.SilverlightTests" EntryPointType="Ninject.App" RuntimeVersion="4.0.50826.0">
   <Deployment.Parts>
     <AssemblyPart x:Name="Ninject.SilverlightTests" Source="Ninject.SilverlightTests.dll" />
-    <AssemblyPart x:Name="Ninject" Source="Ninject.dll" />
-    <AssemblyPart x:Name="UnitDrivenLight" Source="UnitDrivenLight.dll" />
     <AssemblyPart x:Name="Moq.Silverlight" Source="Moq.Silverlight.dll" />
+    <AssemblyPart x:Name="Ninject" Source="Ninject.dll" />
+    <AssemblyPart x:Name="xunit-silverlight" Source="xunit-silverlight.dll" />
+    <AssemblyPart x:Name="xunit.extensions-silverlight" Source="xunit.extensions-silverlight.dll" />
+    <AssemblyPart x:Name="xunit.runner.silverlight" Source="xunit.runner.silverlight.dll" />
     <AssemblyPart x:Name="Castle.Core" Source="Castle.Core.dll" />
+    <AssemblyPart x:Name="System.Xml.Linq" Source="System.Xml.Linq.dll" />
+    <AssemblyPart x:Name="Microsoft.CSharp" Source="Microsoft.CSharp.dll" />
   </Deployment.Parts>
 </Deployment>

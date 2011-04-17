@@ -4,23 +4,8 @@
     using System.Linq;
 
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class StandardKernelContext
     {
@@ -28,17 +13,10 @@
 
         public StandardKernelContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
-        {
             this.kernel = new StandardKernel();
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -78,7 +56,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledForSelfBoundService : StandardKernelContext
     {
         [Fact]
@@ -106,7 +83,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledForUnboundService : StandardKernelContext
     {
         [Fact]
@@ -158,7 +134,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
         [Fact]
@@ -173,7 +148,6 @@
         }
     }
 
-    [TestClass]
     public class WhenTryGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -199,7 +173,6 @@
         }
     }
 
-    [TestClass]
     public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
     {
         [Fact]
@@ -258,7 +231,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -278,6 +250,8 @@
         [Fact]
         public void DoesNotActivateItemsUntilTheEnumeratorRunsOverThem()
         {
+            InitializableA.Count = 0;
+            InitializableB.Count = 0;
             kernel.Bind<IInitializable>().To<InitializableA>();
             kernel.Bind<IInitializable>().To<InitializableB>();
 
@@ -294,7 +268,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetAllIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
         [Fact]
@@ -312,7 +285,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
     {
         [Fact]
@@ -335,7 +307,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
     {
         [Fact]
@@ -358,7 +329,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalledWithConstraints : StandardKernelContext
     {
         [Fact]
@@ -386,7 +356,6 @@
         }
     }
 
-    [TestClass]
     public class WhenUnbindIsCalled : StandardKernelContext
     {
         [Fact]
@@ -404,7 +373,6 @@
         }
     }
 
-    [TestClass]
     public class WhenRebindIsCalled : StandardKernelContext
     {
         [Fact]
@@ -447,7 +415,7 @@
     public class GenericService2<T> : IGeneric<T> { }
     public interface IGenericWithConstraints<T> where T : class { }
     public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
-    
+
     public class NullProvider : Ninject.Activation.Provider<Sword>
     {
         protected override Sword CreateInstance (Activation.IContext context)

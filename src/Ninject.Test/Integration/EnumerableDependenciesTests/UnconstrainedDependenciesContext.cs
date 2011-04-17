@@ -1,15 +1,7 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-#else
-    using UnitDriven.Should;
-#endif
-#else
     using Xunit.Should;
-#endif
 
     public class UnconstrainedDependenciesContext : EnumerableDependenciesContext
     {

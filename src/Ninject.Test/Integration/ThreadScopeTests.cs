@@ -4,23 +4,8 @@
     using System.Threading;
     using Ninject.Activation.Caching;
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class ThreadScopeContext
     {
@@ -31,7 +16,6 @@
             this.SetUp();
         }
 
-        [TestInitialize]
         public void SetUp()
         {
             var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
@@ -39,7 +23,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceIsBoundWithThreadScope : ThreadScopeContext
     {
         [Fact]

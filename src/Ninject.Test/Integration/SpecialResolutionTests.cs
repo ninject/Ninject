@@ -1,23 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.SpecialResolutionTests
 {
     using Ninject.Syntax;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class SpecialResolutionContext
     {
@@ -25,17 +10,10 @@
 
         public SpecialResolutionContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
-        {
             this.kernel = new StandardKernel();
         }
     }
 
-    [TestClass]
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
         [Fact]
@@ -50,7 +28,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
     {
         [Fact]
@@ -65,7 +42,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
         [Fact]

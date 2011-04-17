@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if !NO_MOQ
 using Moq;
 using Ninject.Planning.Bindings;
 using Xunit;
@@ -35,3 +35,4 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
         }
     }
 }
+#endif

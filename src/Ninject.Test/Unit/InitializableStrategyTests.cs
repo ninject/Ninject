@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if !NO_MOQ
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
@@ -51,3 +51,4 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
         }
     }
 }
+#endif

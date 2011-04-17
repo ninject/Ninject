@@ -1,4 +1,5 @@
-﻿#if !NO_ASSEMBLY_SCANNING
+﻿#if !NO_MOQ
+#if !NO_ASSEMBLY_SCANNING
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,3 +52,4 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
     }
 }
 #endif //!NO_ASSEMBLY_SCANNING
+#endif

@@ -3,23 +3,8 @@
     using System.Linq;
     using Ninject.Activation;
     using Ninject.Parameters;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class CircularDependenciesContext
     {
@@ -27,22 +12,14 @@
 
         public CircularDependenciesContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public virtual void SetUp()
-        {
             this.kernel = new StandardKernel();
         }
     }
 
-    [TestClass]
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
-        public override void SetUp()
+        public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors()
         {
-            base.SetUp();
             kernel.Bind<TwoWayConstructorFoo>().ToSelf().InSingletonScope();
             kernel.Bind<TwoWayConstructorBar>().ToSelf().InSingletonScope();
         }
@@ -61,12 +38,10 @@
         }
     }
 
-    [TestClass]
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
-        public override void SetUp()
+        public WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties()
         {
-            base.SetUp();
             kernel.Bind<TwoWayPropertyFoo>().ToSelf().InSingletonScope();
             kernel.Bind<TwoWayPropertyBar>().ToSelf().InSingletonScope();
         }
@@ -89,12 +64,10 @@
         }
     }
 
-    [TestClass]
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
-        public override void SetUp()
+        public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
         {
-            base.SetUp();
             kernel.Bind<ThreeWayConstructorFoo>().ToSelf().InSingletonScope();
             kernel.Bind<ThreeWayConstructorBar>().ToSelf().InSingletonScope();
             kernel.Bind<ThreeWayConstructorBaz>().ToSelf().InSingletonScope();
@@ -114,12 +87,10 @@
         }
     }
 
-    [TestClass]
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
-        public override void SetUp()
+        public WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties()
         {
-            base.SetUp();
             kernel.Bind<ThreeWayPropertyFoo>().ToSelf().InSingletonScope();
             kernel.Bind<ThreeWayPropertyBar>().ToSelf().InSingletonScope();
             kernel.Bind<ThreeWayPropertyBaz>().ToSelf().InSingletonScope();

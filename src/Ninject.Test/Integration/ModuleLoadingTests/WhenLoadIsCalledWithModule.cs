@@ -1,29 +1,13 @@
-﻿#if !WINDOWS_PHONE
+﻿#if !NO_MOQ
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
     using System.Linq;
     using Moq;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-        using MsTest.Should;
-        using Microsoft.VisualStudio.TestTools.UnitTesting;
-        using Assert = AssertWithThrows;
-        using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-        using UnitDriven;
-        using UnitDriven.Should;
-        using Assert = AssertWithThrows;
-        using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
-    [TestClass]
     public class WhenLoadIsCalledWithModule : ModuleLoadingContext
     {
         [Fact]

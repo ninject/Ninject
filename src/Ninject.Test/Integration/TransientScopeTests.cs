@@ -4,23 +4,8 @@
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class TransientScopeContext
     {
@@ -28,17 +13,10 @@
 
         public TransientScopeContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
-        {
             this.kernel = new StandardKernel();            
         }
     }
 
-    [TestClass]
     public class WhenServiceIsBoundToInterfaceInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -69,7 +47,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -105,7 +82,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -136,7 +112,6 @@
         }
     }
 
-    [TestClass]
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
     {
         [Fact]

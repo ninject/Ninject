@@ -5,7 +5,8 @@
 
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    
+    using Xunit.Runner.Silverlight;
+
     public partial class App : Application
     {
 
@@ -72,7 +73,7 @@
                 return;
             phoneApplicationInitialized = true;
 
-            this.RootVisual = new UnitDriven.TestEngine(Assembly.GetExecutingAssembly());
+            this.RootVisual = new TestEngine(Assembly.GetExecutingAssembly());
         }
 
         #endregion

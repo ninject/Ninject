@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if !NO_MOQ
 using System.Reflection;
 using Moq;
 using Ninject.Activation;
@@ -103,3 +103,4 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         public string Bar { get; set; }
     }
 }
+#endif

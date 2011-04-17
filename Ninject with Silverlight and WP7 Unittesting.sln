@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Ninjec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WindowsPhone7Tests", "src\Ninject.WindowsPhone7Tests\Ninject.WindowsPhone7Tests.csproj", "{F7314647-1C1F-4960-A693-AA773C54C13D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModules\TestModules.csproj", "{90F46524-0716-4180-8A5F-1CD1EB5686F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutomatedRelease|Any CPU = AutomatedRelease|Any CPU
@@ -53,8 +57,8 @@ Global
 		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
-		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug .NET 4.0|Any CPU
-		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.Build.0 = Debug .NET 4.0|Any CPU
+		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,6 +75,22 @@ Global
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

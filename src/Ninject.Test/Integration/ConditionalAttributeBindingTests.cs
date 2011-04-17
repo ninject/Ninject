@@ -2,21 +2,9 @@
 {
     using System;
     using Ninject.Infrastructure.Disposal;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
+    using Attribute = System.Attribute;
 
     public class WeakAttribute : Attribute
     {
@@ -98,18 +86,11 @@
         #endregion
     }
 
-    [TestClass]
     public class ConditionalAttributeBindingTests : DisposableObject
     {
         protected IKernel kernel;
 
         public ConditionalAttributeBindingTests()
-        {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IVarialbeWeapon>().To<Hammer>();

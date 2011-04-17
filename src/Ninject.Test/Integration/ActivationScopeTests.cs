@@ -3,22 +3,9 @@
     using System;
 
     using Ninject.Activation.Blocks;
-    using Ninject.Tests.Fakes; 
-#if SILVERLIGHT
-    #if SILVERLIGHT_MSTEST
-        using MsTest.Should;
-        using Microsoft.VisualStudio.TestTools.UnitTesting;
-        using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-    #else
-        using UnitDriven;
-        using UnitDriven.Should;
-        using Fact = UnitDriven.TestMethodAttribute;
-    #endif
-#else
-    using Ninject.Tests.MSTestAttributes;
+    using Ninject.Tests.Fakes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class ActivationBlockContext
     {
@@ -27,18 +14,11 @@
 
         public ActivationBlockContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
-        {
             this.kernel = new StandardKernel();
             this.block = new ActivationBlock(kernel);
         }
     }
 
-    [TestClass]
     public class WhenBlockIsCreated : ActivationBlockContext
     {
         [Fact]
@@ -77,7 +57,6 @@
         }
     }
 
-    [TestClass]
     public class WhenBlockIsDisposed : ActivationBlockContext
     {
         [Fact]

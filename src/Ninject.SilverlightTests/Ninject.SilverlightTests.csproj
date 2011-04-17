@@ -24,7 +24,7 @@
     <TestPageFileName>TestPage.html</TestPageFileName>
     <CreateTestPage>true</CreateTestPage>
     <ValidateXaml>true</ValidateXaml>
-    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <EnableOutOfBrowser>true</EnableOutOfBrowser>
     <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
     <UsePlatformExtensions>false</UsePlatformExtensions>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
@@ -73,12 +73,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Silverlight.Testing">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Toolkit\Apr10\Testing\Microsoft.Silverlight.Testing.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Silverlight\v4.0\Toolkit\Apr10\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll</HintPath>
-    </Reference>
     <Reference Include="Moq.Silverlight">
       <HintPath>..\..\tools\moq\silverlight4\Moq.Silverlight.dll</HintPath>
     </Reference>
@@ -92,8 +86,14 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
-    <Reference Include="UnitDrivenLight">
-      <HintPath>..\..\tools\unitdriven\UnitDrivenLight.dll</HintPath>
+    <Reference Include="xunit-silverlight">
+      <HintPath>..\..\tools\xunit.sl\Silverlight-4.0\xunit-silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions-silverlight">
+      <HintPath>..\..\tools\xunit.sl\Silverlight-4.0\xunit.extensions-silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.silverlight">
+      <HintPath>..\..\tools\xunit.sl\Silverlight-4.0\xunit.runner.silverlight.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -259,9 +259,6 @@
     <Compile Include="..\Ninject.Test\Integration\PropertyInjectionTests.cs">
       <Link>Integration\PropertyInjectionTests.cs</Link>
     </Compile>
-    <Compile Include="..\Ninject.Test\Integration\RequestScopeTests.cs">
-      <Link>Integration\RequestScopeTests.cs</Link>
-    </Compile>
     <Compile Include="..\Ninject.Test\Integration\SingletonScopeTests.cs">
       <Link>Integration\SingletonScopeTests.cs</Link>
     </Compile>
@@ -277,13 +274,82 @@
     <Compile Include="..\Ninject.Test\Integration\TransientScopeTests.cs">
       <Link>Integration\TransientScopeTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationBlockTests.cs">
+      <Link>Unit\ActivationBlockTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheStrategyTest.cs">
+      <Link>Unit\ActivationCacheStrategyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheTests.cs">
+      <Link>Unit\ActivationCacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\BindingActionStrategyTests.cs">
+      <Link>Unit\BindingActionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CachePruningTests.cs">
+      <Link>Unit\CachePruningTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CacheTests.cs">
+      <Link>Unit\CacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CallbackProviderTests.cs">
+      <Link>Unit\CallbackProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CompiledModuleLoaderPluginTests.cs">
+      <Link>Unit\CompiledModuleLoaderPluginTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ComponentContainerTests.cs">
+      <Link>Unit\ComponentContainerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ConstantProviderTests.cs">
+      <Link>Unit\ConstantProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DisposableStrategyTests.cs">
+      <Link>Unit\DisposableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DynamicMethodInjectorFactoryTests.cs">
+      <Link>Unit\DynamicMethodInjectorFactoryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ExtensionsForMemberInfoTest.cs">
+      <Link>Unit\ExtensionsForMemberInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\InitializableStrategyTests.cs">
+      <Link>Unit\InitializableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionDirectiveBaseTests.cs">
+      <Link>Unit\MethodInjectionDirectiveBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionStrategyTests.cs">
+      <Link>Unit\MethodInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ModuleLoaderTests.cs">
+      <Link>Unit\ModuleLoaderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\NamedAttributeTests.cs">
+      <Link>Unit\NamedAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PipelineTests.cs">
+      <Link>Unit\PipelineTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionDirectiveTests.cs">
+      <Link>Unit\PropertyInjectionDirectiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionSelectorTests.cs">
+      <Link>Unit\PropertyInjectionSelectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionStrategyTests.cs">
+      <Link>Unit\PropertyInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
+      <Link>Unit\StartableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\XUnitShould.cs">
+      <Link>XUnitShould.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AssertWithThrows.cs" />
-    <Compile Include="MsTestShouldExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitDrivenShouldExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -293,6 +359,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <Import Condition="$(SilverlightVersion)=='v3.0'" Project="$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SilverlightToolkit\Tools\v3.0)Microsoft.Silverlight.Toolkit.Build.targets" />

@@ -1,4 +1,5 @@
-﻿#if !NO_ASSEMBLY_SCANNING
+﻿#if !NO_MOQ
+#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 {
     using System;
@@ -51,3 +52,4 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     }
 }
 #endif //!NO_ASSEMBLY_SCANNING
+#endif

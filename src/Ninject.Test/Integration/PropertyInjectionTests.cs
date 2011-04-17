@@ -3,23 +3,9 @@ namespace Ninject.Tests.Integration
     using Ninject.Infrastructure.Disposal;
     using Ninject.Parameters;
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
-    [TestClass]
     public class WithPropertyValueTests : PropertyInjectionTests
     {
         [Fact]
@@ -55,7 +41,6 @@ namespace Ninject.Tests.Integration
 #endif //!SILVERLIGHT
     }
 
-    [TestClass]
     public class WithParameterTests : PropertyInjectionTests
     {
         [Fact]
@@ -164,12 +149,6 @@ namespace Ninject.Tests.Integration
         protected IKernel kernel;
 
         public PropertyInjectionTests()
-        {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IWeapon>().To<Shuriken>();

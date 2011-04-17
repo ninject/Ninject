@@ -83,10 +83,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\xunit.net\xunit.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.should, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\tools\xunit.net\xunit.should.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fakes\Shield.cs" />
@@ -122,7 +118,6 @@
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs" />
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs" />
     <Compile Include="Integration\OptionalTest.cs" />
-    <Compile Include="MSTestAttributes\TestClassAttribute.cs" />
     <Compile Include="Fakes\Dagger.cs" />
     <Compile Include="Fakes\FootSoldier.cs" />
     <Compile Include="Fakes\Barracks.cs" />
@@ -146,13 +141,13 @@
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <Compile Include="XUnitShould.cs" />
     <None Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestModules\test.foo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="MSTestAttributes\TestInitialize.cs" />
     <Compile Include="Unit\ActivationCacheStrategyTest.cs" />
     <Compile Include="Unit\ActivationCacheTests.cs" />
     <Compile Include="Unit\CachePruningTests.cs" />

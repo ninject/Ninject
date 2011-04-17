@@ -1,27 +1,12 @@
+#if !NO_MOQ
 namespace Ninject.Tests.Unit
 {
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Activation.Strategies;
-
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
-    using Xunit.Should;
-#endif
 
-    [TestClass]
     public class ActivationCacheStrategyTest
     {
         private ActivationCacheStrategy testee;
@@ -31,12 +16,6 @@ namespace Ninject.Tests.Unit
         private INinjectSettings settings;
 
         public ActivationCacheStrategyTest()
-        {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
         {
             this.activationCacheMock = new Mock<IActivationCache>();
             this.settings = new NinjectSettings();
@@ -90,3 +69,4 @@ namespace Ninject.Tests.Unit
         }
     }
 }
+#endif

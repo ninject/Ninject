@@ -3,25 +3,9 @@ namespace Ninject.Tests.Integration
     using System.Linq;
     using Ninject.Tests.Fakes;
     using Ninject.Tests.Integration.StandardKernelTests;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
-    [TestClass]
     public class ConditionalBindingTests: StandardKernelContext
     {
         [Fact]

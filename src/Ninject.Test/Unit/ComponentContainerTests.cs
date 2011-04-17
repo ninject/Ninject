@@ -1,4 +1,5 @@
-﻿namespace Ninject.Tests.Unit.ComponentContainerTests
+﻿#if !NO_MOQ
+namespace Ninject.Tests.Unit.ComponentContainerTests
 {
     using System;
     using System.Collections.Generic;
@@ -6,23 +7,8 @@
     using Moq;
     using Ninject.Components;
     using Ninject.Infrastructure.Disposal;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = AssertWithThrows;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Assert = AssertWithThrows;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class ComponentContainerContext
     {
@@ -34,7 +20,6 @@
             this.SetUp();
         }
 
-        [TestInitialize]
         public void SetUp()
         {
             this.container = new ComponentContainer();
@@ -44,7 +29,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetIsCalled : ComponentContainerContext
     {
         [Fact]
@@ -91,7 +75,6 @@
         }
     }
 
-    [TestClass]
     public class WhenGetAllIsCalledOnComponentContainer : ComponentContainerContext
     {
         [Fact]
@@ -133,7 +116,6 @@
         }
     }
 
-    [TestClass]
     public class WhenRemoveAllIsCalled : ComponentContainerContext
     {
         [Fact]
@@ -165,7 +147,7 @@
         }
     }
 
-    internal class AsksForEnumerable : NinjectComponent, IAsksForEnumerable
+    public class AsksForEnumerable : NinjectComponent, IAsksForEnumerable
     {
         public ITestService SecondService { get; set; }
 
@@ -175,13 +157,14 @@
         }
     }
 
-    internal interface IAsksForEnumerable : INinjectComponent
+    public interface IAsksForEnumerable : INinjectComponent
     {
         ITestService SecondService { get; set; }
     }
 
-    internal class TestServiceA : NinjectComponent, ITestService { }
-    internal class TestServiceB : NinjectComponent, ITestService { }
+    public class TestServiceA : NinjectComponent, ITestService { }
+    public class TestServiceB : NinjectComponent, ITestService { }
 
-    internal interface ITestService : INinjectComponent, IDisposableObject { }
+    public interface ITestService : INinjectComponent, IDisposableObject { }
 }
+#endif

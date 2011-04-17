@@ -1,6 +1,12 @@
 namespace Ninject.Tests.Fakes
 {
+    using System;
+
+#if !SILVERLIGHT
     internal class Ninja : IWarrior
+#else
+    public class Ninja : IWarrior
+#endif
     {
         public Ninja(IWeapon weapon)
         {

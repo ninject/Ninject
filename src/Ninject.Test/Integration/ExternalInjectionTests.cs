@@ -1,21 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.ExternalInjectionTests
 {
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class ExternalInjectionContext
     {
@@ -23,17 +10,10 @@
 
         public ExternalInjectionContext()
         {
-            this.SetUp();
-        }
-
-        [TestInitialize]
-        public void SetUp()
-        {
             this.kernel = new StandardKernel();
         }
     }
 
-    [TestClass]
     public class WhenInjectIsCalled : ExternalInjectionContext
     {
         [Fact]

@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if !NO_MOQ
 using System.Linq;
 using System.Reflection;
 using Moq;
@@ -109,3 +109,4 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
         public void Bar(IWeapon weapon) { }
     }
 }
+#endif

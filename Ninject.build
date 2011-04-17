@@ -94,7 +94,6 @@
 		<copy todir="${current.path.test}">
 			<fileset basedir="${path.tools.xunit}">
 				<include name="xunit.dll"/>
-				<include name="xunit.should.dll"/>
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.0'))}">
@@ -125,7 +124,6 @@
 				<include name="Moq.dll"/>
 				<include name="xunit.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="xunit.should.dll"/>
 				<include name="${product.assembly}"/>
 			</references>
 			<nowarn>
@@ -155,8 +153,8 @@
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}">
-			<fileset basedir="${path.tools.unitdriven}">
-				<include name="UnitDrivenLight.dll"/>
+			<fileset basedir="${path.tools.xunit.sl}${build.platform}">
+				<include name="*.dll"/>
 			</fileset>
 		</copy>
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
@@ -164,6 +162,7 @@
 			<sources basedir="${path.src}">
 				<include name="${product.name}.Test/*.cs"/>
 				<include name="${product.name}.Test/Fakes/**/*.cs"/>
+				<include name="${product.name}.Test/Unit/**/*.cs"/>
 				<include name="${product.name}.Test/Integration/**/*.cs"/>
 				<include name="${product.name}.SilverlightTests/*.cs"/>
 				<exclude name="${product.name}.Test/MSTestAttributes/*.cs"/>
@@ -175,11 +174,14 @@
 				<include name="System.Windows.dll"/>
 				<include name="System.Windows.Browser.dll"/>
 				<include name="System.Net.dll"/>
-				<include name="Moq.Silverlight.dll"/>
-				<include name="Castle.Core.dll" if="${string::contains(build.platform, 'silverlight-4.0')}"/>
+				<include name="Microsoft.Phone.dll" if="${string::contains(build.platform, 'wp7')}"/>
+				<include name="Microsoft.Phone.Interop.dll" if="${string::contains(build.platform, 'wp7')}"/>
+				<include name="Moq.Silverlight.dll" unless="${string::contains(build.platform, 'wp7')}"/>
+				<include name="Castle.Core.dll" if="${build.platform == 'silverlight-4.0'}"/>
 				<include name="Castle.Core-Silverlight.dll" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
 				<include name="Castle.DynamicProxy-Silverlight.dll" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
-				<include name="UnitDrivenLight.dll"/>
+				<include name="xunit.runner.silverlight.dll"/>
+				<include name="xunit-silverlight.dll"/>
 				<include name="${product.assembly}"/>
 			</references>
 			<nowarn>
@@ -189,6 +191,7 @@
 		<zip zipfile="${current.path.test}/${product.assembly.silverlighttest}">
 			<fileset basedir="${current.path.test}">
 				<include name="*.dll" />
+				<exclude name="CommonServiceLocator.NinjectAdapter.dll" />
 			</fileset>
 			<fileset basedir="${path.src}/${product.name}.SilverlightTests">
 				<include name="AppManifest.xaml" if="${string::contains(build.platform, 'silverlight-4.0')}"/>

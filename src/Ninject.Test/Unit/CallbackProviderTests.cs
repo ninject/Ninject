@@ -1,25 +1,12 @@
-﻿namespace Ninject.Tests.Unit.CallbackProviderTests
+﻿#if !NO_MOQ
+namespace Ninject.Tests.Unit.CallbackProviderTests
 {
-    using System;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Tests.Fakes;
-#if SILVERLIGHT
-#if SILVERLIGHT_MSTEST
-    using MsTest.Should;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Fact = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute;
-#else
-    using UnitDriven;
-    using UnitDriven.Should;
-    using Fact = UnitDriven.TestMethodAttribute;
-#endif
-#else
-    using Ninject.Tests.MSTestAttributes;
     using Xunit;
     using Xunit.Should;
-#endif
 
     public class CallbackProviderContext
     {
@@ -31,14 +18,12 @@
             this.SetUp();
         }
 
-        [TestInitialize]
         public void SetUp()
         {
             this.contextMock = new Mock<IContext>();
         }
     }
 
-    [TestClass]
     public class WhenCreateIsCalled : CallbackProviderContext
     {
         [Fact]
@@ -53,3 +38,4 @@
         }
     }
 }
+#endif
