@@ -88,15 +88,6 @@ IF NOT EXIST .\ninject.extensions.messagebroker GOTO ENDMB
 	cd ..
 :ENDMB
 
-IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
-	cd ninject.extensions.wcf
-	del lib\Ninject\*.zip
-	copy ..\Ninject\dist\*.zip lib\Ninject
-	call UnzipDependencies.cmd
-	call build-release.cmd
-	cd ..
-:ENDWCF
-
 IF NOT EXIST .\ninject.extensions.wf GOTO ENDWF
 	cd ninject.extensions.wf
 	del lib\Ninject\*.zip
@@ -133,10 +124,32 @@ IF NOT EXIST .\ninject.mockingkernel GOTO ENDMK
 	cd ..
 :ENDMK
 
+IF NOT EXIST .\ninject.web.common GOTO ENDWEBCOMMON
+	cd ninject.web.common
+	del lib\Ninject\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	call UnzipDependencies.cmd
+	call build-release.cmd
+	cd ..
+:ENDWEBCOMMON
+
+IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
+	cd ninject.extensions.wcf
+	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
+	call UnzipDependencies.cmd
+	call build-release.cmd
+	cd ..
+:ENDWCF
+
 IF NOT EXIST .\ninject.web GOTO ENDWEB
 	cd ninject.web
 	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
 	call UnzipDependencies.cmd
 	call build-release.cmd
 	cd ..
@@ -146,7 +159,9 @@ IF NOT EXIST .\ninject.web GOTO ENDWEB
 IF NOT EXIST .\ninject.web.mvc GOTO ENDMVC
 	cd ninject.web.mvc
 	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
 	cd mvc1
 	call UnzipDependencies.cmd
 	call build-release.cmd
