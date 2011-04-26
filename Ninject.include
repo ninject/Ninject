@@ -27,6 +27,7 @@
 	<property name="product.assembly.silverlighttest" value="${product.name}.SilverlightTests.xap" overwrite="false"/>
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
+	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
@@ -132,7 +133,7 @@
 				<attribute type="AssemblyVersionAttribute" value="${build.assemblyversion}"/>
 				<attribute type="AssemblyFileVersionAttribute" value="${build.version}" unless="${build.platform == 'netcf-3.5'}"/>
 				<attribute type="ComVisibleAttribute" value="false"/>
-				<attribute type="CLSCompliantAttribute" value="true"/>
+				<attribute type="CLSCompliantAttribute" value="true" if="${product.clsCompliant}"/>
 			</attributes>
 		</asminfo>
 	</target>
@@ -198,21 +199,22 @@
 	<target name="config-platform-net-3.5">
 		<property name="nant.settings.currentframework" value="net-3.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
-		<property name="nuget.platform" value=".NetFramework 3.5"/>
+		<property name="nuget.platform" value="net35-Full"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
 	<target name="config-platform-net-3.5-no-web">
 		<property name="nant.settings.currentframework" value="net-3.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,NO_WEB"/>
-		<property name="nuget.add" value="false"/>
+		<property name="nuget.platform" value="net35-Client"/>
+		<property name="nuget.add" value="true"/>
 	</target>
 
 	<target name="config-platform-net-4.0">
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40"/>
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.platform" value=".NetFramework 4.0"/>
+		<property name="nuget.platform" value="net40-Full"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
@@ -220,34 +222,36 @@
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_WEB"/>
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.add" value="false"/>
+		<property name="nuget.platform" value="net40-Client"/>
+		<property name="nuget.add" value="true"/>
 	</target>
 	
 	<target name="config-platform-silverlight-2.0">
 		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.platform" value="Silverlight 2.0"/>
+		<property name="nuget.platform" value="sl2"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-3.0">
 		<property name="nant.settings.currentframework" value="silverlight-3.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.platform" value="Silverlight 3.0"/>
+		<property name="nuget.platform" value="sl3"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-4.0">
 		<property name="nant.settings.currentframework" value="silverlight-4.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.platform" value="Silverlight 4.0"/>
+		<property name="nuget.platform" value="sl4"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 	
 	<target name="config-platform-silverlight-4.0-wp7">
 		<property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS, NO_MOQ"/>
-		<property name="nuget.add" value="false"/>
+		<property name="nuget.platform" value="sl3-wp"/>
+		<property name="nuget.add" value="true"/>
 	</target>
 
 	<target name="config-platform-netcf-3.5">
@@ -322,7 +326,7 @@
 			<call target="package-bin"/>
 		</foreach>
 		<call target="package-source"/>
-		<call target="nuget"/>
+		<call target="nuget-all"/>
 	</target>
 	
 	<target name="package-bin" depends="create-assembly-info all">
@@ -374,19 +378,32 @@
 		<delete file="${temp.revision.file}" failonerror="false"/>
 	</target>
 	
-	<target name="nuget" description="Copies the nuget output to the top bin directory" >
+	<target name="nuget">
 		<property name="nuget.sourcedir" value="${path.base}/nuget" />
 		<property name="nuget.basedir" value="${path.base}/build/nuget" />
-		<delete dir="nuget.basedir"/>
+		<property name="nuget.platforms" value="${product.platforms}" />
+		<property name="nuget.name" value="${product.name}" />
+		<property name="nuget.releaseDirectory" value="${path.build}\${build.platform}\release" dynamic="true"/>
+		<property name="nuget.dependencies" value="${dependencies}" />
+		<property name="nuget.additionalFiles" value="-" />
+
+		<call target="nuget-run"/>
+	</target>
+
+	<target name="nuget-run" depends="get-git-revision" description="Copies the nuget output to the top bin directory">
+		<delete dir="${nuget.basedir}"/>
+		<property name="nuget.platform" value=""/>
 		
-		<foreach item="String" in="${product.platforms}" delim="," property="platform">
+		<call target="config-build-${build.config}"/>
+		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
 			<call target="config-platform-${build.platform}"/>
 			<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
-				<fileset basedir="${path.build}\${build.platform}\release">
-					<include name="${product.name}.dll" />
-					<include name="${product.name}.xml" />
-					<include name="${product.name}.pdb" />
+				<fileset basedir="${nuget.releaseDirectory}">
+					<include name="${nuget.name}.dll" />
+					<include name="${nuget.name}.xml" />
+					<include name="${nuget.name}.pdb" />
+					<include name="${nuget.additionalFiles}" unless="${nuget.additionalFiles == '-'}"/>
 			    </fileset>
 			</copy>		
 		</foreach>
@@ -403,7 +420,7 @@
 			</fileset>
 		</copy>		
 		
-		<xmlpoke file="${nuget.basedir}/${product.name}.nuspec" xpath="//package/nu:metadata/nu:version" value="${build.version}">
+		<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" xpath="//package/nu:metadata/nu:version" value="${build.version}">
 			<namespaces>
 				<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 				<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
@@ -411,9 +428,29 @@
 			</namespaces>
 		</xmlpoke>
 		
-		<foreach item="String" in="${dependencies}" delim="," property="dependency">
-			<property name="asm" value="${path.lib}\${dependency}\net-4.0\${dependency}.dll"/>
-			<xmlpoke file="${nuget.basedir}/${product.name}.nuspec" xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}">
+		<foreach item="String" in="${nuget.dependencies}" delim="," property="dependency">
+			<property name="asm1" value="${path.lib}\${dependency}\net-4.0\${dependency}.dll"/>
+			<property name="asm2" value="${nuget.releaseDirectory}\${dependency}.dll"/>
+			<property name="asm3" value="${nuget.releaseDirectory}\lib\${dependency}.dll"/>
+			<property name="asm" value="${asm3}" if="${file::exists(asm3)}"/>
+			<property name="asm" value="${asm2}" if="${file::exists(asm2)}"/>
+			<property name="asm" value="${asm1}" if="${file::exists(asm1)}"/>
+			
+			<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
+			<property name="maxVersion" value=""/>
+			<property name="i" value="0"/>
+			<foreach item="String" in="${version}" delim="." property="versionPart">
+				<property name="i" value="${int::parse(i) + 1}"/>
+				<property name="maxVersion" value="${maxVersion + '.'}" unless="${i == '1'}"/>
+				<property name="maxVersion" value="${maxVersion + versionPart}" if="${i == '1'}"/>
+				<property name="maxVersion" value="${maxVersion + int::to-string(int::parse(versionPart) + 1)}" if="${i == '2'}"/>
+				<property name="maxVersion" value="${maxVersion + '0'}" if="${i == '3'}"/>
+				<property name="maxVersion" value="${maxVersion + '0'}" if="${i == '4'}"/>
+			</foreach>
+			
+			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
+			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
+					 value="${'[' + version + ',' + maxVersion + ')'}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 					<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
@@ -422,11 +459,11 @@
 			</xmlpoke>
 		</foreach>
 
-		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${product.name}.nuspec" />
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec" />
 		<move todir="${path.dist}\NuGet\">
 			<fileset basedir="${nuget.basedir}">
 				<include name="*.nupkg" />
 			</fileset>
 		</move>
-	 </target>	
+	 </target>		
 </project>
