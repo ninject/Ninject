@@ -116,9 +116,9 @@
 	<target name="InitializeBuildSystem" depends="DetectOperatingSystemArchitecture"/>
 	
 	<target name="create-assembly-info" depends="get-git-revision">
-		<echo message="##teamcity[buildVersionNumber '${build.version}']" />
-		<echo message="##assembly[assemblyVersionNumber '${build.assemblyversion}']" />
-		<echo message="##assembly[buildPlatform '${build.platform}']" />
+		<echo message="##teamcity[buildNumber '${build.version}']" />
+		<echo message="Assembly Version: '${build.assemblyversion}'" />
+		<echo message="Build Platform: '${build.platform}'" />
 		
 		<asminfo output="${path.build.assemblyinfo}" language="CSharp">
 			<imports>
