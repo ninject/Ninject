@@ -23,6 +23,9 @@ echo "============================================================"
 echo "BUILD FAILED"
 echo "============================================================"
 
+IF NOT "%NoPause%"=="true" goto END 
+exit /B 1
+
 :End
 if "%NoPause%"=="true" goto ENDBATCHFILE 
 pause
