@@ -1,6 +1,9 @@
 SET NoPause=true
+mkdir ..\dist-all
+del /S /Q ..\dist-all\*
 call build-release.cmd
 IF ERRORLEVEL 1 GOTO FAILED
+xcopy /S dist\* ..\dist-all
 cd ..
 
 IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDCTXPRESERVATION
@@ -9,7 +12,8 @@ IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDCTXPRESERVATION
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCTXPRESERVATION
 
@@ -21,7 +25,8 @@ IF NOT EXIST .\ninject.extensions.namedscope GOTO ENDNSC
 	copy ..\ninject.extensions.contextpreservation\dist\*.zip lib\ninject.extensions.contextpreservation
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDNSC
 
@@ -31,7 +36,8 @@ IF NOT EXIST .\ninject.extensions.childkernel GOTO ENDCK
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCK
 
@@ -45,7 +51,8 @@ IF NOT EXIST .\ninject.extensions.bbveventbroker GOTO ENDBBVEB
 	copy ..\ninject.extensions.namedscope\dist\*.zip lib\ninject.extensions.namedscope
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDBBVEB
 
@@ -59,7 +66,8 @@ IF NOT EXIST .\ninject.extensions.dependencycreation GOTO ENDDC
 	copy ..\ninject.extensions.namedscope\dist\*.zip lib\ninject.extensions.namedscope
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDDC
 
@@ -69,7 +77,8 @@ IF NOT EXIST .\ninject.extensions.conventions GOTO ENDCONV
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCONV
 
@@ -79,7 +88,8 @@ IF NOT EXIST ninject.extensions.interception GOTO ENDIC
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDIC
 
@@ -89,7 +99,8 @@ IF NOT EXIST .\ninject.extensions.logging GOTO ENDLOG
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDLOG
 
@@ -99,7 +110,8 @@ IF NOT EXIST .\ninject.extensions.messagebroker GOTO ENDMB
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMB
 
@@ -109,7 +121,8 @@ IF NOT EXIST .\ninject.extensions.wf GOTO ENDWF
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWF
 
@@ -119,7 +132,8 @@ IF NOT EXIST .\ninject.extensions.weakeventmessagebroker GOTO ENDWEAKEB
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWEAKEB
 
@@ -129,7 +143,8 @@ IF NOT EXIST .\ninject.extensions.xml GOTO ENDXML
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDXML
 
@@ -139,7 +154,8 @@ IF NOT EXIST .\ninject.mockingkernel GOTO ENDMK
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMK
 
@@ -149,7 +165,8 @@ IF NOT EXIST .\ninject.web.common GOTO ENDWEBCOMMON
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWEBCOMMON
 
@@ -161,7 +178,8 @@ IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
 	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWCF
 
@@ -173,7 +191,8 @@ IF NOT EXIST .\ninject.web GOTO ENDWEB
 	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWEB
 
@@ -187,15 +206,18 @@ IF NOT EXIST .\ninject.web.mvc GOTO ENDMVC
 	cd mvc1
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd mvc2
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd mvc3
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd ..
 :ENDMVC
@@ -206,7 +228,8 @@ IF NOT EXIST .\ninject.web.mvc.fluentvalidation GOTO ENDMVCFV
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
 	call build-release.cmd
-    IF ERRORLEVEL 1 GOTO FAILED
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMVCFV
 
