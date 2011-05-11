@@ -335,9 +335,7 @@ namespace Ninject
             if (this.CanResolve(request) || this.HandleMissingBinding(request))
             {
                 resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request))
-                                      .OrderByDescending(b => b, bindingPrecedenceComparer)
-                                      .ToList();
+                                      .Where(this.SatifiesRequest(request));
 
             }
 
@@ -351,20 +349,31 @@ namespace Ninject
                 throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
             }
 
-            var model = resolveBindings.First();
-            resolveBindings = resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
-
-            if (request.IsUnique && resolveBindings.Count() > 1)
+            if (request.IsUnique)
             {
-                if (request.IsOptional)
-                {
-                    return Enumerable.Empty<object>();
-                }
+                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
+                resolveBindings =
+                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
 
-                throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+                if (resolveBindings.Count() > 1)
+                {
+                    if (request.IsOptional)
+                    {
+                        return Enumerable.Empty<object>();
+                    }
+
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+                }
             }
 
-            return resolveBindings.Select(binding => this.CreateContext(request, binding).Resolve());
+            if(resolveBindings.Any(binding => !binding.IsImplicit))
+            {
+                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
+            }
+
+            return resolveBindings
+                .Select(binding => this.CreateContext(request, binding).Resolve());
         }
 
         /// <summary>

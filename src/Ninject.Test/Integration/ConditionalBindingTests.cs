@@ -90,5 +90,47 @@ namespace Ninject.Tests.Integration
             weapon = kernel.Get<Sword>();
             weapon.ShouldBeInstanceOf<Sword>();
         }
+
+        [Fact]
+        public void GivenADefaultAndAConditionalBinding_AllBindingsWillResolve()
+        {
+            var shortSword = new ShortSword();
+            var shuriken = new Shuriken();
+
+            kernel.Bind<IWeapon>().ToConstant(shortSword);
+            kernel.Bind<IWeapon>().ToConstant(shuriken).When(_ => true);
+            var result = kernel.GetAll<IWeapon>();
+            result.ShouldContain(shortSword);
+            result.ShouldContain(shuriken);
+        }
+
+        [Fact]
+        public void GivenAMixtureOfBindings_OnlyNonImplicitBindingsWillResolve()
+        {
+            var shortSword = new ShortSword();
+            var sword = new Sword();
+            var shuriken = new Shuriken();
+
+            kernel.Bind<IWeapon>().ToConstant(shortSword);
+            kernel.Bind<IWeapon>().ToConstant(sword);
+            kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
+            var result = kernel.GetAll<IWeapon>();
+            result.ShouldContain(shortSword);
+            result.ShouldContain(sword);
+            result.ShouldNotContain(shuriken);
+        }
+
+        [Fact]
+        public void GivenOnlyImplicitBindings_AllBindingsWillResolve()
+        {
+            var shortSword = new ShortSword();
+            var shuriken = new Shuriken();
+
+            kernel.Bind<IWeapon>().ToConstant(shortSword).Binding.IsImplicit = true;
+            kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
+            var result = kernel.GetAll<IWeapon>();
+            result.ShouldContain(shortSword);
+            result.ShouldContain(shuriken);
+        }
     }
 }
