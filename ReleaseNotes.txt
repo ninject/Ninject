@@ -4,6 +4,7 @@ Version 2.4.0.0
 - Changed: ToConstant bindings are in singleton scope by default
 - Removed: No web builds. All builds are have no reference to web anymore
 - Added default binding for IResolutionRoot that returns the kernel.
+- Bugfix, Breaking change: Get all will now return all bindings and not skip unconditional ones anymore in case there is a conditional one. This is the same behavior as the version 2.0.1 and bevore had. 
 
 Version 2.2.1.0
 ---------------
