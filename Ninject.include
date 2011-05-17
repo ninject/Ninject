@@ -1,29 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="NinjectIncludes">
 
+	<property name="teamcity" value="false" overwrite="false"/>
 	<property name="path.base" value="${project::get-base-directory()}"/>
-	<property name="path.build" value="${path.base}/build"/>
-	<property name="path.lib" value="${path.base}/lib"/>
-	<property name="path.dist" value="${path.base}/dist"/>
-	<property name="path.docs" value="${path.base}/docs"/>
-	<property name="path.src" value="${path.base}/src"/>
+	<property name="path.build" value="${path.base}/build" dynamic="true"/>
+	<property name="path.lib" value="${path.base}/lib" dynamic="true"/>
+	<property name="path.dist" value="${path.base}/dist" dynamic="true"/>
+	<property name="path.docs" value="${path.base}/docs" dynamic="true"/>
+	<property name="path.src" value="${path.base}/src" dynamic="true"/>
 	<property name="path.build.assemblyinfo" value="${path.src}/${build.asminfo}" dynamic="true"/>
-	<property name="path.tools" value="${path.base}/tools"/>
-	<property name="path.tools.xunit.sl" value="${path.tools}/xunit.sl/"/>
-	<property name="path.tools.xunit" value="${path.tools}/xunit.net"/>
+	<property name="path.tools" value="${path.base}/tools" dynamic="true"/>
+	<property name="path.tools.xunit.sl" value="${path.tools}/xunit.sl/" dynamic="true"/>
+	<property name="path.tools.xunit" value="${path.tools}/xunit.net" dynamic="true"/>
 	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
-	<property name="path.tools.moq" value="${path.tools}/moq"/>
-	<property name="path.tools.ncover" value="${path.tools}/ncover"/>
-	<property name="path.tools.git" value="${path.tools}/git"/>
-	<property name="path.tools.statlight" value="${path.tools}/statlight/statlight.exe"/>
-	<property name="path.tools.nuget" value="${path.tools}/nuget/nuget.exe"/>
+	<property name="path.tools.moq" value="${path.tools}/moq" dynamic="true"/>
+	<property name="path.tools.ncover" value="${path.tools}/ncover" dynamic="true"/>
+	<property name="path.tools.git" value="${path.tools}/git" dynamic="true"/>
+	<property name="path.tools.statlight" value="${path.tools}/statlight/statlight.exe" dynamic="true"/>
+	<property name="path.tools.nuget" value="${path.tools}/nuget/nuget.exe" dynamic="true"/>
 
 	<property name="product.keyfile" value="Ninject.snk" overwrite="false"/>
 	<property name="product.docfile" value="${product.name}.xml" overwrite="false"/>
 	<property name="product.assembly" value="${product.name}.dll" overwrite="false"/>
 	<property name="product.assembly.test" value="${product.name}.Test.dll" overwrite="false"/>
-	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
-	<property name="product.assembly.testassembly" value="${product.name}.Tests.TestAssembly.dll" overwrite="false"/>
 	<property name="product.assembly.silverlighttest" value="${product.name}.SilverlightTests.xap" overwrite="false"/>
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
@@ -152,7 +151,6 @@
 		<property name="current.path.build" value="${path.build}/${build.platform}/${build.config}"/>
 		<property name="current.path.build.lib" value="${path.build}/${build.platform}/${build.config}/lib"/>
 		<property name="current.path.test" value="${path.build}/${build.platform}/tests" />
-		<property name="current.path.testmodules" value="${path.build}/${build.platform}/tests/TestModules" />
 
 		<mkdir dir="${current.path.build}" if="${not(directory::exists(current.path.build))}"/>
 		<mkdir dir="${current.path.build.lib}" if="${not(directory::exists(current.path.build.lib))}"/>
@@ -282,7 +280,9 @@
 	</target>
 
 	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests or skip.silverlightTests or string::contains(build.platform, 'wp7')}" if="${string::contains(build.platform, 'silverlight')}">
-		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline='-x"${product.assembly.silverlighttest}" --teamcity' failonerror="true"/>
+	    <property name="cmdLine" value='-x"${product.assembly.silverlighttest}" --teamcity' if="${teamcity}"/>
+		<property name="cmdLine" value='-x"${product.assembly.silverlighttest}"' unless="${teamcity}"/>
+		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine}" failonerror="true"/>
 	</target>
 
 	<target name="UnzipDependencies">
@@ -382,17 +382,21 @@
 	<target name="nuget">
 		<property name="nuget.sourcedir" value="${path.base}/nuget" />
 		<property name="nuget.basedir" value="${path.base}/build/nuget" />
+		<property name="nuget.symbol.basedir" value="${path.base}/build/nuget_symbol" />
 		<property name="nuget.platforms" value="${product.platforms}" />
 		<property name="nuget.name" value="${product.name}" />
+		<property name="nuget.project" value="${path.src}/${product.name}/${product.name}.csproj" />
 		<property name="nuget.releaseDirectory" value="${path.build}\${build.platform}\release" dynamic="true"/>
 		<property name="nuget.dependencies" value="${dependencies}" />
 		<property name="nuget.additionalFiles" value="-" />
+		<property name="nuget.packageName" value="${nuget.name}${product.packagePostfix}.${build.version}" />	
 
 		<call target="nuget-run"/>
 	</target>
 
 	<target name="nuget-run" depends="get-git-revision" description="Copies the nuget output to the top bin directory">
 		<delete dir="${nuget.basedir}"/>
+		<delete dir="${nuget.symbol.basedir}"/>
 		<property name="nuget.platform" value=""/>
 		
 		<call target="config-build-${build.config}"/>
@@ -420,7 +424,8 @@
 				<include name="License.txt" />
 			</fileset>
 		</copy>		
-		
+		 
+		<echo message="Build Version: ${build.version}"/>
 		<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" xpath="//package/nu:metadata/nu:version" value="${build.version}">
 			<namespaces>
 				<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
@@ -466,5 +471,20 @@
 				<include name="*.nupkg" />
 			</fileset>
 		</move>
-	 </target>		
+		
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
+		<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.nupkg" todir="${nuget.symbol.basedir}/target"/>
+		<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
+		<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
+			<fileset basedir="${nuget.symbol.basedir}/source">
+				<include name="[Content_Types].xml" />
+				<include name="src/**" />
+			</fileset>
+		</copy>
+		<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.symbols.nupkg">
+			<fileset basedir="${nuget.symbol.basedir}/target">
+				<include name="**"/>
+			</fileset>
+		</zip>
+	</target>
 </project>

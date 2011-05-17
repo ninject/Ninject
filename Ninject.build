@@ -8,6 +8,10 @@
 	<property name="product.platforms" value="net-3.5,net-4.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,netcf-3.5"  overwrite="false"/>
 	<property name="product.buildserverPlatforms" value="net-3.5,net-4.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,netcf-3.5"  overwrite="false"/>
 	<property name="dependencies" value=""	overwrite="false"/>
+	
+	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
+	<property name="product.assembly.testassembly" value="${product.name}.Tests.TestAssembly.dll" overwrite="false"/>
+    <property name="current.path.testmodules" value="${path.build}/${build.platform}/tests/TestModules" dynamic="true"/>
 
 	<include buildfile="Ninject.include" />
 	<target name="all" depends="core csl test silverlight-test"/>
