@@ -101,6 +101,11 @@
 				<include name="xunit.dll"/>
 			</fileset>
 		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.fluentassertions}/${build.platform}">
+				<include name="FluentAssertions.dll"/>
+			</fileset>
+		</copy>
 		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.0'))}">
 			<fileset basedir="${path.tools.moq}/net35">
 				<include name="Moq.dll"/>
@@ -128,6 +133,7 @@
 				<include name="System.Core.dll"/>
 				<include name="Moq.dll"/>
 				<include name="xunit.dll"/>
+				<include name="FluentAssertions.dll"/>
 				<include name="System.Web.dll"/>
 				<include name="${product.assembly}"/>
 			</references>
@@ -142,6 +148,11 @@
 		<copy todir="${current.path.test}" flatten="true">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.fluentassertions}/${build.platform}">
+				<include name="FluentAssertions.Silverlight.dll"/>
 			</fileset>
 		</copy>
 		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight-4.0')}">
@@ -185,6 +196,7 @@
 				<include name="Castle.Core.dll" if="${build.platform == 'silverlight-4.0'}"/>
 				<include name="Castle.Core-Silverlight.dll" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
 				<include name="Castle.DynamicProxy-Silverlight.dll" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
+				<include name="FluentAssertions.Silverlight.dll"/>
 				<include name="xunit.runner.silverlight.dll"/>
 				<include name="xunit-silverlight.dll"/>
 				<include name="${product.assembly}"/>

@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
+    using FluentAssertions;
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class WhenServiceRequestsUnconstrainedArrayOfDependencies : UnconstrainedDependenciesContext
     {
@@ -37,8 +37,8 @@
 
             var parent = this.Kernel.Get<IParent>();
 
-            parent.ShouldNotBeNull();
-            parent.Children.Count.ShouldBe(0);
+            parent.Should().NotBeNull();
+            parent.Children.Count.Should().Be(0);
         }
     }
 }

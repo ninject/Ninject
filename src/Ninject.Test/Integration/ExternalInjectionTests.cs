@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.ExternalInjectionTests
 {
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class ExternalInjectionContext
     {
@@ -24,8 +24,8 @@
             var warrior = new ExternalWarrior();
             kernel.Inject(warrior);
 
-            warrior.Weapon.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeInstanceOf<Sword>();
+            warrior.Weapon.Should().NotBeNull();
+            warrior.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -36,7 +36,7 @@
             kernel.Inject(instance);
             kernel.Dispose();
 
-            instance.IsDisposed.ShouldBeFalse();
+            instance.IsDisposed.Should().BeFalse();
         }
     }
 

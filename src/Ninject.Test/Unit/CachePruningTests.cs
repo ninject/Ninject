@@ -3,6 +3,7 @@ namespace Ninject.Tests.Unit.CacheTests
 {
     using System;
     using System.Collections.Generic;
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
@@ -12,7 +13,6 @@ namespace Ninject.Tests.Unit.CacheTests
     using Ninject.Planning.Bindings;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class WhenPruneIsCalled
     {
@@ -47,7 +47,7 @@ namespace Ninject.Tests.Unit.CacheTests
             GC.Collect();
             bool swordCollected = !swordWeakReference.IsAlive;
 
-            swordCollected.ShouldBeTrue();
+            swordCollected.Should().BeTrue();
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Ninject.Tests.Unit.CacheTests
             GC.Collect();
             bool swordCollected = !swordWeakReference.IsAlive;
 
-            swordCollected.ShouldBeFalse();
+            swordCollected.Should().BeFalse();
         }
 
         private static IContext CreateContextMock(object scope, IBinding binding, params Type[] genericArguments)

@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration
 {
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class WhenParentContext
     {
@@ -23,8 +23,8 @@
         {
             var instance = kernel.Get<Sword>("Broken");
 
-            instance.ShouldNotBeNull();
-            instance.ShouldBeInstanceOf(typeof(Sword));
+            instance.Should().NotBeNull();
+            instance.Should().BeOfType<Sword>();
         }
     }
 }

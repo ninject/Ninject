@@ -3,9 +3,9 @@ namespace Ninject.Tests.Unit
     using System;
     using System.Linq;
     using System.Reflection;
+    using FluentAssertions;
     using Ninject.Infrastructure.Language;
     using Xunit;
-    using Xunit.Should;
 
 #if !SILVERLIGHT
     public class ExtensionsForMemberInfoTest
@@ -64,7 +64,7 @@ namespace Ninject.Tests.Unit
                     .First(pi => pi.Name == "Item" && pi.GetIndexParameters().Single().ParameterType == indexerType);
             var hasInjectAttribute = propertyInfo.HasAttribute(attributeType);
 
-            hasInjectAttribute.ShouldBe(expectedResult);
+            hasInjectAttribute.Should().Be(expectedResult);
         }
 
         private void TestGetCustomAttributesExtended(string propertyName)
@@ -96,10 +96,10 @@ namespace Ninject.Tests.Unit
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
 
-            attributes.Length.ShouldBe(expectedAttributes.Length);
+            attributes.Length.Should().Be(expectedAttributes.Length);
             foreach (var expectedAttribute in expectedAttributes)
             {
-                attributes.ShouldContain(expectedAttribute);
+                attributes.Should().Contain(expectedAttribute);
             }
         }
 
@@ -125,7 +125,7 @@ namespace Ninject.Tests.Unit
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             bool hasAttribute = propertyInfo.HasAttribute(attributeType);
 
-            hasAttribute.ShouldBe(expectedValue);
+            hasAttribute.Should().Be(expectedValue);
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]

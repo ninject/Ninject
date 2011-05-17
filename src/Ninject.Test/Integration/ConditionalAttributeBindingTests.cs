@@ -1,9 +1,8 @@
 ﻿namespace Ninject.Tests.Integration
 {
-    using System;
+    using FluentAssertions;
     using Ninject.Infrastructure.Disposal;
     using Xunit;
-    using Xunit.Should;
     using Attribute = System.Attribute;
 
     public class WeakAttribute : Attribute
@@ -103,17 +102,17 @@
         public void DefaultInstanceIsResolvedWhenNoAttributesMatch()
         {
             var attackAbility = this.kernel.Get<IAttackAbility>();
-            attackAbility.ShouldBeInstanceOf<UnknownAttack>();
+            attackAbility.Should().BeOfType<UnknownAttack>();
         }
 
         [Fact]
         public void PropertiesAreInjectMatchingAttributeBindings()
         {
             var hammer = this.kernel.Get<IVarialbeWeapon>();
-            hammer.ShouldNotBeNull();
-            hammer.StrongAttack.ShouldBeInstanceOf<StrongAttack>();
-            hammer.WeakAttack.ShouldBeInstanceOf<WeakAttack>();
-            hammer.WtfAttack.ShouldBeInstanceOf<UnknownAttack>();
+            hammer.Should().NotBeNull();
+            hammer.StrongAttack.Should().BeOfType<StrongAttack>();
+            hammer.WeakAttack.Should().BeOfType<WeakAttack>();
+            hammer.WtfAttack.Should().BeOfType<UnknownAttack>();
         }
 
         public override void Dispose( bool disposing )

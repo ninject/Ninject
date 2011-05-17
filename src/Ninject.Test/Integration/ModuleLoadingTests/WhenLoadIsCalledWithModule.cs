@@ -3,10 +3,10 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
     using System.Linq;
+    using FluentAssertions;
     using Moq;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class WhenLoadIsCalledWithModule : ModuleLoadingContext
     {
@@ -26,8 +26,8 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Load(module);
 
             moduleMock.Verify(x => x.OnLoad(this.Kernel), Times.Once());
-            this.Kernel.GetModules().ShouldContainSingle().ShouldBe(module);
-            this.Kernel.HasModule(module.Name).ShouldBeTrue();
+            this.Kernel.GetModules().ShouldContainSingle().Should().Be(module);
+            this.Kernel.HasModule(module.Name).Should().BeTrue();
         }
 
         [Fact]
@@ -40,8 +40,8 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Unload(module.Name);
 
             moduleMock.Verify(x => x.OnUnload(this.Kernel), Times.Once());
-            this.Kernel.HasModule(module.Name).ShouldBeFalse();
-            this.Kernel.GetModules().Count().ShouldBe(0);
+            this.Kernel.HasModule(module.Name).Should().BeFalse();
+            this.Kernel.GetModules().Count().Should().Be(0);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Unload(module1.Name);
             this.Kernel.Load(module2);
 
-            this.Kernel.GetModules().ShouldContainSingle().ShouldBe(module2);
+            this.Kernel.GetModules().ShouldContainSingle().Should().Be(module2);
         }
 
         [Fact]

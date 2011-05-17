@@ -18,6 +18,7 @@
 	<property name="path.tools.git" value="${path.tools}/git" dynamic="true"/>
 	<property name="path.tools.statlight" value="${path.tools}/statlight/statlight.exe" dynamic="true"/>
 	<property name="path.tools.nuget" value="${path.tools}/nuget/nuget.exe" dynamic="true"/>
+	<property name="path.tools.fluentassertions" value="${path.tools}/fluentassertions" dynamic="true"/>
 
 	<property name="product.keyfile" value="Ninject.snk" overwrite="false"/>
 	<property name="product.docfile" value="${product.name}.xml" overwrite="false"/>

@@ -1,11 +1,11 @@
 ﻿namespace Ninject.Tests.Integration.SingletonScopeTests
 {
     using System;
+    using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class SingletonScopeContext
     {
@@ -27,7 +27,7 @@
             var instance1 = kernel.Get<IWeapon>();
             var instance2 = kernel.Get<IWeapon>();
 
-            instance1.ShouldBeSameAs(instance2);
+            instance1.Should().BeSameAs(instance2);
         }
 
         [Fact]
@@ -43,7 +43,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeTrue();
+            reference.IsAlive.Should().BeTrue();
         }
 
         [Fact]
@@ -54,7 +54,7 @@
             var instance = kernel.Get<INotifyWhenDisposed>();
             kernel.Dispose();
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 
@@ -68,7 +68,7 @@
             var sword1 = kernel.Get<Sword>();
             var sword2 = kernel.Get<Sword>();
 
-            sword1.ShouldBeSameAs(sword2);
+            sword1.Should().BeSameAs(sword2);
         }
 
         [Fact]
@@ -84,7 +84,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeTrue();
+            reference.IsAlive.Should().BeTrue();
         }
 
         [Fact]
@@ -95,7 +95,7 @@
             var instance = kernel.Get<NotifiesWhenDisposed>();
             kernel.Dispose();
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 
@@ -109,7 +109,7 @@
             var instance1 = kernel.Get<INotifyWhenDisposed>();
             var instance2 = kernel.Get<INotifyWhenDisposed>();
 
-            instance1.ShouldBeSameAs(instance2);
+            instance1.Should().BeSameAs(instance2);
         }
 
         [Fact]
@@ -125,7 +125,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeTrue();
+            reference.IsAlive.Should().BeTrue();
         }
 
         [Fact]
@@ -136,7 +136,7 @@
             var instance = kernel.Get<INotifyWhenDisposed>();
             kernel.Dispose();
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 
@@ -150,7 +150,7 @@
             var instance1 = kernel.Get<INotifyWhenDisposed>();
             var instance2 = kernel.Get<INotifyWhenDisposed>();
 
-            instance1.ShouldBeSameAs(instance2);
+            instance1.Should().BeSameAs(instance2);
         }
 
         [Fact]
@@ -166,7 +166,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeTrue();
+            reference.IsAlive.Should().BeTrue();
         }
 
         [Fact]
@@ -177,7 +177,7 @@
             var instance = kernel.Get<INotifyWhenDisposed>();
             kernel.Dispose();
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 

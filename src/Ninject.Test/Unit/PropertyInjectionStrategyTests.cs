@@ -9,10 +9,11 @@ using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
+    using FluentAssertions;
+
     public class PropertyInjectionDirectiveContext
     {
         protected readonly PropertyInjectionStrategy strategy;
@@ -78,8 +79,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         public void InvokesInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
-            injector1WasCalled.ShouldBeTrue();
-            injector2WasCalled.ShouldBeTrue();
+            injector1WasCalled.Should().BeTrue();
+            injector2WasCalled.Should().BeTrue();
         }
     }
 

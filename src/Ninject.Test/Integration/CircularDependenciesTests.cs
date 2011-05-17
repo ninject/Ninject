@@ -1,10 +1,10 @@
 ﻿namespace Ninject.Tests.Integration.CircularDependenciesTests
 {
     using System.Linq;
+    using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Parameters;
     using Xunit;
-    using Xunit.Should;
 
     public class CircularDependenciesContext
     {
@@ -59,8 +59,8 @@
             var foo = kernel.Get<TwoWayPropertyFoo>();
             var bar = kernel.Get<TwoWayPropertyBar>();
 
-            foo.Bar.ShouldBeSameAs(bar);
-            bar.Foo.ShouldBeSameAs(foo);
+            foo.Bar.Should().BeSameAs(bar);
+            bar.Foo.Should().BeSameAs(foo);
         }
     }
 
@@ -109,9 +109,9 @@
             var bar = kernel.Get<ThreeWayPropertyBar>();
             var baz = kernel.Get<ThreeWayPropertyBaz>();
 
-            foo.Bar.ShouldBeSameAs(bar);
-            bar.Baz.ShouldBeSameAs(baz);
-            baz.Foo.ShouldBeSameAs(foo);
+            foo.Bar.Should().BeSameAs(bar);
+            bar.Baz.Should().BeSameAs(baz);
+            baz.Foo.Should().BeSameAs(foo);
         }
     }
 

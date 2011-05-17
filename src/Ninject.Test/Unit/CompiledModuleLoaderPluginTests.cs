@@ -7,10 +7,10 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using FluentAssertions;
     using Moq;
     using Ninject.Modules;
     using Xunit;
-    using Xunit.Should;
 
     public class CompiledModuleLoaderPluginContext
     {
@@ -38,9 +38,9 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
                       .Callback<IEnumerable<Assembly>>(m => actual = m);
 
             loaderPlugin.LoadModules(new[] { this.moduleFilename });
-            actual.ShouldNotBeNull();
-            actual.Count().ShouldBe(1);
-            actual.Where(a => a.GetName().Name == expected).ShouldNotBeEmpty();
+            actual.Should().NotBeNull();
+            actual.Count().Should().Be(1);
+            actual.Where(a => a.GetName().Name == expected).Should().NotBeEmpty();
         }
 
         [Fact]

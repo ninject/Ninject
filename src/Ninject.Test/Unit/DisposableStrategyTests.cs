@@ -4,10 +4,11 @@ using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Ninject.Tests.Fakes;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.DisposableStrategyTests
 {
+    using FluentAssertions;
+
     public class DisposableStrategyContext
     {
         protected readonly DisposableStrategy strategy;
@@ -29,7 +30,7 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
             var reference = new InstanceReference { Instance = instance };
 
             strategy.Deactivate(contextMock.Object, reference);
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
 
         [Fact]

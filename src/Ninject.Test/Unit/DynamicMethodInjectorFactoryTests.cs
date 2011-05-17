@@ -1,13 +1,13 @@
 ﻿#if !NO_LCG
-using System;
 using System.Reflection;
 using Ninject.Injection;
 using Ninject.Tests.Fakes;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 {
+    using FluentAssertions;
+
     public class DynamicMethodInjectorFactoryContext
     {
         protected DynamicMethodInjectorFactory injectorFactory;
@@ -37,8 +37,8 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
             var samurai = injector.Invoke(new[] { sword }) as Samurai;
 
-            samurai.ShouldNotBeNull();
-            samurai.Weapon.ShouldBeSameAs(sword);
+            samurai.Should().NotBeNull();
+            samurai.Weapon.Should().BeSameAs(sword);
         }
 
         [Fact]
@@ -46,8 +46,8 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         {
             var samurai = injector.Invoke(new[] { (IWeapon)null }) as Samurai;
 
-            samurai.ShouldNotBeNull();
-            samurai.Weapon.ShouldBeNull();
+            samurai.Should().NotBeNull();
+            samurai.Weapon.Should().BeNull();
         }
     }
 
@@ -70,7 +70,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
             injector.Invoke(samurai, sword);
 
-            samurai.Weapon.ShouldBeSameAs(sword);
+            samurai.Weapon.Should().BeSameAs(sword);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         {
             var samurai = new Samurai(new Sword());
             injector.Invoke(samurai, null);
-            samurai.Weapon.ShouldBeNull();
+            samurai.Weapon.Should().BeNull();
         }
     }
 
@@ -98,7 +98,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         {
             var samurai = new Samurai(new Sword());
             injector.Invoke(samurai, new[] { "Bob" });
-            samurai.Name.ShouldBe("Bob");
+            samurai.Name.Should().Be("Bob");
         }
     }
 
@@ -118,7 +118,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         {
             var samurai = new Samurai(new Sword());
             injector.Invoke(samurai, new[] { "evildoer" });
-            samurai.IsBattleHardened.ShouldBeTrue();
+            samurai.IsBattleHardened.Should().BeTrue();
         }
     }
 }

@@ -1,10 +1,10 @@
 namespace Ninject.Tests.Integration
 {
     using System.Linq;
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
-    using Xunit.Should;
 
     public class ConditionalBindingTests: StandardKernelContext
     {
@@ -15,7 +15,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            warrior.Weapon.ShouldBeInstanceOf<Shuriken>();
+            warrior.Weapon.Should().BeOfType<Shuriken>();
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            warrior.Weapon.ShouldBeInstanceOf<Sword>();
+            warrior.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            warrior.Weapon.ShouldBeInstanceOf<Sword>();
+            warrior.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -52,17 +52,17 @@ namespace Ninject.Tests.Integration
         public void GivenNoBinding_ThenASelfBindableTypeWillResolve()
         {
             var weapon = kernel.Get<Sword>();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void GivenBindingIsMadeAfterImplictBinding_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().BeOfType<Sword>();
             kernel.Bind<Sword>().To<ShortSword>();
             weapon = kernel.Get<Sword>();
-            weapon.ShouldBeInstanceOf<ShortSword>();
+            weapon.Should().BeOfType<ShortSword>();
         }
 
         [Fact]
@@ -71,11 +71,11 @@ namespace Ninject.Tests.Integration
             IWeapon weapon = kernel.Get<Sword>();
             // make the binding conditional
             kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().BeOfType<Sword>();
 
             kernel.Bind<Sword>().To<ShortSword>().When(_ => true);
             weapon = kernel.Get<Sword>();
-            weapon.ShouldBeInstanceOf<ShortSword>();
+            weapon.Should().BeOfType<ShortSword>();
         }
 
         [Fact]
@@ -84,11 +84,11 @@ namespace Ninject.Tests.Integration
             IWeapon weapon = kernel.Get<Sword>();
             // make the binding conditional
             kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().BeOfType<Sword>();
 
             kernel.Bind<Sword>().To<ShortSword>();
             weapon = kernel.Get<Sword>();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -100,8 +100,8 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().ToConstant(shortSword);
             kernel.Bind<IWeapon>().ToConstant(shuriken).When(_ => true);
             var result = kernel.GetAll<IWeapon>();
-            result.ShouldContain(shortSword);
-            result.ShouldContain(shuriken);
+            result.Should().Contain(shortSword);
+            result.Should().Contain(shuriken);
         }
 
         [Fact]
@@ -115,9 +115,9 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().ToConstant(sword);
             kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
             var result = kernel.GetAll<IWeapon>();
-            result.ShouldContain(shortSword);
-            result.ShouldContain(sword);
-            result.ShouldNotContain(shuriken);
+            result.Should().Contain(shortSword);
+            result.Should().Contain(sword);
+            result.Should().NotContain(shuriken);
         }
 
         [Fact]
@@ -129,8 +129,8 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().ToConstant(shortSword).Binding.IsImplicit = true;
             kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
             var result = kernel.GetAll<IWeapon>();
-            result.ShouldContain(shortSword);
-            result.ShouldContain(shuriken);
+            result.Should().Contain(shortSword);
+            result.Should().Contain(shuriken);
         }
     }
 }

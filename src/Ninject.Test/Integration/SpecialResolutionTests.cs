@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.SpecialResolutionTests
 {
+    using FluentAssertions;
     using Ninject.Syntax;
     using Xunit;
-    using Xunit.Should;
 
     public class SpecialResolutionContext
     {
@@ -22,9 +22,9 @@
             kernel.Bind<RequestsKernel>().ToSelf();
             var instance = kernel.Get<RequestsKernel>();
 
-            instance.ShouldNotBeNull();
-            instance.Kernel.ShouldNotBeNull();
-            instance.Kernel.ShouldBeSameAs(kernel);
+            instance.Should().NotBeNull();
+            instance.Kernel.Should().NotBeNull();
+            instance.Kernel.Should().BeSameAs(kernel);
         }
     }
 
@@ -36,9 +36,9 @@
             kernel.Bind<RequestsResolutionRoot>().ToSelf();
             var instance = kernel.Get<RequestsResolutionRoot>();
 
-            instance.ShouldNotBeNull();
-            instance.ResolutionRoot.ShouldNotBeNull();
-            instance.ResolutionRoot.ShouldBeSameAs(kernel);
+            instance.Should().NotBeNull();
+            instance.ResolutionRoot.Should().NotBeNull();
+            instance.ResolutionRoot.Should().BeSameAs(kernel);
         }
     }
 

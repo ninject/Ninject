@@ -10,10 +10,11 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
+    using FluentAssertions;
+
     public class MethodInjectionStrategyContext
     {
         protected readonly MethodInjectionStrategy strategy;
@@ -84,8 +85,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
         public void InvokesInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
-            injector1WasCalled.ShouldBeTrue();
-            injector2WasCalled.ShouldBeTrue();
+            injector1WasCalled.Should().BeTrue();
+            injector2WasCalled.Should().BeTrue();
         }
     }
 

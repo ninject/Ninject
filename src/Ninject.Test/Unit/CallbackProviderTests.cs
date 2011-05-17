@@ -1,12 +1,12 @@
 ﻿#if !NO_MOQ
 namespace Ninject.Tests.Unit.CallbackProviderTests
 {
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class CallbackProviderContext
     {
@@ -34,7 +34,7 @@ namespace Ninject.Tests.Unit.CallbackProviderTests
 
             var result = provider.Create(contextMock.Object);
 
-            result.ShouldBeSameAs(sword);
+            result.Should().BeSameAs(sword);
         }
     }
 }

@@ -1,17 +1,17 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
+    using FluentAssertions;
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
-    using Xunit.Should;
 
     public class UnconstrainedDependenciesContext : EnumerableDependenciesContext
     {
         protected override void VerifyInjection(IParent parent)
         {
-            parent.ShouldNotBeNull();
-            parent.Children.ShouldNotBeNull();
-            parent.Children.Count.ShouldBe(2);
-            parent.Children[0].ShouldBeInstanceOf<ChildA>();
-            parent.Children[1].ShouldBeInstanceOf<ChildB>();
+            parent.Should().NotBeNull();
+            parent.Children.Should().NotBeNull();
+            parent.Children.Count.Should().Be(2);
+            parent.Children[0].Should().BeOfType<ChildA>();
+            parent.Children[1].Should().BeOfType<ChildB>();
         }
     }
 }

@@ -2,10 +2,10 @@
 {
     using System;
     using System.Threading;
+    using FluentAssertions;
     using Ninject.Activation.Caching;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class ThreadScopeContext
     {
@@ -44,9 +44,9 @@
             thread.Start();
             thread.Join();
 
-            weapon1.ShouldNotBeNull();
-            weapon2.ShouldNotBeNull();
-            weapon1.ShouldBeSameAs(weapon2);
+            weapon1.Should().NotBeNull();
+            weapon2.Should().NotBeNull();
+            weapon1.Should().BeSameAs(weapon2);
         }
 
         [Fact]
@@ -64,9 +64,9 @@
             thread.Start();
             thread.Join();
 
-            weapon1.ShouldNotBeNull();
-            weapon2.ShouldNotBeNull();
-            weapon1.ShouldNotBeSameAs(weapon2);
+            weapon1.Should().NotBeNull();
+            weapon2.Should().NotBeNull();
+            weapon1.Should().NotBeSameAs(weapon2);
         }
 
         [Fact]
@@ -91,8 +91,8 @@
 
             cache.Prune();
 
-            instance.ShouldNotBeNull();
-            instance.IsDisposed.ShouldBeTrue();
+            instance.Should().NotBeNull();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace Ninject.Tests.Integration.TransientScopeTests
 {
     using System;
+    using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class TransientScopeContext
     {
@@ -27,7 +27,7 @@
             var instance1 = kernel.Get<IWeapon>();
             var instance2 = kernel.Get<IWeapon>();
 
-            instance1.ShouldNotBeSameAs(instance2);
+            instance1.Should().NotBeSameAs(instance2);
         }
 
         [Fact]
@@ -43,7 +43,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeFalse();
+            reference.IsAlive.Should().BeFalse();
         }
     }
 
@@ -57,7 +57,7 @@
             var sword1 = kernel.Get<Sword>();
             var sword2 = kernel.Get<Sword>();
 
-            sword1.ShouldNotBeSameAs(sword2);
+            sword1.Should().NotBeSameAs(sword2);
         }
 
         [Fact]
@@ -73,12 +73,12 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeFalse();
+            reference.IsAlive.Should().BeFalse();
 
             var cache = kernel.Components.Get<ICache>();
             cache.Prune();
 
-            cache.Count.ShouldBe(0);
+            cache.Count.Should().Be(0);
         }
     }
 
@@ -92,7 +92,7 @@
             var instance1 = kernel.Get<IWeapon>();
             var instance2 = kernel.Get<IWeapon>();
 
-            instance1.ShouldNotBeSameAs(instance2);
+            instance1.Should().NotBeSameAs(instance2);
         }
 
         [Fact]
@@ -108,7 +108,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeFalse();
+            reference.IsAlive.Should().BeFalse();
         }
     }
 
@@ -122,7 +122,7 @@
             var instance1 = kernel.Get<IWeapon>();
             var instance2 = kernel.Get<IWeapon>();
 
-            instance1.ShouldNotBeSameAs(instance2);
+            instance1.Should().NotBeSameAs(instance2);
         }
 
         [Fact]
@@ -138,7 +138,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            reference.IsAlive.ShouldBeFalse();
+            reference.IsAlive.Should().BeFalse();
         }
     }
 

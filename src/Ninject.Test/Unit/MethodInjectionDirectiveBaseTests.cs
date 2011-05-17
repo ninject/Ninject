@@ -4,11 +4,12 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
-using Xunit.Should;
 using Ninject.Injection;
 
 namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 {
+    using FluentAssertions;
+
     public class MethodInjectionDirectiveBaseContext
     {
         protected FakeMethodInjectionDirective directive;
@@ -25,13 +26,13 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
             directive = new FakeMethodInjectionDirective(method, injector);
             ITarget[] targets = directive.Targets;
 
-            targets.Length.ShouldBe(3);
-            targets[0].Name.ShouldBe("foo");
-            targets[0].Type.ShouldBe(typeof(int));
-            targets[1].Name.ShouldBe("bar");
-            targets[1].Type.ShouldBe(typeof(string));
-            targets[2].Name.ShouldBe("baz");
-            targets[2].Type.ShouldBe(typeof(IWeapon));
+            targets.Length.Should().Be(3);
+            targets[0].Name.Should().Be("foo");
+            targets[0].Type.Should().Be(typeof(int));
+            targets[1].Name.Should().Be("bar");
+            targets[1].Type.Should().Be(typeof(string));
+            targets[2].Name.Should().Be("baz");
+            targets[2].Type.Should().Be(typeof(IWeapon));
         }
     }
 

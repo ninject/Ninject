@@ -2,10 +2,10 @@
 namespace Ninject.Tests.Unit
 {
     using System;
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation.Caching;
     using Xunit;
-    using Xunit.Should;
 
     public class ActivationCacheTests
     {
@@ -21,7 +21,7 @@ namespace Ninject.Tests.Unit
         {
             var activated = this.testee.IsActivated(new object());
 
-            activated.ShouldBeFalse();
+            activated.Should().BeFalse();
         }
 
         [Fact]
@@ -33,8 +33,8 @@ namespace Ninject.Tests.Unit
             var activated = this.testee.IsActivated(instance);
             var activatedObjectCount = this.testee.ActivatedObjectCount;
 
-            activated.ShouldBeTrue();
-            activatedObjectCount.ShouldBe(1);
+            activated.Should().BeTrue();
+            activatedObjectCount.Should().Be(1);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Ninject.Tests.Unit
         {
             var activated = this.testee.IsDeactivated(new object());
 
-            activated.ShouldBeFalse();
+            activated.Should().BeFalse();
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace Ninject.Tests.Unit
             var deactivated = this.testee.IsDeactivated(instance);
             var deactivatedObjectCount = this.testee.DeactivatedObjectCount;
 
-            deactivated.ShouldBeTrue();
-            deactivatedObjectCount.ShouldBe(1);
+            deactivated.Should().BeTrue();
+            deactivatedObjectCount.Should().Be(1);
         }
 
 #if SILVERLIGHT_30 || SILVERLIGHT_20
@@ -72,8 +72,8 @@ namespace Ninject.Tests.Unit
             var activatedObjectCount = this.testee.ActivatedObjectCount;
             var deactivatedObjectCount = this.testee.DeactivatedObjectCount;
 
-            activatedObjectCount.ShouldBe(0);
-            deactivatedObjectCount.ShouldBe(0);
+            activatedObjectCount.Should().Be(0);
+            deactivatedObjectCount.Should().Be(0);
         }
     }
 }

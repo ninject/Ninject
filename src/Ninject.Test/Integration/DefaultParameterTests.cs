@@ -1,9 +1,9 @@
 ﻿#if !SILVERLIGHT
 namespace Ninject.Tests.Integration
 {
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class DefaultParameterTests
     {
@@ -15,8 +15,8 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<Shield>().ToSelf();
 
                 var shield = kernel.Get<Shield>();
-                shield.ShouldNotBeNull();
-                shield.Color.ShouldBe(ShieldColor.Red);
+                shield.Should().NotBeNull();
+                shield.Color.Should().Be(ShieldColor.Red);
             }
         }
 
@@ -29,8 +29,8 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<ShieldColor>().ToConstant(ShieldColor.Blue);
 
                 var shield = kernel.Get<Shield>();
-                shield.ShouldNotBeNull();
-                shield.Color.ShouldBe(ShieldColor.Blue);
+                shield.Should().NotBeNull();
+                shield.Color.Should().Be(ShieldColor.Blue);
             }
         }
 
@@ -42,8 +42,8 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<Shield>().ToSelf().WithConstructorArgument("color", ShieldColor.Orange);
 
                 var shield = kernel.Get<Shield>();
-                shield.ShouldNotBeNull();
-                shield.Color.ShouldBe(ShieldColor.Orange);
+                shield.Should().NotBeNull();
+                shield.Color.Should().Be(ShieldColor.Orange);
             }
         }
 
@@ -58,11 +58,11 @@ namespace Ninject.Tests.Integration
                 var shield1 = kernel.Get<Shield>();
                 var shield2 = kernel.Get<KiteShield>();
 
-                shield1.ShouldNotBeNull();
-                shield1.Color.ShouldBe(ShieldColor.Red);
+                shield1.Should().NotBeNull();
+                shield1.Color.Should().Be(ShieldColor.Red);
 
-                shield2.ShouldNotBeNull();
-                shield2.Color.ShouldBe(ShieldColor.Orange);
+                shield2.Should().NotBeNull();
+                shield2.Color.Should().Be(ShieldColor.Orange);
             }
         }
     }

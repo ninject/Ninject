@@ -1,9 +1,9 @@
 namespace Ninject.Tests.Integration
 {
     using Fakes;
+    using FluentAssertions;
     using StandardKernelTests;
     using Xunit;
-    using Xunit.Should;
 
     public class PublicPropertyWithMoreRestrictiveSetterContext : StandardKernelContext
     {
@@ -26,13 +26,13 @@ namespace Ninject.Tests.Integration
             this.kernel.Settings.InjectNonPublic = true;
             var warrior = this.kernel.Get<SpecialNinja>();
 
-            warrior.ShouldNotBeNull();
-            warrior.Weapon.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeInstanceOf(typeof(Shuriken));
-            warrior.SecretWeapon.ShouldNotBeNull();
-            warrior.SecretWeapon.ShouldBeInstanceOf(typeof(Sword));
-            warrior.UltraSecretWeapon.ShouldNotBeNull();
-            warrior.UltraSecretWeapon.ShouldBeInstanceOf(typeof(ShortSword));
+            warrior.Should().NotBeNull();
+            warrior.Weapon.Should().NotBeNull();
+            warrior.Weapon.Should().BeOfType<Shuriken>();
+            warrior.SecretWeapon.Should().NotBeNull();
+            warrior.SecretWeapon.Should().BeOfType<Sword>();
+            warrior.UltraSecretWeapon.Should().NotBeNull();
+            warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
 #endif //!SILVERLIGHT
 
@@ -41,10 +41,10 @@ namespace Ninject.Tests.Integration
         {
             var warrior = this.kernel.Get<SpecialNinja>();
 
-            warrior.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeNull();
-            warrior.SecretWeapon.ShouldBeNull();
-            warrior.UltraSecretWeapon.ShouldBeNull();
+            warrior.Should().NotBeNull();
+            warrior.Weapon.Should().BeNull();
+            warrior.SecretWeapon.Should().BeNull();
+            warrior.UltraSecretWeapon.Should().BeNull();
         }
     }
 
@@ -57,13 +57,13 @@ namespace Ninject.Tests.Integration
             this.kernel.Settings.InjectNonPublic = true;
             var warrior = this.kernel.Get<UltraSpecialNinja>();
 
-            warrior.ShouldNotBeNull();
-            warrior.Weapon.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeInstanceOf(typeof(Shuriken));
-            warrior.SecretWeapon.ShouldNotBeNull();
-            warrior.SecretWeapon.ShouldBeInstanceOf(typeof(Sword));
-            warrior.UltraSecretWeapon.ShouldNotBeNull();
-            warrior.UltraSecretWeapon.ShouldBeInstanceOf(typeof(ShortSword));
+            warrior.Should().NotBeNull();
+            warrior.Weapon.Should().NotBeNull();
+            warrior.Weapon.Should().BeOfType<Shuriken>();
+            warrior.SecretWeapon.Should().NotBeNull();
+            warrior.SecretWeapon.Should().BeOfType<Sword>();
+            warrior.UltraSecretWeapon.Should().NotBeNull();
+            warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
 #endif //!SILVERLIGHT
 
@@ -72,10 +72,10 @@ namespace Ninject.Tests.Integration
         {
             var warrior = this.kernel.Get<UltraSpecialNinja>();
 
-            warrior.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeNull();
-            warrior.SecretWeapon.ShouldBeNull();
-            warrior.UltraSecretWeapon.ShouldBeNull();
+            warrior.Should().NotBeNull();
+            warrior.Weapon.Should().BeNull();
+            warrior.SecretWeapon.Should().BeNull();
+            warrior.UltraSecretWeapon.Should().BeNull();
         }
     }
 

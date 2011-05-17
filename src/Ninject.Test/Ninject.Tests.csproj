@@ -66,6 +66,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\tools\FluentAssertions\.Net-3.5\FluentAssertions.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\moq\NET40\Moq.dll</HintPath>
@@ -138,7 +141,6 @@
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
-    <Compile Include="XUnitShould.cs" />
     <None Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

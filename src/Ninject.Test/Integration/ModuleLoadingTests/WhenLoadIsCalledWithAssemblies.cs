@@ -3,10 +3,10 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System.Linq;
     using System.Reflection;
+    using FluentAssertions;
     using Ninject.Modules;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class WhenLoadIsCalledWithAssemblies : ModuleLoadingContext
     {
@@ -22,12 +22,12 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             INinjectModule testModule2 = modules.SingleOrDefault(module => module.GetType() == typeof(TestModule2));
             INinjectModule testModule3 = modules.SingleOrDefault(module => module.GetType() == typeof(OtherFakes.TestModule));
 
-            testModule.ShouldNotBeNull();
-            testModule2.ShouldNotBeNull();
-            testModule3.ShouldNotBeNull();
-            testModule.Kernel.ShouldBe(this.Kernel);
-            testModule2.Kernel.ShouldBe(this.Kernel);
-            testModule3.Kernel.ShouldBe(this.Kernel);
+            testModule.Should().NotBeNull();
+            testModule2.Should().NotBeNull();
+            testModule3.Should().NotBeNull();
+            testModule.Kernel.Should().Be(this.Kernel);
+            testModule2.Kernel.Should().Be(this.Kernel);
+            testModule3.Kernel.Should().Be(this.Kernel);
         }
     }
 }

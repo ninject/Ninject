@@ -2,6 +2,7 @@
 namespace Ninject.Tests.Unit.CacheTests
 {
     using System;
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
@@ -9,7 +10,6 @@ namespace Ninject.Tests.Unit.CacheTests
     using Ninject.Planning.Bindings;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class CacheContext
     {
@@ -47,7 +47,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
             var instance = cache.TryGet(contextMock.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(contextMock1.Object, reference);
             object instance = cache.TryGet(contextMock2.Object);
 
-            instance.ShouldBeSameAs(reference.Instance);
+            instance.Should().BeSameAs(reference.Instance);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(contextMock1.Object, reference);
             object instance = cache.TryGet(contextMock2.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(contextMock1.Object, reference);
             object instance = cache.TryGet(contextMock2.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
         }
     }
 
@@ -104,7 +104,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(contextMock1.Object, reference);
             object instance = cache.TryGet(contextMock2.Object);
 
-            instance.ShouldBeSameAs(reference.Instance);
+            instance.Should().BeSameAs(reference.Instance);
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(contextMock1.Object, reference);
             object instance = cache.TryGet(contextMock2.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
         }
     }
 
@@ -128,7 +128,7 @@ namespace Ninject.Tests.Unit.CacheTests
         public void ReturnsFalseIfInstanceIsNotTracked()
         {
             bool result = cache.Release(new object());
-            result.ShouldBeFalse();
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Remember(writeContext.Object, reference);
             bool result = cache.Release(instance);
 
-            result.ShouldBeTrue();
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -159,9 +159,9 @@ namespace Ninject.Tests.Unit.CacheTests
             bool result = cache.Release(instance1);
             object instance2 = cache.TryGet(readContext.Object);
 
-            instance1.ShouldBeSameAs(reference.Instance);
-            result.ShouldBeTrue();
-            instance2.ShouldBeNull();
+            instance1.Should().BeSameAs(reference.Instance);
+            result.Should().BeTrue();
+            instance2.Should().BeNull();
         }
     }
 
@@ -182,8 +182,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var instance1 = cache.TryGet(context1.Object);
             var instance2 = cache.TryGet(context2.Object);
 
-            instance1.ShouldBeNull();
-            instance2.ShouldNotBeNull();
+            instance1.Should().BeNull();
+            instance2.Should().NotBeNull();
         }
         
         [Fact]
@@ -200,8 +200,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var instance1 = cache.TryGet(context1.Object);
             var instance2 = cache.TryGet(context2.Object);
 
-            instance1.ShouldBeNull();
-            instance2.ShouldBeNull();
+            instance1.Should().BeNull();
+            instance2.Should().BeNull();
          }
     }
 
@@ -219,7 +219,7 @@ namespace Ninject.Tests.Unit.CacheTests
             scopeMock.Raise(scope => scope.Disposed += null, EventArgs.Empty);
             object instance = cache.TryGet(context.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
 
         }
     }
@@ -239,7 +239,7 @@ namespace Ninject.Tests.Unit.CacheTests
             cache.Clear(scopeOfScope);
             var instance = cache.TryGet(context.Object);
 
-            instance.ShouldBeNull();
+            instance.Should().BeNull();
         }
     }
 }

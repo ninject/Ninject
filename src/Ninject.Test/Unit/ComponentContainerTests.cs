@@ -4,11 +4,11 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FluentAssertions;
     using Moq;
     using Ninject.Components;
     using Ninject.Infrastructure.Disposal;
     using Xunit;
-    using Xunit.Should;
 
     public class ComponentContainerContext
     {
@@ -44,8 +44,8 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
             var service = container.Get<ITestService>();
 
-            service.ShouldNotBeNull();
-            service.ShouldBeInstanceOf<TestServiceA>();
+            service.Should().NotBeNull();
+            service.Should().BeOfType<TestServiceA>();
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
             var service = container.Get<ITestService>();
 
-            service.ShouldNotBeNull();
-            service.ShouldBeInstanceOf<TestServiceA>();
+            service.Should().NotBeNull();
+            service.Should().BeOfType<TestServiceA>();
         }
 
         [Fact]
@@ -69,9 +69,9 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
             var asks = container.Get<IAsksForEnumerable>();
 
-            asks.ShouldNotBeNull();
-            asks.SecondService.ShouldNotBeNull();
-            asks.SecondService.ShouldBeInstanceOf<TestServiceB>();
+            asks.Should().NotBeNull();
+            asks.SecondService.Should().NotBeNull();
+            asks.SecondService.Should().BeOfType<TestServiceB>();
         }
     }
 
@@ -84,9 +84,9 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
             var services = container.GetAll<ITestService>().ToList();
 
-            services.ShouldNotBeNull();
-            services.Count.ShouldBe(1);
-            services[0].ShouldBeInstanceOf<TestServiceA>();
+            services.Should().NotBeNull();
+            services.Count.Should().Be(1);
+            services[0].Should().BeOfType<TestServiceA>();
         }
 
         [Fact]
@@ -96,10 +96,10 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             container.Add<ITestService, TestServiceB>();
             var services = container.GetAll<ITestService>().ToList();
 
-            services.ShouldNotBeNull();
-            services.Count.ShouldBe(2);
-            services[0].ShouldBeInstanceOf<TestServiceA>();
-            services[1].ShouldBeInstanceOf<TestServiceB>();
+            services.Should().NotBeNull();
+            services.Count.Should().Be(2);
+            services[0].Should().BeOfType<TestServiceA>();
+            services[1].Should().BeOfType<TestServiceB>();
         }
 
         [Fact]
@@ -110,9 +110,9 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             var service1 = container.Get<ITestService>();
             var service2 = container.Get<ITestService>();
 
-            service1.ShouldNotBeNull();
-            service2.ShouldNotBeNull();
-            service1.ShouldBeSameAs(service2);
+            service1.Should().NotBeNull();
+            service2.Should().NotBeNull();
+            service1.Should().BeSameAs(service2);
         }
     }
 
@@ -124,7 +124,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             container.Add<ITestService, TestServiceA>();
 
             var service1 = container.Get<ITestService>();
-            service1.ShouldNotBeNull();
+            service1.Should().NotBeNull();
 
             container.RemoveAll<ITestService>();
             Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
@@ -137,13 +137,13 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             container.Add<ITestService, TestServiceB>();
 
             var services = container.GetAll<ITestService>().ToList();
-            services.ShouldNotBeNull();
-            services.Count.ShouldBe(2);
+            services.Should().NotBeNull();
+            services.Count.Should().Be(2);
 
             container.RemoveAll<ITestService>();
 
-            services[0].IsDisposed.ShouldBeTrue();
-            services[1].IsDisposed.ShouldBeTrue();
+            services[0].IsDisposed.Should().BeTrue();
+            services[1].IsDisposed.Should().BeTrue();
         }
     }
 

@@ -2,10 +2,11 @@
 using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 {
+    using FluentAssertions;
+
     public class PropertyInjectionDirectiveContext
     {
         protected PropertyInjectionDirective directive;
@@ -21,8 +22,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 
             directive = new PropertyInjectionDirective(method, injector);
 
-            directive.Target.Name.ShouldBe("Foo");
-            directive.Target.Type.ShouldBe(typeof(int));
+            directive.Target.Name.Should().Be("Foo");
+            directive.Target.Type.Should().Be(typeof(int));
         }
     }
 

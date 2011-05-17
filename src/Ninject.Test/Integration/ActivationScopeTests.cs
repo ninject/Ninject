@@ -1,11 +1,10 @@
 ﻿namespace Ninject.Tests.Integration.ActivationBlockTests
 {
     using System;
-
+    using FluentAssertions;
     using Ninject.Activation.Blocks;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class ActivationBlockContext
     {
@@ -29,7 +28,7 @@
             var weapon1 = block.Get<IWeapon>();
             var weapon2 = block.Get<IWeapon>();
 
-            weapon1.ShouldBeSameAs(weapon2);
+            weapon1.Should().BeSameAs(weapon2);
         }
 
         [Fact]
@@ -40,7 +39,7 @@
             var weapon1 = block.Get<IWeapon>();
             var weapon2 = kernel.Get<IWeapon>();
 
-            weapon1.ShouldNotBeSameAs(weapon2);
+            weapon1.Should().NotBeSameAs(weapon2);
         }
 
         [Fact]
@@ -53,7 +52,7 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            instance.IsDisposed.ShouldBeFalse();
+            instance.IsDisposed.Should().BeFalse();
         }
     }
 
@@ -67,7 +66,7 @@
             var instance = block.Get<NotifiesWhenDisposed>();
             block.Dispose();
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
     }
 }

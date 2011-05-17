@@ -2,10 +2,11 @@
 using Moq;
 using Ninject.Planning.Bindings;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.NamedAttributeTests
 {
+    using FluentAssertions;
+
     public class NamedAttributeContext
     {
         protected readonly NamedAttribute attribute;
@@ -24,14 +25,14 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
         public void ReturnsTrueIfTheNameMatches()
         {
             metadataMock.SetupGet(x => x.Name).Returns("foo");
-            attribute.Matches(metadataMock.Object).ShouldBeTrue();
+            attribute.Matches(metadataMock.Object).Should().BeTrue();
         }
 
         [Fact]
         public void ReturnsFalseIfTheNameDoesNotMatch()
         {
             metadataMock.SetupGet(x => x.Name).Returns("bar");
-            attribute.Matches(metadataMock.Object).ShouldBeFalse();
+            attribute.Matches(metadataMock.Object).Should().BeFalse();
         }
     }
 }

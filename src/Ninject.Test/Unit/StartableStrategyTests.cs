@@ -3,10 +3,11 @@ using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Xunit;
-using Xunit.Should;
 
 namespace Ninject.Tests.Unit.StartableStrategyTests
 {
+    using FluentAssertions;
+
     public class StartableStrategyContext
     {
         protected readonly StartableStrategy strategy;
@@ -28,7 +29,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             var reference = new InstanceReference { Instance = instance };
 
             strategy.Activate(contextMock.Object, reference);
-            instance.WasStarted.ShouldBeTrue();
+            instance.WasStarted.Should().BeTrue();
         }
 
         [Fact]
@@ -51,7 +52,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 
             strategy.Deactivate(contextMock.Object, reference);
 
-            instance.WasStopped.ShouldBeTrue();
+            instance.WasStopped.Should().BeTrue();
         }
 
         [Fact]

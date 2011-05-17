@@ -3,12 +3,12 @@ namespace Ninject.Tests.Unit.PipelineTests
 {
     using System.Collections.Generic;
     using System.Linq;
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Caching;    
     using Ninject.Activation.Strategies;
     using Xunit;
-    using Xunit.Should;    
 
     public class PipelineContext
     {
@@ -31,11 +31,11 @@ namespace Ninject.Tests.Unit.PipelineTests
         [Fact]
         public void HasListOfStrategies()
         {
-            this.Pipeline.Strategies.ShouldNotBeNull();
+            this.Pipeline.Strategies.Should().NotBeNull();
 
             for (int idx = 0; idx < this.StrategyMocks.Count; idx++)
             {
-                this.Pipeline.Strategies[idx].ShouldBeSameAs(this.StrategyMocks[idx].Object);
+                this.Pipeline.Strategies[idx].Should().BeSameAs(this.StrategyMocks[idx].Object);
             }
         }
     }

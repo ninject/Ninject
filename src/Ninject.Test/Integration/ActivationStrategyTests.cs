@@ -1,10 +1,10 @@
 ﻿namespace Ninject.Tests.Integration
 {
     using System.Linq;
+    using FluentAssertions;
     using Ninject.Activation.Strategies;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class ActivationStrategyTests
     {
@@ -22,10 +22,10 @@
                                     });
 
                 var barracks = kernel.Get<Barracks>();
-                barracks.Warrior.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-                barracks.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<FootSoldier>();
+                barracks.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().BeOfType<Shuriken>();
             }
         }
 
@@ -43,10 +43,10 @@
                     });
 
                 var barracks = kernel.Get<Barracks>();
-                barracks.Warrior.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-                barracks.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<FootSoldier>();
+                barracks.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().BeOfType<Shuriken>();
             }
         }
 
@@ -71,13 +71,13 @@
                                     });
 
                 barracks = kernel.Get<Barracks>();
-                barracks.Warrior.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-                barracks.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<FootSoldier>();
+                barracks.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().BeOfType<Shuriken>();
             }
-            barracks.Warrior.ShouldBeNull();
-            barracks.Weapon.ShouldBeNull();
+            barracks.Warrior.Should().BeNull();
+            barracks.Weapon.Should().BeNull();
         }
 
         [Fact]
@@ -101,13 +101,13 @@
                     });
 
                 barracks = kernel.Get<Barracks>();
-                barracks.Warrior.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeInstanceOf<FootSoldier>();
-                barracks.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldBeInstanceOf<Shuriken>();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<FootSoldier>();
+                barracks.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().BeOfType<Shuriken>();
             }
-            barracks.Warrior.ShouldBeNull();
-            barracks.Weapon.ShouldBeNull();
+            barracks.Warrior.Should().BeNull();
+            barracks.Weapon.Should().BeNull();
         }
 
         [Fact]
@@ -123,7 +123,7 @@
 
                 kernel.Get<IWarrior>();
                 
-                testActivationStrategy.ActivationCount.ShouldBe(2);
+                testActivationStrategy.ActivationCount.Should().Be(2);
             }            
         }
         
@@ -139,7 +139,7 @@
 
                 kernel.Get<IWarrior>();
 
-                testActivationStrategy.ActivationCount.ShouldBe(1);
+                testActivationStrategy.ActivationCount.Should().Be(1);
             }
         }
 

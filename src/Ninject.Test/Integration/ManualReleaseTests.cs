@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.ManualReleaseTests
 {
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
     
     public class ManualReleaseContext
     {
@@ -24,7 +24,7 @@
             var instance = kernel.Get<NotifiesWhenDisposed>();
             kernel.Release(instance);
 
-            instance.IsDisposed.ShouldBeTrue();
+            instance.IsDisposed.Should().BeTrue();
         }
 
         [Fact]
@@ -34,13 +34,13 @@
 
             var instance1 = kernel.Get<NotifiesWhenDisposed>();
             var instance2 = kernel.Get<NotifiesWhenDisposed>();
-            instance1.ShouldBeSameAs(instance2);
+            instance1.Should().BeSameAs(instance2);
 
             kernel.Release(instance1);
 
             var instance3 = kernel.Get<NotifiesWhenDisposed>();
-            instance3.ShouldNotBeSameAs(instance1);
-            instance3.ShouldNotBeSameAs(instance2);
+            instance3.Should().NotBeSameAs(instance1);
+            instance3.Should().NotBeSameAs(instance2);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace Ninject.Tests.Integration.ConstantTests
 {
     using Fakes;
+    using FluentAssertions;
     using Xunit;
-    using Xunit.Should;
 
     public class ConstantContext
     {
@@ -28,7 +28,7 @@
             kernel.Bind<IWeapon>().ToConstant(sword);
 
             var instance = kernel.Get<IWeapon>();
-            instance.ShouldBeSameAs(sword);
+            instance.Should().BeSameAs(sword);
         }
 
         [Fact]
@@ -39,9 +39,9 @@
             kernel.Bind<IWeapon>().To<Shuriken>();
 
             var samurai = kernel.Get<Samurai>();
-            samurai.Weapon.ShouldBeSameAs(sword);
+            samurai.Weapon.Should().BeSameAs(sword);
             var weapon = kernel.Get<IWeapon>();
-            weapon.ShouldBeInstanceOf<Shuriken>();
+            weapon.Should().BeOfType<Shuriken>();
         }
 
         [Fact]
@@ -55,7 +55,7 @@
             kernel.Get<IWeapon>();
             kernel.Get<IWeapon>();
 
-            provider.Count.ShouldBe(1);
+            provider.Count.Should().Be(1);
         }
     }
 }

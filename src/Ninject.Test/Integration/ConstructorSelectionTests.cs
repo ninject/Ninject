@@ -1,9 +1,9 @@
 namespace Ninject.Tests.Integration
 {
+    using FluentAssertions;
     using Ninject.Parameters;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class ConstructorSelectionTests
     {
@@ -15,9 +15,9 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<Barracks>().ToSelf();
 
                 var barracks = kernel.Get<Barracks>();
-                barracks.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeNull();
-                barracks.Weapon.ShouldBeNull();
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().BeNull();
+                barracks.Weapon.Should().BeNull();
             }
         }
 
@@ -30,10 +30,10 @@ namespace Ninject.Tests.Integration
                 var constructorArgument = new ConstructorArgument("warrior", new Samurai(new Sword()));
                 var barracks = kernel.Get<Barracks>(constructorArgument);
 
-                barracks.ShouldNotBeNull();
-                barracks.Warrior.ShouldNotBeNull(); 
-                barracks.Warrior.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldBeNull(); 
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().NotBeNull(); 
+                barracks.Warrior.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().BeNull(); 
             }
         }
 
@@ -46,9 +46,9 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWeapon>().To<Sword>();
 
                 var barracks = kernel.Get<Barracks>();
-                barracks.ShouldNotBeNull();
-                barracks.Warrior.ShouldBeNull();
-                barracks.Weapon.ShouldNotBeNull(); 
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().BeNull();
+                barracks.Weapon.Should().NotBeNull(); 
             }
         }
 
@@ -62,10 +62,10 @@ namespace Ninject.Tests.Integration
                 kernel.Bind<IWarrior>().To<Samurai>();
 
                 var barracks = kernel.Get<Barracks>();
-                barracks.ShouldNotBeNull();
-                barracks.Warrior.ShouldNotBeNull();
-                barracks.Warrior.Weapon.ShouldNotBeNull();
-                barracks.Weapon.ShouldNotBeNull(); 
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Weapon.Should().NotBeNull();
+                barracks.Weapon.Should().NotBeNull(); 
             }
         }
 

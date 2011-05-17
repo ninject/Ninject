@@ -2,12 +2,12 @@
 namespace Ninject.Tests.Unit.BindingActionStrategyTests
 {
     using System;
+    using FluentAssertions;
     using Moq;
     using Ninject.Activation;
     using Ninject.Activation.Strategies;
     using Ninject.Planning.Bindings;
     using Xunit;
-    using Xunit.Should;
 
     public class BindingActionStrategyContext
     {
@@ -39,8 +39,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
             bindingMock.SetupGet(x => x.ActivationActions).Returns(actions);
             strategy.Activate(contextMock.Object, new InstanceReference());
 
-            action1WasCalled.ShouldBeTrue();
-            action2WasCalled.ShouldBeTrue();
+            action1WasCalled.Should().BeTrue();
+            action2WasCalled.Should().BeTrue();
         }
     }
 
@@ -60,8 +60,8 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
             bindingMock.SetupGet(x => x.DeactivationActions).Returns(actions);
             strategy.Deactivate(contextMock.Object, new InstanceReference());
 
-            action1WasCalled.ShouldBeTrue();
-            action2WasCalled.ShouldBeTrue();
+            action1WasCalled.Should().BeTrue();
+            action2WasCalled.Should().BeTrue();
         }
     }
 }

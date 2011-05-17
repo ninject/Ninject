@@ -1,12 +1,12 @@
 namespace Ninject.Tests.Integration
 {
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class OptionalTest
     {
-        private StandardKernel kernel;
+        private readonly StandardKernel kernel;
 
         public OptionalTest()
         {
@@ -18,8 +18,8 @@ namespace Ninject.Tests.Integration
         {
             var testClass = this.kernel.Get<OptionalConstructorArgumentTestClass>();
 
-            testClass.ShouldNotBeNull();
-            testClass.Warrior.ShouldBeNull();
+            testClass.Should().NotBeNull();
+            testClass.Warrior.Should().BeNull();
         }
 
         [Fact]
@@ -27,8 +27,8 @@ namespace Ninject.Tests.Integration
         {
             var testClass = this.kernel.Get<OptionalMethodArgumentTestClass>();
 
-            testClass.ShouldNotBeNull();
-            testClass.Warrior.ShouldBeNull();
+            testClass.Should().NotBeNull();
+            testClass.Warrior.Should().BeNull();
         }
 
         [Fact]
@@ -36,8 +36,8 @@ namespace Ninject.Tests.Integration
         {
             var testClass = this.kernel.Get<OptionalMethodArgumentTestClass>();
 
-            testClass.ShouldNotBeNull();
-            testClass.Warrior.ShouldBeNull();
+            testClass.Should().NotBeNull();
+            testClass.Warrior.Should().BeNull();
         }
 
         public class OptionalConstructorArgumentTestClass

@@ -2,10 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    using Xunit.Should;
 
     public class StandardKernelContext
     {
@@ -26,8 +25,8 @@
 
             var weapon = kernel.Get<IWeapon>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -38,7 +37,7 @@
 
             var exception = Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
             
-            exception.Message.ShouldContain("More than one matching bindings are available.");
+            exception.Message.Should().Contain("More than one matching bindings are available.");
         }
 
         [Fact]
@@ -49,10 +48,10 @@
 
             var warrior = kernel.Get<IWarrior>();
 
-            warrior.ShouldNotBeNull();
-            warrior.ShouldBeInstanceOf<Samurai>();
-            warrior.Weapon.ShouldNotBeNull();
-            warrior.Weapon.ShouldBeInstanceOf<Sword>();
+            warrior.Should().NotBeNull();
+            warrior.Should().BeOfType<Samurai>();
+            warrior.Weapon.Should().NotBeNull();
+            warrior.Weapon.Should().BeOfType<Sword>();
         }
     }
 
@@ -65,8 +64,8 @@
 
             var weapon = kernel.Get<Sword>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -77,9 +76,9 @@
 
             var samurai = kernel.Get<Samurai>();
 
-            samurai.ShouldNotBeNull();
-            samurai.Weapon.ShouldNotBeNull();
-            samurai.Weapon.ShouldBeInstanceOf<Sword>();
+            samurai.Should().NotBeNull();
+            samurai.Weapon.Should().NotBeNull();
+            samurai.Weapon.Should().BeOfType<Sword>();
         }
     }
 
@@ -90,8 +89,8 @@
         {
             var weapon = kernel.Get<Sword>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -99,8 +98,8 @@
         {
             var service = kernel.Get<GenericService<int>>();
 
-            service.ShouldNotBeNull();
-            service.ShouldBeInstanceOf<GenericService<int>>();
+            service.Should().NotBeNull();
+            service.Should().BeOfType<GenericService<int>>();
         }
 
         [Fact]
@@ -143,8 +142,8 @@
 
             var service = kernel.Get<IGeneric<int>>();
 
-            service.ShouldNotBeNull();
-            service.ShouldBeInstanceOf<GenericService<int>>();
+            service.Should().NotBeNull();
+            service.Should().BeOfType<GenericService<int>>();
         }
     }
 
@@ -157,8 +156,8 @@
 
             var weapon = kernel.TryGet<IWeapon>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -169,7 +168,7 @@
 
             var weapon = kernel.TryGet<IWeapon>();
 
-            weapon.ShouldBeNull();
+            weapon.Should().BeNull();
         }
     }
 
@@ -180,15 +179,15 @@
         {
             var weapon = kernel.TryGet<Sword>();
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void ReturnsNullIfTypeIsNotSelfBindable()
         {
             var weapon = kernel.TryGet<IWeapon>();
-            weapon.ShouldBeNull();
+            weapon.Should().BeNull();
         }
 
         [Fact]
@@ -197,7 +196,7 @@
             this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
 
             var weapon = kernel.TryGet<IWeapon>();
-            weapon.ShouldBeNull();
+            weapon.Should().BeNull();
         }
 
         [Fact]
@@ -206,7 +205,7 @@
             this.kernel.Bind<IWarrior>().To<Samurai>();
 
             var warrior = kernel.TryGet<IWarrior>();
-            warrior.ShouldBeNull();
+            warrior.Should().BeNull();
         }
 
         [Fact]
@@ -217,7 +216,7 @@
             kernel.Bind<IWeapon>().To<Shuriken>();
 
             var warrior = kernel.TryGet<IWarrior>();
-            warrior.ShouldBeNull();
+            warrior.Should().BeNull();
         }
 
         [Fact]
@@ -227,7 +226,7 @@
             kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
 
             var warrior = kernel.TryGet<IWarrior>();
-            warrior.ShouldBeNull();
+            warrior.Should().BeNull();
         }
     }
 
@@ -241,10 +240,10 @@
 
             var weapons = kernel.GetAll<IWeapon>().ToArray();
 
-            weapons.ShouldNotBeNull();
-            weapons.Length.ShouldBe(2);
-            weapons[0].ShouldBeInstanceOf<Sword>();
-            weapons[1].ShouldBeInstanceOf<Shuriken>();
+            weapons.Should().NotBeNull();
+            weapons.Length.Should().Be(2);
+            weapons[0].Should().BeOfType<Sword>();
+            weapons[1].Should().BeOfType<Shuriken>();
         }
 
         [Fact]
@@ -258,13 +257,13 @@
             IEnumerable<IInitializable> instances = kernel.GetAll<IInitializable>();
             IEnumerator<IInitializable> enumerator = instances.GetEnumerator();
 
-            InitializableA.Count.ShouldBe(0);
+            InitializableA.Count.Should().Be(0);
             enumerator.MoveNext();
-            InitializableA.Count.ShouldBe(1);
-            InitializableB.Count.ShouldBe(0);
+            InitializableA.Count.Should().Be(1);
+            InitializableB.Count.Should().Be(0);
             enumerator.MoveNext();
-            InitializableA.Count.ShouldBe(1);
-            InitializableB.Count.ShouldBe(1);
+            InitializableA.Count.Should().Be(1);
+            InitializableB.Count.Should().Be(1);
         }
     }
 
@@ -278,10 +277,10 @@
 
             var services = kernel.GetAll<IGeneric<int>>().ToArray();
 
-            services.ShouldNotBeNull();
-            services.Length.ShouldBe(2);
-            services[0].ShouldBeInstanceOf<GenericService<int>>();
-            services[1].ShouldBeInstanceOf<GenericService2<int>>();
+            services.Should().NotBeNull();
+            services.Length.Should().Be(2);
+            services[0].Should().BeOfType<GenericService<int>>();
+            services[1].Should().BeOfType<GenericService2<int>>();
         }
     }
 
@@ -292,9 +291,9 @@
         {
             var weapons = kernel.GetAll<Sword>().ToArray();
 
-            weapons.ShouldNotBeNull();
-            weapons.Length.ShouldBe(1);
-            weapons[0].ShouldBeInstanceOf<Sword>();
+            weapons.Should().NotBeNull();
+            weapons.Length.Should().Be(1);
+            weapons[0].Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -302,8 +301,8 @@
         {
             var weapons = kernel.GetAll<IWeapon>().ToArray();
 
-            weapons.ShouldNotBeNull();
-            weapons.Length.ShouldBe(0);
+            weapons.Should().NotBeNull();
+            weapons.Length.Should().Be(0);
         }
     }
 
@@ -325,7 +324,7 @@
 
             var weapon = kernel.Get<IWeapon>();
 
-            weapon.ShouldBeNull();
+            weapon.Should().BeNull();
         }
     }
 
@@ -339,8 +338,8 @@
 
             var weapon = kernel.Get<IWeapon>("sword");
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
@@ -351,8 +350,8 @@
 
             var weapon = kernel.Get<IWeapon>(x => x.Get<string>("type") == "melee");
 
-            weapon.ShouldNotBeNull();
-            weapon.ShouldBeInstanceOf<Sword>();
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
         }
     }
 
@@ -365,11 +364,11 @@
             kernel.Bind<IWeapon>().To<Sword>();
 
             var bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
-            bindings.Length.ShouldBe(2);
+            bindings.Length.Should().Be(2);
 
             kernel.Unbind<IWeapon>();
             bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
-            bindings.ShouldBeEmpty();
+            bindings.Should().BeEmpty();
         }
     }
 
@@ -382,11 +381,11 @@
             kernel.Bind<IWeapon>().To<Sword>();
 
             var bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
-            bindings.Length.ShouldBe(2);
+            bindings.Length.Should().Be(2);
 
             kernel.Rebind<IWeapon>().To<Sword>();
             bindings = kernel.GetBindings(typeof(IWeapon)).ToArray();
-            bindings.Length.ShouldBe(1);
+            bindings.Length.Should().Be(1);
         }
     }
 
