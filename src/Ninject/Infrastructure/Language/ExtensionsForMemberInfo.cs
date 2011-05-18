@@ -135,15 +135,17 @@ namespace Ninject.Infrastructure.Language
 
         private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
         {
-            var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
-            var getParentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", flags);
-            if (getParentDefinitionMethodInfo == null)
-            {
-                return null;
-            }
+			var baseDefinition = method.GetBaseDefinition(); 
+			var type = method.DeclaringType.BaseType;
+			MethodInfo result = null;
+			while (result == null && type != null)
+			{
+				result = type.GetMethods(flags).Where(m => m.GetBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
+				type = type.BaseType;
+			}
 
-            return (MethodInfo)getParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
-        }
+			return result;
+		}
 
         private static bool IsDefined(PropertyInfo element, Type attributeType, bool inherit)
         {
