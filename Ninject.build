@@ -5,8 +5,8 @@
 	<property name="product.company" value="Enkari, Ltd." overwrite="false"/>
 	<property name="product.duration" value="2007-2011" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
-	<property name="product.platforms" value="net-3.5,net-4.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,netcf-3.5"  overwrite="false"/>
-	<property name="product.buildserverPlatforms" value="net-3.5,net-4.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.platforms" value="net-3.5,net-4.0,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.buildserverPlatforms" value="net-3.5,net-4.0,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,netcf-3.5"  overwrite="false"/>
 	<property name="dependencies" value=""	overwrite="false"/>
 	
 	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
@@ -101,8 +101,13 @@
 				<include name="xunit.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}">
-			<fileset basedir="${path.tools.fluentassertions}/${build.platform}">
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.fluentassertions}/Net-4.0">
+				<include name="FluentAssertions.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.fluentassertions}/Net-3.5">
 				<include name="FluentAssertions.dll"/>
 			</fileset>
 		</copy>

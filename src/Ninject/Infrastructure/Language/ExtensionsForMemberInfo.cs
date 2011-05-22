@@ -21,6 +21,29 @@ namespace Ninject.Infrastructure.Language
     /// </summary>
     public static class ExtensionsForMemberInfo
     {
+        const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
+#if !NO_LCG && !SILVERLIGHT
+        const BindingFlags Flags = DefaultFlags | BindingFlags.NonPublic;
+#else
+        const BindingFlags Flags = DefaultFlags;
+#endif
+
+        private static MethodInfo parentDefinitionMethodInfo;
+
+        private static MethodInfo ParentDefinitionMethodInfo
+        {
+            get
+            {
+                if (parentDefinitionMethodInfo == null)
+                {
+                    var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
+                    parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
+                }
+
+                return parentDefinitionMethodInfo;
+            }
+        }
+
         /// <summary>
         /// Determines whether the specified member has attribute.
         /// </summary>
@@ -113,13 +136,6 @@ namespace Ninject.Infrastructure.Language
 
         private static PropertyInfo GetParentDefinition(PropertyInfo property)
         {
-            const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
-#if !NO_LCG && !SILVERLIGHT
-            const BindingFlags Flags = DefaultFlags | BindingFlags.NonPublic;
-#else
-            const BindingFlags Flags = DefaultFlags;
-#endif
-
             var propertyMethod = property.GetGetMethod(true) ?? property.GetSetMethod(true);
             if (propertyMethod != null)
             {
@@ -135,14 +151,25 @@ namespace Ninject.Infrastructure.Language
 
         private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
         {
-            var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
-            var getParentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", flags);
-            if (getParentDefinitionMethodInfo == null)
+#if MEDIUM_TRUST
+            var baseDefinition = method.GetBaseDefinition(); 
+            var type = method.DeclaringType.BaseType;
+            MethodInfo result = null;
+            while (result == null && type != null)
+            {
+                result = type.GetMethods(flags).Where(m => m.GetBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
+                type = type.BaseType;
+            }
+
+            return result;
+#else
+            if (ParentDefinitionMethodInfo == null)
             {
                 return null;
             }
 
-            return (MethodInfo)getParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
+            return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
+#endif
         }
 
         private static bool IsDefined(PropertyInfo element, Type attributeType, bool inherit)
