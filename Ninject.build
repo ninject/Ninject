@@ -28,6 +28,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
+				<include name="${path.lib}/System.Linq.dll" if="${string::contains(build.platform, 'wp7')}"/>
 			</references>
 		</csc>
 	</target>

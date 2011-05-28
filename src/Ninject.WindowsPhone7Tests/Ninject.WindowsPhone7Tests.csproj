@@ -48,10 +48,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions.Silverlight">
+      <HintPath>..\..\tools\FluentAssertions\Silverlight-4.0-wp7\FluentAssertions.Silverlight.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Ninject, Version=2.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\..\build\silverlight-4.0-wp7\release\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq">
+      <HintPath>..\..\lib\System.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
@@ -309,9 +315,6 @@
     </Compile>
     <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
       <Link>Unit\StartableStrategyTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Ninject.Test\XUnitShould.cs">
-      <Link>XUnitShould.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

@@ -87,5 +87,91 @@ namespace Ninject.Tests.Integration
                 kernel.Unbind<IWarrior>();
             }
         }
+
+        [Fact]
+        public void SelectedCtorIsUsedIfDeclared()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind<Barracks>().ToConstructor(_ => new Barracks());
+                kernel.Bind<IWeapon>().To<Sword>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+
+                var barracks = kernel.Get<Barracks>();
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().BeNull();
+                barracks.Weapon.Should().BeNull();
+            }
+        }
+    
+        [Fact]
+        public void SelectedCtorIsUsedIfDeclaredWithInjectedArgument()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(ctorArg.Inject<IWarrior>()));
+                kernel.Bind<IWeapon>().To<Sword>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+
+                var barracks = kernel.Get<Barracks>();
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<Samurai>();
+                barracks.Weapon.Should().BeNull();
+            }
+        }
+    
+        [Fact]
+        public void WhenDefaultValuesArePassedToConstrctorSelectionTheyAreUsed()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(new Ninja(new Sword()), ctorArg.Inject<IWeapon>()));
+                kernel.Bind<IWeapon>().To<Sword>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+
+                var barracks = kernel.Get<Barracks>();
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<Ninja>();
+                barracks.Weapon.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public void DefaultValuesAreEvaluatedForEachRequest()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind<Barracks>().ToConstructor(_ => new Barracks(new Ninja(new Sword())));
+
+                var barracks1 = kernel.Get<Barracks>();
+                var barracks2 = kernel.Get<Barracks>();
+
+                barracks1.Warrior.Should().NotBeSameAs(barracks2.Warrior);
+            }
+        }
+        
+        [Fact]
+        public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                int activationCount = 0;
+                kernel.Bind<Ninja>().ToSelf().Named("1").OnActivation(inst => activationCount++);
+                kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(ctorArg.Context.Kernel.Get<Ninja>("1"), ctorArg.Inject<IWeapon>()));
+                kernel.Bind<IWeapon>().To<Sword>();
+                kernel.Bind<IWarrior>().To<Samurai>();
+
+                activationCount.Should().Be(0);
+                var barracks = kernel.Get<Barracks>();
+
+                barracks.Should().NotBeNull();
+                barracks.Warrior.Should().NotBeNull();
+                barracks.Warrior.Should().BeOfType<Ninja>();
+                barracks.Weapon.Should().NotBeNull();
+                activationCount.Should().Be(1);
+            }
+        }
     }
 }

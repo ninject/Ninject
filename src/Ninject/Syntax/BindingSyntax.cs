@@ -7,15 +7,15 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#region Using Directives
-using System;
-using Ninject.Activation;
-using Ninject.Infrastructure;
-using Ninject.Parameters;
-#endregion
-
 namespace Ninject.Syntax
 {
+    using System;
+#if !NETCF
+    using System.Linq.Expressions;
+#endif
+    using Ninject.Activation;
+    using Ninject.Infrastructure;
+    using Ninject.Parameters;
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -79,6 +79,14 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="value">The constant value.</param>
         IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value);
+
+#if !NETCF
+        /// <summary>
+        /// Indicates that the service should be bound to the speecified constructor.
+        /// </summary>
+        /// <param name="newExpression">The expression that specifies the constructor.</param>
+        IBindingWhenInNamedWithOrOnSyntax<T> ToConstructor(Expression<Func<IConstructorArgumentSyntax, T>> newExpression);
+#endif
     }
 
     /// <summary>

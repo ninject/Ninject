@@ -20,6 +20,9 @@ using Ninject.Syntax;
 
 namespace Ninject.Planning.Bindings
 {
+#if !NETCF
+    using System.Linq.Expressions;
+#endif
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -85,6 +88,27 @@ namespace Ninject.Planning.Bindings
 
             return this;
         }
+
+  #if !NETCF
+        /// <summary>
+        /// Indicates that the service should be bound to the speecified constructor.
+        /// </summary>
+        /// <param name="newExpression">The expression that specifies the constructor.</param>
+        public IBindingWhenInNamedWithOrOnSyntax<T> ToConstructor(Expression<Func<IConstructorArgumentSyntax, T>> newExpression)
+        {
+            var ctorExpression = newExpression.Body as NewExpression;
+            if (ctorExpression == null)
+            {
+                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
+            }
+
+            Binding.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
+            Binding.Target = BindingTarget.Type;
+            this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
+
+            return this;
+        }
+#endif
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.
@@ -444,5 +468,51 @@ namespace Ninject.Planning.Bindings
             Binding.DeactivationActions.Add((context, instance) => action(context, (T)instance));
             return this;
         }
+
+#if !NETCF
+        private void AddConstructorArguments(NewExpression ctorExpression, ParameterExpression constructorArgumentSyntaxParameterExpression)
+        {
+            var parameters = ctorExpression.Constructor.GetParameters();
+
+            for (int i = 0; i < ctorExpression.Arguments.Count; i++)
+            {
+                var argument = ctorExpression.Arguments[i];
+                var argumentName = parameters[i].Name;
+
+                this.AddConstructorArgument(argument, argumentName, constructorArgumentSyntaxParameterExpression);
+            }
+        }
+
+        private void AddConstructorArgument(Expression argument, string argumentName, ParameterExpression constructorArgumentSyntaxParameterExpression)
+        {
+            var methodCall = argument as MethodCallExpression;
+            if (methodCall == null ||
+                methodCall.Method.GetGenericMethodDefinition().DeclaringType != typeof(IConstructorArgumentSyntax))
+            {
+                var compiledExpression = Expression.Lambda(argument, constructorArgumentSyntaxParameterExpression).Compile();
+                Binding.Parameters.Add(new ConstructorArgument(argumentName, 
+                    ctx => compiledExpression.DynamicInvoke(new ConstructorArgumentSyntax(ctx))));
+            }
+        }
+
+        private class ConstructorArgumentSyntax : IConstructorArgumentSyntax
+        {
+            public ConstructorArgumentSyntax(IContext context)
+            {
+                this.Context = context;
+            }
+
+            public T1 Inject<T1>()
+            {
+                throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only!");
+            }
+
+            public IContext Context
+            {
+                get;
+                private set;
+            }
+        }
+#endif
     }
 }

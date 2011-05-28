@@ -159,7 +159,9 @@
     <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
+    <Compile Include="Selection\Heuristics\SpecificConstructorSelector.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
+    <Compile Include="Syntax\IConstructorArgument.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
