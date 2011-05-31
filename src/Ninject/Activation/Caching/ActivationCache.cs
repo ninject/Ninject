@@ -172,7 +172,7 @@ namespace Ninject.Activation.Caching
             var deadObjects = objects.Where(entry => !((ReferenceEqualWeakReference)entry.Key).IsAlive).ToList();
             foreach (var deadObject in deadObjects)
             {
-                objects.Remove(deadObject);
+                objects.Remove(deadObject.Key);
             }
         }
 #else

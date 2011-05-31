@@ -58,11 +58,7 @@ namespace Ninject.Tests.Unit
             deactivatedObjectCount.Should().Be(1);
         }
 
-#if SILVERLIGHT_30 || SILVERLIGHT_20
-        [Fact(Skip = "Fails! reason is currently unknown. Needs investigation.")]
-#else
         [Fact]
-#endif
         public void DeadObjectsAreRemoved()
         {
             this.testee.AddActivatedInstance(new object());
