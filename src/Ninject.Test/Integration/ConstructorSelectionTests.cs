@@ -151,6 +151,21 @@ namespace Ninject.Tests.Integration
                 barracks1.Warrior.Should().NotBeSameAs(barracks2.Warrior);
             }
         }
+
+        [Fact]
+        public void ConstantsCanBePassedToToConstructor()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                var ninja = new Ninja(new Sword());
+                kernel.Bind<Barracks>().ToConstructor(_ => new Barracks(ninja));
+
+                var barracks1 = kernel.Get<Barracks>();
+                var barracks2 = kernel.Get<Barracks>();
+
+                barracks1.Warrior.Should().BeSameAs(barracks2.Warrior);
+            }
+        }
         
         [Fact]
         public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
