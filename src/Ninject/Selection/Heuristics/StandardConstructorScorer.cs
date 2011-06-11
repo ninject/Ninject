@@ -48,13 +48,10 @@ namespace Ninject.Selection.Heuristics
             int score = 1;
             foreach(ITarget target in directive.Targets)
             {
-                foreach(IParameter parameter in context.Parameters)
+                if (ParameterExists(context, target))
                 {
-                    if(string.Equals(target.Name, parameter.Name))
-                    {
-                        score++;
-                        continue;
-                    }
+                    score++;
+                    continue;
                 }
                 
                 Type targetType = target.Type;
@@ -63,12 +60,25 @@ namespace Ninject.Selection.Heuristics
 
                 if(targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
                     targetType = targetType.GetGenericArguments()[0];
-                
-                if(context.Kernel.GetBindings(targetType).Any())
+
+                if (context.Kernel.GetBindings(targetType).Any())
                     score++;
+                else
+                {
+                    score++;
+                    if (score > 0)
+                    {
+                        score += Int32.MinValue;
+                    }
+                }
             }
             
             return score;
+        }
+
+        private static bool ParameterExists(IContext context, ITarget target)
+        {
+            return context.Parameters.Any(parameter => string.Equals(target.Name, parameter.Name));
         }
     }
 }
