@@ -90,16 +90,15 @@ namespace Ninject
 
             GlobalKernelRegistry.StartManaging(this);
 
+            this.Bind<IKernel>().ToConstant(this).InTransientScope();
+            this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
+
 #if !NO_ASSEMBLY_SCANNING
             if (this.Settings.LoadExtensions)
             {
                 this.Load(this.Settings.ExtensionSearchPatterns);
             }
 #endif
-
-            this.Bind<IKernel>().ToConstant(this).InTransientScope();
-            this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
-
             this.Load(modules);
         }
 
