@@ -73,6 +73,16 @@ namespace Ninject.Infrastructure.Language
                 return IsDefined(propertyInfo, type, true);
             }
 
+#if NETCF
+            // Workaround for the CF bug that derived generic methods throw an exception for IsDefined
+            // This means that the Inject attribute can not be defined on base methods for CF framework
+            var methodInfo = member as MethodInfo;
+            if (methodInfo != null)
+            {
+                return methodInfo.IsDefined(type, false);
+            }
+#endif
+
             return member.IsDefined(type, true);
         }
 
