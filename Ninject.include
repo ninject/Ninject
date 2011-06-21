@@ -486,4 +486,93 @@
 			</fileset>
 		</zip>
 	</target>
+	
+	<target name="CopyDefaultTestInfrastructureAssemblies">
+		<call target="CopyProjectOutput"/>
+		<call target="CopyXUnit"/>
+		<call target="CopyMoq"/>
+		<call target="CopyFluentAssertions"/>
+	</target>
+
+	<target name="CopyDefaultTestInfrastructureAssemblies-SL">
+		<call target="CopyProjectOutput"/>
+		<call target="CopyXUnit-SL"/>
+		<call target="CopyMoq-SL"/>
+		<call target="CopyFluentAssertions-SL"/>
+	</target>
+
+	<target name="CopyFluentAssertions">
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.fluentassertions}/Net-4.0">
+				<include name="FluentAssertions.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.fluentassertions}/Net-3.5">
+				<include name="FluentAssertions.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="CopyMoq">
+		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.0'))}">
+			<fileset basedir="${path.tools.moq}/net35">
+				<include name="Moq.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+			<fileset basedir="${path.tools.moq}/net40">
+				<include name="Moq.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="CopyXUnit">
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.xunit}">
+				<include name="xunit.dll"/>
+				<include name="xunit.extensions.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="CopyFluentAssertions-SL">
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.fluentassertions}/${build.platform}">
+				<include name="FluentAssertions.Silverlight.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="CopyMoq-SL">
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight-4.0')}">
+			<fileset basedir="${path.tools.moq}/silverlight4">
+				<include name="Moq.Silverlight.dll"/>
+				<include name="Castle.Core.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'silverlight-4.0')}">
+			<fileset basedir="${path.tools.moq}/silverlight3">
+				<include name="Moq.Silverlight.dll"/>
+				<include name="Castle.Core-Silverlight.dll"/>
+				<include name="Castle.DynamicProxy-Silverlight.dll"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="CopyXUnit-SL">
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.xunit.sl}${build.platform}">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="CopyProjectOutput">
+		<copy todir="${current.path.test}" flatten="true">
+			<fileset basedir="${current.path.build}">
+				<include name="**/*.dll"/>
+			</fileset>
+		</copy>
+	</target>
 </project>
