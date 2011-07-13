@@ -28,7 +28,7 @@ namespace Ninject.Planning.Bindings
     /// <summary>
     /// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
     /// </summary>
-    public class BindingBuilder<T> : IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
+    public class BindingBuilder<T> : IBindingSyntax<T>
     {
         /// <summary>
         /// Gets the binding being built.

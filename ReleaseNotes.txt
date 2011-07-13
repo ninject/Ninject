@@ -1,6 +1,6 @@
 Version 2.4.0.0
 ---------------
-- Added: Support for default parameters. If not explicit binding exists for a debendency but there is default value defined it is uesd instead.
+- Added: Support for default parameters. If not explicit binding exists for a dependency but there is default value defined it is uesd instead.
 - Added: Support to define the constructor and constructor arguments using ToConstructor "to" overload
 - Changed: ToConstant bindings are in singleton scope by default
 - Changed: Separate project for medium trust environments.
