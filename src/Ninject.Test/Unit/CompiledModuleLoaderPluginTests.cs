@@ -16,13 +16,13 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     {
         protected readonly CompiledModuleLoaderPlugin loaderPlugin;
         protected readonly Mock<IKernel> kernelMock;
-        protected readonly string moduleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestModule.dll");
-        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\Ninject.Tests.TestAssembly.dll");
+        protected readonly string moduleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
+        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestAssembly.dll");
 
         public CompiledModuleLoaderPluginContext()
         {
             kernelMock = new Mock<IKernel>();
-            loaderPlugin = new CompiledModuleLoaderPlugin(kernelMock.Object);
+            loaderPlugin = new CompiledModuleLoaderPlugin(kernelMock.Object, new AssemblyNameRetriever());
         }
     }
 

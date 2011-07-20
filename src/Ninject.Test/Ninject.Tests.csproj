@@ -116,6 +116,7 @@
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule2.cs" />
     <Compile Include="Integration\ModuleLoadingTests\OtherFakes\TestModule.cs" />
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs" />
+    <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithFileName.cs" />
     <Compile Include="Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs" />
     <Compile Include="Integration\OptionalTest.cs" />
     <Compile Include="Fakes\Dagger.cs" />
@@ -149,6 +150,7 @@
     </None>
     <Compile Include="Unit\ActivationCacheStrategyTest.cs" />
     <Compile Include="Unit\ActivationCacheTests.cs" />
+    <Compile Include="Unit\AssemblyNameRetrieverTests.cs" />
     <Compile Include="Unit\CachePruningTests.cs" />
     <Compile Include="Unit\CallbackProviderTests.cs" />
     <Compile Include="Unit\ConstantProviderTests.cs" />

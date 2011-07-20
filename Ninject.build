@@ -60,7 +60,7 @@
 			</fileset>
 		</copy>
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-		 output="${current.path.testmodules}/${product.assembly.testmodule}">
+		 output="${current.path.test}/${product.assembly.testmodule}">
 			<sources basedir="${path.src}">
 				<include name="TestModules/**/*.cs"/>
 			</sources>
@@ -75,7 +75,7 @@
 			</nowarn>
 		</csc>
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-		 output="${current.path.testmodules}/${product.assembly.testassembly}">
+		 output="${current.path.test}/${product.assembly.testassembly}">
 			<sources basedir="${path.src}">
 				<include name="TestAssembly/**/*.cs"/>
 			</sources>

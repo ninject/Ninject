@@ -205,11 +205,11 @@ namespace Ninject
 
             foreach (INinjectModule module in modules)
             {
-				if (string.IsNullOrEmpty(module.Name))
-				{
-					throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
-				}
-				
+                if (string.IsNullOrEmpty(module.Name))
+                {
+                    throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
+                }
+                
                 INinjectModule existingModule;
 
                 if (this.modules.TryGetValue(module.Name, out existingModule))

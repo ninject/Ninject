@@ -1,8 +1,8 @@
 ﻿#if !NO_MOQ
+#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
-    using System.Linq;
     using FluentAssertions;
     using Moq;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
@@ -26,8 +26,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Load(module);
 
             moduleMock.Verify(x => x.OnLoad(this.Kernel), Times.Once());
-            this.Kernel.GetModules().ShouldContainSingle().Should().Be(module);
-            this.Kernel.HasModule(module.Name).Should().BeTrue();
+            this.Kernel.GetModules().Should().BeEquivalentTo(module);
         }
 
         [Fact]
@@ -40,8 +39,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Unload(module.Name);
 
             moduleMock.Verify(x => x.OnUnload(this.Kernel), Times.Once());
-            this.Kernel.HasModule(module.Name).Should().BeFalse();
-            this.Kernel.GetModules().Count().Should().Be(0);
+            this.Kernel.GetModules().Should().BeEmpty();
         }
 
         [Fact]
@@ -49,7 +47,9 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             var module = this.CreateModule(null);
 
-            Assert.Throws<NotSupportedException>(() => this.Kernel.Load(module));
+            Action moduleLoadingAction = () => this.Kernel.Load(module);
+
+            moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
         [Fact]
@@ -57,7 +57,9 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             var module = this.CreateModule(string.Empty);
 
-            Assert.Throws<NotSupportedException>(() => this.Kernel.Load(module));
+            Action moduleLoadingAction = () => this.Kernel.Load(module);
+
+            moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
         [Fact]
@@ -68,7 +70,9 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             var module2 = this.CreateModule(ModuleName);
 
             this.Kernel.Load(module1);
-            Assert.Throws<NotSupportedException>(() => this.Kernel.Load(module2));
+            Action moduleLoadingAction = () => this.Kernel.Load(module2);
+
+            moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
         [Fact]
@@ -82,14 +86,17 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Unload(module1.Name);
             this.Kernel.Load(module2);
 
-            this.Kernel.GetModules().ShouldContainSingle().Should().Be(module2);
+            this.Kernel.GetModules().Should().BeEquivalentTo(module2);
         }
 
         [Fact]
         public void UnloadNotLoadedModuleFails()
         {
-            Assert.Throws<NotSupportedException>(() => this.Kernel.Unload("NotLoadedModule"));
+            Action moduleUnloadingAction = () => this.Kernel.Unload("NotLoadedModule");
+
+            moduleUnloadingAction.ShouldThrow<NotSupportedException>();
         }
     }
 }
+#endif
 #endif

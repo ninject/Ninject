@@ -1,35 +1,66 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
+//-------------------------------------------------------------------------------
+// <copyright file="CompiledModuleLoaderPlugin.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//           
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
+
 #if !NO_ASSEMBLY_SCANNING
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
-#endregion
-
 namespace Ninject.Modules
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
+    using Ninject.Components;
+    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
+    
     /// <summary>
     /// Loads modules from compiled assemblies.
     /// </summary>
     public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
     {
+        /// <summary>
+        /// The assembly name retriever.
+        /// </summary>
+        private readonly IAssemblyNameRetriever assemblyNameRetriever;
+
+        /// <summary>
+        /// The file extensions that are supported.
+        /// </summary>
         private static readonly string[] Extensions = new[] { ".dll" };
 
         /// <summary>
-        /// Gets or sets the kernel into which modules will be loaded.
+        /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
+        /// </summary>
+        /// <param name="kernel">The kernel into which modules will be loaded.</param>
+        /// <param name="assemblyNameRetriever">The assembly name retriever.</param>
+        public CompiledModuleLoaderPlugin(IKernel kernel, IAssemblyNameRetriever assemblyNameRetriever)
+        {
+            Ensure.ArgumentNotNull(kernel, "kernel");
+            this.Kernel = kernel;
+            this.assemblyNameRetriever = assemblyNameRetriever;
+        }
+
+        /// <summary>
+        /// Gets the kernel into which modules will be loaded.
         /// </summary>
         public IKernel Kernel { get; private set; }
 
@@ -42,75 +73,14 @@ namespace Ninject.Modules
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
-        /// </summary>
-        /// <param name="kernel">The kernel into which modules will be loaded.</param>
-        public CompiledModuleLoaderPlugin(IKernel kernel)
-        {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Kernel = kernel;
-        }
-
-        /// <summary>
         /// Loads modules from the specified files.
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
         public void LoadModules(IEnumerable<string> filenames)
         {
-            Kernel.Load(FindAssembliesWithModules(filenames).Select(name => Assembly.Load(name)));
-        }
-
-        private static IEnumerable<AssemblyName> FindAssembliesWithModules(IEnumerable<string> filenames)
-        {
-            var moduleCheckerType = typeof(ModuleChecker);
-            var temporaryDomain = CreateTemporaryAppDomain();
-            try
-            {
-                var checker = (ModuleChecker)temporaryDomain.CreateInstanceAndUnwrap(
-                    moduleCheckerType.Assembly.FullName, moduleCheckerType.FullName ?? String.Empty);
-
-                return checker.CheckModules(filenames.ToArray());
-            }
-            finally
-            {
-                AppDomain.Unload(temporaryDomain);
-            }
-        }
-
-        private class ModuleChecker : MarshalByRefObject
-        {
-            public IEnumerable<AssemblyName> CheckModules(IEnumerable<string> filenames)
-            {
-                var result = new List<AssemblyName>();
-                foreach(var filename in filenames)
-                {
-                    Assembly assembly;
-                    try
-                    {
-                        assembly = Assembly.LoadFrom(filename);
-                    }
-                    catch (BadImageFormatException)
-                    {
-                        // Ignore native assemblies
-                        continue;
-                    }
-                    if (assembly.HasNinjectModules())
-                    {
-                        result.Add(assembly.GetName(false));
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        private static AppDomain CreateTemporaryAppDomain()
-        {
-            return AppDomain.CreateDomain(
-                "NinjectModuleLoader",
-                AppDomain.CurrentDomain.Evidence,
-                AppDomain.CurrentDomain.SetupInformation);
+            var assembliesWithModules = this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
+            this.Kernel.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
         }
     }
 }
-#endif //!NO_ASSEMBLY_SCANNING
+#endif
