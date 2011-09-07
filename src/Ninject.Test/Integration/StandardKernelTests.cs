@@ -282,6 +282,18 @@
             services[0].Should().BeOfType<GenericService<int>>();
             services[1].Should().BeOfType<GenericService2<int>>();
         }
+
+        [Fact]
+        public void OpenGenericBindingsCanBeOverridenByClosedGenericBindings()
+        {
+            kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
+            kernel.Bind<IGeneric<int>>().To<ClosedGenericService>();
+
+            var service = kernel.Get<IGeneric<int>>();
+
+            service.Should().BeOfType<ClosedGenericService>();
+
+        }
     }
 
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
@@ -412,6 +424,7 @@
     public interface IGeneric<T> { }
     public class GenericService<T> : IGeneric<T> { }
     public class GenericService2<T> : IGeneric<T> { }
+    public class ClosedGenericService : IGeneric<int> { }
     public interface IGenericWithConstraints<T> where T : class { }
     public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
 
