@@ -73,6 +73,28 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             asks.SecondService.Should().NotBeNull();
             asks.SecondService.Should().BeOfType<TestServiceB>();
         }
+
+        [Fact]
+        public void SameInstanceIsReturnedByDefault()
+        {
+            container.Add<ITestService, TestServiceA>();
+
+            var service1 = container.Get<ITestService>();
+            var service2 = container.Get<ITestService>();
+
+            service1.Should().BeSameAs(service2);
+        }
+
+        [Fact]
+        public void DifferentInstanceAreReturnedForTransients()
+        {
+            container.AddTransient<ITestService, TestServiceA>();
+
+            var service1 = container.Get<ITestService>();
+            var service2 = container.Get<ITestService>();
+
+            service1.Should().NotBeSameAs(service2);
+        }
     }
 
     public class WhenGetAllIsCalledOnComponentContainer : ComponentContainerContext

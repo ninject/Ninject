@@ -72,5 +72,14 @@ namespace Ninject.Components
         /// <param name="component">The component type.</param>
         /// <returns>A series of instances of the specified component.</returns>
         IEnumerable<object> GetAll(Type component);
+
+        /// <summary>
+        /// Registers a transient component in the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The component's implementation type.</typeparam>
+        void AddTransient<TComponent, TImplementation>()
+            where TComponent : INinjectComponent
+            where TImplementation : TComponent, INinjectComponent;
     }
 }

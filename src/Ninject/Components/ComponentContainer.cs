@@ -27,6 +27,7 @@ namespace Ninject.Components
     {
         private readonly Multimap<Type, Type> _mappings = new Multimap<Type, Type>();
         private readonly Dictionary<Type, INinjectComponent> _instances = new Dictionary<Type, INinjectComponent>();
+        private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
         /// Gets or sets the kernel that owns the component container.
@@ -62,6 +63,19 @@ namespace Ninject.Components
             _mappings.Add(typeof(TComponent), typeof(TImplementation));
         }
 
+        /// <summary>
+        /// Registers a transient component in the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The component's implementation type.</typeparam>
+        public void AddTransient<TComponent, TImplementation>()
+            where TComponent : INinjectComponent
+            where TImplementation : TComponent, INinjectComponent
+        {
+            this.Add<TComponent, TImplementation>();
+            this.transients.Add(new KeyValuePair<Type, Type>(typeof(TComponent), typeof(TImplementation)));
+        }
+        
         /// <summary>
         /// Removes all registrations for the specified component.
         /// </summary>
@@ -176,7 +190,11 @@ namespace Ninject.Components
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
                 instance.Settings = Kernel.Settings;
-                _instances.Add(implementation, instance);
+
+                if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
+                {
+                    _instances.Add(implementation, instance);                    
+                }
 
                 return instance;
             }
@@ -196,5 +214,22 @@ namespace Ninject.Components
 
             return constructor;
         }
+
+#if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35
+        private class HashSet<T>
+        {
+            private IDictionary<T, object> data = new Dictionary<T,object>();
+ 
+            public void Add(T o)
+            {
+                this.data.Add(o, null);
+            }
+
+            public bool Contains(T o)
+            {
+                return this.data.ContainsKey(o);
+            }
+        }
+#endif
     }
 }
