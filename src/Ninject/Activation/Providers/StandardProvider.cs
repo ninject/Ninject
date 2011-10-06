@@ -95,7 +95,9 @@ namespace Ninject.Activation.Providers
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(target, "target");
 
-            var parameter = context.Parameters.OfType<ConstructorArgument>().Where(p => p.Name == target.Name).SingleOrDefault();
+            var parameter = context
+                .Parameters.OfType<IConstructorArgument>()
+                .Where(p => p.AppliesToTarget(context, target)).SingleOrDefault();
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }
 

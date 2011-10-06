@@ -19,7 +19,7 @@ namespace Ninject.Parameters
     /// <summary>
     /// Overrides the injected value of a constructor argument.
     /// </summary>
-    public class ConstructorArgument : Parameter
+    public class ConstructorArgument : Parameter, IConstructorArgument
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorArgument"/> class.
@@ -41,5 +41,21 @@ namespace Ninject.Parameters
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
         public ConstructorArgument(string name, Func<IContext, ITarget, object> valueCallback) : base(name, valueCallback, false) { }
+
+        /// <summary>
+        /// Determines if the parameter applies to the given target.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>
+        /// Tre if the parameter applies in the specified context to the specified target.
+        /// </returns>
+        /// <remarks>
+        /// Only one parameter may return true.
+        /// </remarks>
+        public bool AppliesToTarget(IContext context, ITarget target)
+        {
+            return string.Equals(this.Name, target.Name);
+        }
     }
 }

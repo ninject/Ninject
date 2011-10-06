@@ -78,7 +78,9 @@ namespace Ninject.Selection.Heuristics
 
         private static bool ParameterExists(IContext context, ITarget target)
         {
-            return context.Parameters.Any(parameter => string.Equals(target.Name, parameter.Name));
+            return context
+                .Parameters.OfType<IConstructorArgument>()
+                .Any(parameter => parameter.AppliesToTarget(context, target));
         }
     }
 }
