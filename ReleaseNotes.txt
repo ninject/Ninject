@@ -2,6 +2,9 @@ Version 2.4.0.0
 ---------------
 - Added: Support for default parameters. If not explicit binding exists for a dependency but there is default value defined it is uesd instead.
 - Added: Support to define the constructor and constructor arguments using ToConstructor "to" overload
+- Added: WhenInjectedExactlyInto When overload: Matches only if the target is exactly the specified type. This was the behavior of WhenInjectedInto in Ninject 2.2.
+- Added: WhenAnyAnchestorNamed. Matches if any of the anchestor bindings is named with the specified name.
+- Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default
 - Changed: Separate project for medium trust environments.
 - Changed: Open generic bindings can be overwritten by closed generic bindings

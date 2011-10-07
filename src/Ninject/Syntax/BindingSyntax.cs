@@ -103,16 +103,34 @@ namespace Ninject.Syntax
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
+        /// Types that derive from the specified type are considered as valid targets.
         /// </summary>
         /// <typeparam name="TParent">The type.</typeparam>
         IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>();
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
+        /// Types that derive from the specified type are considered as valid targets.
         /// </summary>
         /// <param name="parent">The type.</param>
         IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent);
 
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
+        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// will not be considered as valid target.  
+        /// </summary>
+        /// <typeparam name="TParent">The type.</typeparam>
+        IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto<TParent>();
+
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
+        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// will not be considered as valid target.  
+        /// </summary>
+        /// <param name="parent">The type.</param>
+        IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent);
+        
         /// <summary>
         /// Indicates that the binding should be used only when the class being injected has
         /// an attribute of the specified type.
@@ -161,6 +179,13 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="name">The name to expect.</param>
         IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name);
+
+        /// <summary>
+        /// Indicates that the binding should be used only when the service is being requested
+        /// by a service bound with the specified name or any of its anchestor services bound with the specified name. 
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name);
     }
 
     /// <summary>

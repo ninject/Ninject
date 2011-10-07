@@ -186,6 +186,7 @@ namespace Ninject.Planning.Bindings
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
+        /// Types that derive from the specified type are considered as valid targets.
         /// </summary>
         /// <typeparam name="TParent">The type.</typeparam>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>()
@@ -195,9 +196,33 @@ namespace Ninject.Planning.Bindings
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
+        /// Types that derive from the specified type are considered as valid targets.
         /// </summary>
         /// <param name="parent">The type.</param>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
+        {
+            Binding.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
+        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// will not be considered as valid target.  
+        /// </summary>
+        /// <typeparam name="TParent">The type.</typeparam>
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto<TParent>()
+        {
+            return WhenInjectedExactlyInto(typeof(TParent));
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
+        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// will not be considered as valid target.  
+        /// </summary>
+        /// <param name="parent">The type.</param>
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent)
         {
             Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
             return this;
@@ -288,6 +313,30 @@ namespace Ninject.Planning.Bindings
             String.Intern(name);
             Binding.Condition = r => r.ParentContext != null && string.Equals(r.ParentContext.Binding.Metadata.Name, name, StringComparison.Ordinal);
             return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when the service is being requested
+        /// by a service bound with the specified name or any of its anchestor services bound with the specified name. 
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        public IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name)
+        {
+            Binding.Condition = r => IsAnyAnchestorNamed(r, name);
+            return this;
+        }
+
+        private static bool IsAnyAnchestorNamed(IRequest request, string name)
+        {
+            var parentContext = request.ParentContext;
+            if (parentContext == null)
+            {
+                return false;
+            }
+
+            return 
+                string.Equals(parentContext.Binding.Metadata.Name, name, StringComparison.Ordinal) || 
+                IsAnyAnchestorNamed(parentContext.Request, name);
         }
 
         /// <summary>

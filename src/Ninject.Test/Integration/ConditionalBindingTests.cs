@@ -1,5 +1,6 @@
 namespace Ninject.Tests.Integration
 {
+    using System;
     using System.Linq;
     using FluentAssertions;
     using Ninject.Tests.Fakes;
@@ -131,6 +132,53 @@ namespace Ninject.Tests.Integration
             var result = kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(shuriken);
+        }
+
+        [Fact]
+        public void WhenInjectedIntoAppliesToBaseTypes()
+        {
+            kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedInto<IWarrior>();
+
+            var warrior = kernel.Get<IWarrior>();
+
+            warrior.Weapon.Should().BeOfType<Sword>();
+        }
+    
+        [Fact]
+        public void WhenInjectedExactlyIntoAppliesNotToBaseTypes()
+        {
+            kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<IWarrior>();
+
+            Action getWarrior = () => kernel.Get<IWarrior>();
+
+            getWarrior.ShouldThrow<ActivationException>();
+        }
+    
+        [Fact]
+        public void WhenInjectedExactlyIntoAppliesToServiceType()
+        {
+            kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<Samurai>();
+
+            var warrior = kernel.Get<IWarrior>();
+
+            warrior.Weapon.Should().BeOfType<Sword>();
+        }
+    
+        [Fact]
+        public void WhenAnyAnchestorNamedAppliesToGrandParentAndParent()
+        {
+            const string Name = "SomeName";
+            kernel.Bind<Barracks>().ToSelf().Named(Name);
+            kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAnchestorNamed(Name);
+
+            var barack = kernel.Get<Barracks>();
+
+            barack.Weapon.Should().BeOfType<Sword>();
+            barack.Warrior.Weapon.Should().BeOfType<Sword>();
         }
     }
 }
