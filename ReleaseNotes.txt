@@ -4,12 +4,16 @@ Version 2.4.0.0
 - Added: Support to define the constructor and constructor arguments using ToConstructor "to" overload
 - Added: WhenInjectedExactlyInto When overload: Matches only if the target is exactly the specified type. This was the behavior of WhenInjectedInto in Ninject 2.2.
 - Added: WhenAnyAnchestorNamed. Matches if any of the anchestor bindings is named with the specified name.
+- Added default binding for IResolutionRoot that returns the kernel.
+- Added: Open generic bindings can be overriden by closed generics for specific types.
+
 - Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default
 - Changed: Separate project for medium trust environments.
 - Changed: Open generic bindings can be overwritten by closed generic bindings
+
 - Removed: No web builds. All builds are have no reference to web anymore
-- Added default binding for IResolutionRoot that returns the kernel.
+
 - Bugfix, Breaking change: Get all will now return all bindings and not skip unconditional ones anymore in case there is a conditional one. This is the same behavior as the version 2.0.1 and bevore had. 
 - Bugfix: Fixed that the CF and SL version of the activation cache did not properly remove the weak references
 - Bugfix (for CF): The CF version threw an exception when a class had a generic method on a base class. This bugfix has the side effect that the Inject attribute cannot be defined on base methods anymore. It has to be defined on the overriden method! 
