@@ -69,6 +69,7 @@
             weapon1.Should().NotBeSameAs(weapon2);
         }
 
+#if !MONO
         [Fact]
         public void InstancesActivatedWithinScopeAreDeactivatedAfterThreadIsGarbageCollectedAndCacheIsPruned()
         {
@@ -94,5 +95,6 @@
             instance.Should().NotBeNull();
             instance.IsDisposed.Should().BeTrue();
         }
+#endif
     }
 }

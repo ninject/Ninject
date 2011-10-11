@@ -161,7 +161,7 @@ namespace Ninject.Infrastructure.Language
 
         private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
         {
-#if MEDIUM_TRUST
+#if MEDIUM_TRUST || MONO
             var baseDefinition = method.GetBaseDefinition(); 
             var type = method.DeclaringType.BaseType;
             MethodInfo result = null;

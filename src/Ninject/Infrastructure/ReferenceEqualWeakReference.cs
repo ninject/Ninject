@@ -56,7 +56,7 @@ namespace Ninject.Infrastructure
         /// <summary>
         /// Gets or sets the target of this weak reference.
         /// </summary>
-        /// <value>The targe of this weak reference.</value>
+        /// <value>The target of this weak reference.</value>
         public object Target
         {
             get

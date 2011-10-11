@@ -30,6 +30,7 @@
             instance1.Should().NotBeSameAs(instance2);
         }
 
+#if !MONO
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
@@ -45,6 +46,7 @@
 
             reference.IsAlive.Should().BeFalse();
         }
+#endif
     }
 
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
@@ -60,6 +62,7 @@
             sword1.Should().NotBeSameAs(sword2);
         }
 
+#if !MONO
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
@@ -80,6 +83,7 @@
 
             cache.Count.Should().Be(0);
         }
+#endif
     }
 
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
@@ -95,6 +99,7 @@
             instance1.Should().NotBeSameAs(instance2);
         }
 
+#if !MONO
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
@@ -110,6 +115,7 @@
 
             reference.IsAlive.Should().BeFalse();
         }
+#endif
     }
 
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
@@ -125,6 +131,7 @@
             instance1.Should().NotBeSameAs(instance2);
         }
 
+#if !MONO
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
@@ -140,6 +147,7 @@
 
             reference.IsAlive.Should().BeFalse();
         }
+#endif
     }
 
     public class SwordProvider : Provider<Sword>

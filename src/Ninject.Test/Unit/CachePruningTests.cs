@@ -32,6 +32,7 @@ namespace Ninject.Tests.Unit.CacheTests
             this.cache = new Cache(new PipelineMock(), this.cachePrunerMock.Object);
         }
 
+#if !MONO
         [Fact]
         public void CollectedScopeInstancesAreRemoved()
         {
@@ -49,6 +50,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
             swordCollected.Should().BeTrue();
         }
+#endif
 
         [Fact]
         public void UncollectedScopeInstancesAreNotRemoved()

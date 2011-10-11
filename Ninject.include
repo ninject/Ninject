@@ -271,7 +271,21 @@
 	</target>
 	
 	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5')}">
-		<exec program="${path.tools.xunit.console}" workingdir="${current.path.test}" commandline="${product.assembly.test} /html ${current.path.test}/results.html" failonerror="true"/>
+		<exec 
+			program="${path.tools.xunit.console}" 
+			workingdir="${current.path.test}" 
+			commandline="${product.assembly.test} /html ${current.path.test}/results.html" 
+			failonerror="true"
+			if="${not(string::contains(build.platform, 'mono'))}"/>
+
+		<if test="${string::contains(build.platform, 'mono')}">
+			<exec 
+				program="${framework::get-runtime-engine(framework::get-target-framework())}" 
+				workingdir="${current.path.test}" 
+				commandline="${path.tools.xunit.console} ${product.assembly.test} /html ${current.path.test}/results.html" 
+				failonerror="true"/>
+		</if>
+			
 		<if test="${not Is64BitOperatingSystem}">
 			<exec verbose="true" program="${path.tools.ncover}/ncover.console.exe" workingdir="${current.path.test}"
 				commandline="&quot;${path.tools.xunit.console}&quot; &quot;${product.assembly.test}&quot; //reg //w &quot;.&quot; //x &quot;coverage.xml&quot;" />
