@@ -28,6 +28,7 @@ namespace Ninject.Infrastructure.Language
         const BindingFlags Flags = DefaultFlags;
 #endif
 
+#if !MONO
         private static MethodInfo parentDefinitionMethodInfo;
 
         private static MethodInfo ParentDefinitionMethodInfo
@@ -43,6 +44,7 @@ namespace Ninject.Infrastructure.Language
                 return parentDefinitionMethodInfo;
             }
         }
+#endif
 
         /// <summary>
         /// Determines whether the specified member has attribute.
