@@ -23,6 +23,9 @@ namespace Ninject.Activation.Caching
     /// </summary>
     public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
     {
+        /// <summary>
+        /// indicator for if GC has been run.
+        /// </summary>
         private readonly WeakReference indicator = new WeakReference(new object());
         
         /// <summary>
@@ -30,6 +33,9 @@ namespace Ninject.Activation.Caching
         /// </summary>
         private readonly List<IPruneable> caches = new List<IPruneable>();
 
+        /// <summary>
+        /// The timer used to trigger the cache pruning
+        /// </summary>
         private Timer timer;
 
         /// <summary>
@@ -65,10 +71,18 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Stop()
         {
-            this.timer.Change(Timeout.Infinite, Timeout.Infinite);
-            this.timer.Dispose();
-            this.timer = null;
-            this.caches.Clear();
+            using (var signal = new ManualResetEvent(false))
+            {
+#if !NETCF
+                this.timer.Dispose(signal);
+                signal.WaitOne();
+#else
+                this.timer.Dispose();
+#endif
+
+                this.timer = null;
+                this.caches.Clear();
+            }
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
