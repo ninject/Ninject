@@ -30,6 +30,14 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
             block.CanResolve(request);
             parentMock.Verify(x => x.CanResolve(request));
         }
+    
+        [Fact]
+        public void DelegatesCallToParent2()
+        {
+            IRequest request = requestMock.Object;
+            block.CanResolve(request, true);
+            parentMock.Verify(x => x.CanResolve(request, true));
+        }
     }
 
     public class WhenResolveIsCalledWithRequestObject : ActivationBlockContext

@@ -1,18 +1,26 @@
 ﻿namespace Ninject.Tests.Integration.StandardKernelTests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using FluentAssertions;
+
+    using Ninject.Parameters;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class StandardKernelContext
+    public class StandardKernelContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public StandardKernelContext()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 
@@ -423,6 +431,20 @@
         }
     }
 
+    public class WhenCanResolveIsCalled : StandardKernelContext
+    {
+        [Fact]
+        public void ForImplicitBindings()
+        {
+            this.kernel.Get<Sword>();
+            var request = this.kernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+
+            this.kernel.CanResolve(request, true).Should().BeFalse();
+            this.kernel.CanResolve(request, false).Should().BeTrue();
+            this.kernel.CanResolve(request).Should().BeTrue();
+        }
+    }
+    
     public class InitializableA : IInitializable
     {
         public static int Count = 0;

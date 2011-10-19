@@ -71,7 +71,21 @@ namespace Ninject.Activation.Blocks
         public bool CanResolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return Parent.CanResolve(request);
+            return this.Parent.CanResolve(request);
+        }
+
+        /// <summary>
+        /// Determines whether the specified request can be resolved.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <returns>
+        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// </returns>
+        public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
+        {
+            Ensure.ArgumentNotNull(request, "request");
+            return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
         /// <summary>

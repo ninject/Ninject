@@ -319,6 +319,21 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Determines whether the specified request can be resolved.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <returns>
+        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool CanResolve(IRequest request, bool ignoreImplicitBindings)
+        {
+            Ensure.ArgumentNotNull(request, "request");
+            return this.GetBindings(request.Service)
+                .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
+        }
+
+        /// <summary>
         /// Resolves instances for the specified request. The instances are not actually resolved
         /// until a consumer iterates over the enumerator.
         /// </summary>
