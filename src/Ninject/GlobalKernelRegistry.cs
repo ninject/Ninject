@@ -18,7 +18,10 @@ namespace Ninject
         /// <param name="kernel">The kernel.</param>
         public static void StartManaging(IKernel kernel)
         {
-            kernels.Add(kernel);
+            lock (kernels)
+            {
+                kernels.Add(kernel);
+            }
         }
 
         /// <summary>
@@ -27,7 +30,10 @@ namespace Ninject
         /// <param name="kernel">The kernel.</param>
         public static void StopManaging(IKernel kernel)
         {
-            kernels.Remove(kernel);
+            lock (kernels)
+            {
+                kernels.Remove(kernel);
+            }
         }
 
         /// <summary>
@@ -38,7 +44,13 @@ namespace Ninject
         {
             get
             {
-                return kernels;
+                var result = new List<IKernel>();
+                lock (kernels)
+                {
+                    result.AddRange(kernels);
+                }
+
+                return result;
             }
         }
     }
