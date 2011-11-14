@@ -88,8 +88,6 @@ namespace Ninject
 
             this.AddComponents();
 
-            GlobalKernelRegistry.StartManaging(this);
-
             this.Bind<IKernel>().ToConstant(this).InTransientScope();
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
@@ -119,8 +117,6 @@ namespace Ninject
         {
             if (disposing && !IsDisposed)
             {
-                GlobalKernelRegistry.StopManaging(this);
-
                 if (this.Components != null)
                 {
                     // Deactivate all cached instances before shutting down the kernel.

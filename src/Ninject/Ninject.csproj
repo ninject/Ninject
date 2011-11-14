@@ -87,7 +87,8 @@
     <Compile Include="Activation\Caching\ICachePruner.cs" />
     <Compile Include="Activation\Caching\IPruneable.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
-    <Compile Include="GlobalKernelRegistry.cs" />
+    <Compile Include="GlobalKernelRegistration.cs" />
+    <Compile Include="GlobalKernelRegistrationModule.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />
     <Compile Include="Modules\IAssemblyNameRetriever.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
