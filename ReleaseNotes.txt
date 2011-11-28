@@ -11,6 +11,7 @@ Version 2.4.0.0
 - Changed: ToConstant bindings are in singleton scope by default
 - Changed: Separate project for medium trust environments.
 - Changed: Open generic bindings can be overwritten by closed generic bindings
+- Changed: Ninject modules have a new method VerifyRequiredModulesAreLoaded to check if their dependencies are loaded.
 
 - Removed: No web builds. All builds are have no reference to web anymore
 

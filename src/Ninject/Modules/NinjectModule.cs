@@ -73,6 +73,14 @@ namespace Ninject.Modules
         }
 
         /// <summary>
+        /// Called after loading the modules. A module can verify here if all other required modules are loaded.
+        /// </summary>
+        public void OnVerifyRequiredModules()
+        {
+            this.VerifyRequiredModulesAreLoaded();
+        }
+
+        /// <summary>
         /// Loads the module into the kernel.
         /// </summary>
         public abstract void Load();
@@ -81,6 +89,11 @@ namespace Ninject.Modules
         /// Unloads the module from the kernel.
         /// </summary>
         public virtual void Unload() { }
+
+        /// <summary>
+        /// Called after loading the modules. A module can verify here if all other required modules are loaded.
+        /// </summary>
+        public virtual void VerifyRequiredModulesAreLoaded() { }
 
         /// <summary>
         /// Unregisters all bindings for the specified service.

@@ -36,5 +36,10 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="kernel">The kernel that is unloading the module.</param>
         void OnUnload(IKernel kernel);
+
+        /// <summary>
+        /// Called after loading the modules. A module can verify here if all other required modules are loaded.
+        /// </summary>
+        void OnVerifyRequiredModules();
     }
 }

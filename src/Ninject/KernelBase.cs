@@ -217,6 +217,11 @@ namespace Ninject
 
                 this.modules.Add(module.Name, module);
             }
+
+            foreach (INinjectModule module in modules)
+            {
+                module.OnVerifyRequiredModules();
+            }
         }
 
 #if !NO_ASSEMBLY_SCANNING

@@ -3,6 +3,7 @@
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
+    using System.Text;
     using FluentAssertions;
     using Moq;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
@@ -95,6 +96,23 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             Action moduleUnloadingAction = () => this.Kernel.Unload("NotLoadedModule");
 
             moduleUnloadingAction.ShouldThrow<NotSupportedException>();
+        }
+    
+        [Fact]
+        public void ModulesAreVerifiedAfterAllModulesAreLoaded()
+        {
+            var moduleMock1 = this.CreateModuleMock("SomeName1");
+            var moduleMock2 = this.CreateModuleMock("SomeName2");
+            var orderStringBuilder = new StringBuilder();
+
+            moduleMock1.Setup(m => m.OnLoad(this.Kernel)).Callback(() => orderStringBuilder.Append("LoadModule1 "));
+            moduleMock2.Setup(m => m.OnLoad(this.Kernel)).Callback(() => orderStringBuilder.Append("LoadModule2 "));
+            moduleMock1.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
+            moduleMock2.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
+
+            this.Kernel.Load(moduleMock1.Object, moduleMock2.Object);
+
+            orderStringBuilder.ToString().Should().Be("LoadModule1 LoadModule2 VerifyModule VerifyModule ");
         }
     }
 }
