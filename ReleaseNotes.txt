@@ -6,6 +6,7 @@ Version 2.4.0.0
 - Added: WhenAnyAnchestorNamed. Matches if any of the anchestor bindings is named with the specified name.
 - Added default binding for IResolutionRoot that returns the kernel.
 - Added: Open generic bindings can be overriden by closed generics for specific types.
+- Added: Support for extensions that they can define bindings that return the same instance for different interfaces (interface segregation principle).
 
 - Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default

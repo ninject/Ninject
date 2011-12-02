@@ -53,8 +53,8 @@ namespace Ninject
         /// <summary>
         /// Loads the module(s) into the kernel.
         /// </summary>
-        /// <param name="modules">The modules to load.</param>
-        void Load(IEnumerable<INinjectModule> modules);
+        /// <param name="m">The modules to load.</param>
+        void Load(IEnumerable<INinjectModule> m);
 
         #if !NO_ASSEMBLY_SCANNING
         /// <summary>

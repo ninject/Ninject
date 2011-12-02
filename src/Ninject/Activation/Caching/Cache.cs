@@ -26,8 +26,8 @@ namespace Ninject.Activation.Caching
         /// Contains all cached instances.
         /// This is a dictionary of scopes to a multimap for bindings to cache entries.
         /// </summary>
-        private readonly IDictionary<object, Multimap<IBinding, CacheEntry>> entries =
-            new Dictionary<object, Multimap<IBinding, CacheEntry>>();
+        private readonly IDictionary<object, Multimap<IBindingConfiguration, CacheEntry>> entries =
+            new Dictionary<object, Multimap<IBindingConfiguration, CacheEntry>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cache"/> class.
@@ -87,7 +87,7 @@ namespace Ninject.Activation.Caching
                 var weakScopeReference = new ReferenceEqualWeakReference(scope);
                 if (!this.entries.ContainsKey(weakScopeReference))
                 {
-                    this.entries[weakScopeReference] = new Multimap<IBinding, CacheEntry>();
+                    this.entries[weakScopeReference] = new Multimap<IBindingConfiguration, CacheEntry>();
                     var notifyScope = scope as INotifyWhenDisposed;
                     if (notifyScope != null)
                     {
@@ -95,7 +95,7 @@ namespace Ninject.Activation.Caching
                     }
                 }
 
-                this.entries[weakScopeReference].Add(context.Binding, entry);
+                this.entries[weakScopeReference].Add(context.Binding.BindingConfiguration, entry);
             }
         }
 
@@ -115,13 +115,13 @@ namespace Ninject.Activation.Caching
 
             lock (this.entries)
             {
-                Multimap<IBinding, CacheEntry> bindings;
+                Multimap<IBindingConfiguration, CacheEntry> bindings;
                 if (!this.entries.TryGetValue(scope, out bindings))
                 {
                     return null;
                 }
 
-                foreach (var entry in bindings[context.Binding])
+                foreach (var entry in bindings[context.Binding.BindingConfiguration])
                 {
                     if (context.HasInferredGenericArguments)
                     {
@@ -191,7 +191,7 @@ namespace Ninject.Activation.Caching
         {
             lock (this.entries)
             {
-                Multimap<IBinding, CacheEntry> bindings;
+                Multimap<IBindingConfiguration, CacheEntry> bindings;
                 if (this.entries.TryGetValue(scope, out bindings))
                 {
                     this.Forget(GetAllBindingEntries(bindings));
@@ -217,7 +217,7 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="bindings">The bindings.</param>
         /// <returns>All bindings of a binding.</returns>
-        private static IEnumerable<CacheEntry> GetAllBindingEntries(IEnumerable<KeyValuePair<IBinding, ICollection<CacheEntry>>> bindings)
+        private static IEnumerable<CacheEntry> GetAllBindingEntries(IEnumerable<KeyValuePair<IBindingConfiguration, ICollection<CacheEntry>>> bindings)
         {
             return bindings.SelectMany(bindingEntries => bindingEntries.Value);
         }

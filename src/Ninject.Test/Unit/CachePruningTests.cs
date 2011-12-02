@@ -17,7 +17,7 @@ namespace Ninject.Tests.Unit.CacheTests
     public class WhenPruneIsCalled
     {
         private Mock<ICachePruner> cachePrunerMock;
-        private Mock<IBinding> bindingMock;
+        private Mock<IBindingConfiguration> bindingConfigurationMock;
         private Cache cache;
 
         public WhenPruneIsCalled()
@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.CacheTests
         public void SetUp()
         {
             this.cachePrunerMock = new Mock<ICachePruner>();
-            this.bindingMock = new Mock<IBinding>();
+            this.bindingConfigurationMock = new Mock<IBindingConfiguration>();
             this.cache = new Cache(new PipelineMock(), this.cachePrunerMock.Object);
         }
 
@@ -38,7 +38,7 @@ namespace Ninject.Tests.Unit.CacheTests
         {
             var sword = new Sword();
             var swordWeakReference = new WeakReference(sword);
-            var context = CreateContextMock(new object(), bindingMock.Object);
+            var context = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
 
             this.Execute(sword, context);
             sword = null;
@@ -57,7 +57,7 @@ namespace Ninject.Tests.Unit.CacheTests
         {
             var sword = new Sword();
             var swordWeakReference = new WeakReference(sword);
-            var context = CreateContextMock(new object(), bindingMock.Object);
+            var context = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
 
             this.Execute(sword, context);
             GC.Collect();
@@ -66,9 +66,11 @@ namespace Ninject.Tests.Unit.CacheTests
             swordCollected.Should().BeFalse();
         }
 
-        private static IContext CreateContextMock(object scope, IBinding binding, params Type[] genericArguments)
+        private static IContext CreateContextMock(object scope, IBindingConfiguration bindingConfiguration, params Type[] genericArguments)
         {
-            return new ContextMock(scope, binding, genericArguments);
+            var bindingMock = new Mock<IBinding>();
+            bindingMock.Setup(b => b.BindingConfiguration).Returns(bindingConfiguration);
+            return new ContextMock(scope, bindingMock.Object, genericArguments);
         }
 
         private void Execute(Sword sword, IContext context)

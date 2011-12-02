@@ -94,6 +94,8 @@
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Parameters\IConstructorArgument.cs" />
+    <Compile Include="Planning\Bindings\BindingConfiguration.cs" />
+    <Compile Include="Planning\Bindings\IBindingConfiguration.cs" />
     <Compile Include="Planning\Bindings\IBindingSyntax.cs" />
     <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
