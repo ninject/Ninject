@@ -242,10 +242,7 @@ namespace Ninject
         /// <param name="assemblies">The assemblies to search.</param>
         public void Load(IEnumerable<Assembly> assemblies)
         {
-            foreach (Assembly assembly in assemblies)
-            {
-                this.Load(assembly.GetNinjectModules());
-            }
+            this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
         }
 #endif //!NO_ASSEMBLY_SCANNING
 
