@@ -168,7 +168,17 @@
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\SpecificConstructorSelector.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
-    <Compile Include="Syntax\IConstructorArgument.cs" />
+    <Compile Include="Syntax\IBindingInNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingInSyntax.cs" />
+    <Compile Include="Syntax\IBindingNamedSyntax.cs" />
+    <Compile Include="Syntax\IBindingNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingToSyntax.cs" />
+    <Compile Include="Syntax\IBindingWhenInNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingWhenSyntax.cs" />
+    <Compile Include="Syntax\IBindingWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingWithSyntax.cs" />
+    <Compile Include="Syntax\IConstructorArgumentSyntax.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
@@ -233,7 +243,7 @@
     <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
-    <Compile Include="Syntax\BindingSyntax.cs" />
+    <Compile Include="Syntax\IBindingSyntax.cs" />
     <Compile Include="Planning\Bindings\IBinding.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
