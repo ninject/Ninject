@@ -50,13 +50,9 @@ namespace Ninject.Planning
         {
             Ensure.ArgumentNotNull(type, "type");
 
-            IPlan plan;
-            if (plans.TryGetValue(type, out plan))
-            {
-                return plan;
-            }
             lock (plans)
             {
+                IPlan plan;
                 if (plans.TryGetValue(type, out plan))
                 {
                     return plan;

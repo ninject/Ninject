@@ -285,10 +285,7 @@ namespace Ninject
             var request = this.CreateRequest(service, null, parameters, false, false);
             var context = this.CreateContext(request, binding);
 
-            lock (planner)
-            {
-                context.Plan = planner.GetPlan(service);
-            }
+            context.Plan = planner.GetPlan(service);
 
             var reference = new InstanceReference { Instance = instance };
             pipeline.Activate(context, reference);
