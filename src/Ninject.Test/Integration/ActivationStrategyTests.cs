@@ -28,7 +28,7 @@
                 barracks.Weapon.Should().BeOfType<Shuriken>();
             }
         }
-
+        
         [Fact]
         public void InstanceIsActivatedOnCreationWithContext()
         {

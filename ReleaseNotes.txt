@@ -1,4 +1,4 @@
-Version 2.4.0.0
+Version 3.0.0.0
 ---------------
 - Added: Support for default parameters. If not explicit binding exists for a dependency but there is default value defined it is uesd instead.
 - Added: Support to define the constructor and constructor arguments using ToConstructor "to" overload
@@ -7,6 +7,7 @@ Version 2.4.0.0
 - Added default binding for IResolutionRoot that returns the kernel.
 - Added: Open generic bindings can be overriden by closed generics for specific types.
 - Added: Support for extensions that they can define bindings that return the same instance for different interfaces (interface segregation principle).
+- Added: Generic Overloads for OnActivation and OnDeactivation that can be used to cast the implementation type. 
 
 - Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default
