@@ -86,6 +86,7 @@
     <Compile Include="Activation\Caching\IActivationCache.cs" />
     <Compile Include="Activation\Caching\ICachePruner.cs" />
     <Compile Include="Activation\Caching\IPruneable.cs" />
+    <Compile Include="Activation\IProvider{T}.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
@@ -94,7 +95,12 @@
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Parameters\IConstructorArgument.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder.cs" />
     <Compile Include="Planning\Bindings\BindingConfiguration.cs" />
+    <Compile Include="Planning\Bindings\BindingConfigurationBuilder.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2}.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2,T3}.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2,T3,T4}.cs" />
     <Compile Include="Planning\Bindings\IBindingConfiguration.cs" />
     <Compile Include="Planning\Bindings\IBindingSyntax.cs" />
     <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
@@ -160,7 +166,7 @@
     <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
     <Compile Include="Modules\IModuleLoaderPlugin.cs" />
     <Compile Include="Planning\Bindings\BindingTarget.cs" />
-    <Compile Include="Infrastructure\IHaveBinding.cs" />
+    <Compile Include="Infrastructure\IHaveBindingConfiguration.cs" />
     <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
     <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
@@ -168,12 +174,15 @@
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\SpecificConstructorSelector.cs" />
     <Compile Include="Syntax\BindingRoot.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2,T3,T4}.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2,T3}.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2}.cs" />
     <Compile Include="Syntax\IBindingInNamedWithOrOnSyntax.cs" />
     <Compile Include="Syntax\IBindingInSyntax.cs" />
     <Compile Include="Syntax\IBindingNamedSyntax.cs" />
     <Compile Include="Syntax\IBindingNamedWithOrOnSyntax.cs" />
     <Compile Include="Syntax\IBindingOnSyntax.cs" />
-    <Compile Include="Syntax\IBindingToSyntax.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1}.cs" />
     <Compile Include="Syntax\IBindingWhenInNamedWithOrOnSyntax.cs" />
     <Compile Include="Syntax\IBindingWhenSyntax.cs" />
     <Compile Include="Syntax\IBindingWithOrOnSyntax.cs" />
@@ -237,7 +246,7 @@
     <Compile Include="Activation\IProvider.cs" />
     <Compile Include="Planning\Plan.cs" />
     <Compile Include="KernelBase.cs" />
-    <Compile Include="Planning\Bindings\BindingBuilder.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1}.cs" />
     <Compile Include="Planning\Bindings\Binding.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />

@@ -1,9 +1,7 @@
 ﻿//-------------------------------------------------------------------------------
-// <copyright file="IBindingSyntax.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
+// <copyright file="IProvider{T}.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
+//   Authors: Remo Gloor (remo.gloor@gmail.com)
 //           
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
@@ -21,14 +19,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-namespace Ninject.Syntax
+namespace Ninject.Activation
 {
-    using Ninject.Infrastructure;
-
     /// <summary>
-    /// Used to define a basic binding syntax builder.
+    /// Provides instances ot the type T
     /// </summary>
-    public interface IBindingSyntax : IHaveBindingConfiguration, IHaveKernel
-    {
+    /// <typeparam name="T">The type provides by this implementation.</typeparam>
+    public interface IProvider<T> : IProvider
+    {       
     }
 }

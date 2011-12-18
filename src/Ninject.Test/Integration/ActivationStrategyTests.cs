@@ -134,7 +134,7 @@
             {
                 kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
                 kernel.Bind<IWarrior>().To<Samurai>();
-                kernel.Bind<IWeapon>().ToConstant(null);
+                kernel.Bind<IWeapon>().ToConstant((IWeapon)null);
                 var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
 
                 kernel.Get<IWarrior>();

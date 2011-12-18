@@ -17,11 +17,11 @@ namespace Ninject.Infrastructure
     /// <summary>
     /// Indicates the object has a reference to a <see cref="IBinding"/>.
     /// </summary>
-    public interface IHaveBinding
+    public interface IHaveBindingConfiguration
     {
         /// <summary>
         /// Gets the binding.
         /// </summary>
-        IBinding Binding { get; }
+        IBindingConfiguration BindingConfiguration { get; }
     }
 }

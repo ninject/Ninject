@@ -1,6 +1,6 @@
 namespace Ninject.Tests.Fakes
 {
-    public class Monk : IWarrior, ICleric
+    public class Monk : IWarrior, ICleric, IHuman, ILifeform
     {
         public IWeapon Weapon
         {
@@ -9,9 +9,9 @@ namespace Ninject.Tests.Fakes
                 return null;
             }
         }
-    }
 
-    public interface ICleric
-    {
+        public void Pray()
+        {
+        }
     }
 }

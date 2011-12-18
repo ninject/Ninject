@@ -57,6 +57,18 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Gets the kernel.
+        /// </summary>
+        /// <value>The kernel.</value>
+        protected override IKernel KernelInstance
+        {
+            get
+            {
+                return this;
+            }
+        }
+        
+        /// <summary>
         /// Adds components to the kernel during startup.
         /// </summary>
         protected override void AddComponents()

@@ -1,573 +1,75 @@
-﻿#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using Ninject.Activation;
-using Ninject.Activation.Providers;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Infrastructure.Language;
-using Ninject.Parameters;
-using Ninject.Syntax;
-#endregion
+﻿//-------------------------------------------------------------------------------
+// <copyright file="BindingBuilder.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//           
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Bindings
 {
 #if !NETCF
+    using System;
     using System.Linq.Expressions;
 #endif
-    using Ninject.Planning.Targets;
+    using Ninject.Activation;
+    using Ninject.Infrastructure;
+    using Ninject.Parameters;
+    using Ninject.Syntax;
 
     /// <summary>
-    /// Provides a root for the fluent syntax associated with an <see cref="Binding"/>.
+    /// Provides a root for the fluent syntax associated with an <see cref="BindingConfiguration"/>.
     /// </summary>
-    public class BindingBuilder<T> : IBindingSyntax<T>
+    public class BindingBuilder
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BindingBuilder"/> class.
+        /// </summary>
+        /// <param name="bindingConfiguration">The binding to build.</param>
+        /// <param name="kernel">The kernel.</param>
+        public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel)
+        {
+            Ensure.ArgumentNotNull(bindingConfiguration, "binding");
+            Ensure.ArgumentNotNull(kernel, "kernel");
+            this.BindingConfiguration = bindingConfiguration;
+            this.Kernel = kernel;
+        }
+
         /// <summary>
         /// Gets the binding being built.
         /// </summary>
-        public IBinding Binding { get; private set; }
+        public IBindingConfiguration BindingConfiguration { get; private set; }
 
         /// <summary>
         /// Gets the kernel.
         /// </summary>
         public IKernel Kernel { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
-        /// </summary>
-        /// <param name="binding">The binding to build.</param>
-        /// <param name="kernel">The kernel.</param>
-        public BindingBuilder(IBinding binding, IKernel kernel)
-        {
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Binding = binding;
-            Kernel = kernel;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be self-bound.
-        /// </summary>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToSelf()
-        {
-            Binding.ProviderCallback = StandardProvider.GetCreationCallback(Binding.Service);
-            Binding.Target = BindingTarget.Self;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to the specified implementation type.
-        /// </summary>
-        /// <typeparam name="TImplementation">The implementation type.</typeparam>
-        public IBindingWhenInNamedWithOrOnSyntax<T> To<TImplementation>()
-            where TImplementation : T
-        {
-            Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
-            Binding.Target = BindingTarget.Type;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to the specified implementation type.
-        /// </summary>
-        /// <param name="implementation">The implementation type.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> To(Type implementation)
-        {
-            Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
-            Binding.Target = BindingTarget.Type;
-
-            return this;
-        }
-
-  #if !NETCF
-        /// <summary>
-        /// Indicates that the service should be bound to the speecified constructor.
-        /// </summary>
-        /// <param name="newExpression">The expression that specifies the constructor.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToConstructor(Expression<Func<IConstructorArgumentSyntax, T>> newExpression)
-        {
-            var ctorExpression = newExpression.Body as NewExpression;
-            if (ctorExpression == null)
-            {
-                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
-            }
-
-            Binding.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
-            Binding.Target = BindingTarget.Type;
-            this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
-
-            return this;
-        }
-#endif
-
-        /// <summary>
-        /// Indicates that the service should be bound to an instance of the specified provider type.
-        /// The instance will be activated via the kernel when an instance of the service is activated.
-        /// </summary>
-        /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider<TProvider>()
-            where TProvider : IProvider
-        {
-            Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
-            Binding.Target = BindingTarget.Provider;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to an instance of the specified provider type.
-        /// The instance will be activated via the kernel when an instance of the service is activated.
-        /// </summary>
-        /// <param name="providerType">The type of provider to activate.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(Type providerType)
-        {
-            Binding.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
-            Binding.Target = BindingTarget.Provider;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to the specified provider.
-        /// </summary>
-        /// <param name="provider">The provider.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToProvider(IProvider provider)
-        {
-            Binding.ProviderCallback = ctx => provider;
-            Binding.Target = BindingTarget.Provider;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to the specified callback method.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToMethod(Func<IContext, T> method)
-        {
-            Binding.ProviderCallback = ctx => new CallbackProvider<T>(method);
-            Binding.Target = BindingTarget.Method;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to the specified constant value.
-        /// </summary>
-        /// <param name="value">The constant value.</param>
-        public IBindingWhenInNamedWithOrOnSyntax<T> ToConstant(T value)
-        {
-            Binding.ProviderCallback = ctx => new ConstantProvider<T>(value);
-            Binding.Target = BindingTarget.Constant;
-            Binding.ScopeCallback = StandardScopeCallbacks.Singleton;
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only for requests that support the specified condition.
-        /// </summary>
-        /// <param name="condition">The condition.</param>
-        public IBindingInNamedWithOrOnSyntax<T> When(Func<IRequest, bool> condition)
-        {
-            Binding.Condition = condition;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
-        /// Types that derive from the specified type are considered as valid targets.
-        /// </summary>
-        /// <typeparam name="TParent">The type.</typeparam>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>()
-        {
-            return WhenInjectedInto(typeof(TParent));
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
-        /// Types that derive from the specified type are considered as valid targets.
-        /// </summary>
-        /// <param name="parent">The type.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
-        {
-            Binding.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
-        /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
-        /// </summary>
-        /// <typeparam name="TParent">The type.</typeparam>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto<TParent>()
-        {
-            return WhenInjectedExactlyInto(typeof(TParent));
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
-        /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
-        /// </summary>
-        /// <param name="parent">The type.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent)
-        {
-            Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the class being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of attribute.</typeparam>
-        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute
-        {
-            return WhenClassHas(typeof(TAttribute));
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the member being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of attribute.</typeparam>
-        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute
-        {
-            return WhenMemberHas(typeof(TAttribute));
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the target being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of attribute.</typeparam>
-        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute
-        {
-            return WhenTargetHas(typeof(TAttribute));
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the class being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <param name="attributeType">The type of attribute.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas(Type attributeType)
-        {
-            if (!typeof(Attribute).IsAssignableFrom(attributeType))
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenClassHas", attributeType));
-
-            Binding.Condition = r => r.Target != null && r.Target.Member.ReflectedType.HasAttribute(attributeType);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the member being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <param name="attributeType">The type of attribute.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
-        {
-            if (!typeof(Attribute).IsAssignableFrom(attributeType))
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenMemberHas", attributeType));
-
-            Binding.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the target being injected has
-        /// an attribute of the specified type.
-        /// </summary>
-        /// <param name="attributeType">The type of attribute.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType)
-        {
-            if (!typeof(Attribute).IsAssignableFrom(attributeType))
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, "WhenTargetHas", attributeType));
-
-            this.Binding.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the service is being requested
-        /// by a service bound with the specified name.
-        /// </summary>
-        /// <param name="name">The name to expect.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name)
-        {
-            String.Intern(name);
-            Binding.Condition = r => r.ParentContext != null && string.Equals(r.ParentContext.Binding.Metadata.Name, name, StringComparison.Ordinal);
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be used only when the service is being requested
-        /// by a service bound with the specified name or any of its anchestor services bound with the specified name. 
-        /// </summary>
-        /// <param name="name">The name to expect.</param>
-        public IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name)
-        {
-            Binding.Condition = r => IsAnyAnchestorNamed(r, name);
-            return this;
-        }
-
-        private static bool IsAnyAnchestorNamed(IRequest request, string name)
-        {
-            var parentContext = request.ParentContext;
-            if (parentContext == null)
-            {
-                return false;
-            }
-
-            return 
-                string.Equals(parentContext.Binding.Metadata.Name, name, StringComparison.Ordinal) || 
-                IsAnyAnchestorNamed(parentContext.Request, name);
-        }
-
-        /// <summary>
-        /// Indicates that the binding should be registered with the specified name. Names are not
-        /// necessarily unique; multiple bindings for a given service may be registered with the same name.
-        /// </summary>
-        /// <param name="name">The name to give the binding.</param>
-        public IBindingWithOrOnSyntax<T> Named(string name)
-        {
-            String.Intern(name);
-            Binding.Metadata.Name = name;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that only a single instance of the binding should be created, and then
-        /// should be re-used for all subsequent requests.
-        /// </summary>
-        public IBindingNamedWithOrOnSyntax<T> InSingletonScope()
-        {
-            Binding.ScopeCallback = StandardScopeCallbacks.Singleton;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that instances activated via the binding should not be re-used, nor have
-        /// their lifecycle managed by Ninject.
-        /// </summary>
-        public IBindingNamedWithOrOnSyntax<T> InTransientScope()
-        {
-            Binding.ScopeCallback = StandardScopeCallbacks.Transient;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that instances activated via the binding should be re-used within the same thread.
-        /// </summary>
-        public IBindingNamedWithOrOnSyntax<T> InThreadScope()
-        {
-            Binding.ScopeCallback = StandardScopeCallbacks.Thread;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that instances activated via the binding should be re-used as long as the object
-        /// returned by the provided callback remains alive (that is, has not been garbage collected).
-        /// </summary>
-        /// <param name="scope">The callback that returns the scope.</param>
-        public IBindingNamedWithOrOnSyntax<T> InScope(Func<IContext, object> scope)
-        {
-            Binding.ScopeCallback = scope;
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified constructor argument should be overridden with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the argument to override.</param>
-        /// <param name="value">The value for the argument.</param>
-        public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, object value)
-        {
-            Binding.Parameters.Add(new ConstructorArgument(name, value));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified constructor argument should be overridden with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the argument to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
-        public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, object> callback)
-        {
-            Binding.Parameters.Add(new ConstructorArgument(name, callback));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified constructor argument should be overridden with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the argument to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
-        public IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, ITarget, object> callback)
-        {
-            Binding.Parameters.Add(new ConstructorArgument(name, callback));
-            return this;
-        }
-        
-        /// <summary>
-        /// Indicates that the specified property should be injected with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the property to override.</param>
-        /// <param name="value">The value for the property.</param>
-        public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, object value)
-        {
-            Binding.Parameters.Add(new PropertyValue(name, value));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified property should be injected with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the property to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the property.</param>
-        public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, object> callback)
-        {
-            Binding.Parameters.Add(new PropertyValue(name, callback));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified property should be injected with the specified value.
-        /// </summary>
-        /// <param name="name">The name of the property to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the property.</param>
-        public IBindingWithOrOnSyntax<T> WithPropertyValue(string name, Func<IContext, ITarget, object> callback)
-        {
-            Binding.Parameters.Add(new PropertyValue(name, callback));
-            return this;
-        }
-        
-        /// <summary>
-        /// Adds a custom parameter to the binding.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        public IBindingWithOrOnSyntax<T> WithParameter(IParameter parameter)
-        {
-            Binding.Parameters.Add(parameter);
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the value of a piece of metadata on the binding.
-        /// </summary>
-        /// <param name="key">The metadata key.</param>
-        /// <param name="value">The metadata value.</param>
-        public IBindingWithOrOnSyntax<T> WithMetadata(string key, object value)
-        {
-            Binding.Metadata.Set(key, value);
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are activated.
-        /// </summary>
-        /// <param name="action">The action callback.</param>
-        public IBindingOnSyntax<T> OnActivation(Action<T> action)
-        {
-            return this.OnActivation<T>(action);
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are activated.
-        /// </summary>
-        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
-        /// <param name="action">The action callback.</param>
-        /// <returns>The fluent syntax.</returns>
-        public IBindingOnSyntax<T> OnActivation<TImplementation>(Action<TImplementation> action)
-        {
-            this.Binding.ActivationActions.Add((context, instance) => action((TImplementation)instance));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are activated.
-        /// </summary>
-        /// <param name="action">The action callback.</param>
-        public IBindingOnSyntax<T> OnActivation(Action<IContext, T> action)
-        {
-            return this.OnActivation<T>(action);
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are activated.
-        /// </summary>
-        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
-        /// <param name="action">The action callback.</param>
-        /// <returns>The fluent syntax.</returns>
-        public IBindingOnSyntax<T> OnActivation<TImplementation>(Action<IContext, TImplementation> action)
-        {
-            this.Binding.ActivationActions.Add((context, instance) => action(context, (TImplementation)instance));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are deactivated.
-        /// </summary>
-        /// <param name="action">The action callback.</param>
-        public IBindingOnSyntax<T> OnDeactivation(Action<T> action)
-        {
-            return this.OnDeactivation<T>(action);
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are deactivated.
-        /// </summary>
-        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
-        /// <param name="action">The action callback.</param>
-        /// <returns>The fluent syntax.</returns>
-        public IBindingOnSyntax<T> OnDeactivation<TImplementation>(Action<TImplementation> action)
-        {
-            this.Binding.DeactivationActions.Add((context, instance) => action((TImplementation)instance));
-            return this;
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are deactivated.
-        /// </summary>
-        /// <param name="action">The action callback.</param>
-        public IBindingOnSyntax<T> OnDeactivation(Action<IContext, T> action)
-        {
-            return this.OnDeactivation<T>(action);
-        }
-
-        /// <summary>
-        /// Indicates that the specified callback should be invoked when instances are deactivated.
-        /// </summary>
-        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
-        /// <param name="action">The action callback.</param>
-        /// <returns>The fluent syntax.</returns>
-        public IBindingOnSyntax<T> OnDeactivation<TImplementation>(Action<IContext, TImplementation> action)
-        {
-            this.Binding.DeactivationActions.Add((context, instance) => action(context, (TImplementation)instance));
-            return this;
-        }
-
 #if !NETCF
-        private void AddConstructorArguments(NewExpression ctorExpression, ParameterExpression constructorArgumentSyntaxParameterExpression)
+        /// <summary>
+        /// Adds the constructor arguments for the specified constructor expression.
+        /// </summary>
+        /// <param name="ctorExpression">The ctor expression.</param>
+        /// <param name="constructorArgumentSyntaxParameterExpression">The constructor argument syntax parameter expression.</param>
+        protected void AddConstructorArguments(NewExpression ctorExpression, ParameterExpression constructorArgumentSyntaxParameterExpression)
         {
             var parameters = ctorExpression.Constructor.GetParameters();
 
-            for (int i = 0; i < ctorExpression.Arguments.Count; i++)
+            for (var i = 0; i < ctorExpression.Arguments.Count; i++)
             {
                 var argument = ctorExpression.Arguments[i];
                 var argumentName = parameters[i].Name;
@@ -576,6 +78,12 @@ namespace Ninject.Planning.Bindings
             }
         }
 
+        /// <summary>
+        /// Adds a constructor argument for the specified argument expression.
+        /// </summary>
+        /// <param name="argument">The argument.</param>
+        /// <param name="argumentName">Name of the argument.</param>
+        /// <param name="constructorArgumentSyntaxParameterExpression">The constructor argument syntax parameter expression.</param>
         private void AddConstructorArgument(Expression argument, string argumentName, ParameterExpression constructorArgumentSyntaxParameterExpression)
         {
             var methodCall = argument as MethodCallExpression;
@@ -583,27 +91,44 @@ namespace Ninject.Planning.Bindings
                 methodCall.Method.GetGenericMethodDefinition().DeclaringType != typeof(IConstructorArgumentSyntax))
             {
                 var compiledExpression = Expression.Lambda(argument, constructorArgumentSyntaxParameterExpression).Compile();
-                Binding.Parameters.Add(new ConstructorArgument(argumentName, 
+                this.BindingConfiguration.Parameters.Add(new ConstructorArgument(
+                    argumentName, 
                     ctx => compiledExpression.DynamicInvoke(new ConstructorArgumentSyntax(ctx))));
             }
         }
 
+        /// <summary>
+        /// Passed to ToConstructor to specify that a constructor value is Injected.
+        /// </summary>
         private class ConstructorArgumentSyntax : IConstructorArgumentSyntax
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ConstructorArgumentSyntax"/> class.
+            /// </summary>
+            /// <param name="context">The context.</param>
             public ConstructorArgumentSyntax(IContext context)
             {
                 this.Context = context;
             }
 
-            public T1 Inject<T1>()
-            {
-                throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only!");
-            }
-
+            /// <summary>
+            /// Gets the context.
+            /// </summary>
+            /// <value>The context.</value>
             public IContext Context
             {
                 get;
                 private set;
+            }
+
+            /// <summary>
+            /// Specifies that the argument is injected.
+            /// </summary>
+            /// <typeparam name="T1">The type of the parameter</typeparam>
+            /// <returns>Not used. This interface has no implementation.</returns>
+            public T1 Inject<T1>()
+            {
+                throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only! Never call it directly.");
             }
         }
 #endif

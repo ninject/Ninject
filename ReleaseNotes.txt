@@ -8,6 +8,7 @@ Version 3.0.0.0
 - Added: Open generic bindings can be overriden by closed generics for specific types.
 - Added: Support for extensions that they can define bindings that return the same instance for different interfaces (interface segregation principle).
 - Added: Generic Overloads for OnActivation and OnDeactivation that can be used to cast the implementation type. 
+- Added: Bind<T1,T2, ...>() to define multiple interfaces for one service.
 
 - Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default

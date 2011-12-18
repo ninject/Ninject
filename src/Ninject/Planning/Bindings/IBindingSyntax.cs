@@ -14,7 +14,11 @@ namespace Ninject.Planning.Bindings
     /// The syntax to define bindings.
     /// </summary>
     /// <typeparam name="T">The type of the service.</typeparam>
-    public interface IBindingSyntax<T> : IBindingToSyntax<T>, IBindingWhenInNamedWithOrOnSyntax<T>, IBindingInNamedWithOrOnSyntax<T>, IBindingNamedWithOrOnSyntax<T>, IBindingWithOrOnSyntax<T>
+    public interface IBindingConfigurationSyntax<T> : 
+        IBindingWhenInNamedWithOrOnSyntax<T>, 
+        IBindingInNamedWithOrOnSyntax<T>, 
+        IBindingNamedWithOrOnSyntax<T>, 
+        IBindingWithOrOnSyntax<T>
     {
     }
 }

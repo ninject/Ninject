@@ -83,12 +83,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\xunit.net\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\tools\xunit.net\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\ICleric.cs" />
     <Compile Include="Fakes\Monk.cs" />
     <Compile Include="Fakes\Shield.cs" />
     <Compile Include="Integration\ConstantTests.cs" />
     <Compile Include="Fakes\ResolveCountingProvider.cs" />
+    <Compile Include="Integration\InterfaceSegregationWithTwoServicesTests.cs" />
+    <Compile Include="Integration\InterfaceSegregationWithThreeServicesTests.cs" />
+    <Compile Include="Integration\InterfaceSegregationWithFourServicesTests.cs" />
     <Compile Include="Integration\DefaultParameterTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
@@ -112,7 +119,6 @@
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
     <Compile Include="Fakes\KiteShield.cs" />
-    <Compile Include="Integration\InterfaceSegregationTests.cs" />
     <Compile Include="Integration\ModuleLoadingTests\ModuleLoadingContext.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule.cs" />
     <Compile Include="Integration\ModuleLoadingTests\Fakes\TestModule2.cs" />
@@ -216,6 +222,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

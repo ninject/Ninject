@@ -459,17 +459,6 @@ namespace Ninject
         }
 
         /// <summary>
-        /// Creates a new builder for the specified binding.
-        /// </summary>
-        /// <typeparam name="T">The type restriction to apply to the binding builder.</typeparam>
-        /// <param name="binding">The binding that will be built.</param>
-        /// <returns>The created builder.</returns>
-        protected override BindingBuilder<T> CreateBindingBuilder<T>(IBinding binding)
-        {
-            return new BindingBuilder<T>(binding, this);
-        }
-
-        /// <summary>
         /// Adds components to the kernel during startup.
         /// </summary>
         protected abstract void AddComponents();

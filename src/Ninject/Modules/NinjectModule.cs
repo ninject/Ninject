@@ -1,32 +1,53 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-#endregion
+//-------------------------------------------------------------------------------
+// <copyright file="NinjectModule.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//           
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
 
 namespace Ninject.Modules
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+
     /// <summary>
     /// A loadable unit that defines bindings for your application.
     /// </summary>
     public abstract class NinjectModule : BindingRoot, INinjectModule
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectModule"/> class.
+        /// </summary>
+        protected NinjectModule()
+        {
+            this.Bindings = new List<IBinding>();
+        }
+
+        /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
-        public IKernel Kernel { get; protected set; }
+        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Gets the module's name. Only a single module with a given name can be loaded at one time.
@@ -42,13 +63,17 @@ namespace Ninject.Modules
         public ICollection<IBinding> Bindings { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NinjectModule"/> class.
+        /// Gets the kernel.
         /// </summary>
-        protected NinjectModule()
+        /// <value>The kernel.</value>
+        protected override IKernel KernelInstance
         {
-            Bindings = new List<IBinding>();
+            get
+            {
+                return this.Kernel;
+            }
         }
-
+        
         /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
@@ -56,8 +81,8 @@ namespace Ninject.Modules
         public void OnLoad(IKernel kernel)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
-            Kernel = kernel;
-            Load();
+            this.Kernel = kernel;
+            this.Load();
         }
 
         /// <summary>
@@ -67,9 +92,9 @@ namespace Ninject.Modules
         public void OnUnload(IKernel kernel)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
-            Unload();
-            Bindings.Map(Kernel.RemoveBinding);
-            Kernel = null;
+            this.Unload();
+            this.Bindings.Map(this.Kernel.RemoveBinding);
+            this.Kernel = null;
         }
 
         /// <summary>
@@ -88,12 +113,16 @@ namespace Ninject.Modules
         /// <summary>
         /// Unloads the module from the kernel.
         /// </summary>
-        public virtual void Unload() { }
+        public virtual void Unload()
+        {
+        }
 
         /// <summary>
         /// Called after loading the modules. A module can verify here if all other required modules are loaded.
         /// </summary>
-        public virtual void VerifyRequiredModulesAreLoaded() { }
+        public virtual void VerifyRequiredModulesAreLoaded()
+        {
+        }
 
         /// <summary>
         /// Unregisters all bindings for the specified service.
@@ -101,7 +130,7 @@ namespace Ninject.Modules
         /// <param name="service">The service to unbind.</param>
         public override void Unbind(Type service)
         {
-            Kernel.Unbind(service);
+            this.Kernel.Unbind(service);
         }
 
         /// <summary>
@@ -112,8 +141,8 @@ namespace Ninject.Modules
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            Kernel.AddBinding(binding);
-            Bindings.Add(binding);
+            this.Kernel.AddBinding(binding);
+            this.Bindings.Add(binding);
         }
 
         /// <summary>
@@ -124,19 +153,8 @@ namespace Ninject.Modules
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            Kernel.RemoveBinding(binding);
-            Bindings.Remove(binding);
-        }
-
-        /// <summary>
-        /// Creates a new builder for the specified binding.
-        /// </summary>
-        /// <typeparam name="T">The type restriction to apply to the binding builder.</typeparam>
-        /// <param name="binding">The binding that will be built.</param>
-        /// <returns>The created builder.</returns>
-        protected override BindingBuilder<T> CreateBindingBuilder<T>(IBinding binding)
-        {
-            return new BindingBuilder<T>(binding, Kernel);
+            this.Kernel.RemoveBinding(binding);
+            this.Bindings.Remove(binding);
         }
     }
 }

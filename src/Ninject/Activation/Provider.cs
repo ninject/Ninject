@@ -7,18 +7,17 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#region Using Directives
-using System;
-using Ninject.Infrastructure;
-#endregion
 
 namespace Ninject.Activation
 {
+    using System;
+    using Ninject.Infrastructure;
+
     /// <summary>
     /// A simple abstract provider for instances of a specific type.
     /// </summary>
     /// <typeparam name="T">The type of instances the provider creates.</typeparam>
-    public abstract class Provider<T> : IProvider
+    public abstract class Provider<T> : IProvider<T>
     {
         /// <summary>
         /// Gets the type (or prototype) of instances the provider creates.
@@ -36,7 +35,7 @@ namespace Ninject.Activation
         public object Create(IContext context)
         {
             Ensure.ArgumentNotNull(context, "context");
-            return CreateInstance(context);
+            return this.CreateInstance(context);
         }
 
         /// <summary>

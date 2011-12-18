@@ -114,7 +114,7 @@ namespace Ninject.Tests.Integration
 
             kernel.Bind<IWeapon>().ToConstant(shortSword);
             kernel.Bind<IWeapon>().ToConstant(sword);
-            kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
+            kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
             var result = kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(sword);
@@ -127,8 +127,8 @@ namespace Ninject.Tests.Integration
             var shortSword = new ShortSword();
             var shuriken = new Shuriken();
 
-            kernel.Bind<IWeapon>().ToConstant(shortSword).Binding.IsImplicit = true;
-            kernel.Bind<IWeapon>().ToConstant(shuriken).Binding.IsImplicit = true;
+            kernel.Bind<IWeapon>().ToConstant(shortSword).BindingConfiguration.IsImplicit = true;
+            kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
             var result = kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(shuriken);

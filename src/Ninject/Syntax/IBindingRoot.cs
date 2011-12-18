@@ -1,20 +1,31 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using Ninject.Infrastructure;
-using Ninject.Planning.Bindings;
-#endregion
+//-------------------------------------------------------------------------------
+// <copyright file="IBindingRoot.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//           
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
+    using System;
+    using Ninject.Planning.Bindings;
+
     /// <summary>
     /// Provides a path to register bindings.
     /// </summary>
@@ -24,13 +35,23 @@ namespace Ninject.Syntax
         /// Declares a binding for the specified service.
         /// </summary>
         /// <typeparam name="T">The service to bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
         IBindingToSyntax<T> Bind<T>();
 
         /// <summary>
+        /// Declares a binding for the specified service.
+        /// </summary>
+        /// <typeparam name="T1">The first service to bind.</typeparam>
+        /// <typeparam name="T2">The second service to bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        IBindingToSyntax<T1, T2> Bind<T1, T2>();
+        
+        /// <summary>
         /// Declares a binding from the service to itself.
         /// </summary>
-        /// <param name="service">The service to bind.</param>
-        IBindingToSyntax<object> Bind(Type service);
+        /// <param name="services">The services to bind.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingToSyntax<object> Bind(params Type[] services);
 
         /// <summary>
         /// Unregisters all bindings for the specified service.
@@ -48,12 +69,14 @@ namespace Ninject.Syntax
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <typeparam name="T">The service to re-bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
         IBindingToSyntax<T> Rebind<T>();
 
         /// <summary>
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <param name="service">The service to re-bind.</param>
+        /// <returns>The fluent syntax.</returns>
         IBindingToSyntax<object> Rebind(Type service);
 
         /// <summary>

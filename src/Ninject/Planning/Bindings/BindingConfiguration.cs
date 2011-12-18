@@ -33,15 +33,15 @@ namespace Ninject.Planning.Bindings
     public class BindingConfiguration : IBindingConfiguration
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Binding"/> class.
+        /// Initializes a new instance of the <see cref="BindingConfiguration"/> class.
         /// </summary>
         public BindingConfiguration()
         {
-            Metadata = new BindingMetadata();
-            Parameters = new List<IParameter>();
-            ActivationActions = new List<Action<IContext, object>>();
-            DeactivationActions = new List<Action<IContext, object>>();
-            ScopeCallback = StandardScopeCallbacks.Transient;
+            this.Metadata = new BindingMetadata();
+            this.Parameters = new List<IParameter>();
+            this.ActivationActions = new List<Action<IContext, object>>();
+            this.DeactivationActions = new List<Action<IContext, object>>();
+            this.ScopeCallback = StandardScopeCallbacks.Transient;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         public bool IsConditional
         {
-            get { return Condition != null; }
+            get { return this.Condition != null; }
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Ninject.Planning.Bindings
         public IProvider GetProvider(IContext context)
         {
             Ensure.ArgumentNotNull(context, "context");
-            return ProviderCallback(context);
+            return this.ProviderCallback(context);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Ninject.Planning.Bindings
         public object GetScope(IContext context)
         {
             Ensure.ArgumentNotNull(context, "context");
-            return ScopeCallback(context);
+            return this.ScopeCallback(context);
         }
 
         /// <summary>
@@ -127,8 +127,7 @@ namespace Ninject.Planning.Bindings
         public bool Matches(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return Condition == null || Condition(request);
-        }
-        
+            return this.Condition == null || this.Condition(request);
+        }    
     }
 }

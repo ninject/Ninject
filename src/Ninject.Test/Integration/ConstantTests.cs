@@ -48,8 +48,8 @@
         public void TheBindingShouldOnlyBeResolvedOnce()
         {
             var builder = kernel.Bind<IWeapon>().ToConstant(new Sword());
-            var provider = new ResolveCountingProvider(builder.Binding.ProviderCallback);
-            builder.Binding.ProviderCallback = ctx => provider.Callback(ctx);
+            var provider = new ResolveCountingProvider(builder.BindingConfiguration.ProviderCallback);
+            builder.BindingConfiguration.ProviderCallback = ctx => provider.Callback(ctx);
 
 
             kernel.Get<IWeapon>();
