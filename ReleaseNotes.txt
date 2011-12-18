@@ -15,12 +15,15 @@ Version 3.0.0.0
 - Changed: Separate project for medium trust environments.
 - Changed: Open generic bindings can be overwritten by closed generic bindings
 - Changed: Ninject modules have a new method VerifyRequiredModulesAreLoaded to check if their dependencies are loaded.
+- Changed: If several constructors have the same score an ActivationExcpetion is thrown.
 
 - Removed: No web builds. All builds are have no reference to web anymore
 
 - Bugfix, Breaking change: Get all will now return all bindings and not skip unconditional ones anymore in case there is a conditional one. This is the same behavior as the version 2.0.1 and bevore had. 
 - Bugfix: Fixed that the CF and SL version of the activation cache did not properly remove the weak references
 - Bugfix (for CF): The CF version threw an exception when a class had a generic method on a base class. This bugfix has the side effect that the Inject attribute cannot be defined on base methods anymore. It has to be defined on the overriden method! 
+- Bugfix: The constructor scorer accepts self bindings
+- Bugfix. The constructor scorer accepts default values
 
 Version 2.2.1.0
 ---------------

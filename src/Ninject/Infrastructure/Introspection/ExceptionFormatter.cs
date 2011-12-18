@@ -25,9 +25,12 @@ namespace Ninject.Infrastructure.Introspection
 {
     using System;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
 
     using Ninject.Activation;
     using Ninject.Modules;
+    using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -50,7 +53,7 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The exception message.</returns>
         public static string TargetDoesNotHaveADefaultValue(ITarget target)
         {
-            return String.Format("Target '{0}' at site '{1}' does not have a default value.", target.Member, target.Name);
+            return string.Format("Target '{0}' at site '{1}' does not have a default value.", target.Member, target.Name);
         }
 
         /// <summary>
@@ -308,6 +311,82 @@ namespace Ninject.Infrastructure.Introspection
                 
                 return sw.ToString();
             }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the constructor is ambiguous.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="bestDirectives">The best constructor directives.</param>
+        /// <returns>The exception message.</returns>
+        public static string ConstructorsAmbiguous(IContext context, IGrouping<int, ConstructorInjectionDirective> bestDirectives)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+                sw.WriteLine("Several constructors have the same priority. Please specify the constructor using ToConstructor syntax or add an Inject attribute.");
+                sw.WriteLine();
+                
+                sw.WriteLine("Constructors:");
+                foreach (var constructorInjectionDirective in bestDirectives)
+                {
+                    FormatConstructor(constructorInjectionDirective.Constructor, sw);
+                }
+
+                sw.WriteLine();
+                
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(context.Request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that the implementation type has a public constructor.");
+                sw.WriteLine("  2) If you have implemented the Singleton pattern, use a binding with InSingletonScope() instead.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Formats the constructor.
+        /// </summary>
+        /// <param name="constructor">The constructor.</param>
+        /// <param name="sw">The string writer.</param>
+        private static void FormatConstructor(ConstructorInfo constructor, StringWriter sw)
+        {
+            foreach (Attribute attribute in constructor.GetCustomAttributes(false))
+            {
+                FormatAttribute(sw, attribute);
+            }
+
+            sw.Write(constructor.DeclaringType.Name);
+            sw.Write("(");
+            foreach (var parameterInfo in constructor.GetParameters())
+            {
+                foreach (Attribute attribute in parameterInfo.GetCustomAttributes(false))
+                {
+                    FormatAttribute(sw, attribute);
+                }
+
+                sw.Write(parameterInfo.ParameterType.Format());
+                sw.Write(" ");
+                sw.Write(parameterInfo.Name);
+            }
+
+            sw.WriteLine(")");
+        }
+
+        /// <summary>
+        /// Formats the attribute.
+        /// </summary>
+        /// <param name="sw">The string writer.</param>
+        /// <param name="attribute">The attribute.</param>
+        private static void FormatAttribute(StringWriter sw, Attribute attribute)
+        {
+            sw.Write("[");
+            var name = attribute.GetType().Format();
+            name = name.EndsWith("Attribute") ? name.Substring(0, name.Length - 9) : name;
+            sw.Write(name);
+            sw.Write("]");
         }
     }
 }

@@ -1,8 +1,13 @@
 namespace Ninject.Tests.Integration
 {
+    using System;
+    using System.Runtime.InteropServices;
+
     using FluentAssertions;
     using Ninject.Parameters;
     using Ninject.Tests.Fakes;
+    using Ninject.Tests.Integration.StandardKernelTests;
+
     using Xunit;
 
     public class ConstructorSelectionTests
@@ -186,6 +191,110 @@ namespace Ninject.Tests.Integration
                 barracks.Warrior.Should().BeOfType<Ninja>();
                 barracks.Weapon.Should().NotBeNull();
                 activationCount.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public void WhenClassHasTwoConstructorsWithInjectAttributeThenAnActivationExceptionIsThrown()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind<ClassWithTwoInjectAttributes>().ToSelf();
+
+                Action getClassWithTwoInjectAttributes = () => kernel.Get<ClassWithTwoInjectAttributes>();
+
+                getClassWithTwoInjectAttributes.ShouldThrow<ActivationException>();
+            }
+        }
+
+        [Fact]
+        public void WhenConstructorHasSelfBindableTypeItCountsAsServedParameter()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                var instance = kernel.Get<ClassWithSelfBindableType>();
+
+                instance.Sword.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public void WhenConstructorHasAnOpenGenericTypeItCountsAsServedParameterIfBindingExists()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
+                var instance = kernel.Get<ClassWithGeneric>();
+
+                instance.Generic.Should().NotBeNull();
+            }
+        }
+
+#if !SILVERLIGHT
+        [Fact]
+        public void WhenConstructorHasAValueWithDefaultValueItCountsAsServedParameter()
+        {
+            using (IKernel kernel = new StandardKernel())
+            {
+                var instance = kernel.Get<ClassWithDefaultValue>();
+
+                instance.X.Should().NotBe(0);
+            }
+        }
+        
+        public class ClassWithDefaultValue
+        {
+            public ClassWithDefaultValue()
+            {
+            }
+
+            public ClassWithDefaultValue([DefaultParameterValue(3)]int x)
+            {
+                this.X = x;
+            }
+
+            public int X { get; set; }
+        }
+#endif
+
+        public class ClassWithGeneric
+        {
+            public ClassWithGeneric()
+            {
+            }
+
+            public ClassWithGeneric(IGeneric<int> generic)
+            {
+                this.Generic = generic;
+            }
+
+            public IGeneric<int> Generic { get; set; }
+        }
+        
+        public class ClassWithSelfBindableType
+        {
+            public ClassWithSelfBindableType()
+            {
+            }
+
+            public ClassWithSelfBindableType(Sword sword)
+            {
+                this.Sword = sword;
+            }
+
+            public Sword Sword { get; set; }
+        }
+
+        public class ClassWithTwoInjectAttributes
+        {
+            [Inject]
+            public ClassWithTwoInjectAttributes()
+            {
+            }
+
+            [Inject]
+            public ClassWithTwoInjectAttributes(int someValue)
+            {
             }
         }
     }

@@ -73,14 +73,27 @@ namespace Ninject.Activation.Providers
             Ensure.ArgumentNotNull(context, "context");
 
             if (context.Plan == null)
-                context.Plan = Planner.GetPlan(GetImplementationType(context.Request.Service));
+            {
+                context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
+            }
 
             if (!context.Plan.Has<ConstructorInjectionDirective>())
+            {
                 throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+            }
 
             var directives = context.Plan.GetAll<ConstructorInjectionDirective>();
-            var directive = directives.OrderByDescending(option => ConstructorScorer.Score(context, option)).First();
-            object[] arguments = directive.Targets.Select(target => GetValue(context, target)).ToArray();
+            var bestDirectives = directives
+                .GroupBy(option => this.ConstructorScorer.Score(context, option))
+                .OrderByDescending(g => g.Key)
+                .First();
+            if (bestDirectives.Skip(1).Any())
+            {
+                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
+            }
+
+            var directive = bestDirectives.Single();
+            var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
             return directive.Injector(arguments);
         }
 
