@@ -247,7 +247,7 @@
 	
 	<target name="config-platform-silverlight-4.0-wp7">
 		<property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS, NO_MOQ"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
 		<property name="nuget.platform" value="sl3-wp"/>
 		<property name="nuget.add" value="true"/>
 	</target>
@@ -260,13 +260,8 @@
 
 	<target name="config-platform-mono-2.0">
 		<property name="nant.settings.currentframework" value="mono-2.0"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO"/>
-		<property name="nuget.add" value="false"/>
-	</target>
-
-	<target name="config-platform-mono-2.0-no-web">
-		<property name="nant.settings.currentframework" value="mono-2.0"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,NO_GENERIC_MOQ,MONO_2_6" if="${teamcity}"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,NO_GENERIC_MOQ" unless="${teamcity}"/>
 		<property name="nuget.add" value="false"/>
 	</target>
 	
@@ -335,6 +330,7 @@
 	</target>
 
 	<target name="allPlatforms" depends="InitializeBuildSystem">
+		<call target="csproj"/>
 		<foreach item="String" in="${product.platforms}" delim="," property="platform">
 			<property name="build.platform" value="${platform}"/>
 			<call target="package-bin"/>
@@ -345,7 +341,7 @@
 	
 	<target name="package-bin" depends="create-assembly-info all">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
-		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}-${product.additionalVersionTag}${build.config}-${build.platform}.zip" ziplevel="9">
+		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag}-${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.*"/>
 			</fileset>
@@ -354,7 +350,7 @@
 
 	<target name="package-source" depends="create-assembly-info">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
-		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}-${product.additionalVersionTag}source.zip" ziplevel="9">
+		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag}-source.zip" ziplevel="9">
 			<fileset basedir="${path.base}">
 				<include name="lib/*.*"/>
 				<include name="**/*.cs"/>
@@ -366,6 +362,10 @@
 				<include name="**/*.snk"/>
 			</fileset>
 		</zip>
+	</target>
+	
+	<target name="csproj">
+		<msbuild project="${path.src}/${product.name}/${product.name}.csproj" />
 	</target>
 	
 	<target name="revert">
@@ -402,7 +402,7 @@
 		<property name="nuget.releaseDirectory" value="${path.build}\${build.platform}\release" dynamic="true"/>
 		<property name="nuget.dependencies" value="${dependencies}" />
 		<property name="nuget.additionalFiles" value="-" />
-		<property name="nuget.packageName" value="${nuget.name}${product.packagePostfix}.${build.version}" />	
+		<property name="nuget.packageName" value="${nuget.name}${product.packagePostfix}" />	
 
 		<call target="nuget-run"/>
 	</target>
@@ -411,6 +411,8 @@
 		<delete dir="${nuget.basedir}"/>
 		<delete dir="${nuget.symbol.basedir}"/>
 		<property name="nuget.platform" value=""/>
+		<property name="nuget.version" value="${build.version}" if="${product.additionalVersionTag == ''}"/>
+		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${product.additionalVersionTag}" unless="${product.additionalVersionTag == ''}"/>
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
@@ -438,8 +440,8 @@
 			</fileset>
 		</copy>		
 		 
-		<echo message="Build Version: ${build.version}"/>
-		<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" xpath="//package/nu:metadata/nu:version" value="${build.version}">
+		<echo message="Build Version: ${nuget.version}"/>
+		<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" xpath="//package/nu:metadata/nu:version" value="${nuget.version}">
 			<namespaces>
 				<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 				<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
@@ -486,15 +488,15 @@
 		</move>
 		
 		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
-		<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.nupkg" todir="${nuget.symbol.basedir}/target"/>
-		<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
+		<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
+		<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
 		<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
 			<fileset basedir="${nuget.symbol.basedir}/source">
 				<include name="[Content_Types].xml" />
 				<include name="src/**" />
 			</fileset>
 		</copy>
-		<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.symbols.nupkg">
+		<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.symbols.nupkg">
 			<fileset basedir="${nuget.symbol.basedir}/target">
 				<include name="**"/>
 			</fileset>
@@ -502,17 +504,17 @@
 	</target>
 	
 	<target name="CopyDefaultTestInfrastructureAssemblies">
-		<call target="CopyProjectOutput"/>
 		<call target="CopyXUnit"/>
 		<call target="CopyMoq"/>
 		<call target="CopyFluentAssertions"/>
+		<call target="CopyProjectOutput"/>
 	</target>
 
 	<target name="CopyDefaultTestInfrastructureAssemblies-SL">
-		<call target="CopyProjectOutput"/>
 		<call target="CopyXUnit-SL"/>
 		<call target="CopyMoq-SL"/>
 		<call target="CopyFluentAssertions-SL"/>
+		<call target="CopyProjectOutput"/>
 	</target>
 
 	<target name="CopyFluentAssertions">
@@ -583,7 +585,7 @@
 	</target>
 
 	<target name="CopyProjectOutput">
-		<copy todir="${current.path.test}" flatten="true">
+		<copy todir="${current.path.test}" flatten="true" overwrite="true">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.dll"/>
 			</fileset>
