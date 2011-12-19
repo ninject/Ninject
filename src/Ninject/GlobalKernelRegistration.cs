@@ -19,7 +19,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !SILVERLIGHT && !NETCF
 namespace Ninject
 {
     using System;
@@ -46,7 +45,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ReleaseLock();
+                registration.KernelLock.ReleaseWriterLock();
             }
         }
 
@@ -83,7 +82,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ReleaseLock();
+                registration.KernelLock.ReleaseReaderLock();
             }
 
             if (requiresCleanup)
@@ -104,7 +103,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ReleaseLock();
+                registration.KernelLock.ReleaseWriterLock();
             }
         }
 
@@ -119,7 +118,20 @@ namespace Ninject
                     return registration;
                 }
                 
-                kernelRegistrationsLock.UpgradeToWriterLock(Timeout.Infinite);
+                return CreateNewRegistration(type);
+            }
+            finally
+            {
+                kernelRegistrationsLock.ReleaseReaderLock();
+            }
+        }
+
+        private static Registration CreateNewRegistration(Type type)
+        {
+            var lockCookie = kernelRegistrationsLock.UpgradeToWriterLock(Timeout.Infinite);
+            try
+            {
+                Registration registration;
                 if (kernelRegistrations.TryGetValue(type, out registration))
                 {
                     return registration;
@@ -131,7 +143,7 @@ namespace Ninject
             }
             finally
             {
-                kernelRegistrationsLock.ReleaseLock();
+                kernelRegistrationsLock.DowngradeFromWriterLock(ref lockCookie);
             }
         }
 
@@ -148,4 +160,3 @@ namespace Ninject
         }
     }
 }
-#endif

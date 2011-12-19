@@ -90,6 +90,7 @@
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />
     <Compile Include="Modules\IAssemblyNameRetriever.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
