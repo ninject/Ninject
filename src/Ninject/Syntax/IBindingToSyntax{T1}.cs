@@ -85,6 +85,13 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the service should be bound to the specified callback method.
         /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingWhenInNamedWithOrOnSyntax<T1> ToMethod(Func<IContext, T1> method);
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified callback method.
+        /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="method">The method.</param>
         /// <returns>The fluent syntax.</returns>

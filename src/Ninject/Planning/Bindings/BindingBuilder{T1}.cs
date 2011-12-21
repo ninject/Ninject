@@ -176,6 +176,19 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Indicates that the service should be bound to the specified callback method.
         /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingWhenInNamedWithOrOnSyntax<T1> ToMethod(Func<IContext, T1> method)
+        {
+            this.Binding.ProviderCallback = ctx => new CallbackProvider<T1>(method);
+            this.Binding.Target = BindingTarget.Method;
+
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified callback method.
+        /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="method">The method.</param>
         /// <returns>The fluent syntax.</returns>
