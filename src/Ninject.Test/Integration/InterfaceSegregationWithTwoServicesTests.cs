@@ -19,7 +19,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !MONO_2_6
 namespace Ninject.Tests.Integration
 {
     using System;
@@ -122,4 +121,3 @@ namespace Ninject.Tests.Integration
         }
     }
 }
-#endif

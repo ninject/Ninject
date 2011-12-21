@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// <copyright file="InterfaceSegregationWithThreeServicesTests.cs" company="Ninject Project Contributors">
+// <copyright file="InterfaceSegregationWithFourServicesTests.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
 //           
@@ -19,7 +19,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !MONO_2_6
 namespace Ninject.Tests.Integration
 {
     using System;
@@ -128,4 +127,3 @@ namespace Ninject.Tests.Integration
         }
     }
 }
-#endif

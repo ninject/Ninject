@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// <copyright file="InterfaceSegregationWithFourServicesTests.cs" company="Ninject Project Contributors">
+// <copyright file="InterfaceSegregationWithThreeServicesTests.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
 //           
@@ -19,7 +19,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !MONO_2_6
 namespace Ninject.Tests.Integration
 {
     using System;
@@ -31,11 +30,11 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class InterfaceSegregationWithThreerServicesTests : IDisposable
+    public class InterfaceSegregationWithThreeServicesTests : IDisposable
     {
         private readonly StandardKernel kernel;
 
-        public InterfaceSegregationWithThreerServicesTests()
+        public InterfaceSegregationWithThreeServicesTests()
         {
             this.kernel = new StandardKernel();
         }
@@ -125,4 +124,3 @@ namespace Ninject.Tests.Integration
         }
     }
 }
-#endif
