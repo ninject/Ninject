@@ -23,6 +23,8 @@
 namespace Ninject.Tests.Integration
 {
     using System;
+    using System.Linq;
+
     using FluentAssertions;
 
     using Ninject.Activation;
@@ -91,6 +93,18 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
+        [Fact]
+        public void Rebind()
+        {
+            this.kernel.Bind<IWarrior, ICleric>().To<Monk>().InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric>().To<Monk>().InSingletonScope();
+            this.kernel.Rebind<IWarrior, ICleric>().To<Monk>().InSingletonScope();
+
+            this.kernel.GetBindings(typeof(IWarrior)).Count().Should().Be(1);
+            this.kernel.GetBindings(typeof(ICleric)).Count().Should().Be(1);
+            this.VerifyAllInterfacesAreSameInstance();
+        }
+        
         private void VerifyAllInterfacesAreSameInstance()
         {
             var warrior = this.kernel.Get<IWarrior>();

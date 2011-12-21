@@ -153,23 +153,72 @@ namespace Ninject.Syntax
         /// <summary>
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
-        /// <typeparam name="T">The service to re-bind.</typeparam>
+        /// <typeparam name="T1">The first service to re-bind.</typeparam>
         /// <returns>The fluent syntax</returns>
-        public IBindingToSyntax<T> Rebind<T>()
+        public IBindingToSyntax<T1> Rebind<T1>()
         {
-            Unbind<T>();
-            return Bind<T>();
+            Unbind<T1>();
+            return Bind<T1>();
+        }
+
+        /// <summary>
+        /// Removes any existing bindings for the specified services, and declares a new one.
+        /// </summary>
+        /// <typeparam name="T1">The first service to re-bind.</typeparam>
+        /// <typeparam name="T2">The second service to re-bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingToSyntax<T1, T2> Rebind<T1, T2>()
+        {
+            Unbind<T1>();
+            Unbind<T2>();
+            return Bind<T1, T2>();
+        }
+
+        /// <summary>
+        /// Removes any existing bindings for the specified services, and declares a new one.
+        /// </summary>
+        /// <typeparam name="T1">The first service to re-bind.</typeparam>
+        /// <typeparam name="T2">The second service to re-bind.</typeparam>
+        /// <typeparam name="T3">The third service to re-bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingToSyntax<T1, T2, T3> Rebind<T1, T2, T3>()
+        {
+            Unbind<T1>();
+            Unbind<T2>();
+            Unbind<T3>();
+            return Bind<T1, T2, T3>();
+        }
+
+        /// <summary>
+        /// Removes any existing bindings for the specified services, and declares a new one.
+        /// </summary>
+        /// <typeparam name="T1">The first service to re-bind.</typeparam>
+        /// <typeparam name="T2">The second service to re-bind.</typeparam>
+        /// <typeparam name="T3">The third service to re-bind.</typeparam>
+        /// <typeparam name="T4">The fourth service to re-bind.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingToSyntax<T1, T2, T3, T4> Rebind<T1, T2, T3, T4>()
+        {
+            Unbind<T1>();
+            Unbind<T2>();
+            Unbind<T3>();
+            Unbind<T4>();
+            return Bind<T1, T2, T3, T4>();
         }
 
         /// <summary>
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
-        /// <param name="service">The service to re-bind.</param>
+        /// <param name="services">The services to re-bind.</param>
         /// <returns>The fluent syntax</returns>
-        public IBindingToSyntax<object> Rebind(Type service)
+        public IBindingToSyntax<object> Rebind(params Type[] services)
         {
-            Unbind(service);
-            return Bind(service);
+            foreach (var service in services)
+            {
+                Unbind(service);                
+            }
+
+            return Bind(services);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------
-// <copyright file="InterfaceSegregationWithFourServicesTests.cs" company="Ninject Project Contributors">
+// <copyright file="InterfaceSegregationWithThreeServicesTests.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
 //           
@@ -23,17 +23,19 @@
 namespace Ninject.Tests.Integration
 {
     using System;
+    using System.Linq;
+
     using FluentAssertions;
 
     using Ninject.Activation;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class InterfaceSegregationWithThreerServicesTests : IDisposable
+    public class InterfaceSegregationWithFourServicesTests : IDisposable
     {
         private readonly StandardKernel kernel;
 
-        public InterfaceSegregationWithThreerServicesTests()
+        public InterfaceSegregationWithFourServicesTests()
         {
             this.kernel = new StandardKernel();
         }
@@ -46,7 +48,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithGenericToReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().To<Monk>().InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().To<Monk>().InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
@@ -54,7 +56,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithToReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().To(typeof(Monk)).InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().To(typeof(Monk)).InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
@@ -62,7 +64,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithToConstantReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().ToConstant(new Monk()).InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().ToConstant(new Monk()).InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
@@ -70,7 +72,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithToMethodReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().ToMethod(ctx => new Monk()).InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().ToMethod(ctx => new Monk()).InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
@@ -78,7 +80,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithToProviderReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().ToProvider(new MonkProvider()).InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().ToProvider(new MonkProvider()).InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
@@ -86,19 +88,35 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void MultipleServicesBoundWithGenericToProviderReturnSameInstance()
         {
-            this.kernel.Bind<IWarrior, ICleric, IHuman>().ToProvider<MonkProvider>().InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().ToProvider<MonkProvider>().InSingletonScope();
 
             this.VerifyAllInterfacesAreSameInstance();
         }
 
+        [Fact]
+        public void Rebind()
+        {
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().To<Monk>().InSingletonScope();
+            this.kernel.Bind<IWarrior, ICleric, IHuman, ILifeform>().To<Monk>().InSingletonScope();
+            this.kernel.Rebind<IWarrior, ICleric, IHuman, ILifeform>().To<Monk>().InSingletonScope();
+
+            this.kernel.GetBindings(typeof(IWarrior)).Count().Should().Be(1);
+            this.kernel.GetBindings(typeof(ICleric)).Count().Should().Be(1);
+            this.kernel.GetBindings(typeof(IHuman)).Count().Should().Be(1);
+            this.kernel.GetBindings(typeof(ILifeform)).Count().Should().Be(1);
+            this.VerifyAllInterfacesAreSameInstance();
+        }
+        
         private void VerifyAllInterfacesAreSameInstance()
         {
             var warrior = this.kernel.Get<IWarrior>();
             var cleric = this.kernel.Get<ICleric>();
             var human = this.kernel.Get<IHuman>();
+            var lifeform = this.kernel.Get<ILifeform>();
 
             warrior.Should().BeSameAs(cleric);
             human.Should().BeSameAs(cleric);
+            lifeform.Should().BeSameAs(cleric);
         }
 
         public class MonkProvider : Provider<Monk>

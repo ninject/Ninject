@@ -94,8 +94,8 @@
     <Compile Include="Integration\ConstantTests.cs" />
     <Compile Include="Fakes\ResolveCountingProvider.cs" />
     <Compile Include="Integration\InterfaceSegregationWithTwoServicesTests.cs" />
-    <Compile Include="Integration\InterfaceSegregationWithThreeServicesTests.cs" />
     <Compile Include="Integration\InterfaceSegregationWithFourServicesTests.cs" />
+    <Compile Include="Integration\InterfaceSegregationWithThreeServicesTests.cs" />
     <Compile Include="Integration\DefaultParameterTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildB.cs" />
