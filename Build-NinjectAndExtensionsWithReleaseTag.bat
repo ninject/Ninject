@@ -1,25 +1,46 @@
 SET NoPause=true
-SET ReleaseTag=RC2-
+SET ReleaseTag=-rc1
+mkdir ..\dist-all
+del /S /Q ..\dist-all\*
 call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+IF ERRORLEVEL 1 GOTO FAILED
+xcopy /S dist\* ..\dist-all
 cd ..
 
-IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDCTXPRESERVATION
+IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDFACTORY
 	cd ninject.extensions.contextpreservation
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
+	cd ..
+:ENDFACTORY
+
+IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDCTXPRESERVATION
+	cd ninject.extensions.contextpreservation
+	del lib\Ninject\*.zip
+	del lib\Ninject.Extensions.Factory\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\Ninject.Extensions.Factory\dist\*.zip lib\Ninject.Extensions.Factory
+	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCTXPRESERVATION
 
 IF NOT EXIST .\ninject.extensions.namedscope GOTO ENDNSC
 	cd ninject.extensions.namedscope
 	del lib\Ninject\*.zip
-	del lib\ninject.extensions.contextpreservation\*.zip
+	del lib\Ninject.Extensions.ContextPreservation\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	copy ..\ninject.extensions.contextpreservation\dist\*.zip lib\ninject.extensions.contextpreservation
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDNSC
 
@@ -29,41 +50,51 @@ IF NOT EXIST .\ninject.extensions.childkernel GOTO ENDCK
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCK
 
 IF NOT EXIST .\ninject.extensions.bbveventbroker GOTO ENDBBVEB
 	cd ninject.extensions.bbveventbroker
 	del lib\Ninject\*.zip
-	del lib\ninject.extensions.contextpreservation\*.zip
-	del lib\ninject.extensions.namedscope\*.zip
+	del lib\Ninject.Extensions.ContextPreservation\*.zip
+	del lib\Ninject.Extensions.NamedScope\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	copy ..\ninject.extensions.contextpreservation\dist\*.zip lib\ninject.extensions.contextpreservation
 	copy ..\ninject.extensions.namedscope\dist\*.zip lib\ninject.extensions.namedscope
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDBBVEB
 
 IF NOT EXIST .\ninject.extensions.dependencycreation GOTO ENDDC
 	cd ninject.extensions.dependencycreation
 	del lib\Ninject\*.zip
-	del lib\ninject.extensions.contextpreservation\*.zip
-	del lib\ninject.extensions.namedscope\*.zip
+	del lib\Ninject.Extensions.ContextPreservation\*.zip
+	del lib\Ninject.Extensions.NamedScope\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	copy ..\ninject.extensions.contextpreservation\dist\*.zip lib\ninject.extensions.contextpreservation
 	copy ..\ninject.extensions.namedscope\dist\*.zip lib\ninject.extensions.namedscope
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDDC
 
 IF NOT EXIST .\ninject.extensions.conventions GOTO ENDCONV
 	cd ninject.extensions.conventions
 	del lib\Ninject\*.zip
+	del lib\Ninject.Extensions.Factory\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\Ninject.Extensions.Factory\dist\*.zip lib\Ninject.Extensions.Factory
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDCONV
 
@@ -73,6 +104,8 @@ IF NOT EXIST ninject.extensions.interception GOTO ENDIC
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDIC
 
@@ -82,6 +115,8 @@ IF NOT EXIST .\ninject.extensions.logging GOTO ENDLOG
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDLOG
 
@@ -91,24 +126,19 @@ IF NOT EXIST .\ninject.extensions.messagebroker GOTO ENDMB
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMB
 
-IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
-	cd ninject.extensions.wcf
-	del lib\Ninject\*.zip
-	copy ..\Ninject\dist\*.zip lib\Ninject
-	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
-	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
-	cd ..
-:ENDWCF
-
-IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWF
+IF NOT EXIST .\ninject.extensions.wf GOTO ENDWF
 	cd ninject.extensions.wf
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWF
 
@@ -116,8 +146,10 @@ IF NOT EXIST .\ninject.extensions.weakeventmessagebroker GOTO ENDWEAKEB
 	cd ninject.extensions.weakeventmessagebroker
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
-	call UnzipDependencies.cmd
+	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWEAKEB
 
@@ -127,6 +159,8 @@ IF NOT EXIST .\ninject.extensions.xml GOTO ENDXML
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDXML
 
@@ -134,17 +168,47 @@ IF NOT EXIST .\ninject.mockingkernel GOTO ENDMK
 	cd ninject.mockingkernel
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
-	call UnzipDependencies.cmd
+	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMK
 
-IF NOT EXIST .\ninject.web GOTO ENDWEB
-	cd ninject.web
+IF NOT EXIST .\ninject.web.common GOTO ENDWEBCOMMON
+	cd ninject.web.common
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
+	cd ..
+:ENDWEBCOMMON
+
+IF NOT EXIST .\ninject.extensions.wcf GOTO ENDWCF
+	cd ninject.extensions.wcf
+	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
+	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
+	cd ..
+:ENDWCF
+
+IF NOT EXIST .\ninject.web GOTO ENDWEB
+	cd ninject.web
+	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
+	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
+	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDWEB
 
@@ -152,16 +216,24 @@ IF NOT EXIST .\ninject.web GOTO ENDWEB
 IF NOT EXIST .\ninject.web.mvc GOTO ENDMVC
 	cd ninject.web.mvc
 	del lib\Ninject\*.zip
+	del lib\Ninject.Web.Common\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
+	copy ..\ninject.web.common\dist\*.zip lib\ninject.web.common
 	cd mvc1
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd mvc2
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd mvc3
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\..\dist-all
 	cd ..
 	cd ..
 :ENDMVC
@@ -172,7 +244,17 @@ IF NOT EXIST .\ninject.web.mvc.fluentvalidation GOTO ENDMVCFV
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
+	IF ERRORLEVEL 1 GOTO FAILED
+	xcopy /S dist\* ..\dist-all
 	cd ..
 :ENDMVCFV
 
+
 pause
+goto END
+
+:FAILED
+cd ..
+pause
+
+:END

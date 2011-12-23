@@ -10,6 +10,7 @@ Version 3.0.0.0
 - Added: Generic Overloads for OnActivation and OnDeactivation that can be used to cast the implementation type. 
 - Added: Bind<T1,T2, ...>() to define multiple interfaces for one service.
 - Added: Rebind<T1,T2, ...>() to define multiple interfaces for one service.
+- Added: Support to inject constructor arguments to deeper levels using new ConstructorArgument("name", value, true)
 
 - Changed: WhenInjectedInto matches also if the target derives from the specified type.
 - Changed: ToConstant bindings are in singleton scope by default
