@@ -157,6 +157,7 @@ namespace Ninject.Tests.Integration
             }
         }
 
+#if !WINDOWS_PHONE
         [Fact]
         public void ConstantsCanBePassedToToConstructor()
         {
@@ -171,7 +172,8 @@ namespace Ninject.Tests.Integration
                 barracks1.Warrior.Should().BeSameAs(barracks2.Warrior);
             }
         }
-        
+#endif
+
         [Fact]
         public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
         {
