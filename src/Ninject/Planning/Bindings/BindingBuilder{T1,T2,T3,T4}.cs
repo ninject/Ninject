@@ -28,8 +28,6 @@ namespace Ninject.Planning.Bindings
     using System.Linq.Expressions;
 #endif    
     using Ninject.Activation;
-    using Ninject.Activation.Providers;
-    using Ninject.Infrastructure;
     using Ninject.Syntax;
 
     /// <summary>
@@ -41,11 +39,6 @@ namespace Ninject.Planning.Bindings
     /// <typeparam name="T4">The fourth service type.</typeparam>
     public class BindingBuilder<T1, T2, T3, T4> : BindingBuilder, IBindingToSyntax<T1, T2, T3, T4>
     {
-        /// <summary>
-        /// The names of the services.
-        /// </summary>
-        private readonly string serviceNames;
-
 #pragma warning disable 1584 //mono compiler bug
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingBuilder{T1, T2, T3, T4}"/> class.
@@ -54,9 +47,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="kernel">The kernel.</param>
         /// <param name="serviceNames">The names of the services.</param>
         public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, IKernel kernel, string serviceNames)
-            : base(bindingConfigurationConfiguration, kernel)
+            : base(bindingConfigurationConfiguration, kernel, serviceNames)
         {
-            this.serviceNames = serviceNames;
         }
 #pragma warning restore 1584
 
@@ -68,10 +60,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>()
             where TImplementation : T1, T2, T3, T4
         {
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
-            this.BindingConfiguration.Target = BindingTarget.Type;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalTo<TImplementation>();
         }
 
         /// <summary>
@@ -81,10 +70,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<object> To(Type implementation)
         {
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
-            this.BindingConfiguration.Target = BindingTarget.Type;
-
-            return new BindingConfigurationBuilder<object>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalTo<object>(implementation);
         }
 
   #if !NETCF
@@ -98,17 +84,7 @@ namespace Ninject.Planning.Bindings
             Expression<Func<IConstructorArgumentSyntax, TImplementation>> newExpression)
             where TImplementation : T1, T2, T3, T4
         {
-            var ctorExpression = newExpression.Body as NewExpression;
-            if (ctorExpression == null)
-            {
-                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
-            }
-
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
-            this.BindingConfiguration.Target = BindingTarget.Type;
-            this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToConstructor(newExpression);
         }
 #endif
 
@@ -137,7 +113,7 @@ namespace Ninject.Planning.Bindings
         {
             return this.ToProviderInternal<TProvider, TImplementation>();
         }
-        
+
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.
         /// The instance will be activated via the kernel when an instance of the service is activated.
@@ -146,10 +122,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<object> ToProvider(Type providerType)
         {
-            this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
-            this.BindingConfiguration.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<object>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.ToProviderInternal<object>(providerType);
         }
 
         /// <summary>
@@ -161,10 +134,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProvider<TImplementation>(IProvider<TImplementation> provider)
             where TImplementation : T1, T2, T3, T4
         {
-            this.BindingConfiguration.ProviderCallback = ctx => provider;
-            this.BindingConfiguration.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToProvider(provider);
         }
 
         /// <summary>
@@ -176,10 +146,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToMethod<TImplementation>(Func<IContext, TImplementation> method)
             where TImplementation : T1, T2, T3
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
-            this.BindingConfiguration.Target = BindingTarget.Method;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToMethod(method);
         }
 
         /// <summary>
@@ -191,27 +158,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstant<TImplementation>(TImplementation value)
             where TImplementation : T1, T2, T3, T4
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
-            this.BindingConfiguration.Target = BindingTarget.Constant;
-            this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
-        }
-
-        /// <summary>
-        /// Indicates that the service should be bound to an instance of the specified provider type.
-        /// The instance will be activated via the kernel when an instance of the service is activated.
-        /// </summary>
-        /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
-        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
-        /// <returns>The fluent syntax.</returns>
-        private IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProviderInternal<TProvider, TImplementation>()
-            where TProvider : IProvider
-        {
-            this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
-            this.BindingConfiguration.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToConfiguration(value);
         }
     }
 }

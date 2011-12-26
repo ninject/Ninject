@@ -7,4 +7,5 @@ dist
 *resharper*
 *.user
 *.cache
+*.dotCover
 /src/Ninject.SilverlightTests/Bin

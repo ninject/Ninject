@@ -38,11 +38,6 @@ namespace Ninject.Planning.Bindings
     /// <typeparam name="T1">The service type.</typeparam>
     public class BindingBuilder<T1> : BindingBuilder, IBindingToSyntax<T1>
     {
-        /// <summary>
-        /// The names of the services.
-        /// </summary>
-        private readonly string serviceNames;
-
 #pragma warning disable 1584 //mono compiler bug
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingBuilder{T1}"/> class.
@@ -51,9 +46,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="kernel">The kernel.</param>
         /// <param name="serviceNames">The names of the services.</param>
         public BindingBuilder(IBinding binding, IKernel kernel, string serviceNames)
-            : base(binding.BindingConfiguration, kernel)
+            : base(binding.BindingConfiguration, kernel, serviceNames)
         {
-            this.serviceNames = serviceNames;
             Ensure.ArgumentNotNull(binding, "binding");
             Ensure.ArgumentNotNull(kernel, "kernel");
             this.Binding = binding;
@@ -74,7 +68,7 @@ namespace Ninject.Planning.Bindings
             this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -85,10 +79,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>()
             where TImplementation : T1
         {
-            this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(typeof(TImplementation));
-            this.Binding.Target = BindingTarget.Type;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalTo<TImplementation>();
         }
 
         /// <summary>
@@ -98,13 +89,10 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> To(Type implementation)
         {
-            this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
-            this.Binding.Target = BindingTarget.Type;
-
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalTo<T1>(implementation);
         }
 
-  #if !NETCF
+#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the speecified constructor.
         /// </summary>
@@ -115,17 +103,7 @@ namespace Ninject.Planning.Bindings
             Expression<Func<IConstructorArgumentSyntax, TImplementation>> newExpression)
             where TImplementation : T1
         {
-            var ctorExpression = newExpression.Body as NewExpression;
-            if (ctorExpression == null)
-            {
-                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
-            }
-
-            this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
-            this.Binding.Target = BindingTarget.Type;
-            this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
-
-            return new BindingConfigurationBuilder<TImplementation>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToConstructor(newExpression);
         }
 #endif
 
@@ -138,10 +116,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToProvider<TProvider>()
             where TProvider : IProvider
         {
-            this.Binding.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
-            this.Binding.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.ToProviderInternal<TProvider, T1>();
         }
 
         /// <summary>
@@ -152,10 +127,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToProvider(Type providerType)
         {
-            this.Binding.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
-            this.Binding.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.ToProviderInternal<T1>(providerType);
         }
 
         /// <summary>
@@ -167,10 +139,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProvider<TImplementation>(IProvider<TImplementation> provider)
             where TImplementation : T1
         {
-            this.Binding.ProviderCallback = ctx => provider;
-            this.Binding.Target = BindingTarget.Provider;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToProvider(provider);
         }
 
         /// <summary>
@@ -180,10 +149,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToMethod(Func<IContext, T1> method)
         {
-            this.Binding.ProviderCallback = ctx => new CallbackProvider<T1>(method);
-            this.Binding.Target = BindingTarget.Method;
-
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToMethod(method);
         }
 
         /// <summary>
@@ -195,10 +161,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToMethod<TImplementation>(Func<IContext, TImplementation> method)
             where TImplementation : T1
         {
-            this.Binding.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
-            this.Binding.Target = BindingTarget.Method;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToMethod(method);
         }
 
         /// <summary>
@@ -210,11 +173,7 @@ namespace Ninject.Planning.Bindings
         public IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstant<TImplementation>(TImplementation value)
             where TImplementation : T1
         {
-            this.Binding.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
-            this.Binding.Target = BindingTarget.Constant;
-            this.Binding.ScopeCallback = StandardScopeCallbacks.Singleton;
-
-            return new BindingConfigurationBuilder<TImplementation>(this.Binding.BindingConfiguration, this.serviceNames, this.Kernel);
+            return this.InternalToConfiguration(value);
         }
     }
 }

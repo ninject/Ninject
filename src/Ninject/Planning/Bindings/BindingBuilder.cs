@@ -23,11 +23,12 @@
 
 namespace Ninject.Planning.Bindings
 {
-#if !NETCF
     using System;
+#if !NETCF
     using System.Linq.Expressions;
 #endif
     using Ninject.Activation;
+    using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
     using Ninject.Syntax;
@@ -42,12 +43,14 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="bindingConfiguration">The binding to build.</param>
         /// <param name="kernel">The kernel.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel)
+        /// <param name="serviceNames">The names of the services.</param>
+        public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel, string serviceNames)
         {
             Ensure.ArgumentNotNull(bindingConfiguration, "binding");
             Ensure.ArgumentNotNull(kernel, "kernel");
             this.BindingConfiguration = bindingConfiguration;
             this.Kernel = kernel;
+            this.ServiceNames = serviceNames;
         }
 
         /// <summary>
@@ -59,13 +62,140 @@ namespace Ninject.Planning.Bindings
         /// Gets the kernel.
         /// </summary>
         public IKernel Kernel { get; private set; }
+
+        /// <summary>
+        /// Gets the names of the services.
+        /// </summary>
+        /// <value>The names of the services.</value>
+        protected string ServiceNames { get; private set; }
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified implementation type.
+        /// </summary>
+        /// <typeparam name="TImplementation">The implementation type.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalTo<TImplementation>()
+        {
+            return this.InternalTo<TImplementation>(typeof(TImplementation));
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified implementation type.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned syntax.</typeparam>
+        /// <param name="implementation">The implementation type.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<T> InternalTo<T>(Type implementation)
+        {
+            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
+            this.BindingConfiguration.Target = BindingTarget.Type;
+
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+        
+        /// <summary>
+        /// Indicates that the service should be bound to the specified constant value.
+        /// </summary>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="value">The constant value.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value) 
+        {
+            this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
+            this.BindingConfiguration.Target = BindingTarget.Constant;
+            this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
+
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified callback method.
+        /// </summary>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="method">The method.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToMethod<TImplementation>(Func<IContext, TImplementation> method)
+        {
+            this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
+            this.BindingConfiguration.Target = BindingTarget.Method;
+
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to the specified provider.
+        /// </summary>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="provider">The provider.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToProvider<TImplementation>(IProvider<TImplementation> provider)
+        {
+            this.BindingConfiguration.ProviderCallback = ctx => provider;
+            this.BindingConfiguration.Target = BindingTarget.Provider;
+
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to an instance of the specified provider type.
+        /// The instance will be activated via the kernel when an instance of the service is activated.
+        /// </summary>
+        /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProviderInternal<TProvider, TImplementation>()
+            where TProvider : IProvider
+        {
+            this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
+            this.BindingConfiguration.Target = BindingTarget.Provider;
+
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
+        /// <summary>
+        /// Indicates that the service should be bound to an instance of the specified provider type.
+        /// The instance will be activated via the kernel when an instance of the service is activated.
+        /// </summary>
+        /// <typeparam name="T">The type of the returned fleunt syntax</typeparam>
+        /// <param name="providerType">The type of provider to activate.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<T> ToProviderInternal<T>(Type providerType)
+        {
+            this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
+            this.BindingConfiguration.Target = BindingTarget.Provider;
+
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
 #if !NETCF
+        /// <summary>
+        /// Indicates that the service should be bound to the speecified constructor.
+        /// </summary>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="newExpression">The expression that specifies the constructor.</param>
+        /// <returns>The fluent syntax.</returns>
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConstructor<TImplementation>(
+            Expression<Func<IConstructorArgumentSyntax, TImplementation>> newExpression)
+        {
+            var ctorExpression = newExpression.Body as NewExpression;
+            if (ctorExpression == null)
+            {
+                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
+            }
+
+            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
+            this.BindingConfiguration.Target = BindingTarget.Type;
+            this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
+
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+        }
+
         /// <summary>
         /// Adds the constructor arguments for the specified constructor expression.
         /// </summary>
         /// <param name="ctorExpression">The ctor expression.</param>
         /// <param name="constructorArgumentSyntaxParameterExpression">The constructor argument syntax parameter expression.</param>
-        protected void AddConstructorArguments(NewExpression ctorExpression, ParameterExpression constructorArgumentSyntaxParameterExpression)
+        private void AddConstructorArguments(NewExpression ctorExpression, ParameterExpression constructorArgumentSyntaxParameterExpression)
         {
             var parameters = ctorExpression.Constructor.GetParameters();
 
@@ -92,7 +222,7 @@ namespace Ninject.Planning.Bindings
             {
                 var compiledExpression = Expression.Lambda(argument, constructorArgumentSyntaxParameterExpression).Compile();
                 this.BindingConfiguration.Parameters.Add(new ConstructorArgument(
-                    argumentName, 
+                    argumentName,
                     ctx => compiledExpression.DynamicInvoke(new ConstructorArgumentSyntax(ctx))));
             }
         }
