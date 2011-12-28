@@ -384,11 +384,12 @@
 			failonerror="true" 
 			output="${temp.revision.file}"/>
 		<loadfile file="${temp.revision.file}" property="actual.git.revision"/>
-		<regex pattern="(?&lt;gitmajor&gt;\d+)\.(?&lt;gitminor&gt;\d+)\.(?&lt;gitbuild&gt;\d+)\.(?&lt;gitrevision&gt;\d+)-(?&lt;gitrevisionnumber&gt;\d+)-.*" input="${actual.git.revision}"/>
+		<regex pattern="(?&lt;gitmajor&gt;\d+)\.(?&lt;gitminor&gt;\d+)\.(?&lt;gitbuild&gt;\d+)(\.(?&lt;gitrevision&gt;\d+))?-((?&lt;gitprerelease&gt;[^-]+)-)?(?&lt;gitrevisionnumber&gt;\d+)-.*" input="${actual.git.revision}"/>
 		<property name="version.major" value="${gitmajor}" overwrite="true" />
 		<property name="version.minor" value="${gitminor}" overwrite="true" />
 		<property name="version.build" value="${gitbuild}" overwrite="true" />
 		<property name="version.revision" value="${gitrevisionnumber}" overwrite="true" />
+		
 		<delete file="${temp.revision.file}" failonerror="false"/>
 	</target>
 	
