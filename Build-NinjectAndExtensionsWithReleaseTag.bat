@@ -7,8 +7,8 @@ IF ERRORLEVEL 1 GOTO FAILED
 xcopy /S dist\* ..\dist-all
 cd ..
 
-IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDFACTORY
-	cd ninject.extensions.contextpreservation
+IF NOT EXIST .\ninject.extensions.factory GOTO ENDFACTORY
+	cd ninject.extensions.factory
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
@@ -179,6 +179,8 @@ IF NOT EXIST .\ninject.web.common GOTO ENDWEBCOMMON
 	cd ninject.web.common
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
+	del lib\Ninject.Extensions.Xml\*.zip
+	copy ..\Ninject.Extensions.Xml\dist\*.zip lib\Ninject.Extensions.Xml
 	call UnzipDependencies.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"
 	IF ERRORLEVEL 1 GOTO FAILED
