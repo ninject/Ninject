@@ -460,6 +460,7 @@
 			
 			<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
 			<property name="maxVersion" value=""/>
+			<property name="versionPrerelease" value=""/>
 			<property name="i" value="0"/>
 			<foreach item="String" in="${version}" delim="." property="versionPart">
 				<property name="i" value="${int::parse(i) + 1}"/>
@@ -468,11 +469,26 @@
 				<property name="maxVersion" value="${maxVersion + int::to-string(int::parse(versionPart) + 1)}" if="${i == '2'}"/>
 				<property name="maxVersion" value="${maxVersion + '0'}" if="${i == '3'}"/>
 				<property name="maxVersion" value="${maxVersion + '0'}" if="${i == '4'}"/>
+
+				<property name="versionPrerelease" value="${versionPrerelease + '.'}" unless="${i == '1' or i == '4'}"/>
+				<property name="versionPrerelease" value="${versionPrerelease + versionPart}" unless="${i == '4'}"/>
 			</foreach>
 			
+		    <property name="versionPrerelease" value="${versionPrerelease + product.additionalVersionTag}"/>
 			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
 			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
-					 value="${'[' + version + ',' + maxVersion + ')'}">
+					 value="${'[' + version + ',' + maxVersion + ')'}"
+					 if="${product.additionalVersionTag == ''}">
+				<namespaces>
+					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
+					<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
+					<namespace prefix="nu" uri="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" />
+				</namespaces>
+			</xmlpoke>
+			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
+			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
+					 value="${versionPrerelease}"
+					 unless="${product.additionalVersionTag == ''}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 					<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
