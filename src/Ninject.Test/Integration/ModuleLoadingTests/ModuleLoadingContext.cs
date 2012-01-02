@@ -1,14 +1,21 @@
 ﻿#if !NO_MOQ
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
+    using System;
+
     using Moq;
     using Ninject.Modules;
 
-    public class ModuleLoadingContext
+    public class ModuleLoadingContext : IDisposable
     {
         public ModuleLoadingContext()
         {
             this.Kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.Kernel.Dispose();
         }
 
         protected StandardKernel Kernel { get; private set; }

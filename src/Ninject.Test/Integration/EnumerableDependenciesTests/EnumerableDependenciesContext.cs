@@ -1,20 +1,22 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
+    using System;
+
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
 
-    public abstract class EnumerableDependenciesContext
+    public abstract class EnumerableDependenciesContext : IDisposable
     {
         protected EnumerableDependenciesContext()
         {
-            this.SetUp();
+            this.Kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.Kernel.Dispose();
         }
 
         protected StandardKernel Kernel { get; private set; }
-
-        public void SetUp()
-        {
-            this.Kernel = new StandardKernel();
-        }
 
         protected abstract void VerifyInjection(IParent parent);
     }

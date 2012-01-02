@@ -1,16 +1,23 @@
 ﻿namespace Ninject.Tests.Integration.ExternalInjectionTests
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class ExternalInjectionContext
+    public class ExternalInjectionContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public ExternalInjectionContext()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

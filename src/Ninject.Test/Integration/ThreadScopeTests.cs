@@ -7,19 +7,19 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class ThreadScopeContext
+    public class ThreadScopeContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public ThreadScopeContext()
         {
-            this.SetUp();
-        }
-
-        public void SetUp()
-        {
             var settings = new NinjectSettings { CachePruningInterval = TimeSpan.MaxValue };
             this.kernel = new StandardKernel(settings);
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

@@ -1,16 +1,23 @@
 namespace Ninject.Tests.Integration
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class OptionalTest
+    public class OptionalTest : IDisposable
     {
         private readonly StandardKernel kernel;
 
         public OptionalTest()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
 
         [Fact]

@@ -1,11 +1,13 @@
 namespace Ninject.Tests.Integration
 {
 #if !SILVERLIGHT
+    using System;
+
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
     
-    public class NamedPropertyInjectionTests
+    public class NamedPropertyInjectionTests : IDisposable
     {
         private readonly IKernel kernel;
 
@@ -16,6 +18,11 @@ namespace Ninject.Tests.Integration
             this.kernel.Bind<IWeapon>().To<ShortSword>().Named("Offhand");
             this.kernel.Bind<IWeapon>().To<Shuriken>().Named("Secret");
             this.kernel.Bind<IWeapon>().To<Dagger>().Named("VerySecret");
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
 
         [Fact]

@@ -1,21 +1,23 @@
 ﻿namespace Ninject.Tests.Integration.ConstantTests
 {
+    using System;
+
     using Fakes;
     using FluentAssertions;
     using Xunit;
 
-    public class ConstantContext
+    public class ConstantContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public ConstantContext()
         {
-            this.SetUp();
+            this.kernel = new StandardKernel();
         }
 
-        public void SetUp()
+        public void Dispose()
         {
-            this.kernel = new StandardKernel();
+            this.kernel.Dispose();
         }
     }
 

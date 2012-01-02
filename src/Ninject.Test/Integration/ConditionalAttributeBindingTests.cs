@@ -20,38 +20,26 @@
 
     public class UnknownAttack : IAttackAbility
     {
-        #region IAttackAbility Members
-
         public int Strength
         {
             get { return -1; }
         }
-
-        #endregion
     }
 
     public class WeakAttack : IAttackAbility
     {
-        #region IAttackAbility Members
-
         public int Strength
         {
             get { return 1; }
         }
-
-        #endregion
     }
 
     public class StrongAttack : IAttackAbility
     {
-        #region IAttackAbility Members
-
         public int Strength
         {
             get { return 10; }
         }
-
-        #endregion
     }
 
     public interface IVarialbeWeapon
@@ -64,8 +52,6 @@
 
     public class Hammer : IVarialbeWeapon
     {
-        #region IWeapon Members
-
         [Inject]
         [Weak]
         public IAttackAbility WeakAttack { get; set; }
@@ -81,8 +67,6 @@
         {
             get { return "hammer"; }
         }
-
-        #endregion
     }
 
     public class ConditionalAttributeBindingTests : DisposableObject

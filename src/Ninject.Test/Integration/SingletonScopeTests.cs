@@ -7,13 +7,18 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class SingletonScopeContext
+    public class SingletonScopeContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public SingletonScopeContext()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

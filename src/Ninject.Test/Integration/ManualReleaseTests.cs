@@ -1,16 +1,23 @@
 ﻿namespace Ninject.Tests.Integration.ManualReleaseTests
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
     
-    public class ManualReleaseContext
+    public class ManualReleaseContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public ManualReleaseContext()
         {
             this.kernel = new StandardKernel();            
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

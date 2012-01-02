@@ -5,26 +5,38 @@ namespace Ninject.Tests.Integration
     using Ninject.Activation;
     using Xunit;
 
-    public class ProviderTests
+    public class ProviderTests : IDisposable
     {
+        private readonly IKernel kernel;
+
+        public ProviderTests()
+        {
+            this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
+        }
+
         [Fact]
         public void InstancesCanBeCreated()
         {
-            using (var kernel = new StandardKernel())
-            {
-                kernel.Bind<IConfig>().ToProvider<ConfigProvider>();
+            this.kernel.Bind<IConfig>().ToProvider<ConfigProvider>();
 
-                var instance = kernel.Get<IConfig>();
+            var instance = this.kernel.Get<IConfig>();
 
-                instance.Should().NotBeNull();
-            }
+            instance.Should().NotBeNull();
         }
 
         public class ConfigProvider : IProvider
         {
             public Type Type
             {
-                get { return typeof(DynamicConfigReader); }
+                get
+                {
+                    return typeof(DynamicConfigReader);
+                }
             }
             
             public object Create(IContext context)

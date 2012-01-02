@@ -7,13 +7,18 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class TransientScopeContext
+    public class TransientScopeContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public TransientScopeContext()
         {
             this.kernel = new StandardKernel();            
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

@@ -1,16 +1,23 @@
 ﻿namespace Ninject.Tests.Integration.SpecialResolutionTests
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Syntax;
     using Xunit;
 
-    public class SpecialResolutionContext
+    public class SpecialResolutionContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public SpecialResolutionContext()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

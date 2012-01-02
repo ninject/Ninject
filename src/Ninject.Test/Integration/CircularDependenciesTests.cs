@@ -1,18 +1,24 @@
 ﻿namespace Ninject.Tests.Integration.CircularDependenciesTests
 {
+    using System;
     using System.Linq;
     using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Parameters;
     using Xunit;
 
-    public class CircularDependenciesContext
+    public class CircularDependenciesContext : IDisposable
     {
         protected StandardKernel kernel;
 
         public CircularDependenciesContext()
         {
             this.kernel = new StandardKernel();
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

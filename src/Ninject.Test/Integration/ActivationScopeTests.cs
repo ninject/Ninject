@@ -6,7 +6,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class ActivationBlockContext
+    public class ActivationBlockContext : IDisposable
     {
         protected StandardKernel kernel;
         protected ActivationBlock block;
@@ -15,6 +15,11 @@
         {
             this.kernel = new StandardKernel();
             this.block = new ActivationBlock(kernel);
+        }
+
+        public void Dispose()
+        {
+            this.kernel.Dispose();
         }
     }
 

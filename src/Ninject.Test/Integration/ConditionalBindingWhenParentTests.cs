@@ -1,10 +1,12 @@
 ﻿namespace Ninject.Tests.Integration
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class WhenParentContext
+    public class WhenParentContext : IDisposable
     {
         protected StandardKernel kernel;
 
@@ -13,6 +15,11 @@
             this.kernel = new StandardKernel();
             this.kernel.Bind<Sword>().ToSelf().Named("Broken");
             this.kernel.Bind<Sword>().ToSelf().WhenParentNamed("Something");
+        }
+
+        public void Dispose()
+        {
+            this.kernel = new StandardKernel();
         }
     }
 
