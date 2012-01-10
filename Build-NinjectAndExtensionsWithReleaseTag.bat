@@ -1,5 +1,5 @@
 SET NoPause=true
-SET ReleaseTag=-rc2
+SET ReleaseTag=-rc3
 mkdir ..\dist-all
 del /S /Q ..\dist-all\*
 call build-release.cmd "-D:product.additionalVersionTag=%ReleaseTag%"

@@ -199,7 +199,7 @@
 	<target name="config-platform-net-3.5">
 		<property name="nant.settings.currentframework" value="net-3.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
-		<property name="nuget.platform" value="net35-Full"/>
+		<property name="nuget.platform" value="net35"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
@@ -213,7 +213,15 @@
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_PARTIAL_TRUST"/>
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.platform" value="net40-Full"/>
+		<property name="nuget.platform" value="net40"/>
+		<property name="nuget.add" value="true"/>
+	</target>
+
+	<target name="config-platform-net-4.5">
+		<property name="nant.settings.currentframework" value="net-4.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_45,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.platform" value="net45"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
@@ -244,11 +252,25 @@
 		<property name="nuget.platform" value="sl4"/>
 		<property name="nuget.add" value="true"/>
 	</target>
+
+	<target name="config-platform-silverlight-5.0">
+		<property name="nant.settings.currentframework" value="silverlight-5.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_50,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_PARTIAL_TRUST"/>
+		<property name="nuget.platform" value="sl5"/>
+		<property name="nuget.add" value="true"/>
+	</target>
 	
 	<target name="config-platform-silverlight-4.0-wp7">
 		<property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
 		<property name="nuget.platform" value="sl3-wp"/>
+		<property name="nuget.add" value="true"/>
+	</target>
+
+	<target name="config-platform-silverlight-4.0-wp71">
+		<property name="nant.settings.currentframework" value="silverlight-4.0-wp71"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
+		<property name="nuget.platform" value="sl4-windowsphone71"/>
 		<property name="nuget.add" value="true"/>
 	</target>
 
@@ -548,12 +570,12 @@
 	</target>
 	
 	<target name="CopyMoq">
-		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.0'))}">
+		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.'))}">
 			<fileset basedir="${path.tools.moq}/net35">
 				<include name="Moq.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.')}">
 			<fileset basedir="${path.tools.moq}/net40">
 				<include name="Moq.dll"/>
 			</fileset>
@@ -578,13 +600,13 @@
 	</target>
 	
 	<target name="CopyMoq-SL">
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight-4.0')}">
+		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight4">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'silverlight-4.0')}">
+		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight3">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core-Silverlight.dll"/>

@@ -53,7 +53,7 @@
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="Ninject, Version=2.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+    <Reference Include="Ninject">
       <HintPath>..\..\build\silverlight-4.0-wp7\release\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq">
