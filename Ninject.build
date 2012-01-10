@@ -6,7 +6,7 @@
 	<property name="product.duration" value="2007-2011" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
 	<property name="product.platforms" value="net-3.5,net-4.0,net-4.5,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-4.0-wp71,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp7,mono-2.0,netcf-3.5"  overwrite="false"/>
-	<property name="product.buildserverPlatforms" value="net-3.5,net-4.0,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-4.0-wp71,silverlight-3.0,silverlight-2.0,mono-2.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.buildserverPlatforms" value="net-3.5,net-4.0,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-4.0-wp7,silverlight-3.0,silverlight-2.0,mono-2.0,netcf-3.5"  overwrite="false"/>
 	<property name="dependencies" value=""	overwrite="false"/>
 	
 	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
