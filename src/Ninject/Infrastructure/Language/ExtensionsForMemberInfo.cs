@@ -133,7 +133,7 @@ namespace Ninject.Infrastructure.Language
         /// <returns></returns>
         public static object[] GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35
+#if !NET_35 && !MONO_40
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;

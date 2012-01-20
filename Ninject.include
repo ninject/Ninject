@@ -37,7 +37,8 @@
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.assemblyversion" value="${version.major}.${version.minor}.0.0" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
-	<property name="build.platform" value="net-3.5" overwrite="false"/>
+	<property name="build.platform" value="net-3.5" overwrite="true"/>
+	<property name="build.target" value="net-3.5" overwrite="false"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
@@ -116,7 +117,7 @@
 	<target name="build" depends="InitializeBuildSystem all"/>
 	<target name="InitializeBuildSystem" depends="DetectOperatingSystemArchitecture"/>
 	
-	<target name="create-assembly-info" depends="get-git-revision">
+	<target name="create-assembly-info" depends="init get-git-revision">
 		<echo message="##teamcity[buildNumber '${build.version}']" />
 		<echo message="Assembly Version: '${build.assemblyversion}'" />
 		<echo message="Build Platform: '${build.platform}'" />
@@ -144,7 +145,7 @@
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 
 		<call target="config-build-${build.config}"/>
-		<call target="config-platform-${build.platform}"/>
+		<call target="config-platform-${build.target}"/>
 
 		<property name="current.path.ninject.lib" value="${path.lib}/Ninject/${build.platform}"/>
 		<property name="current.path.context.lib" value="${path.lib}/Ninject.Extensions.ContextPreservation/${build.platform}"/>
@@ -196,47 +197,82 @@
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
 
-	<target name="config-platform-net-3.5">
-		<property name="nant.settings.currentframework" value="net-3.5"/>
+	<target name="config-platform-net-3.5-client">
+		<property name="nant.settings.currentframework" value="net-3.5-client"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
 		<property name="nuget.platform" value="net35"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-3.5" overwrite="true"/>
+    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
+	</target>
+
+	<target name="config-platform-net-3.5">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
+		<property name="nuget.platform" value="net35-full"/>
+		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-3.5" overwrite="true"/>
+    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
 	</target>
 
 	<target name="config-platform-net-3.5_medium_trust">
-		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="nant.settings.currentframework" value="net-3.5-client"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_35,MEDIUM_TRUST"/>
 		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="net-3.5_medium_trust" overwrite="true"/>
+    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
+	</target>
+
+	<target name="config-platform-net-4.0-client">
+		<property name="nant.settings.currentframework" value="net-4.0-client"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.platform" value="net40"/>
+		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-4.0" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-net-4.0">
 		<property name="nant.settings.currentframework" value="net-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_PARTIAL_TRUST"/>
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.platform" value="net40"/>
+		<property name="nuget.platform" value="net40-full"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-4.0" overwrite="true"/>
+	</target>
+
+	<target name="config-platform-net-4.0_medium_trust">
+		<property name="nant.settings.currentframework" value="net-4.0-client"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_40,MEDIUM_TRUST,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="net-4.0_medium_trust" overwrite="true"/>
+	</target>
+	
+	<target name="config-platform-net-4.5-client">
+		<property name="nant.settings.currentframework" value="net-4.5-client"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_45,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.platform" value="net45"/>
+		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-4.5" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-net-4.5">
 		<property name="nant.settings.currentframework" value="net-4.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_45,NO_PARTIAL_TRUST"/>
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.platform" value="net45"/>
+		<property name="nuget.platform" value="net45-full"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="net-4.5" overwrite="true"/>
 	</target>
 
-	<target name="config-platform-net-4.0_medium_trust">
-		<property name="nant.settings.currentframework" value="net-4.0"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_40,MEDIUM_TRUST,NO_PARTIAL_TRUST"/>
-		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
-		<property name="nuget.add" value="false"/>
-	</target>
-	
 	<target name="config-platform-silverlight-2.0">
 		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 		<property name="nuget.platform" value="sl2"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-2.0" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-3.0">
@@ -244,6 +280,7 @@
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 		<property name="nuget.platform" value="sl3"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-3.0" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-4.0">
@@ -251,6 +288,7 @@
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_PARTIAL_TRUST"/>
 		<property name="nuget.platform" value="sl4"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-4.0" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-5.0">
@@ -258,35 +296,54 @@
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_50,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_PARTIAL_TRUST"/>
 		<property name="nuget.platform" value="sl5"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-5.0" overwrite="true"/>
 	</target>
 	
 	<target name="config-platform-silverlight-4.0-wp7">
-		<property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
+		<property name="nant.settings.currentframework" value="silverlight-wp7"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
 		<property name="nuget.platform" value="sl3-wp"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-4.0-wp7" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-silverlight-4.0-wp71">
-		<property name="nant.settings.currentframework" value="silverlight-4.0-wp71"/>
+		<property name="nant.settings.currentframework" value="silverlight-wp71"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
 		<property name="nuget.platform" value="sl4-windowsphone71"/>
 		<property name="nuget.add" value="true"/>
+		<property name="build.platform" value="silverlight-4.0-wp71" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-netcf-3.5">
 		<property name="nant.settings.currentframework" value="netcf-3.5"/>
 		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_35,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
 		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="netcf-3.5" overwrite="true"/>
 	</target>
 
 	<target name="config-platform-mono-2.0">
 		<property name="nant.settings.currentframework" value="mono-2.0"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,NO_GENERIC_MOQ,MONO_2_6" if="${teamcity}"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,NO_GENERIC_MOQ" unless="${teamcity}"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,MONO_20,NO_GENERIC_MOQ" />
 		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="mono-2.0" overwrite="true"/>
 	</target>
 	
+	<target name="config-platform-mono-3.5">
+		<property name="nant.settings.currentframework" value="mono-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,MONO_35,NO_GENERIC_MOQ" />
+		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="mono-3.5" overwrite="true"/>
+	</target>
+
+	<target name="config-platform-mono-4.0">
+		<property name="nant.settings.currentframework" value="mono-4.0"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_40,MONO,MONO_40,NO_GENERIC_MOQ" />
+		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="mono-4.0" overwrite="true"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+	</target>
+
 	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5')}">
 		<exec 
 			program="${path.tools.xunit.console}" 
@@ -345,7 +402,7 @@
 	
 	<target name="buildServerPlatforms" depends="InitializeBuildSystem">
 		<foreach item="String" in="${product.buildserverPlatforms}" delim="," property="platform">
-			<property name="build.platform" value="${platform}"/>
+			<property name="build.target" value="${platform}"/>
 			<call target="package-bin"/>
 		</foreach>
 		<call target="package-source"/>
@@ -354,7 +411,7 @@
 	<target name="allPlatforms" depends="InitializeBuildSystem">
 		<call target="csproj"/>
 		<foreach item="String" in="${product.platforms}" delim="," property="platform">
-			<property name="build.platform" value="${platform}"/>
+			<property name="build.target" value="${platform}"/>
 			<call target="package-bin"/>
 		</foreach>
 		<call target="package-source"/>
@@ -439,8 +496,7 @@
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
-			<property name="build.platform" value="${platform}"/>
-			<call target="config-platform-${build.platform}"/>
+			<call target="config-platform-${platform}"/>
 			<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
 				<fileset basedir="${nuget.releaseDirectory}">
 					<include name="${nuget.name}.dll" />
@@ -543,26 +599,41 @@
 	</target>
 	
 	<target name="CopyDefaultTestInfrastructureAssemblies">
-		<call target="CopyXUnit"/>
-		<call target="CopyMoq"/>
-		<call target="CopyFluentAssertions"/>
-		<call target="CopyProjectOutput"/>
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyDefaultTestInfrastructureAssemblies-Target" />
+	</target>
+
+	<target name="CopyDefaultTestInfrastructureAssemblies-Target">
+		<call target="CopyXUnit-Target"/>
+		<call target="CopyMoq-Target"/>
+		<call target="CopyFluentAssertions-Target"/>
+		<call target="CopyProjectOutput-Target"/>
 	</target>
 
 	<target name="CopyDefaultTestInfrastructureAssemblies-SL">
-		<call target="CopyXUnit-SL"/>
-		<call target="CopyMoq-SL"/>
-		<call target="CopyFluentAssertions-SL"/>
-		<call target="CopyProjectOutput"/>
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyDefaultTestInfrastructureAssemblies-SL-Target" />
+	</target>
+
+	<target name="CopyDefaultTestInfrastructureAssemblies-SL-Target">
+		<call target="CopyXUnit-SL-Target"/>
+		<call target="CopyMoq-SL-Target"/>
+		<call target="CopyFluentAssertions-SL-Target"/>
+		<call target="CopyProjectOutput-Target"/>
 	</target>
 
 	<target name="CopyFluentAssertions">
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.0')}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyFluentAssertions-Target" />
+	</target>
+
+	<target name="CopyFluentAssertions-Target">
+		<copy todir="${target}" if="${string::contains(build.platform, 'net-4.')}">
 			<fileset basedir="${path.tools.fluentassertions}/Net-4.0">
 				<include name="FluentAssertions.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'net-4.0')}">
+		<copy todir="${target}" unless="${string::contains(build.platform, 'net-4.0')}">
 			<fileset basedir="${path.tools.fluentassertions}/Net-3.5">
 				<include name="FluentAssertions.dll"/>
 			</fileset>
@@ -570,12 +641,17 @@
 	</target>
 	
 	<target name="CopyMoq">
-		<copy todir="${current.path.test}" if="${not(string::contains(build.platform, 'net-4.'))}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyMoq-Target" />
+	</target>
+	
+	<target name="CopyMoq-Target">
+		<copy todir="${target}" if="${not(string::contains(build.platform, 'net-4.')) and not(string::contains(build.platform, 'mono-4.'))}">
 			<fileset basedir="${path.tools.moq}/net35">
 				<include name="Moq.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'net-4.')}">
+		<copy todir="${target}" if="${string::contains(build.platform, 'net-4.') or string::contains(build.platform, 'mono-4.')}">
 			<fileset basedir="${path.tools.moq}/net40">
 				<include name="Moq.dll"/>
 			</fileset>
@@ -583,7 +659,12 @@
 	</target>
 	
 	<target name="CopyXUnit">
-		<copy todir="${current.path.test}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyXUnit-Target" />
+	</target>
+	
+	<target name="CopyXUnit-Target">
+		<copy todir="${target}">
 			<fileset basedir="${path.tools.xunit}">
 				<include name="xunit.dll"/>
 				<include name="xunit.extensions.dll"/>
@@ -592,7 +673,12 @@
 	</target>
 	
 	<target name="CopyFluentAssertions-SL">
-		<copy todir="${current.path.test}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyFluentAssertions-SL-Target" />
+	</target>
+
+	<target name="CopyFluentAssertions-SL-Target">
+		<copy todir="${target}">
 			<fileset basedir="${path.tools.fluentassertions}/${build.platform}">
 				<include name="FluentAssertions.Silverlight.dll"/>
 			</fileset>
@@ -600,13 +686,18 @@
 	</target>
 	
 	<target name="CopyMoq-SL">
-		<copy todir="${current.path.test}" if="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyMoq-SL-Target" />
+	</target>
+	
+	<target name="CopyMoq-SL-Target">
+		<copy todir="${target}" if="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight4">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${current.path.test}" unless="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
+		<copy todir="${target}" unless="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight3">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core-Silverlight.dll"/>
@@ -616,7 +707,12 @@
 	</target>
 	
 	<target name="CopyXUnit-SL">
-		<copy todir="${current.path.test}">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyXUnit-SL-Target" />
+	</target>
+	
+	<target name="CopyXUnit-SL-Target">
+		<copy todir="${target}">
 			<fileset basedir="${path.tools.xunit.sl}${build.platform}">
 				<include name="*.dll"/>
 			</fileset>
@@ -624,7 +720,12 @@
 	</target>
 
 	<target name="CopyProjectOutput">
-		<copy todir="${current.path.test}" flatten="true" overwrite="true">
+	    <property name="target" value="${current.path.test}" overwrite="true" />
+		<call target="CopyProjectOutput-Target" />
+	</target>
+
+	<target name="CopyProjectOutput-Target">
+		<copy todir="${target}" flatten="true" overwrite="true">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.dll"/>
 			</fileset>
