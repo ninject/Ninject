@@ -366,10 +366,11 @@
 		</if>
 	</target>
 
-	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests or skip.silverlightTests or string::contains(build.platform, 'wp7')}" if="${string::contains(build.platform, 'silverlight')}">
+	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight')}">
 	    <property name="cmdLine" value='-x"${product.assembly.silverlighttest}" --teamcity --debug' if="${teamcity}"/>
 		<property name="cmdLine" value='-x"${product.assembly.silverlighttest}"' unless="${teamcity}"/>
-		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine}" failonerror="true"/>
+		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine}" failonerror="true" unless="${string::contains(build.platform, 'wp')}" />
+		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine} --UsePhoneEmulator" failonerror="true" if="${string::contains(build.platform, 'wp')}" />
 	</target>
 
 	<target name="UnzipDependencies">

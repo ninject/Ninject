@@ -168,6 +168,9 @@
 			<fileset basedir="${path.src}/${product.name}.SilverlightTests/Silverlight3">
 				<include name="AppManifest.xaml" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
 			</fileset>
+		    <fileset basedir="${path.lib}">
+				<include name="System.Linq.dll" if="${string::contains(build.platform, 'wp7') and not(string::contains(build.platform, 'wp71'))}"/>
+			</fileset>
 		</zip>
 	</target>
 </project>

@@ -434,34 +434,15 @@
     public class sdf : StandardKernelContext
     {
         [Fact]
-        public void RemovesAllBindingsForServiceAndReplacesWithSpecifiedBinding()
+        public void Ddd()
         {
-            kernel.Bind<IWeapon>().To<Shuriken>().When(r => r.ParentRequest.Service.GetGenericArguments()[0] == typeof(string));
-            kernel.Bind<IWeapon>().To<Sword>().When(r => r.ParentRequest.Service.GetGenericArguments()[0] == typeof(int));
-            kernel.Bind(typeof(IRepository<>)).To(typeof(Repository<>));
-
-            var repo = kernel.Get<IRepository<int>>();
-
-            repo.Weapon.Should().BeOfType<Sword>();
-        }
-
-        public interface IRepository<T>
-        {
-            IWeapon Weapon { get; }
-        }
-
-        public class Repository<T> : IRepository<T>
-        {
-            public Repository(IWeapon weapon)
-            {
-                this.Weapon = weapon;
-            }
-
-            public IWeapon Weapon { get; private set; }
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWarrior>().To<Ninja>();
+            this.kernel.Bind<IWarrior>().To<Samurai>().When(c => true);
+            this.kernel.GetAll<IWarrior>().Count().Should().Be(2);
         }
     }
-    
-    
+     
     public class WhenCanResolveIsCalled : StandardKernelContext
     {
         [Fact]
