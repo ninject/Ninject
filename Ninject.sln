@@ -1,12 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E299B94-5F07-49DE-8226-55EDC56F13E3}"
 	ProjectSection(SolutionItems) = preProject
-		build-release.cmd = build-release.cmd
-		build.cmd = build.cmd
 		LICENSE.txt = LICENSE.txt
 		README.markdown = README.markdown
+		build-release.cmd = build-release.cmd
+		build.cmd = build.cmd
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject", "src\Ninject\Ninject.csproj", "{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}"
@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WinRT", "src\Ninject\Ninject.WinRT.csproj", "{0EA44209-1324-4BEE-A8D2-46163D26B504}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutomatedRelease|Any CPU = AutomatedRelease|Any CPU
@@ -27,22 +29,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
@@ -59,6 +53,22 @@ Global
 		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90F46524-0716-4180-8A5F-1CD1EB5686F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU

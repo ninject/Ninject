@@ -25,8 +25,12 @@ namespace Ninject.Planning.Targets
     /// Represents a site on a type where a value can be injected.
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
+#if !WINRT
     public abstract class Target<T> : ITarget
         where T : ICustomAttributeProvider
+#else
+    public abstract class Target : ITarget
+#endif
     {
         private readonly Future<Func<IBindingMetadata, bool>> _constraint;
         private readonly Future<bool> _isOptional;
@@ -36,11 +40,12 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public MemberInfo Member { get; private set; }
 
+#if !WINRT
         /// <summary>
         /// Gets or sets the site (property, parameter, etc.) represented by the target.
         /// </summary>
         public T Site { get; private set; }
-
+#endif
         /// <summary>
         /// Gets the name of the target.
         /// </summary>
@@ -84,6 +89,7 @@ namespace Ninject.Planning.Targets
             get { throw new InvalidOperationException(ExceptionFormatter.TargetDoesNotHaveADefaultValue(this)); }
         }
 
+#if !WINRT
         /// <summary>
         /// Initializes a new instance of the Target&lt;T&gt; class.
         /// </summary>
@@ -101,27 +107,64 @@ namespace Ninject.Planning.Targets
             _isOptional = new Future<bool>(ReadOptionalFromTarget);
         }
 
+#else
+        /// <summary>
+        /// Initializes a new instance of the Target&lt;T&gt; class.
+        /// </summary>
+        /// <param name="member">The member that contains the target.</param>
+        /// <param name="site">The site represented by the target.</param>
+        protected Target(MemberInfo member)
+        {
+            Ensure.ArgumentNotNull(member, "member");
+
+            Member = member;
+
+            _constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
+            _isOptional = new Future<bool>(ReadOptionalFromTarget);
+        }
+#endif
+
         /// <summary>
         /// Returns an array of custom attributes of a specified type defined on the target.
         /// </summary>
         /// <param name="attributeType">The type of attribute to search for.</param>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns>An array of custom attributes of the specified type.</returns>
-        public object[] GetCustomAttributes(Type attributeType, bool inherit)
+        public
+#if WINRT
+            abstract IEnumerable<Attribute>
+#else
+            object[] 
+#endif            
+            GetCustomAttributes(Type attributeType, bool inherit)
+#if WINRT
+            ;
+#else
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.GetCustomAttributesExtended(attributeType, inherit);
         }
+#endif
 
         /// <summary>
         /// Returns an array of custom attributes defined on the target.
         /// </summary>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns>An array of custom attributes.</returns>
-        public object[] GetCustomAttributes(bool inherit)
+        public
+#if WINRT
+ abstract IEnumerable<Attribute>
+#else
+            object[] 
+#endif   
+            GetCustomAttributes(bool inherit)
+#if WINRT
+            ;
+#else
         {
             return Site.GetCustomAttributes(inherit);
         }
+#endif
 
         /// <summary>
         /// Returns a value indicating whether an attribute of the specified type is defined on the target.
@@ -129,11 +172,19 @@ namespace Ninject.Planning.Targets
         /// <param name="attributeType">The type of attribute to search for.</param>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
-        public bool IsDefined(Type attributeType, bool inherit)
+        public
+#if WINRT
+            abstract
+#endif
+            bool IsDefined(Type attributeType, bool inherit)
+#if WINRT
+            ;
+#else
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.IsDefined(attributeType, inherit);
         }
+#endif
 
         /// <summary>
         /// Resolves a value for the target within the specified parent context.
@@ -153,7 +204,11 @@ namespace Ninject.Planning.Targets
             if (Type.IsGenericType)
             {
                 Type gtd = Type.GetGenericTypeDefinition();
+#if !WINRT
                 Type service = Type.GetGenericArguments()[0];
+#else
+                Type service = Type.GenericTypeArguments[0];
+#endif
 
                 if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
                     return GetValues(service, parent).CastSlow(service).ToListSlow(service);
@@ -201,10 +256,20 @@ namespace Ninject.Planning.Targets
         /// Reads whether the target represents an optional dependency.
         /// </summary>
         /// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
-        protected virtual bool ReadOptionalFromTarget()
+        protected
+#if !WINRT
+            virtual
+#else
+            abstract
+#endif
+            bool ReadOptionalFromTarget()
+#if WINRT
+            ;
+#else
         {
             return Site.HasAttribute(typeof(OptionalAttribute));
         }
+#endif
 
         /// <summary>
         /// Reads the resolution constraint from target.

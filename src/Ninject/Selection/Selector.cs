@@ -26,6 +26,7 @@ namespace Ninject.Selection
     /// </summary>
     public class Selector : NinjectComponent, ISelector
     {
+#if !WINRT
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
         private BindingFlags Flags
@@ -39,6 +40,7 @@ namespace Ninject.Selection
                 #endif
             }
         }
+#endif
 
         /// <summary>
         /// Gets or sets the constructor scorer.
@@ -73,8 +75,14 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 
+#if !WINRT
             var constructors = type.GetConstructors( Flags );
             return constructors.Length == 0 ? null : constructors;
+#else
+            var constructors = type.GetTypeInfo().DeclaredConstructors;
+            return constructors.Any() ? constructors : null;
+#endif
+            
         }
 
         /// <summary>
@@ -86,10 +94,18 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
             List<PropertyInfo> properties = new List<PropertyInfo>();
+            
+#if !WINRT
             properties.AddRange(
                 type.GetProperties(this.Flags)
                        .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
+#else
+            properties.AddRange(
+                type.GetTypeInfo().DeclaredProperties
+                    .Select(p => p.GetPropertyFromDeclaredType(p))
+                    .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
+#endif
 #if !SILVERLIGHT
             if (this.Settings.InjectParentPrivateProperties)
             {
@@ -103,10 +119,12 @@ namespace Ninject.Selection
             return properties;
         }
 
+#if !SILVERLIGHT
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
         }
+#endif
 
         /// <summary>
         /// Selects methods that should be injected.
@@ -116,7 +134,11 @@ namespace Ninject.Selection
         public IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
+#if WINRT
+            return type.GetTypeInfo().DeclaredMethods.Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+#else
             return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+#endif
         }
     }
 }
