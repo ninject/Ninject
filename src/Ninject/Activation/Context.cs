@@ -11,6 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if WINRT
+using System.Reflection;
+#endif
 using Ninject.Activation.Caching;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
@@ -108,7 +111,11 @@ namespace Ninject.Activation
             if (binding.Service.IsGenericTypeDefinition)
             {
                 HasInferredGenericArguments = true;
+#if !WINRT
                 GenericArguments = request.Service.GetGenericArguments();
+#else
+                GenericArguments = request.Service.GetTypeInfo().GenericTypeArguments;
+#endif
             }
         }
 

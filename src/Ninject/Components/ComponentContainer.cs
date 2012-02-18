@@ -142,15 +142,23 @@ namespace Ninject.Components
             if (component.IsGenericType)
             {
                 Type gtd = component.GetGenericTypeDefinition();
+#if !WINRT
                 Type argument = component.GetGenericArguments()[0];
+#else
+                Type argument = component.GetTypeInfo().GenericTypeArguments[0];
+#endif
 
 #if WINDOWS_PHONE
                 Type discreteGenericType =
                     typeof (IEnumerable<>).MakeGenericType(argument);
                 if (gtd.IsInterface && discreteGenericType.IsAssignableFrom(component))
                     return GetAll(argument).CastSlow(argument);
-#else
+#elif !WINRT
                 if (gtd.IsInterface && typeof (IEnumerable<>).IsAssignableFrom(gtd))
+                    return GetAll(argument).CastSlow(argument);
+#else
+                var info = gtd.GetTypeInfo();
+                if(info.IsInterface && typeof(IEnumerable<>).GetTypeInfo().IsAssignableFrom(info))
                     return GetAll(argument).CastSlow(argument);
 #endif
             }
@@ -207,8 +215,13 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
+#if !WINRT
             var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
-
+#else
+            var constructor =
+                implementation.GetTypeInfo().DeclaredConstructors.OrderByDescending(c => c.GetParameters().Length).
+                    FirstOrDefault();
+#endif
             if (constructor == null)
                 throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
 

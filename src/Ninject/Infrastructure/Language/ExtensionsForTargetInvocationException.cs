@@ -10,6 +10,9 @@
 #region Using Directives
 using System;
 using System.Reflection;
+#if WINRT
+using System.Runtime.ExceptionServices;
+#endif
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -20,8 +23,12 @@ namespace Ninject.Infrastructure.Language
         {
             Exception innerException = exception.InnerException;
 
+#if !WINRT
             FieldInfo stackTraceField = typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
             stackTraceField.SetValue(innerException, innerException.StackTrace);
+#else
+            ExceptionDispatchInfo.Capture(innerException).Throw();
+#endif
 
             throw innerException;
         }

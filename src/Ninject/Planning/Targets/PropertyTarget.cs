@@ -14,7 +14,7 @@ using System.Reflection;
 #if WINRT
 using System.Collections.Generic;
 using Ninject.Infrastructure;
-
+using Ninject.Infrastructure.Language;
 #endif
 #endregion
 

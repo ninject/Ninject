@@ -169,7 +169,7 @@ namespace Ninject.Infrastructure.Language
             return member.GetCustomAttributes(attributeType, inherited);
 #endif
         }
-
+#if !WINRT
         private static PropertyInfo GetParentDefinition(PropertyInfo property)
         {
 #if WINRT
@@ -196,6 +196,7 @@ namespace Ninject.Infrastructure.Language
 
             return null;
         }
+#endif
 
 #if !WINRT
 
@@ -234,7 +235,7 @@ namespace Ninject.Infrastructure.Language
             {
                 return true;
             }
-
+#if !WINRT
             if (inherit)
             {
                 if (!InternalGetAttributeUsage(attributeType).Inherited)
@@ -252,6 +253,7 @@ namespace Ninject.Infrastructure.Language
                     }
                 }
             }
+#endif
 
             return false;
         }
@@ -268,12 +270,14 @@ namespace Ninject.Infrastructure.Language
             {
                 if (InternalGetAttributeUsage(attributeType).Inherited)
                 {
-                    var attributeUsages = new Dictionary<Type, bool>();
+                    
 #if WINRT
                     var attributes = new List<Attribute>();
+
+                    attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, inherit));
 #else
                     var attributes = new List<object>();
-#endif
+                    var attributeUsages = new Dictionary<Type, bool>();
                     attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false));
                     for (var info = GetParentDefinition(propertyInfo);
                          info != null;
@@ -283,13 +287,9 @@ namespace Ninject.Infrastructure.Language
                         AddAttributes(attributes, customAttributes, attributeUsages);
                     }
 
-
-#if !WINRT
                     var result = Array.CreateInstance(attributeType, attributes.Count) as object[];
                     Array.Copy(attributes.ToArray(), result, result.Length);
                     return result;
-#else
-                    return attributes;
 #endif
                 }
             }

@@ -519,11 +519,20 @@ namespace Ninject
         [Obsolete]
         protected virtual bool TypeIsSelfBindable(Type service)
         {
+#if !WINRT
             return !service.IsInterface
                 && !service.IsAbstract
                 && !service.IsValueType
                 && service != typeof(string)
                 && !service.ContainsGenericParameters;
+#else
+            var sInfo = service.GetTypeInfo();
+            return !sInfo.IsInterface
+                && !sInfo.IsAbstract
+                && !sInfo.IsValueType
+                && service != typeof(string)
+                && !service.ContainsGenericParameters;
+#endif
         }
 
         /// <summary>

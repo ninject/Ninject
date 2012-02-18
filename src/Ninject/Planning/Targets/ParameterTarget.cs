@@ -12,6 +12,7 @@ using System;
 using System.Reflection;
 using Ninject.Infrastructure;
 #if WINRT
+using Ninject.Infrastructure.Language;
 using System.Collections.Generic;
 #endif
 

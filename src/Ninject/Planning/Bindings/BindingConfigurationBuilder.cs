@@ -24,6 +24,9 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
+#if WINRT
+    using System.Reflection;
+#endif
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
@@ -98,7 +101,14 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-            this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+            this.BindingConfiguration.Condition = r => r.Target != null &&
+#if !WINRT    
+                parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+#else
+                                                       parent.GetTypeInfo().IsAssignableFrom(
+                                                           r.Target.Member.DeclaringType.GetTypeInfo());
+#endif
+
             return this;
         }
 
@@ -123,7 +133,12 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent)
         {
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
+            this.BindingConfiguration.Condition = r => r.Target != null &&
+#if !WINRT
+                r.Target.Member.ReflectedType == parent;
+#else
+ r.Target.Member.DeclaringType == parent;
+#endif
             return this;
         }
 
@@ -168,12 +183,22 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenClassHas(Type attributeType)
         {
+#if !WINRT
             if (!typeof(Attribute).IsAssignableFrom(attributeType))
+#else
+            if(!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
+#endif
             {
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenClassHas", attributeType));
             }
 
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType.HasAttribute(attributeType);
+            this.BindingConfiguration.Condition = r => r.Target != null &&
+#if !WINRT
+                r.Target.Member.ReflectedType.HasAttribute(attributeType);
+#else
+                                                       r.Target.Member.DeclaringType.GetTypeInfo().HasAttribute(
+                                                           attributeType);
+#endif
 
             return this;
         }
@@ -186,7 +211,11 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
         {
+#if !WINRT
             if (!typeof(Attribute).IsAssignableFrom(attributeType))
+#else
+            if(!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
+#endif
             {
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenMemberHas", attributeType));
             }
@@ -204,7 +233,11 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas(Type attributeType)
         {
+#if !WINRT
             if (!typeof(Attribute).IsAssignableFrom(attributeType))
+#else
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
+#endif
             {
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenTargetHas", attributeType));                
             }
@@ -222,7 +255,9 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name)
         {
+#if !WINRT
             String.Intern(name);
+#endif
             this.BindingConfiguration.Condition = r => r.ParentContext != null && string.Equals(r.ParentContext.Binding.Metadata.Name, name, StringComparison.Ordinal);
             return this;
         }
@@ -247,7 +282,9 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWithOrOnSyntax<T> Named(string name)
         {
+#if !WINRT
             String.Intern(name);
+#endif
             this.BindingConfiguration.Metadata.Name = name;
             return this;
         }

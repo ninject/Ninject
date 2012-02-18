@@ -26,7 +26,9 @@ namespace Ninject.Selection.Heuristics
     using System;
     using System.Collections;
     using System.Linq;
-
+#if WINRT
+    using System.Reflection;
+#endif
     using Ninject.Activation;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -84,7 +86,10 @@ namespace Ninject.Selection.Heuristics
 
         private static bool BindingExists(IContext context, ITarget target)
         {
+
             var targetType = GetTargetType(target);
+#if !WINRT
+
             return context.Kernel.GetBindings(targetType).Any()
                    || target.HasDefaultValue
                    || (!targetType.IsInterface
@@ -92,20 +97,44 @@ namespace Ninject.Selection.Heuristics
                        && !targetType.IsValueType
                        && targetType != typeof(string)
                        && !targetType.ContainsGenericParameters);
+#else
+            var targetTypeInfo = targetType.GetTypeInfo();
+            return context.Kernel.GetBindings(targetType).Any()
+                   || target.HasDefaultValue
+                   || (!targetTypeInfo.IsInterface
+                       && !targetTypeInfo.IsAbstract
+                       && !targetTypeInfo.IsValueType
+                       && targetType != typeof(string)
+                       && !targetTypeInfo.ContainsGenericParameters);
+#endif
         }
 
         private static Type GetTargetType(ITarget target)
         {
             var targetType = target.Type;
+            
             if (targetType.IsArray)
             {
                 targetType = targetType.GetElementType();
             }
 
+#if !WINRT
             if (targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
             {
+                
                 targetType = targetType.GetGenericArguments()[0];
             }
+
+#else
+            if(targetType.IsGenericType)
+            {
+                var typeInfo = targetType.GetTypeInfo();
+                if(typeInfo.ImplementedInterfaces.Any(type => type == typeof(IEnumerable)))
+                {
+                    targetType = typeInfo.GenericTypeArguments[0];
+                }
+            }
+#endif
 
             return targetType;
         }
