@@ -8,8 +8,8 @@
     <ProjectGuid>{875065AA-EA3B-4C7A-B7DD-9B660AA76D27}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestModules.WinRT</RootNamespace>
-    <AssemblyName>TestModules.WinRT</AssemblyName>
+    <RootNamespace>Ninject.Tests.TestModules</RootNamespace>
+    <AssemblyName>Ninject.Tests.TestModule</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

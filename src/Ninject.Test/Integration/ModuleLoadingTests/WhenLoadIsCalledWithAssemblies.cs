@@ -7,6 +7,9 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenLoadIsCalledWithAssemblies : ModuleLoadingContext
     {
 #if !MSTEST 
@@ -17,8 +20,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         public void ModulesContainedInAssembliesAreLoaded()
         {
             var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule) };
+#if !WINRT
             var assembly = Assembly.GetExecutingAssembly();
-            
+#else
+            var assembly = typeof (WhenLoadIsCalledWithAssemblies).GetTypeInfo().Assembly;
+#endif
             this.Kernel.Load(assembly);
             var modules = this.Kernel.GetModules().ToArray();
 

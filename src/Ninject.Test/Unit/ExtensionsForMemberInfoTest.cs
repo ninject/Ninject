@@ -8,6 +8,9 @@ namespace Ninject.Tests.Unit
     using Xunit;
 
 #if !SILVERLIGHT
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ExtensionsForMemberInfoTest
     {
 #if !MSTEST 
@@ -34,7 +37,7 @@ namespace Ninject.Tests.Unit
             this.TestHasAttributeForAttributesOnBaseClass("InternalProperty");
             this.TestHasAttributeForAttributesOnBaseClass("ProtectedProperty");
         }
-
+#if !WINRT
 #if !MSTEST 
         [Fact]
 #else
@@ -59,6 +62,7 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("InternalProperty");
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("ProtectedProperty");
         }
+#endif
 
 #if !MSTEST 
         [Fact]
@@ -80,13 +84,17 @@ namespace Ninject.Tests.Unit
         public void TestIndexerHasAttribute(Type testObjectType, Type indexerType, Type attributeType, bool expectedResult)
         {
             var propertyInfo =
+#if !WINRT
                 testObjectType.GetProperties()
+#else
+                testObjectType.GetTypeInfo().DeclaredProperties
+#endif
                     .First(pi => pi.Name == "Item" && pi.GetIndexParameters().Single().ParameterType == indexerType);
             var hasInjectAttribute = propertyInfo.HasAttribute(attributeType);
 
             hasInjectAttribute.Should().Be(expectedResult);
         }
-
+#if !WINRT
         private void TestGetCustomAttributesExtended(string propertyName)
         {
             this.TestGetCustomAttributesExtended(propertyName, true);
@@ -122,6 +130,7 @@ namespace Ninject.Tests.Unit
                 attributes.Should().Contain(expectedAttribute);
             }
         }
+#endif
 
         private void TestHasAttribute(string propertyName)
         {
@@ -142,7 +151,11 @@ namespace Ninject.Tests.Unit
         private void TestHasAttribute(object testObject, string attributeName, Type attributeType, bool expectedValue)
         {
             var propertyInfo = testObject.GetType()
+#if !WINRT
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#else
+                .GetTypeInfo().GetDeclaredProperty(attributeName);
+#endif
             bool hasAttribute = propertyInfo.HasAttribute(attributeType);
 
             hasAttribute.Should().Be(expectedValue);

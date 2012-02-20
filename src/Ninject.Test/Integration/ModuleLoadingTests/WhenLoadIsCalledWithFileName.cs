@@ -7,9 +7,16 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     using FluentAssertions;
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenLoadIsCalledWithFileName : ModuleLoadingContext
     {
+#if !WINRT
         protected readonly string ModuleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
+#else
+        protected readonly string ModuleFilename = @"Ninject.Tests.TestModule.dll";
+#endif
 
 #if !MSTEST 
         [Fact]

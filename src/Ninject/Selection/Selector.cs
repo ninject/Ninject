@@ -103,11 +103,11 @@ namespace Ninject.Selection
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #else
             properties.AddRange(
-                type.GetTypeInfo().DeclaredProperties
+                type.GetTypeInfo().DeclaredProperties.Where(p => !p.GetMethod.IsStatic)
                     .Select(p => p.GetPropertyFromDeclaredType(p))
                     .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #endif
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !WINRT
             if (this.Settings.InjectParentPrivateProperties)
             {
                 for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
@@ -120,7 +120,7 @@ namespace Ninject.Selection
             return properties;
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !WINRT
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
@@ -136,7 +136,7 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 #if WINRT
-            return type.GetTypeInfo().DeclaredMethods.Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+            return type.GetTypeInfo().DeclaredMethods.Where(m => !m.IsStatic && InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #else
             return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #endif

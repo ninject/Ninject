@@ -43,6 +43,7 @@ namespace Ninject.Modules
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
         public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
+#if !WINRT
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -50,15 +51,20 @@ namespace Ninject.Modules
                 var checker = (AssemblyChecker)temporaryDomain.CreateInstanceAndUnwrap(
                     assemblyCheckerType.Assembly.FullName,
                     assemblyCheckerType.FullName ?? string.Empty);
-
+#else
+                var checker = new AssemblyCheckerWinRT();
+#endif
                 return checker.GetAssemblyNames(filenames.ToArray(), filter);
+#if !WINRT
             }
             finally
             {
                 AppDomain.Unload(temporaryDomain);
             }
+#endif
         }
 
+#if !WINRT
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -120,6 +126,60 @@ namespace Ninject.Modules
                 return result;
             }
         }
+#else
+        private sealed class AssemblyCheckerWinRT
+        {
+            public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            {
+                return GetAssemblyListAsync(filenames, filter).Result;
+            }
+
+            private async System.Threading.Tasks.Task<IEnumerable<AssemblyName>> GetAssemblyListAsync(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            {
+                var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+
+                var result = new List<AssemblyName>();
+                var files = (await folder.GetFilesAsync()).ToDictionary(k => k.FileName.ToLowerInvariant(), e => (Windows.Storage.StorageFile)e);
+                
+                foreach (var filename in filenames)
+                {
+                    Assembly assembly;
+                    
+                    if (files.ContainsKey(filename.ToLowerInvariant()))
+                    {
+                        try
+                        {
+                            AssemblyName name = new AssemblyName() { Name = files[filename.ToLowerInvariant()].Name };
+                            assembly = Assembly.Load(name);
+                        }
+                        catch (BadImageFormatException)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            AssemblyName name = new AssemblyName() { Name = filename };
+                            assembly = Assembly.Load(name);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (filter(assembly))
+                    {
+                        result.Add(assembly.GetName());
+                    }
+                }
+
+                return result;
+            }
+        }
+#endif
     }
 }
 #endif

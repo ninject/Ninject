@@ -22,22 +22,41 @@ namespace Ninject.Infrastructure.Language
     {
         public static bool HasNinjectModules(this Assembly assembly)
         {
-            return assembly.GetExportedTypes().Any(IsLoadableModule);
+            return
+#if !WINRT
+                assembly.GetExportedTypes()
+#else
+                assembly.ExportedTypes
+#endif
+                .Any(IsLoadableModule);
         }
 
         public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
         {
-            return assembly.GetExportedTypes()
+            return 
+#if !WINRT
+                assembly.GetExportedTypes()
+#else
+                assembly.ExportedTypes
+#endif
                     .Where(IsLoadableModule)
                     .Select(type => Activator.CreateInstance(type) as INinjectModule);
         }
 
         private static bool IsLoadableModule(Type type)
         {
+#if !WINRT
             return typeof(INinjectModule).IsAssignableFrom(type)
                 && !type.IsAbstract
                 && !type.IsInterface
                 && type.GetConstructor(Type.EmptyTypes) != null;
+#else
+            var typeInfo = type.GetTypeInfo();
+            return typeof(INinjectModule).GetTypeInfo().IsAssignableFrom(typeInfo)
+                && !typeInfo.IsAbstract
+                && !typeInfo.IsInterface
+                && typeInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.GetParameters().Length == 0).Any();
+#endif
         }
     }
 }
