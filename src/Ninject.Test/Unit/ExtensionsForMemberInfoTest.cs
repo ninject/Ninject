@@ -10,7 +10,11 @@ namespace Ninject.Tests.Unit
 #if !SILVERLIGHT
     public class ExtensionsForMemberInfoTest
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void HasAttribute()
         {
             this.TestHasAttribute("PublicProperty");
@@ -19,7 +23,11 @@ namespace Ninject.Tests.Unit
             this.TestHasAttribute("PrivateProperty");
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void HasAttributeForAttributesOnBaseClass()
         {
             this.TestHasAttributeForAttributesOnBaseClass("PublicProperty");
@@ -27,7 +35,11 @@ namespace Ninject.Tests.Unit
             this.TestHasAttributeForAttributesOnBaseClass("ProtectedProperty");
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void GetCustomAttributesExtended()
         {
             this.TestGetCustomAttributesExtended("PublicProperty");
@@ -36,7 +48,11 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtended("PrivateProperty");
         }
         
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void GetCustomAttributesExtendedForAttributesOnBaseClass()
         {
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("PublicProperty");
@@ -44,7 +60,11 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("ProtectedProperty");
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void IndexerHasAttribute()
         {
             this.TestIndexerHasAttribute(typeof(PropertyAttributeTest), typeof(string), typeof(InjectAttribute), true);

@@ -23,7 +23,11 @@
 
     public class WhenReleaseIsCalled : ManualReleaseContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceIsDeactivated()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
@@ -34,7 +38,11 @@
             instance.IsDisposed.Should().BeTrue();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceIsRemovedFromCache()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();

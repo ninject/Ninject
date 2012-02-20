@@ -96,7 +96,7 @@ namespace Ninject.Activation.Strategies
 #if !WINRT
             var properties = reference.Instance.GetType().GetProperties( Flags );
 #else
-            var properties = reference.Instance.GetType().GetTypeInfo().DeclaredProperties;
+            var properties = reference.Instance.GetType().GetTypeInfo().DeclaredProperties.Where(p => !p.SetMethod.IsStatic);
 #endif
             foreach (var propertyValue in propertyValues)
             {

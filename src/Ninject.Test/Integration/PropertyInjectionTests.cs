@@ -8,7 +8,11 @@ namespace Ninject.Tests.Integration
 
     public class WithPropertyValueTests : PropertyInjectionTests
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValueIsAssignedWhenNoInjectAttributeIsSuppliedUsingCallback()
         {
             this.kernel.Bind<IWarrior>().To<FootSoldier>()
@@ -17,7 +21,11 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValueIsAssignedWhenNoInjectAttributeUsingSuppliedValue()
         {
             this.kernel.Bind<IWarrior>().To<FootSoldier>()
@@ -27,7 +35,11 @@ namespace Ninject.Tests.Integration
         }
 
 #if !SILVERLIGHT
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValuesOverrideDefaultBinding()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -43,7 +55,11 @@ namespace Ninject.Tests.Integration
 
     public class WithParameterTests : PropertyInjectionTests
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValueIsAssignedWhenNoInjectAttributeIsSuppliedUsingCallback()
         {
             this.kernel.Bind<IWarrior>().To<FootSoldier>()
@@ -52,7 +68,11 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValueIsAssignedWhenNoInjectAttributeUsingSuppliedValue()
         {
             this.kernel.Bind<IWarrior>().To<FootSoldier>()
@@ -62,7 +82,11 @@ namespace Ninject.Tests.Integration
         }
 
 #if !SILVERLIGHT
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertyValuesOverrideDefaultBinding()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -79,7 +103,11 @@ namespace Ninject.Tests.Integration
     public class WhenNoPropertyOverridesAreSupplied : PropertyInjectionTests
     {
 #if !SILVERLIGHT
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DefaultBindingsAreUsed()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -92,7 +120,11 @@ namespace Ninject.Tests.Integration
             Assert.IsType<Shuriken>(ninja.VerySecretWeaponAccessor);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void OverriddenPropertiesAreInjected()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -106,7 +138,11 @@ namespace Ninject.Tests.Integration
             warrior.VerySecretWeaponAccessor.Should().NotBeNull();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ParentPropertiesAreInjected()
         {
             this.kernel.Settings.InjectNonPublic = true;

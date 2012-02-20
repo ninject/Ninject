@@ -23,7 +23,11 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
 
     public class WhenCanResolveIsCalled : ActivationBlockContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DelegatesCallToParent()
         {
             IRequest request = requestMock.Object;
@@ -31,7 +35,11 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
             parentMock.Verify(x => x.CanResolve(request));
         }
     
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DelegatesCallToParent2()
         {
             IRequest request = requestMock.Object;
@@ -42,7 +50,11 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
 
     public class WhenResolveIsCalledWithRequestObject : ActivationBlockContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DelegatesCallToParent()
         {
             IRequest request = requestMock.Object;

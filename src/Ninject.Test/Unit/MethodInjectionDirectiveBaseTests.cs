@@ -17,10 +17,18 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 
     public class WhenDirectiveIsCreated : MethodInjectionDirectiveBaseContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CreatesTargetsForMethodParameters()
         {
+#if !MSTEST
             var method = typeof(Dummy).GetMethod("MethodA");
+#else
+            var method = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("MethodA");
+#endif
             MethodInjector injector = delegate { };
 
             directive = new FakeMethodInjectionDirective(method, injector);

@@ -34,7 +34,11 @@ namespace Ninject.Tests.Unit
     public class PropertyInjectionSelectorTests : PropertyInjectionSelectorContext
     {
 #if !SILVERLIGHT
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NonPublicPropertiesCanBeInjectedWhenEnabled()
         {
             _kernel.Settings.InjectNonPublic = true;
@@ -51,7 +55,11 @@ namespace Ninject.Tests.Unit
         }
 #endif //!SILVERLIGHT
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NonPublicPropertiesCannotBeCreatedByDefault()
         {
             var instance = _kernel.Get<Ninja>();

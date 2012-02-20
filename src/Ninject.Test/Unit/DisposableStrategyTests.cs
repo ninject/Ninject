@@ -23,7 +23,11 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 
     public class WhenDeactivateIsCalled : DisposableStrategyContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyDisposesInstanceIfItIsDisposable()
         {
             var instance = new NotifiesWhenDisposed();
@@ -33,7 +37,11 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
             instance.IsDisposed.Should().BeTrue();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyDoesNotAttemptToDisposeInstanceIfItIsNotDisposable()
         {
             var instance = new object();

@@ -104,7 +104,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Condition = r => r.Target != null &&
 #if !WINRT    
                 parent.IsAssignableFrom(r.Target.Member.ReflectedType);
-#else
+#else                
                                                        parent.GetTypeInfo().IsAssignableFrom(
                                                            r.Target.Member.DeclaringType.GetTypeInfo());
 #endif

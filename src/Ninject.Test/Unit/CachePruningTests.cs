@@ -33,7 +33,11 @@ namespace Ninject.Tests.Unit.CacheTests
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CollectedScopeInstancesAreRemoved()
         {
             var sword = new Sword();
@@ -52,7 +56,11 @@ namespace Ninject.Tests.Unit.CacheTests
         }
 #endif
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void UncollectedScopeInstancesAreNotRemoved()
         {
             var sword = new Sword();

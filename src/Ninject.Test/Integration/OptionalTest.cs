@@ -20,7 +20,11 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void OptionalConstructorArgument()
         {
             var testClass = this.kernel.Get<OptionalConstructorArgumentTestClass>();
@@ -29,7 +33,11 @@ namespace Ninject.Tests.Integration
             testClass.Warrior.Should().BeNull();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void OptionalMethodArgument()
         {
             var testClass = this.kernel.Get<OptionalMethodArgumentTestClass>();
@@ -38,7 +46,11 @@ namespace Ninject.Tests.Integration
             testClass.Warrior.Should().BeNull();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void OptionalProperty()
         {
             var testClass = this.kernel.Get<OptionalMethodArgumentTestClass>();

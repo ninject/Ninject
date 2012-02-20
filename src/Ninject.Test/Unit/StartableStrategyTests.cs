@@ -22,7 +22,11 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 
     public class WhenActivateIsCalled : StartableStrategyContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyStartsInstanceIfItIsStartable()
         {
             var instance = new StartableObject();
@@ -32,7 +36,11 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             instance.WasStarted.Should().BeTrue();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyDoesNotAttemptToStartInstanceIfItIsNotStartable()
         {
             var instance = new object();
@@ -44,7 +52,11 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 
     public class WhenDeactivateIsCalled : StartableStrategyContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyStopsInstanceIfItIsStartable()
         {
             var instance = new StartableObject();
@@ -55,7 +67,11 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             instance.WasStopped.Should().BeTrue();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyDoesNotAttemptToInitializeInstanceIfItIsNotInitializable()
         {
             var instance = new object();

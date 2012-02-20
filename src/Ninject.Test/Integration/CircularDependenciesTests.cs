@@ -30,14 +30,22 @@
             kernel.Bind<TwoWayConstructorBar>().ToSelf().InSingletonScope();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
             Assert.DoesNotThrow(() => kernel.Resolve(request));
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ThrowsActivationExceptionWhenHookIsResolved()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<TwoWayConstructorFoo>());
@@ -53,13 +61,21 @@
         }
 
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DoesNotThrowException()
         {
             Assert.DoesNotThrow(() => kernel.Get<TwoWayPropertyFoo>());
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ScopeIsRespected()
         {
             var foo = kernel.Get<TwoWayPropertyFoo>();
@@ -79,14 +95,22 @@
             kernel.Bind<ThreeWayConstructorBaz>().ToSelf().InSingletonScope();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
             Assert.DoesNotThrow(() => kernel.Resolve(request));
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ThrowsActivationExceptionWhenHookIsResolved()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<ThreeWayConstructorFoo>());
@@ -102,13 +126,21 @@
             kernel.Bind<ThreeWayPropertyBaz>().ToSelf().InSingletonScope();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DoesNotThrowException()
         {
             Assert.DoesNotThrow(() => kernel.Get<ThreeWayPropertyFoo>());
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ScopeIsRespected()
         {
             var foo = kernel.Get<ThreeWayPropertyFoo>();

@@ -23,9 +23,16 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceIsBoundWithThreadScope : ThreadScopeContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void FirstActivatedInstanceIsReusedWithinThread()
         {
             kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
@@ -49,7 +56,11 @@
             weapon1.Should().BeSameAs(weapon2);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ScopeDoesNotInterfereWithExternalRequests()
         {
             kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
@@ -70,7 +81,11 @@
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesActivatedWithinScopeAreDeactivatedAfterThreadIsGarbageCollectedAndCacheIsPruned()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();

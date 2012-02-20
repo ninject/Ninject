@@ -38,7 +38,11 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
 
     public class WhenLoadModulesIsCalled : ModuleLoaderContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PassesMatchingFilesToAppropriatePlugin()
         {
             moduleLoader.LoadModules(new[] { "TestModules/*" });

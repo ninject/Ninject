@@ -24,7 +24,11 @@
 
     public class WhenServiceIsBoundToInterfaceInTransientScope : TransientScopeContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NewInstanceIsReturnedForEachRequest()
         {
             kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
@@ -36,7 +40,11 @@
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
             kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
@@ -56,7 +64,11 @@
 
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NewInstanceIsReturnedForEachRequest()
         {
             kernel.Bind<Sword>().ToSelf().InTransientScope();
@@ -68,7 +80,11 @@
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
             kernel.Bind<Sword>().ToSelf().InTransientScope();
@@ -93,7 +109,11 @@
 
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NewInstanceIsReturnedForEachRequest()
         {
             kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
@@ -105,7 +125,11 @@
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
             kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
@@ -125,7 +149,11 @@
 
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void NewInstanceIsReturnedForEachRequest()
         {
             kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
@@ -137,7 +165,11 @@
         }
 
 #if !MONO
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
             kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();

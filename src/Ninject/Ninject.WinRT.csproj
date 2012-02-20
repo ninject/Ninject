@@ -18,16 +18,16 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_ASSEMBLY_SCANNING;SILVERLIGHT;NO_LCG</DefineConstants>
+    <OutputPath>bin\WinRT\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_ASSEMBLY_SCANNING;SILVERLIGHT;NO_LCG;NET_40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_ASSEMBLY_SCANNING;SILVERLIGHT;NO_LCG</DefineConstants>
+    <OutputPath>bin\WinRT\Release\</OutputPath>
+    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_ASSEMBLY_SCANNING;SILVERLIGHT;NO_LCG;NET_40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

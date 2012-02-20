@@ -79,7 +79,8 @@ namespace Ninject.Selection
             var constructors = type.GetConstructors( Flags );
             return constructors.Length == 0 ? null : constructors;
 #else
-            var constructors = type.GetTypeInfo().DeclaredConstructors;
+            var tInfo = type.GetTypeInfo();
+            var constructors = tInfo.DeclaredConstructors.Where(c => !c.IsStatic);
             return constructors.Any() ? constructors : null;
 #endif
             

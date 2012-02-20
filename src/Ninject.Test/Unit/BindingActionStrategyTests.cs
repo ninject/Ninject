@@ -25,7 +25,11 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 
     public class WhenActivateIsCalled : BindingActionStrategyContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyInvokesActivationActionsDefinedInBinding()
         {
             bool action1WasCalled = false;
@@ -46,7 +50,11 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
 
     public class WhenDeactivateIsCalled : BindingActionStrategyContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void StrategyInvokesDeactivationActionsDefinedInBinding()
         {
             bool action1WasCalled = false;

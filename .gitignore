@@ -9,3 +9,5 @@ dist
 *.cache
 *.dotCover
 /src/Ninject.SilverlightTests/Bin
+
+*.UTests.*

@@ -28,7 +28,11 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 
     public class WhenLoadModulesIsCalled : CompiledModuleLoaderPluginContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CallsLoadMethodOnKernelWithAssemblies()
         {
             var expected = Assembly.LoadFrom(this.moduleFilename).GetName().Name;
@@ -43,7 +47,11 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
             actual.Where(a => a.GetName().Name == expected).Should().NotBeEmpty();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DoesNotLoadAssembliesWithoutModules()
         {
             loaderPlugin.LoadModules(new[] { this.assemblyFilename });

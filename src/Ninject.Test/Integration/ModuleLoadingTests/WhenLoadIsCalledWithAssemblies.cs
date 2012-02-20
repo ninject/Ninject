@@ -9,7 +9,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 
     public class WhenLoadIsCalledWithAssemblies : ModuleLoadingContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModulesContainedInAssembliesAreLoaded()
         {
             var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule) };

@@ -19,7 +19,11 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesCanBeCreated()
         {
             this.kernel.Bind<IConfig>().ToProvider<ConfigProvider>();

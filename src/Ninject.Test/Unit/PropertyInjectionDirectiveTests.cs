@@ -3,6 +3,10 @@ using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Xunit;
 
+#if MSTEST
+using System.Reflection;
+#endif
+
 namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 {
     using FluentAssertions;
@@ -12,12 +16,23 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
         protected PropertyInjectionDirective directive;
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenDirectiveIsCreated : PropertyInjectionDirectiveContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CreatesTargetForProperty()
         {
+#if !MSTEST
             var method = typeof(Dummy).GetProperty("Foo");
+#else
+            var method = typeof (Dummy).GetTypeInfo().GetDeclaredProperty("Foo");
+#endif
             PropertyInjector injector = delegate { };
 
             directive = new PropertyInjectionDirective(method, injector);

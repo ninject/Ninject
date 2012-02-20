@@ -25,7 +25,11 @@
 
     public class WhenBlockIsCreated : ActivationBlockContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void FirstActivatedInstanceIsReusedWithinBlock()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -36,7 +40,11 @@
             weapon1.Should().BeSameAs(weapon2);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void BlockDoesNotInterfereWithExternalResolution()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -47,7 +55,11 @@
             weapon1.Should().NotBeSameAs(weapon2);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesAreNotGarbageCollectedAsLongAsBlockRemainsAlive()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf();
@@ -63,7 +75,11 @@
 
     public class WhenBlockIsDisposed : ActivationBlockContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstancesActivatedWithinBlockAreDeactivated()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf();

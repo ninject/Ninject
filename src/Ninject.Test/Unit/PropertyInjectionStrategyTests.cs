@@ -59,7 +59,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             planMock.Setup(x => x.GetAll<PropertyInjectionDirective>()).Returns(directives);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReadsMethodInjectorsFromPlan()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -67,7 +71,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             planMock.Verify(x => x.GetAll<PropertyInjectionDirective>());
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ResolvesValuesForEachTargetOfEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -75,7 +83,11 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             directives.Map(d => d.TargetMock.Verify(x => x.ResolveWithin(contextMock.Object)));
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InvokesInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);

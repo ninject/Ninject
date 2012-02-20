@@ -41,7 +41,11 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenTryGetInstanceIsCalled : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsNullIfNoInstancesHaveBeenAddedToCache()
         {
             var scope = new object();
@@ -52,7 +56,11 @@ namespace Ninject.Tests.Unit.CacheTests
             instance.Should().BeNull();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsCachedInstanceIfOneHasBeenAddedWithinSpecifiedScope()
         {
             var scope = new object();
@@ -66,7 +74,11 @@ namespace Ninject.Tests.Unit.CacheTests
             instance.Should().BeSameAs(reference.Instance);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsNullIfNoInstancesHaveBeenAddedWithinSpecifiedScope()
         {
             var reference = new InstanceReference { Instance = new Sword() };
@@ -79,7 +91,11 @@ namespace Ninject.Tests.Unit.CacheTests
             instance.Should().BeNull();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsNullIfScopeIsNull()
         {
             var reference = new InstanceReference { Instance = new Sword() };
@@ -95,7 +111,11 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenTryGetInstanceIsCalledForContextWithGenericInference : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsInstanceIfOneHasBeenCachedWithSameGenericParameters()
         {
             var scope = new object();
@@ -109,7 +129,11 @@ namespace Ninject.Tests.Unit.CacheTests
             instance.Should().BeSameAs(reference.Instance);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsNullIfInstanceAddedToCacheHasDifferentGenericParameters()
         {
             var scope = new object();
@@ -126,14 +150,22 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenReleaseIsCalled : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsFalseIfInstanceIsNotTracked()
         {
             bool result = cache.Release(new object());
             result.Should().BeFalse();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ReturnsTrueIfInstanceIsTracked()
         {
             var scope = new object();
@@ -147,7 +179,11 @@ namespace Ninject.Tests.Unit.CacheTests
             result.Should().BeTrue();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceIsRemovedFromCache()
         {
             var scope = new object();
@@ -169,7 +205,11 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenClearIsCalled : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void WhenScopeIsDefinedItsEntriesAreReleased()
         {
             var scope = new object();
@@ -188,7 +228,11 @@ namespace Ninject.Tests.Unit.CacheTests
             instance2.Should().NotBeNull();
         }
         
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void WhenNoScopeIsDefinedAllEntriesAreReleased()
          {
             var sword = new Sword();
@@ -209,7 +253,11 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenNotifiesWhenDisposedScopeIsDisposed : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CachedObjectsAreReleased()
         {
             var scopeMock = new Mock<INotifyWhenDisposed>();
@@ -228,7 +276,11 @@ namespace Ninject.Tests.Unit.CacheTests
 
     public class WhenScopeIsReleasedFormCache : CacheContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void CachedObjectsAreReleased()
         {
             var scope = new object();

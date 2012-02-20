@@ -82,14 +82,22 @@
             this.kernel.Bind<IAttackAbility>().To<WeakAttack>().WhenTargetHas<WeakAttribute>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void DefaultInstanceIsResolvedWhenNoAttributesMatch()
         {
             var attackAbility = this.kernel.Get<IAttackAbility>();
             attackAbility.Should().BeOfType<UnknownAttack>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void PropertiesAreInjectMatchingAttributeBindings()
         {
             var hammer = this.kernel.Get<IVarialbeWeapon>();

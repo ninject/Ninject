@@ -11,7 +11,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     {
         protected readonly string ModuleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModulesContainedInAssembliesAreLoaded()
         {
             this.Kernel.Load(this.ModuleFilename);

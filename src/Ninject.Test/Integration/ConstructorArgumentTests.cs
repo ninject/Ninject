@@ -44,7 +44,11 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ConstructorArgumentsArePassedToFirstLevel()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -56,7 +60,11 @@ namespace Ninject.Tests.Integration
             baracks.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
         
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ConstructorArgumentsAreNotInheritedIfNotSpecified()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -66,7 +74,11 @@ namespace Ninject.Tests.Integration
             getAction.ShouldThrow<ActivationException>();
         }
         
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ConstructorArgumentsAreInheritedIfSpecified()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();

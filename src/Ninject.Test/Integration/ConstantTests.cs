@@ -23,7 +23,11 @@
 
     public class WhenTypeIsBoundToAConstant : ConstantContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void TheSameInstanceShouldBeReturned()
         {
             var sword = new Sword();
@@ -33,7 +37,11 @@
             instance.Should().BeSameAs(sword);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ConditionalBindingShouldNotAffectUnconditionalBinding()
         {
             var sword = new Sword();
@@ -46,7 +54,11 @@
             weapon.Should().BeOfType<Shuriken>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void TheBindingShouldOnlyBeResolvedOnce()
         {
             var builder = kernel.Bind<IWeapon>().ToConstant(new Sword());

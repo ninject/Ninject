@@ -11,14 +11,22 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 
     public class WhenLoadIsCalledWithModule : ModuleLoadingContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void IdenticalNamedModulesFromDifferenNamespacesCanBeLoadedTogether()
         {
             this.Kernel.Load(new TestModule());
             this.Kernel.Load(new OtherFakes.TestModule());
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void MockModulePassedToLoadIsLoadedAndCallsOnLoad()
         {
             var moduleMock = this.CreateModuleMock("SomeName");
@@ -30,7 +38,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.GetModules().Should().BeEquivalentTo(module);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void OnUnloadTheModuleIsUnloadedAndRemovedFormTheKernel()
         {
             var moduleMock = this.CreateModuleMock("SomeName");
@@ -43,7 +55,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.GetModules().Should().BeEmpty();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModuleInstanceWithNullNameIsNotSupported()
         {
             var module = this.CreateModule(null);
@@ -53,7 +69,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModuleInstanceWithEmptyNameIsNotSupported()
         {
             var module = this.CreateModule(string.Empty);
@@ -63,7 +83,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void TwoModulesWithSameNamesAreNotSupported()
         {
             const string ModuleName = "SomeModuleName";
@@ -76,7 +100,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModuleWithSameNameCanBeLoadedAfterTheFirstIsUnloaded()
         {
             const string ModuleName = "SomeModuleName";
@@ -90,7 +118,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.GetModules().Should().BeEquivalentTo(module2);
         }
 
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void UnloadNotLoadedModuleFails()
         {
             Action moduleUnloadingAction = () => this.Kernel.Unload("NotLoadedModule");
@@ -98,7 +130,11 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             moduleUnloadingAction.ShouldThrow<NotSupportedException>();
         }
     
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ModulesAreVerifiedAfterAllModulesAreLoaded()
         {
             var moduleMock1 = this.CreateModuleMock("SomeName1");

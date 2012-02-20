@@ -26,7 +26,11 @@ namespace Ninject.Tests.Unit
 
         public class WhenGetAssemblyNamesIsCalledWithFileName : AssemblyNameRetrieverContext
         {
-            [Fact]
+    #if !MSTEST 
+        [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
             public void AssemblyNamesOfMatchingAssembliesAreReturned()
             {
                 var expected = Assembly.LoadFrom(this.ModuleFilename).GetName();
@@ -42,7 +46,11 @@ namespace Ninject.Tests.Unit
         
         public class WhenGetAssemblyNamesIsCalledWithAssemblyName : AssemblyNameRetrieverContext
         {
-            [Fact]
+    #if !MSTEST 
+        [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
             public void AssemblyNamesOfMatchingAssembliesAreReturned()
             {
                 var expected = Assembly.LoadFrom(this.ModuleFilename).GetName();
@@ -58,7 +66,11 @@ namespace Ninject.Tests.Unit
 
         public class WhenGetAssemblyNamesIsCalledWithUnknownAssemblyName : AssemblyNameRetrieverContext
         {
-            [Fact]
+    #if !MSTEST 
+        [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
             public void WillBeIgnored()
             {
                 var actualNames = this.AssemblyNameRetriever.GetAssemblyNames(new[] { "Blah" }, asm => true);

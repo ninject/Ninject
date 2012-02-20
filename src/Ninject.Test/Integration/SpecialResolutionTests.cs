@@ -23,7 +23,11 @@
 
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceOfKernelIsInjected()
         {
             kernel.Bind<RequestsKernel>().ToSelf();
@@ -37,7 +41,11 @@
 
     public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceOfKernelIsInjected()
         {
             kernel.Bind<RequestsResolutionRoot>().ToSelf();
@@ -51,7 +59,11 @@
 
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void InstanceOfStringIsInjected()
         {
             kernel.Bind<RequestsString>().ToSelf();

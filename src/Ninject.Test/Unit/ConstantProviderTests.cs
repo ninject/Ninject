@@ -26,7 +26,11 @@ namespace Ninject.Tests.Unit.ConstantProviderTests
 
     public class WhenCreateIsCalled : ConstantProviderContext
     {
+#if !MSTEST 
         [Fact]
+#else
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
+#endif
         public void ProviderReturnsConstantValue()
         {
             var sword = new Sword();
