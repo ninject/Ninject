@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WinRT", "src\Ninject\Ninject.WinRT.csproj", "{0EA44209-1324-4BEE-A8D2-46163D26B504}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutomatedRelease|Any CPU = AutomatedRelease|Any CPU
@@ -29,14 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EA44209-1324-4BEE-A8D2-46163D26B504}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
