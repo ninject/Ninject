@@ -21,12 +21,13 @@ namespace Ninject.Selection.Heuristics
 {
     using System.Reflection;
     using Ninject.Activation;
+    using Ninject.Components;
     using Ninject.Planning.Directives;
 
     /// <summary>
     /// Constructor selector that selects the constructor matching the one passed to the constructor.
     /// </summary>
-    public class SpecificConstructorSelector : IConstructorScorer
+    public class SpecificConstructorSelector : NinjectComponent, IConstructorScorer
     {
         private readonly ConstructorInfo constructorInfo;
 
@@ -40,25 +41,12 @@ namespace Ninject.Selection.Heuristics
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the settings.
-        /// </summary>
-        /// <value>The ninject settings.</value>
-        public INinjectSettings Settings { get; set; }
-
-        /// <summary>
         /// Gets the score for the specified constructor.
         /// </summary>
         /// <param name="context">The injection context.</param>
         /// <param name="directive">The constructor.</param>
         /// <returns>The constructor's score.</returns>
-        public int Score(IContext context, ConstructorInjectionDirective directive)
+        public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
             return directive.Constructor.Equals(constructorInfo) ? 1 : 0;
         }

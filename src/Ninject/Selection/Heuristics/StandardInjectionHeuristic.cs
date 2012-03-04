@@ -28,7 +28,7 @@ namespace Ninject.Selection.Heuristics
         /// </summary>
         /// <param name="member">The member in question.</param>
         /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
-        public bool ShouldInject(MemberInfo member)
+        public virtual bool ShouldInject(MemberInfo member)
         {
             Ensure.ArgumentNotNull(member, "member");
 
