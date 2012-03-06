@@ -8,6 +8,8 @@
 // 
 #endregion
 
+
+
 namespace Ninject.Activation.Caching
 {
     using System;
@@ -16,6 +18,11 @@ namespace Ninject.Activation.Caching
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
+
+#if WINRT
+    using Windows.System.Threading;
+#endif
+
 
     /// <summary>
     /// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
@@ -36,8 +43,11 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// The timer used to trigger the cache pruning
         /// </summary>
+#if !WINRT
         private Timer timer;
-
+#else
+        private ThreadPoolTimer timer;
+#endif
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
@@ -62,7 +72,13 @@ namespace Ninject.Activation.Caching
             this.caches.Add(pruneable);
             if (this.timer == null)
             {
+#if !WINRT
                 this.timer = new Timer(this.PruneCacheIfGarbageCollectorHasRun, null, this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+#else
+                
+                this.timer = ThreadPoolTimer.CreatePeriodicTimer(t => this.PruneCacheIfGarbageCollectorHasRun(null),
+                                                                 TimeSpan.FromMilliseconds(this.GetTimeoutInMilliseconds()));
+#endif
             }
         }
 
@@ -73,11 +89,13 @@ namespace Ninject.Activation.Caching
         {
             using (var signal = new ManualResetEvent(false))
             {
-#if !NETCF
+#if !NETCF && !WINRT
                 this.timer.Dispose(signal);
                 signal.WaitOne();
-#else
+#elif !WINRT
                 this.timer.Dispose();
+#else
+                this.timer.Cancel();
 #endif
 
                 this.timer = null;
@@ -99,7 +117,9 @@ namespace Ninject.Activation.Caching
             }
             finally
             {
+#if !WINRT
                 this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+#endif
             }
         }
 

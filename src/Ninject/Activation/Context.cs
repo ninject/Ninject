@@ -108,7 +108,11 @@ namespace Ninject.Activation
             Planner = planner;
             Pipeline = pipeline;
 
-            if (binding.Service.IsGenericTypeDefinition)
+            if (binding.Service
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .IsGenericTypeDefinition)
             {
                 HasInferredGenericArguments = true;
 #if !WINRT

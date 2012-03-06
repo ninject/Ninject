@@ -139,7 +139,7 @@ namespace Ninject.Modules
                 var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 
                 var result = new List<AssemblyName>();
-                var files = (await folder.GetFilesAsync()).ToDictionary(k => k.FileName.ToLowerInvariant(), e => (Windows.Storage.StorageFile)e);
+                var files = (await folder.GetFilesAsync()).ToDictionary(k => k.Name.ToLowerInvariant(), e => (Windows.Storage.StorageFile)e);
                 
                 foreach (var filename in filenames)
                 {
@@ -149,7 +149,7 @@ namespace Ninject.Modules
                     {
                         try
                         {
-                            AssemblyName name = new AssemblyName() { Name = files[filename.ToLowerInvariant()].Name };
+                            AssemblyName name = new AssemblyName() { Name = files[filename.ToLowerInvariant()].DisplayName };
                             assembly = Assembly.Load(name);
                         }
                         catch (BadImageFormatException)

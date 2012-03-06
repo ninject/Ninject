@@ -201,7 +201,11 @@ namespace Ninject.Planning.Targets
                 return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
             }
 
-            if (Type.IsGenericType)
+            if (Type
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .IsGenericType)
             {
                 Type gtd = Type.GetGenericTypeDefinition();
 #if !WINRT

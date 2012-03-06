@@ -126,9 +126,9 @@ namespace Ninject.Selection.Heuristics
             }
 
 #else
-            if(targetType.IsGenericType)
+            var typeInfo = targetType.GetTypeInfo();
+            if (typeInfo.IsGenericType)
             {
-                var typeInfo = targetType.GetTypeInfo();
                 if(typeInfo.ImplementedInterfaces.Any(type => type == typeof(IEnumerable)))
                 {
                     targetType = typeInfo.GenericTypeArguments[0];

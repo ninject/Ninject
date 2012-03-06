@@ -139,7 +139,11 @@ namespace Ninject.Components
             if (component == typeof(IKernel))
                 return Kernel;
 
-            if (component.IsGenericType)
+            if (component
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .IsGenericType)
             {
                 Type gtd = component.GetGenericTypeDefinition();
 #if !WINRT

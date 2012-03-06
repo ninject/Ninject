@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WinRT\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_LCG;NET_40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_LCG;NET_40;NETFX_CORE;NO_ASSEMBLY_SCANNING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WinRT\Release\</OutputPath>
-    <DefineConstants>TRACE;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_LCG;NET_40</DefineConstants>
+    <DefineConstants>TRACE;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NO_LCG;NET_40;NETFX_CORE;NO_ASSEMBLY_SCANNING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -109,7 +109,6 @@
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\StandardKernelTests.cs" />
-    <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\TransientScopeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\ActivationBlockTests.cs" />
@@ -141,7 +140,9 @@
     <Compile Include="XUnitAdapter\XUnitSdk.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest" />
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\UnitTestLogo.png">
@@ -189,7 +190,7 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v1.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

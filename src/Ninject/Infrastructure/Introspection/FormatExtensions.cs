@@ -201,7 +201,11 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-            if (type.IsGenericType)
+            if (type
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .IsGenericType)
             {
                 var sb = new StringBuilder();
 

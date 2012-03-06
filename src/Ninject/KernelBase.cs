@@ -531,7 +531,7 @@ namespace Ninject
                 && !sInfo.IsAbstract
                 && !sInfo.IsValueType
                 && service != typeof(string)
-                && !service.ContainsGenericParameters;
+                && !sInfo.ContainsGenericParameters;
 #endif
         }
 
@@ -578,7 +578,11 @@ namespace Ninject
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
+#if !WINRT
                                 b => !b.Service.ContainsGenericParameters, // closed generics > open generics
+#else
+                                b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
+#endif
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 

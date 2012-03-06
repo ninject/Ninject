@@ -315,11 +315,13 @@ namespace Ninject.Planning.Bindings
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
         /// <returns>The fluent syntax.</returns>
+#if !WINRT
         public IBindingNamedWithOrOnSyntax<T> InThreadScope()
         {
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Thread;
             return this;
         }
+#endif
 
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object
