@@ -167,6 +167,7 @@
     <Content Include="Images\UnitTestStoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Ninject.Tests_TemporaryKey.pfx" />
     <None Include="TestModules\test.bar" />
     <None Include="TestModules\test.foo" />
   </ItemGroup>
