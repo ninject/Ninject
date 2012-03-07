@@ -4,6 +4,10 @@ using Ninject.Injection;
 using Ninject.Tests.Fakes;
 using Xunit;
 
+#if WINRT
+using System.Linq;
+#endif
+
 namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 {
     using FluentAssertions;
@@ -19,6 +23,9 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenConstructorInjectorIsInvoked : DynamicMethodInjectorFactoryContext
     {
         protected ConstructorInfo constructor;
@@ -26,7 +33,13 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
         public WhenConstructorInjectorIsInvoked()
         {
+#if !WINRT
             constructor = typeof(Samurai).GetConstructor(new[] { typeof(IWeapon) });
+#else
+            constructor =
+                typeof(Samurai).GetTypeInfo().DeclaredConstructors.Where(
+                    c => c.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] {typeof(IWeapon)})).Single();
+#endif
             injector = injectorFactory.Create(constructor);
         }
 
@@ -59,6 +72,9 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenPropertyInjectorIsInvoked : DynamicMethodInjectorFactoryContext
     {
         protected PropertyInfo property;
@@ -66,7 +82,11 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
         public WhenPropertyInjectorIsInvoked()
         {
+#if !WINRT
             property = typeof(Samurai).GetProperty("Weapon");
+#else
+            property = typeof(Samurai).GetTypeInfo().GetDeclaredProperty("Weapon");
+#endif
             injector = injectorFactory.Create(property);
         }
 
@@ -98,6 +118,9 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenMethodInjectorIsInvokedOnVoidMethod : DynamicMethodInjectorFactoryContext
     {
         protected MethodInfo method;
@@ -105,7 +128,11 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
         public WhenMethodInjectorIsInvokedOnVoidMethod()
         {
+#if !WINRT
             method = typeof(Samurai).GetMethod("SetName");
+#else
+            method = typeof(Samurai).GetTypeInfo().GetDeclaredMethod("SetName");
+#endif
             injector = injectorFactory.Create(method);
         }
 
@@ -122,6 +149,9 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenMethodInjectorIsInvokedOnNonVoidMethod : DynamicMethodInjectorFactoryContext
     {
         protected MethodInfo method;
@@ -129,7 +159,11 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
         public WhenMethodInjectorIsInvokedOnNonVoidMethod()
         {
+#if !WINRT
             method = typeof(Samurai).GetMethod("Attack");
+#else
+            method = typeof(Samurai).GetTypeInfo().GetDeclaredMethod("Attack");
+#endif
             injector = injectorFactory.Create(method);
         }
 
