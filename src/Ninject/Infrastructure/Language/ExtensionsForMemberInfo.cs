@@ -130,7 +130,7 @@ namespace Ninject.Infrastructure.Language
         {
             public bool Equals(ParameterInfo x, ParameterInfo y)
             {
-                return x.Position == y.Position && x.ParameterType.Equals(y.ParameterType);
+                return x.Position == y.Position && x.ParameterType == y.ParameterType;
             }
 
             public int GetHashCode(ParameterInfo obj)
