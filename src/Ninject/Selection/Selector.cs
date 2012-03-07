@@ -33,7 +33,10 @@ namespace Ninject.Selection
 #if !WINRT
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
-        private BindingFlags Flags
+        /// <summary>
+        /// Gets the default binding flags.
+        /// </summary>
+        protected virtual BindingFlags Flags
         {
             get
             {
@@ -75,7 +78,7 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
-        public IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
+        public  virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
 
@@ -95,7 +98,7 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A series of the selected properties.</returns>
-        public IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
+        public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
             List<PropertyInfo> properties = new List<PropertyInfo>();
@@ -152,7 +155,7 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A series of the selected methods.</returns>
-        public IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
+        public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
 #if WINRT
