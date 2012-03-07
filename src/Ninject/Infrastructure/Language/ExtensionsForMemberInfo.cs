@@ -112,7 +112,7 @@ namespace Ninject.Infrastructure.Language
                 p => p.Name == propertyDefinition.Name &&
                     !p.GetMethod.IsStatic && 
                      p.PropertyType == propertyDefinition.PropertyType &&
-                     p.GetIndexParameters().SequenceEqual(propertyDefinition.GetIndexParameters())
+                     p.GetIndexParameters().SequenceEqual(propertyDefinition.GetIndexParameters(), new ParameterInfoEqualityComparer())
                 );
 #else
             return memberInfo.DeclaringType.GetProperty(
@@ -125,6 +125,20 @@ namespace Ninject.Infrastructure.Language
 #endif
         }
 
+#if WINRT
+        private class ParameterInfoEqualityComparer : IEqualityComparer<ParameterInfo>
+        {
+            public bool Equals(ParameterInfo x, ParameterInfo y)
+            {
+                return x.Position == y.Position && x.ParameterType.Equals(y.ParameterType);
+            }
+
+            public int GetHashCode(ParameterInfo obj)
+            {
+                return obj.Position.GetHashCode() ^ obj.ParameterType.GetHashCode();
+            }
+        }
+#endif
 #if !WINRT
         /// <summary>
         /// Determines whether the specified property info is private.
