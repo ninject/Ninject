@@ -19,6 +19,10 @@ using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
+
+#if WINRT
+using System.Reflection.RuntimeExtensions;
+#endif
 #endregion
 
 namespace Ninject.Activation.Strategies
@@ -96,7 +100,7 @@ namespace Ninject.Activation.Strategies
 #if !WINRT
             var properties = reference.Instance.GetType().GetProperties( Flags );
 #else
-            var properties = reference.Instance.GetType().GetTypeInfo().DeclaredProperties.Where(p => !p.SetMethod.IsStatic);
+            var properties = reference.Instance.GetType().GetRuntimeProperties().Where(p => !p.SetMethod.IsStatic);
 #endif
             foreach (var propertyValue in propertyValues)
             {

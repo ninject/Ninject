@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Ninject.Tests.Unit
 {
     using System;
@@ -6,6 +8,10 @@ namespace Ninject.Tests.Unit
     using FluentAssertions;
     using Ninject.Infrastructure.Language;
     using Xunit;
+
+#if WINRT
+    using System.Reflection.RuntimeExtensions;
+#endif
 
 #if !SILVERLIGHT
 #if MSTEST
@@ -34,10 +40,12 @@ namespace Ninject.Tests.Unit
         public void HasAttributeForAttributesOnBaseClass()
         {
             this.TestHasAttributeForAttributesOnBaseClass("PublicProperty");
+#if !WINRT
             this.TestHasAttributeForAttributesOnBaseClass("InternalProperty");
+#endif
             this.TestHasAttributeForAttributesOnBaseClass("ProtectedProperty");
         }
-#if !WINRT
+
 #if !MSTEST 
         [Fact]
 #else
@@ -46,9 +54,12 @@ namespace Ninject.Tests.Unit
         public void GetCustomAttributesExtended()
         {
             this.TestGetCustomAttributesExtended("PublicProperty");
+#if !WINRT
             this.TestGetCustomAttributesExtended("InternalProperty");
-            this.TestGetCustomAttributesExtended("ProtectedProperty");
             this.TestGetCustomAttributesExtended("PrivateProperty");
+#endif
+            this.TestGetCustomAttributesExtended("ProtectedProperty");
+
         }
         
 #if !MSTEST 
@@ -62,7 +73,6 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("InternalProperty");
             this.TestGetCustomAttributesExtendedForAttributesOnBaseClass("ProtectedProperty");
         }
-#endif
 
 #if !MSTEST 
         [Fact]
@@ -94,7 +104,7 @@ namespace Ninject.Tests.Unit
 
             hasInjectAttribute.Should().Be(expectedResult);
         }
-#if !WINRT
+
         private void TestGetCustomAttributesExtended(string propertyName)
         {
             this.TestGetCustomAttributesExtended(propertyName, true);
@@ -118,19 +128,29 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtended(propertyAttributeClass, propertyName, typeof(NamedAttribute), true, new NamedAttribute[0]);
         }
 
-        private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, object[] expectedAttributes)
+        private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, 
+#if !WINRT
+            object[] 
+#else
+            IEnumerable<Attribute>
+#endif
+                expectedAttributes)
         {
-            var propertyInfo = testObject.GetType()
-                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
 
-            attributes.Length.Should().Be(expectedAttributes.Length);
+            var propertyInfo = testObject.GetType()
+#if !WINRT
+                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#else
+                .GetRuntimeProperties().Single(pi => pi.Name == attributeName);
+#endif
+            var attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
+
+            attributes.Count().Should().Be(expectedAttributes.Count());
             foreach (var expectedAttribute in expectedAttributes)
             {
                 attributes.Should().Contain(expectedAttribute);
             }
         }
-#endif
 
         private void TestHasAttribute(string propertyName)
         {

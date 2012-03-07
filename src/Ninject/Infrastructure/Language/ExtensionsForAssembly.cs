@@ -55,7 +55,7 @@ namespace Ninject.Infrastructure.Language
             return typeof(INinjectModule).GetTypeInfo().IsAssignableFrom(typeInfo)
                 && !typeInfo.IsAbstract
                 && !typeInfo.IsInterface
-                && typeInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.GetParameters().Length == 0).Any();
+                && typeInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic && c.GetParameters().Length == 0).Any();
 #endif
         }
     }

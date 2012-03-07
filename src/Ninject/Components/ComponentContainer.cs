@@ -223,7 +223,7 @@ namespace Ninject.Components
             var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 #else
             var constructor =
-                implementation.GetTypeInfo().DeclaredConstructors.OrderByDescending(c => c.GetParameters().Length).
+                implementation.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic && !c.IsStatic).OrderByDescending(c => c.GetParameters().Length).
                     FirstOrDefault();
 #endif
             if (constructor == null)

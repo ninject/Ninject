@@ -15,6 +15,10 @@ using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Selection.Heuristics;
+
+#if WINRT
+using System.Reflection.RuntimeExtensions;
+#endif
 #endregion
 
 namespace Ninject.Selection
@@ -80,7 +84,7 @@ namespace Ninject.Selection
             return constructors.Length == 0 ? null : constructors;
 #else
             var tInfo = type.GetTypeInfo();
-            var constructors = tInfo.DeclaredConstructors.Where(c => !c.IsStatic);
+            var constructors = tInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic);
             return constructors.Any() ? constructors : null;
 #endif
             
@@ -103,16 +107,28 @@ namespace Ninject.Selection
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #else
             properties.AddRange(
-                type.GetTypeInfo().DeclaredProperties.Where(p => !p.GetMethod.IsStatic)
+                type.GetRuntimeProperties().Where(p => !p.GetMethod.IsStatic)
                     .Select(p => p.GetPropertyFromDeclaredType(p))
                     .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #endif
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT 
             if (this.Settings.InjectParentPrivateProperties)
             {
-                for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
+                for (Type parentType = type
+#if WINRT
+                    .GetTypeInfo()
+#endif
+                    .BaseType; parentType != null; parentType = parentType
+#if WINRT
+.GetTypeInfo()
+#endif
+                    .BaseType)
                 {
-                    properties.AddRange(this.GetPrivateProperties(type.BaseType));
+                    properties.AddRange(this.GetPrivateProperties(type
+#if WINRT
+.GetTypeInfo()
+#endif
+                        .BaseType));
                 }
             }
 #endif
@@ -120,10 +136,14 @@ namespace Ninject.Selection
             return properties;
         }
 
-#if !SILVERLIGHT && !WINRT
+#if !SILVERLIGHT
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
+#if !WINRT
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
+#else
+            return type.GetRuntimeProperties().Where(p => !p.GetMethod.IsStatic && p.DeclaringType == type && p.IsPrivate());
+#endif
         }
 #endif
 
@@ -136,7 +156,7 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 #if WINRT
-            return type.GetTypeInfo().DeclaredMethods.Where(m => !m.IsStatic && InjectionHeuristics.Any(h => h.ShouldInject(m)));
+            return type.GetRuntimeMethods().Where(m => !m.IsStatic && InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #else
             return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #endif

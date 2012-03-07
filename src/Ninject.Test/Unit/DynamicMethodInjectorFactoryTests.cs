@@ -38,7 +38,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 #else
             constructor =
                 typeof(Samurai).GetTypeInfo().DeclaredConstructors.Where(
-                    c => c.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] {typeof(IWeapon)})).Single();
+                    c => !c.IsStatic && c.IsPublic && c.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] {typeof(IWeapon)})).Single();
 #endif
             injector = injectorFactory.Create(constructor);
         }
