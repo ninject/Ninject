@@ -172,7 +172,11 @@ namespace Ninject.Modules
 
                     if (filter(assembly))
                     {
+#if !WINRT
                         result.Add(assembly.GetName());
+#else
+                        result.Add(new AssemblyName() {Name = assembly.GetName().Name});
+#endif
                     }
                 }
 
