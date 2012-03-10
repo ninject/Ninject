@@ -3,7 +3,7 @@ using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Xunit;
 
-#if MSTEST
+#if WINRT
 using System.Reflection;
 #endif
 
@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 #endif
         public void CreatesTargetForProperty()
         {
-#if !MSTEST
+#if !WINRT
             var method = typeof(Dummy).GetProperty("Foo");
 #else
             var method = typeof (Dummy).GetTypeInfo().GetDeclaredProperty("Foo");

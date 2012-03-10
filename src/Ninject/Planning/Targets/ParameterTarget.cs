@@ -49,13 +49,29 @@ namespace Ninject.Planning.Targets
         }
 
 // Windows Phone doesn't support default values and returns null instead of DBNull.
-#if !WINDOWS_PHONE && !WINRT
+#if !WINDOWS_PHONE 
         /// <summary>
         /// Gets a value indicating whether the target has a default value.
         /// </summary>
         public override bool HasDefaultValue
         {
-            get { return defaultValue.Value != DBNull.Value; }
+            get 
+            { 
+#if WINRT
+                var val = defaultValue.Value;
+
+                if (val != null)
+                {
+                    var name = val.GetType().FullName;
+                    if (name == "System.DBNull") // WINRT doesn't expose DBNull as a type, but it's still returned as the default
+                        return false;
+
+                }
+                return true;
+#else
+                return defaultValue.Value != DBNull.Value; 
+#endif      
+            }
         }
 
         /// <summary>

@@ -87,7 +87,7 @@ namespace Ninject.Selection
             return constructors.Length == 0 ? null : constructors;
 #else
             var tInfo = type.GetTypeInfo();
-            var constructors = tInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic);
+            var constructors = tInfo.DeclaredConstructors.FilterPublic(Settings.InjectNonPublic);
             return constructors.Any() ? constructors : null;
 #endif
             
@@ -110,7 +110,7 @@ namespace Ninject.Selection
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #else
             properties.AddRange(
-                type.GetRuntimeProperties().Where(p => !p.GetMethod.IsStatic)
+                type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic)
                     .Select(p => p.GetPropertyFromDeclaredType(p))
                     .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
 #endif
@@ -121,7 +121,9 @@ namespace Ninject.Selection
 #if WINRT
                     .GetTypeInfo()
 #endif
-                    .BaseType; parentType != null; parentType = parentType
+                    .BaseType; 
+                    parentType != null; 
+                    parentType = parentType
 #if WINRT
 .GetTypeInfo()
 #endif
@@ -145,7 +147,7 @@ namespace Ninject.Selection
 #if !WINRT
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
 #else
-            return type.GetRuntimeProperties().Where(p => !p.GetMethod.IsStatic && p.DeclaringType == type && p.IsPrivate());
+            return type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic).Where(p => p.DeclaringType == type && p.IsPrivate());
 #endif
         }
 #endif
@@ -159,10 +161,36 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 #if WINRT
-            return type.GetRuntimeMethods().Where(m => !m.IsStatic && InjectionHeuristics.Any(h => h.ShouldInject(m)));
+            return type.GetRuntimeMethods().FilterPublic(Settings.InjectNonPublic).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #else
             return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #endif
         }
     }
 }
+#if WINRT
+namespace Ninject
+{
+
+    internal static class WinRTFilters
+    {
+        public static IEnumerable<T> FilterPublic<T>(this IEnumerable<T> input, bool nonPublic)
+            where T : MethodBase
+        {
+            return input.Where(m => !m.IsStatic && nonPublic ? true : m.IsPublic);
+        }
+
+        public static IEnumerable<PropertyInfo> FilterPublic(this IEnumerable<PropertyInfo> input, bool nonPublic)
+       {
+           var toReturn = from pi in input
+                          let method = pi.SetMethod ?? pi.GetMethod
+                          where !method.IsStatic && nonPublic ? true : method.IsPublic
+                          select pi;
+
+           return toReturn;
+        }
+    }
+
+}
+
+#endif

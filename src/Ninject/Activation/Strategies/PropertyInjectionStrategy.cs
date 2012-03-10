@@ -89,6 +89,8 @@ namespace Ninject.Activation.Strategies
             AssignProperyOverrides( context, reference, propertyValues );
         }
 
+
+
         /// <summary>
         /// Applies user supplied override values to instance properties.
         /// </summary>
@@ -100,7 +102,7 @@ namespace Ninject.Activation.Strategies
 #if !WINRT
             var properties = reference.Instance.GetType().GetProperties( Flags );
 #else
-            var properties = reference.Instance.GetType().GetRuntimeProperties().Where(p => !p.SetMethod.IsStatic);
+            var properties = reference.Instance.GetType().GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic);
 #endif
             foreach (var propertyValue in propertyValues)
             {

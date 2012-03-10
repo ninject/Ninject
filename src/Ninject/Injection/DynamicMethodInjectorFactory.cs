@@ -73,9 +73,9 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ldarg_1);
             EmitUnboxOrCast(il, property.PropertyType);
 
-            #if !SILVERLIGHT && !WINRT
+            #if !SILVERLIGHT
             bool injectNonPublic = Settings.InjectNonPublic;
-            #elif !WINRT
+            #else
             const bool injectNonPublic = false;
             #endif // !SILVERLIGHT
 

@@ -24,7 +24,7 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 #endif
         public void CreatesTargetsForMethodParameters()
         {
-#if !MSTEST
+#if !WINRT
             var method = typeof(Dummy).GetMethod("MethodA");
 #else
             var method = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("MethodA");
