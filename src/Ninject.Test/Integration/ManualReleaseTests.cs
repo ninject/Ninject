@@ -6,6 +6,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
     
+    
     public class ManualReleaseContext : IDisposable
     {
         protected StandardKernel kernel;
@@ -21,6 +22,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenReleaseIsCalled : ManualReleaseContext
     {
 #if !MSTEST 

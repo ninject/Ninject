@@ -17,6 +17,9 @@ namespace Ninject.Tests.Integration
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT
@@ -56,6 +59,9 @@ namespace Ninject.Tests.Integration
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT

@@ -69,6 +69,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ConditionalAttributeBindingTests : DisposableObject
     {
         protected IKernel kernel;

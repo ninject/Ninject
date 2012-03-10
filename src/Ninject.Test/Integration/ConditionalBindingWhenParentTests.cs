@@ -23,6 +23,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenParentNamed : WhenParentContext
     {
 #if !MSTEST 

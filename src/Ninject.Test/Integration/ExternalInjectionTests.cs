@@ -21,6 +21,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenInjectIsCalled : ExternalInjectionContext
     {
 #if !MSTEST 

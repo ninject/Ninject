@@ -4,6 +4,9 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure;
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ReferenceEqualWeakReferenceTests
     {
 #if !MSTEST 

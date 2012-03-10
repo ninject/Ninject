@@ -5,6 +5,10 @@ namespace Ninject.Tests.Integration
     using Ninject.Activation;
     using Xunit;
 
+
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ProviderTests : IDisposable
     {
         private readonly IKernel kernel;

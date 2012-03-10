@@ -22,6 +22,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceIsBoundToInterfaceInTransientScope : TransientScopeContext
     {
 #if !MSTEST 
@@ -62,6 +65,9 @@
 #endif
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
     {
 #if !MSTEST 
@@ -107,6 +113,9 @@
 #endif
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
     {
 #if !MSTEST 
@@ -147,6 +156,9 @@
 #endif
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
     {
 #if !MSTEST 

@@ -21,6 +21,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
 #if !MSTEST 
@@ -39,6 +42,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
     {
 #if !MSTEST 
@@ -57,6 +63,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
 #if !MSTEST 

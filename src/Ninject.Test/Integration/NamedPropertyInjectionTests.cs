@@ -6,7 +6,10 @@ namespace Ninject.Tests.Integration
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    
+
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class NamedPropertyInjectionTests : IDisposable
     {
         private readonly IKernel kernel;

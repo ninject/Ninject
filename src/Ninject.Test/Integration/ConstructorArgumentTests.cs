@@ -30,6 +30,9 @@ namespace Ninject.Tests.Integration
 
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ConstructorArgumentTests : IDisposable
     {
         private StandardKernel kernel;

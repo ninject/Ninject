@@ -31,6 +31,9 @@ namespace Ninject.Tests.Unit
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class PropertyInjectionSelectorTests : PropertyInjectionSelectorContext
     {
 #if !SILVERLIGHT

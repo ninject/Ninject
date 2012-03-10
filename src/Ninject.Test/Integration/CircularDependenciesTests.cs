@@ -22,6 +22,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors()
@@ -52,6 +55,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties()
@@ -86,6 +92,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
@@ -117,6 +126,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties()

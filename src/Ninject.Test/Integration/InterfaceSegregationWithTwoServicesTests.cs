@@ -30,6 +30,9 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class InterfaceSegregationWithTwoServicesTests : IDisposable
     {
         private readonly StandardKernel kernel;

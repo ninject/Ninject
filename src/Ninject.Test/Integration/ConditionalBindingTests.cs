@@ -7,6 +7,9 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class ConditionalBindingTests: StandardKernelContext
     {
 #if !MSTEST 

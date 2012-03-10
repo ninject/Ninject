@@ -23,6 +23,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenBlockIsCreated : ActivationBlockContext
     {
 #if !MSTEST 
@@ -73,6 +76,9 @@
         }
     }
 
+#if MSTEST
+    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+#endif
     public class WhenBlockIsDisposed : ActivationBlockContext
     {
 #if !MSTEST 
