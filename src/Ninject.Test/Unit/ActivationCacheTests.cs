@@ -16,11 +16,7 @@ namespace Ninject.Tests.Unit
             this.testee = new ActivationCache(new Mock<ICachePruner>().Object);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void IsActivatedReturnsFalseForObjectsNotInTheActivationCache()
         {
             var activated = this.testee.IsActivated(new object());
@@ -28,11 +24,7 @@ namespace Ninject.Tests.Unit
             activated.Should().BeFalse();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void IsActivatedReturnsTrueForObjectsInTheActivationCache()
         {
             var instance = new object();
@@ -45,11 +37,7 @@ namespace Ninject.Tests.Unit
             activatedObjectCount.Should().Be(1);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void IsDeactivatedReturnsFalseForObjectsNotInTheDeactivationCache()
         {
             var activated = this.testee.IsDeactivated(new object());
@@ -57,11 +45,7 @@ namespace Ninject.Tests.Unit
             activated.Should().BeFalse();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void IsDeactivatedReturnsTrueForObjectsInTheDeactivationCache()
         {
             var instance = new object();
@@ -74,11 +58,7 @@ namespace Ninject.Tests.Unit
             deactivatedObjectCount.Should().Be(1);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DeadObjectsAreRemoved()
         {
             this.testee.AddActivatedInstance(new object());

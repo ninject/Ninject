@@ -4,16 +4,10 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class ReferenceEqualWeakReferenceTests
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void TwoReferencesReferencingTheSameObjectAreEqual()
         {
             var instance = new object();
@@ -24,11 +18,7 @@ namespace Ninject.Tests.Unit
             ref1.GetHashCode().Should().Be(ref2.GetHashCode());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReferencesIsEqualToTheInstanceItIsReferingTo()
         {
             var instance = new object();

@@ -6,9 +6,7 @@ namespace Ninject.Tests.Integration
     using Xunit;
 
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class ProviderTests : IDisposable
     {
         private readonly IKernel kernel;
@@ -23,11 +21,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesCanBeCreated()
         {
             this.kernel.Bind<IConfig>().ToProvider<ConfigProvider>();

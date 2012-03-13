@@ -28,11 +28,7 @@ namespace Ninject.Tests.Unit.PipelineTests
 
     public class WhenPipelineIsCreated : PipelineContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void HasListOfStrategies()
         {
             this.Pipeline.Strategies.Should().NotBeNull();
@@ -46,11 +42,7 @@ namespace Ninject.Tests.Unit.PipelineTests
 
     public class WhenActivateIsCalled : PipelineContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsActivateOnStrategies()
         {
             var contextMock = new Mock<IContext>();
@@ -61,11 +53,7 @@ namespace Ninject.Tests.Unit.PipelineTests
             this.StrategyMocks.Map(mock => mock.Verify(x => x.Activate(contextMock.Object, reference)));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenAlreadyActiavatedNothingHappens()
         {
             var contextMock = new Mock<IContext>();
@@ -80,11 +68,7 @@ namespace Ninject.Tests.Unit.PipelineTests
 
     public class WhenDeactivateIsCalled : PipelineContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsDeactivateOnStrategies()
         {
             var contextMock = new Mock<IContext>();
@@ -95,11 +79,7 @@ namespace Ninject.Tests.Unit.PipelineTests
             this.StrategyMocks.Map(mock => mock.Verify(x => x.Deactivate(contextMock.Object, reference)));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenAlreadyDeactiavatedNothingHappens()
         {
             var contextMock = new Mock<IContext>();

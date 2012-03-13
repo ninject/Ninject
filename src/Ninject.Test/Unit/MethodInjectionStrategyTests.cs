@@ -1,4 +1,5 @@
 ﻿#if !NO_MOQ
+using System;
 using System.Linq;
 using System.Reflection;
 using Moq;
@@ -10,6 +11,8 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
+
+
 
 namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
@@ -29,8 +32,13 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
     {
         protected Dummy instance = new Dummy();
         protected InstanceReference reference;
+#if !WINRT
         protected MethodInfo method1 = typeof(Dummy).GetMethod("Foo");
         protected MethodInfo method2 = typeof(Dummy).GetMethod("Bar");
+#else
+        protected MethodInfo method1 = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("Foo");
+        protected MethodInfo method2 = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("Bar");
+#endif
         protected Mock<IContext> contextMock;
         protected Mock<IPlan> planMock;
         protected FakeMethodInjectionDirective[] directives;
@@ -59,11 +67,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
             planMock.Setup(x => x.GetAll<MethodInjectionDirective>()).Returns(directives);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReadsMethodInjectorsFromPlan()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -71,21 +75,13 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
             planMock.Verify(x => x.GetAll<MethodInjectionDirective>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CreatesMethodInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ResolvesValuesForEachTargetOfEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -93,11 +89,7 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
             directives.Map(d => d.TargetMocks.Map(m => m.Verify(x => x.ResolveWithin(contextMock.Object))));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InvokesInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);

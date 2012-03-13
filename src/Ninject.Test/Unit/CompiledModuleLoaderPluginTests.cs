@@ -16,9 +16,13 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     {
         protected readonly CompiledModuleLoaderPlugin loaderPlugin;
         protected readonly Mock<IKernel> kernelMock;
+#if !WINRT
         protected readonly string moduleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
         protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestAssembly.dll");
-
+#else
+        protected readonly string moduleFilename = @"Ninject.Tests.TestModule.dll";
+        protected readonly string assemblyFilename = @"Ninject.Tests.TestAssembly.dll";
+#endif
         public CompiledModuleLoaderPluginContext()
         {
             kernelMock = new Mock<IKernel>();
@@ -28,14 +32,14 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 
     public class WhenLoadModulesIsCalled : CompiledModuleLoaderPluginContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsLoadMethodOnKernelWithAssemblies()
         {
+#if !WINRT
             var expected = Assembly.LoadFrom(this.moduleFilename).GetName().Name;
+#else
+            var expected = Assembly.Load(new AssemblyName { Name = Path.GetFileNameWithoutExtension(this.moduleFilename) }).GetName().Name;
+#endif
 
             IEnumerable<Assembly> actual = null;
             kernelMock.Setup(x => x.Load(It.IsAny<IEnumerable<Assembly>>()))
@@ -47,11 +51,7 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
             actual.Where(a => a.GetName().Name == expected).Should().NotBeEmpty();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DoesNotLoadAssembliesWithoutModules()
         {
             loaderPlugin.LoadModules(new[] { this.assemblyFilename });

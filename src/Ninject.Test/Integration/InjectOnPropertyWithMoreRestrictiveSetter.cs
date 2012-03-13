@@ -17,17 +17,11 @@ namespace Ninject.Tests.Integration
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NonPublicPropertiesWithMoreRestrictiveSetterCanBeInjectedWhenEnabled()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -43,11 +37,7 @@ namespace Ninject.Tests.Integration
         }
 #endif //!SILVERLIGHT
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NonPublicPropertiesWithMoreRestrictiveSetterCannotBeCreatedByDefault()
         {
             var warrior = this.kernel.Get<SpecialNinja>();
@@ -59,17 +49,11 @@ namespace Ninject.Tests.Integration
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyExceptPrivateCanBeInjectedWhenEnabled()
         {
             this.kernel.Settings.InjectNonPublic = true;
@@ -85,11 +69,7 @@ namespace Ninject.Tests.Integration
         }
 #endif //!SILVERLIGHT
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyCannotBeCreatedByDefault()
         {
             var warrior = this.kernel.Get<UltraSpecialNinja>();

@@ -7,16 +7,10 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenLoadIsCalledWithAssemblies : ModuleLoadingContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ModulesContainedInAssembliesAreLoaded()
         {
             var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule) };

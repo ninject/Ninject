@@ -22,16 +22,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceIsBoundToInterfaceInSingletonScope : SingletonScopeContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void FirstActivatedInstanceIsReused()
         {
             kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
@@ -42,11 +36,7 @@
             instance1.Should().BeSameAs(instance2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
             kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
@@ -62,11 +52,7 @@
             reference.IsAlive.Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
             kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
@@ -78,16 +64,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceIsBoundToSelfInSingletonScope : SingletonScopeContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void FirstActivatedInstanceIsReused()
         {
             kernel.Bind<Sword>().ToSelf().InSingletonScope();
@@ -98,11 +78,7 @@
             sword1.Should().BeSameAs(sword2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
@@ -118,11 +94,7 @@
             reference.IsAlive.Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
             kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
@@ -134,16 +106,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceIsBoundToProviderInSingletonScope : SingletonScopeContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void FirstActivatedInstanceIsReused()
         {
             kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
@@ -154,11 +120,7 @@
             instance1.Should().BeSameAs(instance2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
             kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
@@ -174,11 +136,7 @@
             reference.IsAlive.Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
             kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
@@ -190,16 +148,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceIsBoundToMethodInSingletonScope : SingletonScopeContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void FirstActivatedInstanceIsReused()
         {
             kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
@@ -210,11 +162,7 @@
             instance1.Should().BeSameAs(instance2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
             kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
@@ -230,11 +178,7 @@
             reference.IsAlive.Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
             kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();

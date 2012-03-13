@@ -16,16 +16,10 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
         protected PropertyInjectionDirective directive;
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenDirectiveIsCreated : PropertyInjectionDirectiveContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CreatesTargetForProperty()
         {
 #if !WINRT

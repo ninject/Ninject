@@ -23,9 +23,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenConstructorInjectorIsInvoked : DynamicMethodInjectorFactoryContext
     {
         protected ConstructorInfo constructor;
@@ -43,11 +41,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             injector = injectorFactory.Create(constructor);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsConstructor()
         {
             var sword = new Sword();
@@ -58,11 +52,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             samurai.Weapon.Should().BeSameAs(sword);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsConstructorWithNullArgumentIfOneIsSpecified()
         {
             var samurai = injector.Invoke(new[] { (IWeapon)null }) as Samurai;
@@ -72,9 +62,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenPropertyInjectorIsInvoked : DynamicMethodInjectorFactoryContext
     {
         protected PropertyInfo property;
@@ -90,11 +78,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             injector = injectorFactory.Create(property);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SetsPropertyValue()
         {
             var samurai = new Samurai(null);
@@ -105,11 +89,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             samurai.Weapon.Should().BeSameAs(sword);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SetsPropertyValueToNullIfInvokedWithNullArgument()
         {
             var samurai = new Samurai(new Sword());
@@ -118,9 +98,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenMethodInjectorIsInvokedOnVoidMethod : DynamicMethodInjectorFactoryContext
     {
         protected MethodInfo method;
@@ -136,11 +114,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             injector = injectorFactory.Create(method);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsMethod()
         {
             var samurai = new Samurai(new Sword());
@@ -149,9 +123,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenMethodInjectorIsInvokedOnNonVoidMethod : DynamicMethodInjectorFactoryContext
     {
         protected MethodInfo method;
@@ -167,11 +139,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             injector = injectorFactory.Create(method);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CallsMethod()
         {
             var samurai = new Samurai(new Sword());

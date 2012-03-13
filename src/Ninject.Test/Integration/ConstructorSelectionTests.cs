@@ -10,9 +10,7 @@ namespace Ninject.Tests.Integration
 
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class ConstructorSelectionTests
     {
         private readonly StandardKernel kernel;
@@ -27,11 +25,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DefaultCtorIsUsedWhenNoBindingAreAvailable()
         {
             kernel.Bind<Barracks>().ToSelf();
@@ -42,11 +36,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CtorIsUsedWhenParameterIsSupplied()
         {
             kernel.Bind<Barracks>().ToSelf();
@@ -59,11 +49,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void FirstAvailableWithBindingAvailableIsUsed()
         {
             kernel.Bind<Barracks>().ToSelf();
@@ -75,11 +61,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().NotBeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CtorWithMostDependenciesIsUsedWhenBindingsAreAvailable()
         {
             kernel.Bind<Barracks>().ToSelf();
@@ -93,11 +75,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().NotBeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CreationWillFailIfAllDepenciesAreMissingAndInjectAttributeIsApplied()
         {
             kernel.Bind<NinjaBarracks>().ToSelf();
@@ -113,11 +91,7 @@ namespace Ninject.Tests.Integration
             kernel.Unbind<IWarrior>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SelectedCtorIsUsedIfDeclared()
         {
             kernel.Bind<Barracks>().ToConstructor(_ => new Barracks());
@@ -130,11 +104,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SelectedCtorIsUsedIfDeclaredWithInjectedArgument()
         {
             kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(ctorArg.Inject<IWarrior>()));
@@ -148,11 +118,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenDefaultValuesArePassedToConstrctorSelectionTheyAreUsed()
         {
             kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(new Ninja(new Sword()), ctorArg.Inject<IWeapon>()));
@@ -166,11 +132,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().NotBeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DefaultValuesAreEvaluatedForEachRequest()
         {
             kernel.Bind<Barracks>().ToConstructor(_ => new Barracks(new Ninja(new Sword())));
@@ -182,11 +144,7 @@ namespace Ninject.Tests.Integration
         }
 
 #if !WINDOWS_PHONE
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ConstantsCanBePassedToToConstructor()
         {
             var ninja = new Ninja(new Sword());
@@ -199,11 +157,7 @@ namespace Ninject.Tests.Integration
         }
 #endif
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
         {
             int activationCount = 0;
@@ -222,11 +176,7 @@ namespace Ninject.Tests.Integration
             activationCount.Should().Be(1);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenClassHasTwoConstructorsWithInjectAttributeThenAnActivationExceptionIsThrown()
         {
             kernel.Bind<ClassWithTwoInjectAttributes>().ToSelf();
@@ -236,11 +186,7 @@ namespace Ninject.Tests.Integration
             getClassWithTwoInjectAttributes.ShouldThrow<ActivationException>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenConstructorHasSelfBindableTypeItCountsAsServedParameter()
         {
             var instance = kernel.Get<ClassWithSelfBindableType>();
@@ -248,11 +194,7 @@ namespace Ninject.Tests.Integration
             instance.Sword.Should().NotBeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenConstructorHasAnOpenGenericTypeItCountsAsServedParameterIfBindingExists()
         {
             kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
@@ -262,11 +204,7 @@ namespace Ninject.Tests.Integration
         }
 
 #if !SILVERLIGHT
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenConstructorHasAValueWithDefaultValueItCountsAsServedParameter()
         {
             var instance = kernel.Get<ClassWithDefaultValue>();

@@ -21,16 +21,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenInjectIsCalled : ExternalInjectionContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceOfKernelIsInjected()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -42,11 +36,7 @@
             warrior.Weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceIsNotTrackedForDeactivation()
         {
             var instance = new NotifiesWhenDisposed();

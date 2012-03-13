@@ -31,21 +31,13 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
     public class WhenGetIsCalled : ComponentContainerContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfNoImplementationRegisteredForService()
         {
             Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsInstanceWhenOneImplementationIsRegistered()
         {
             container.Add<ITestService, TestServiceA>();
@@ -56,11 +48,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             service.Should().BeOfType<TestServiceA>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsInstanceOfFirstRegisteredImplementation()
         {
             container.Add<ITestService, TestServiceA>();
@@ -72,11 +60,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             service.Should().BeOfType<TestServiceA>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InjectsEnumeratorOfServicesWhenConstructorArgumentIsIEnumerable()
         {
             container.Add<ITestService, TestServiceA>();
@@ -90,11 +74,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             asks.SecondService.Should().BeOfType<TestServiceB>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SameInstanceIsReturnedByDefault()
         {
             container.Add<ITestService, TestServiceA>();
@@ -105,11 +85,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             service1.Should().BeSameAs(service2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DifferentInstanceAreReturnedForTransients()
         {
             container.AddTransient<ITestService, TestServiceA>();
@@ -123,11 +99,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
     public class WhenGetAllIsCalledOnComponentContainer : ComponentContainerContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsSeriesWithSingleItem()
         {
             container.Add<ITestService, TestServiceA>();
@@ -139,11 +111,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             services[0].Should().BeOfType<TestServiceA>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsInstanceOfEachRegisteredImplementation()
         {
             container.Add<ITestService, TestServiceA>();
@@ -156,11 +124,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             services[1].Should().BeOfType<TestServiceB>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsSameInstanceForTwoCallsForSameService()
         {
             container.Add<ITestService, TestServiceA>();
@@ -176,11 +140,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
     public class WhenRemoveAllIsCalled : ComponentContainerContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void RemovesAllMappings()
         {
             container.Add<ITestService, TestServiceA>();
@@ -192,11 +152,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
             Assert.Throws<InvalidOperationException>(() => container.Get<ITestService>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DisposesOfAllInstances()
         {
             container.Add<ITestService, TestServiceA>();

@@ -7,16 +7,10 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class ConditionalBindingTests: StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndSingleSatisfiedConditional_ThenTheConditionalIsUsed()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -26,11 +20,7 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.Should().BeOfType<Shuriken>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndSingleUnatisfiedConditional_ThenTheDefaultIsUsed()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -40,11 +30,7 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndAnUnSatisfiedConditional_ThenTheDefaultIsUsed()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -54,11 +40,7 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndAnManySatisfiedConditionals_ThenAnExceptionIsThrown()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -68,22 +50,14 @@ namespace Ninject.Tests.Integration
             Assert.Throws<ActivationException>(() => kernel.Get<Samurai>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenNoBinding_ThenASelfBindableTypeWillResolve()
         {
             var weapon = kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenBindingIsMadeAfterImplictBinding_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
@@ -93,11 +67,7 @@ namespace Ninject.Tests.Integration
             weapon.Should().BeOfType<ShortSword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenBothImplicitAndExplicitConditionalBindings_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
@@ -110,11 +80,7 @@ namespace Ninject.Tests.Integration
             weapon.Should().BeOfType<ShortSword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndAConditionalImplicitBinding_ThenConditionalBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
@@ -127,11 +93,7 @@ namespace Ninject.Tests.Integration
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenADefaultAndAConditionalBinding_AllBindingsWillResolve()
         {
             var shortSword = new ShortSword();
@@ -144,11 +106,7 @@ namespace Ninject.Tests.Integration
             result.Should().Contain(shuriken);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenAMixtureOfBindings_OnlyNonImplicitBindingsWillResolve()
         {
             var shortSword = new ShortSword();
@@ -164,11 +122,7 @@ namespace Ninject.Tests.Integration
             result.Should().NotContain(shuriken);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GivenOnlyImplicitBindings_AllBindingsWillResolve()
         {
             var shortSword = new ShortSword();
@@ -181,11 +135,7 @@ namespace Ninject.Tests.Integration
             result.Should().Contain(shuriken);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenInjectedIntoAppliesToBaseTypes()
         {
             kernel.Bind<IWarrior>().To<Samurai>();
@@ -196,11 +146,7 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.Should().BeOfType<Sword>();
         }
     
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenInjectedExactlyIntoAppliesNotToBaseTypes()
         {
             kernel.Bind<IWarrior>().To<Samurai>();
@@ -211,11 +157,7 @@ namespace Ninject.Tests.Integration
             getWarrior.ShouldThrow<ActivationException>();
         }
     
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenInjectedExactlyIntoAppliesToServiceType()
         {
             kernel.Bind<IWarrior>().To<Samurai>();
@@ -226,11 +168,7 @@ namespace Ninject.Tests.Integration
             warrior.Weapon.Should().BeOfType<Sword>();
         }
     
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenAnyAnchestorNamedAppliesToGrandParentAndParent()
         {
             const string Name = "SomeName";

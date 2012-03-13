@@ -21,22 +21,14 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
 
     public class WhenMatchesIsCalled : NamedAttributeContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsTrueIfTheNameMatches()
         {
             metadataMock.SetupGet(x => x.Name).Returns("foo");
             attribute.Matches(metadataMock.Object).Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsFalseIfTheNameDoesNotMatch()
         {
             metadataMock.SetupGet(x => x.Name).Returns("bar");

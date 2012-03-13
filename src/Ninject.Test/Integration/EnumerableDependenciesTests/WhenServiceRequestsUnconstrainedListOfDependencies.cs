@@ -4,16 +4,10 @@
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceRequestsUnconstrainedListOfDependencies : UnconstrainedDependenciesContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ServiceIsInjectedWithListOfAllAvailableDependencies()
         {
             this.Kernel.Bind<IParent>().To<RequestsList>();
@@ -25,11 +19,7 @@
             VerifyInjection(parent);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ServiceIsInjectedWithListOfAllAvailableDependenciesWhenDefaultCtorIsAvailable()
         {
             this.Kernel.Bind<IParent>().To<RequestsListWithDefaultCtor>();
@@ -41,11 +31,7 @@
             VerifyInjection(parent);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void EmptyListIsInjectedWhenNoBindingIsAvailable()
         {
             this.Kernel.Bind<IParent>().To<RequestsList>();

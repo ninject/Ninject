@@ -10,6 +10,9 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Xunit;
 
+#if WINRT
+using System.Reflection.RuntimeExtensions;
+#endif
 namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
     using FluentAssertions;
@@ -27,8 +30,14 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
     public class WhenActivateIsCalled : PropertyInjectionDirectiveContext
     {
         protected Dummy instance = new Dummy();
+#if !WINRT
         protected PropertyInfo property1 = typeof(Dummy).GetProperty("Foo");
         protected PropertyInfo property2 = typeof(Dummy).GetProperty("Bar");
+#else
+        protected PropertyInfo property1 = typeof(Dummy).GetRuntimeProperty("Foo");
+        protected PropertyInfo property2 = typeof(Dummy).GetRuntimeProperty("Bar");
+#endif
+
         protected InstanceReference reference;
         protected Mock<IContext> contextMock;
         protected Mock<IPlan> planMock;
@@ -59,11 +68,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             planMock.Setup(x => x.GetAll<PropertyInjectionDirective>()).Returns(directives);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReadsMethodInjectorsFromPlan()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -71,11 +76,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             planMock.Verify(x => x.GetAll<PropertyInjectionDirective>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ResolvesValuesForEachTargetOfEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);
@@ -83,11 +84,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
             directives.Map(d => d.TargetMock.Verify(x => x.ResolveWithin(contextMock.Object)));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InvokesInjectorsForEachDirective()
         {
             strategy.Activate(contextMock.Object, reference);

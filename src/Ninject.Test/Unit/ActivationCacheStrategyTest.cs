@@ -22,11 +22,7 @@ namespace Ninject.Tests.Unit
             this.testee = new ActivationCacheStrategy(this.activationCacheMock.Object) { Settings = this.settings };
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceActivationsAreCachedAtActivation()
         {
             var instance  = new object();
@@ -37,11 +33,7 @@ namespace Ninject.Tests.Unit
             this.activationCacheMock.Verify(activationCache => activationCache.AddActivatedInstance(instance));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceActivationsAreNotCachedAtActivationWhenDisabled()
         {
             var instance = new object();
@@ -53,11 +45,7 @@ namespace Ninject.Tests.Unit
             this.activationCacheMock.Verify(activationCache => activationCache.AddActivatedInstance(instance));
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceDeactivationsAreCachedAtDeactivation()
         {
             var instance = new object();
@@ -68,11 +56,7 @@ namespace Ninject.Tests.Unit
             this.activationCacheMock.Verify(activationCache => activationCache.AddDeactivatedInstance(instance));
         }
         
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceDeactivationsAreNotCachedAtDeactivationWhenDisabled()
         {
             var instance = new object();

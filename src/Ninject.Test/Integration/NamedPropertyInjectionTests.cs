@@ -7,9 +7,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class NamedPropertyInjectionTests : IDisposable
     {
         private readonly IKernel kernel;
@@ -28,11 +26,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NamedAttributeOfPropertiesAreRespected()
         {
             var ninja = this.kernel.Get<OwnStyleNinja>();
@@ -43,11 +37,7 @@ namespace Ninject.Tests.Integration
             ninja.VerySecretWeaponAccessor.Should().BeOfType<Dagger>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NamedAttributeOfPropertiesDefinedOnBaseClassAreRespected()
         {
             var ninja = this.kernel.Get<NinjaWithSpecialMaster>();

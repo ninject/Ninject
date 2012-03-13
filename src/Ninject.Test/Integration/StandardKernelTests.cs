@@ -24,16 +24,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -44,11 +38,7 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ActivationExceptionThrownWhenMultipleBindingsAreRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -59,11 +49,7 @@
             exception.Message.Should().Contain("More than one matching bindings are available.");
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DependenciesAreInjectedViaConstructor()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -78,16 +64,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledForSelfBoundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
         {
             kernel.Bind<Sword>().ToSelf();
@@ -98,11 +78,7 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DependenciesAreInjectedViaConstructor()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -116,16 +92,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledForUnboundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ImplicitSelfBindingIsRegisteredAndActivated()
         {
             var weapon = kernel.Get<Sword>();
@@ -134,11 +104,7 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ImplicitSelfBindingForGenericTypeIsRegisteredAndActivated()
         {
             var service = kernel.Get<GenericService<int>>();
@@ -147,67 +113,41 @@
             service.Should().BeOfType<GenericService<int>>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfAnUnboundInterfaceIsRequested()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfAnUnboundAbstractClassIsRequested()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<AbstractWeapon>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfAnUnboundValueTypeIsRequested()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<int>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfAStringIsRequestedWithNoBinding()
         {
             Assert.Throws<ActivationException>(() => kernel.Get<string>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ThrowsExceptionIfAnOpenGenericTypeIsRequested()
         {
             Assert.Throws<ActivationException>(() => kernel.Get(typeof(IGeneric<>)));
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GenericParametersAreInferred()
         {
             kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
@@ -219,16 +159,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenTryGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -239,11 +173,7 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NullIsReturnedWhenMultipleBindingsAreRegistered()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -255,16 +185,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
         {
             var weapon = kernel.TryGet<Sword>();
@@ -273,22 +197,14 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsNullIfTypeIsNotSelfBindable()
         {
             var weapon = kernel.TryGet<IWeapon>();
             weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
@@ -297,11 +213,7 @@
             weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsNullIfNoBindingForADependencyExists()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -310,11 +222,7 @@
             warrior.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsNullIfMultipleBindingsExistForADependency()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -325,11 +233,7 @@
             warrior.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -340,16 +244,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsSeriesOfItemsInOrderTheyWereBound()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -363,11 +261,7 @@
             weapons[1].Should().BeOfType<Shuriken>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DoesNotActivateItemsUntilTheEnumeratorRunsOverThem()
         {
             InitializableA.Count = 0;
@@ -388,16 +282,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetAllIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void GenericParametersAreInferred()
         {
             kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
@@ -411,11 +299,7 @@
             services[1].Should().BeOfType<GenericService2<int>>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void OpenGenericBindingsCanBeOverridenByClosedGenericBindings()
         {
             kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
@@ -428,11 +312,7 @@
         }
 
 #if NET_40
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void OpenGenericsWithCoAndContraVarianceCanBeResolved()
         {
             kernel.Bind(typeof(IGenericCoContraVarianceService<,>)).To(typeof(OpenGenericCoContraVarianceService<,>));
@@ -442,11 +322,7 @@
             service.Should().BeOfType<OpenGenericCoContraVarianceService<string, int>>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ClosedGenericsWithCoAndContraVarianceCanBeResolved()
         {
             kernel.Bind(typeof(IGenericCoContraVarianceService<string, int>)).To(typeof(ClosedGenericCoContraVarianceService));
@@ -458,16 +334,10 @@
 #endif
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
         {
             var weapons = kernel.GetAll<Sword>().ToArray();
@@ -477,11 +347,7 @@
             weapons[0].Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsEmptyEnumerableIfTypeIsNotSelfBindable()
         {
             var weapons = kernel.GetAll<IWeapon>().ToArray();
@@ -491,16 +357,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenProviderReturnsNullThenActivationExceptionIsThrown()
         {
             kernel.Bind<IWeapon>().ToProvider<NullProvider>();
@@ -508,11 +368,7 @@
             Assert.Throws<Ninject.ActivationException>(() => kernel.Get<IWeapon>());
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void WhenProviderReturnsNullButAllowedInSettingsThenNullIsResolved()
         {
             kernel.Settings.AllowNullInjection = true;
@@ -524,16 +380,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenGetIsCalledWithConstraints : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsServiceRegisteredViaBindingWithSpecifiedName()
         {
             kernel.Bind<IWeapon>().To<Shuriken>();
@@ -545,11 +395,7 @@
             weapon.Should().BeOfType<Sword>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ReturnsServiceRegisteredViaBindingThatMatchesPredicate()
         {
             kernel.Bind<IWeapon>().To<Shuriken>().WithMetadata("type", "range");
@@ -562,16 +408,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenUnbindIsCalled : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void RemovesAllBindingsForService()
         {
             kernel.Bind<IWeapon>().To<Shuriken>();
@@ -586,16 +426,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenRebindIsCalled : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void RemovesAllBindingsForServiceAndReplacesWithSpecifiedBinding()
         {
             kernel.Bind<IWeapon>().To<Shuriken>();
@@ -610,16 +444,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class sdf : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void Ddd()
         {
             this.kernel.Bind<IWeapon>().To<Sword>();
@@ -629,16 +457,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenCanResolveIsCalled : StandardKernelContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ForImplicitBindings()
         {
             this.kernel.Get<Sword>();

@@ -22,11 +22,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 
     public class WhenActivateIsCalled : InitializableStrategyContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void StrategyInitializesInstanceIfItIsInitializable()
         {
             var instance = new InitializableObject();
@@ -36,11 +32,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
             instance.WasInitialized.Should().BeTrue();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void StrategyDoesNotAttemptToInitializeInstanceIfItIsNotInitializable()
         {
             var instance = new object();

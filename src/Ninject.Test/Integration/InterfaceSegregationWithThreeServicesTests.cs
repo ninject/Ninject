@@ -30,9 +30,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class InterfaceSegregationWithThreeServicesTests : IDisposable
     {
         private readonly StandardKernel kernel;
@@ -47,11 +45,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithGenericToReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().To<Monk>().InSingletonScope();
@@ -59,11 +53,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithToReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().To(typeof(Monk)).InSingletonScope();
@@ -71,11 +61,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithToConstantReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().ToConstant(new Monk()).InSingletonScope();
@@ -83,11 +69,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithToMethodReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().ToMethod(ctx => new Monk()).InSingletonScope();
@@ -95,11 +77,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithToProviderReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().ToProvider(new MonkProvider()).InSingletonScope();
@@ -107,11 +85,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void MultipleServicesBoundWithGenericToProviderReturnSameInstance()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().ToProvider<MonkProvider>().InSingletonScope();
@@ -119,11 +93,7 @@ namespace Ninject.Tests.Integration
             this.VerifyAllInterfacesAreSameInstance();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void Rebind()
         {
             this.kernel.Bind<IWarrior, ICleric, IHuman>().To<Monk>().InSingletonScope();

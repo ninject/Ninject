@@ -5,9 +5,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class DefaultParameterTests
     {
         private readonly StandardKernel kernel;
@@ -22,11 +20,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DefaultValueShouldBeUsedWhenNoneSupplied()
         {
             kernel.Bind<Shield>().ToSelf();
@@ -36,11 +30,7 @@ namespace Ninject.Tests.Integration
             shield.Color.Should().Be(ShieldColor.Red);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SpecificValueShouldBeUsedWhenMapped()
         {
             kernel.Bind<Shield>().ToSelf();
@@ -51,11 +41,7 @@ namespace Ninject.Tests.Integration
             shield.Color.Should().Be(ShieldColor.Blue);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void SpecificValueShouldBeUsedWhenSupplied()
         {
             kernel.Bind<Shield>().ToSelf().WithConstructorArgument("color", ShieldColor.Orange);
@@ -65,11 +51,7 @@ namespace Ninject.Tests.Integration
             shield.Color.Should().Be(ShieldColor.Orange);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void DefaultValuesShouldNotInflunceInjectionsToOtherTypes()
         {
             kernel.Bind<Shield>().ToSelf();

@@ -17,11 +17,7 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 
     public class WhenDirectiveIsCreated : MethodInjectionDirectiveBaseContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void CreatesTargetsForMethodParameters()
         {
 #if !WINRT

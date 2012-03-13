@@ -8,9 +8,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class ActivationStrategyTests
     {
         private readonly StandardKernel kernel;
@@ -25,11 +23,7 @@
             this.kernel.Dispose();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceIsActivatedOnCreation()
         {
             kernel.Bind<Barracks>().ToSelf().OnActivation(
@@ -46,11 +40,7 @@
             barracks.Weapon.Should().BeOfType<Shuriken>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceIsActivatedOnCreationWithContext()
         {
             kernel.Bind<Barracks>().ToSelf().OnActivation(
@@ -67,11 +57,7 @@
             barracks.Weapon.Should().BeOfType<Shuriken>();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceIsDeactivatedWhenItLeavesScope()
         {
             Barracks barracks;
@@ -98,11 +84,7 @@
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceIsDeactivatedWhenItLeavesScopeWithContext()
         {
             Barracks barracks;
@@ -129,11 +111,7 @@
             barracks.Weapon.Should().BeNull();
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ObjectsActivatedOnlyOnce()
         {
             kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
@@ -147,11 +125,7 @@
             testActivationStrategy.ActivationCount.Should().Be(2);
         }
 
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NullIsNotActivated()
         {
             kernel.Settings.AllowNullInjection = true;

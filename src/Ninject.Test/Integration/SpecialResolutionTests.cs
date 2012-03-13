@@ -21,16 +21,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceOfKernelIsInjected()
         {
             kernel.Bind<RequestsKernel>().ToSelf();
@@ -42,16 +36,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceOfKernelIsInjected()
         {
             kernel.Bind<RequestsResolutionRoot>().ToSelf();
@@ -63,16 +51,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenServiceRequestsString : SpecialResolutionContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void InstanceOfStringIsInjected()
         {
             kernel.Bind<RequestsString>().ToSelf();

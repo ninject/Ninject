@@ -26,11 +26,7 @@ namespace Ninject.Tests.Unit.CallbackProviderTests
 
     public class WhenCreateIsCalled : CallbackProviderContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void ProviderInvokesCallbackToRetrieveValue()
         {
             var sword = new Sword();

@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ninject.Tests</RootNamespace>
     <AssemblyName>Ninject.Tests</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -18,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WinRT\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WinRT\Release\</OutputPath>
-    <DefineConstants>TRACE;WINRT;MSTEST;NO_MOQ;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE</DefineConstants>
+    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -35,8 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <!--A reference to the entire .Net Framework and Windows SDK are automatically included-->
-    <SDKReference Include="MSTestFramework, Version=11.0" />
+    <SDKReference Include="Moq, Version=4.0">
+      <Name>Moq</Name>
+    </SDKReference>
     <SDKReference Include="TestPlatform, Version=11.0" />
+    <SDKReference Include="XUnit, Version=2.0">
+      <Name>XUnit for Managed Projects</Name>
+    </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionsForIEnumerable.cs" />
@@ -136,8 +142,6 @@
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\ReferenceEqualWeakReferenceTests.cs" />
     <Compile Include="Unit\StartableStrategyTests.cs" />
-    <Compile Include="XUnitAdapter\XUnitAssert.cs" />
-    <Compile Include="XUnitAdapter\XUnitSdk.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -189,9 +193,14 @@
     <Reference Include="FluentAssertions">
       <HintPath>..\..\tools\FluentAssertions\WinRT\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>$(SolutionDir)\tools;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

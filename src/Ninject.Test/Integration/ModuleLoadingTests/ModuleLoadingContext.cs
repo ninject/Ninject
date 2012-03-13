@@ -25,7 +25,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             return "TestModuleName";
         }
-        #if !NO_MOQ
+#if !NO_MOQ
         protected Mock<INinjectModule> CreateModuleMock(string name)
         {
             var moduleMock = new Mock<INinjectModule>();
@@ -38,12 +38,13 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             return this.CreateModuleMock(name).Object;
         }
-#endif
+#else
 
         protected INinjectModule CreateModule(string name)
         {
             return new FakeModule(name);
         }
+#endif
 
         private class FakeModule : INinjectModule
         {

@@ -23,16 +23,10 @@
         }
     }
 
-#if MSTEST
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
-#endif
+
     public class WhenParentNamed : WhenParentContext
     {
-#if !MSTEST 
         [Fact]
-#else
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]
-#endif
         public void NamedInstanceAvailableEvenWithWhenBinding()
         {
             var instance = kernel.Get<Sword>("Broken");
