@@ -47,7 +47,7 @@ namespace Ninject.Selection.Heuristics
         /// <param name="context">The injection context.</param>
         /// <param name="directive">The constructor.</param>
         /// <returns>The constructor's score.</returns>
-        public int Score(IContext context, ConstructorInjectionDirective directive)
+        public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(directive, "constructor");
@@ -82,14 +82,20 @@ namespace Ninject.Selection.Heuristics
             return score;
         }
 
-        private static bool BindingExists(IContext context, ITarget target)
+        /// <summary>
+        /// Checkes whether a binding exists for a given target.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>Whether a binding exists for the target in the given context.</returns>
+        protected virtual bool BindingExists(IContext context, ITarget target)
         {
             var targetType = GetTargetType(target);
             return context.Kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
                    || target.HasDefaultValue;
         }
 
-        private static Type GetTargetType(ITarget target)
+        private Type GetTargetType(ITarget target)
         {
             var targetType = target.Type;
             if (targetType.IsArray)
@@ -105,7 +111,13 @@ namespace Ninject.Selection.Heuristics
             return targetType;
         }
 
-        private static bool ParameterExists(IContext context, ITarget target)
+        /// <summary>
+        /// Checks whether any parameters exist for the geiven target..
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>Whether a parameter exists for the target in the given context.</returns>
+        protected virtual bool ParameterExists(IContext context, ITarget target)
         {
             return context
                 .Parameters.OfType<IConstructorArgument>()
