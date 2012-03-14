@@ -20,7 +20,7 @@ namespace Ninject.Syntax
     /// <summary>
     /// Provides a path to resolve instances.
     /// </summary>
-    public interface IResolutionRoot
+    public interface IResolutionRoot : IFluentSyntax
     {
         /// <summary>
         /// Determines whether the specified request can be resolved.
