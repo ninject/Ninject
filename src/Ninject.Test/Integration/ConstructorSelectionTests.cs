@@ -187,11 +187,11 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void WhenConstructorHasSelfBindableTypeItCountsAsServedParameter()
+        public void WhenConstructorHasSelfBindableTypeItDoesNotCountAsServedParameter()
         {
             var instance = kernel.Get<ClassWithSelfBindableType>();
 
-            instance.Sword.Should().NotBeNull();
+            instance.Sword.Should().BeNull();
         }
 
         [Fact]

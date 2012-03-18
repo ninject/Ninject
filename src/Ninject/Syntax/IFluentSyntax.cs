@@ -25,7 +25,7 @@ namespace Ninject.Syntax
         /// Gets the type of this instance.
         /// </summary>
         /// <returns>The type of this instance.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         Type GetType();
 
         /// <summary>

@@ -92,9 +92,32 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         protected virtual bool BindingExists(IContext context, ITarget target)
         {
+
             var targetType = GetTargetType(target);
+<<<<<<< HEAD
+#if !WINRT
+
+            return context.Kernel.GetBindings(targetType).Any()
+                   || target.HasDefaultValue
+                   || (!targetType.IsInterface
+                       && !targetType.IsAbstract
+                       && !targetType.IsValueType
+                       && targetType != typeof(string)
+                       && !targetType.ContainsGenericParameters);
+#else
+            var targetTypeInfo = targetType.GetTypeInfo();
+            return context.Kernel.GetBindings(targetType).Any()
+                   || target.HasDefaultValue
+                   || (!targetTypeInfo.IsInterface
+                       && !targetTypeInfo.IsAbstract
+                       && !targetTypeInfo.IsValueType
+                       && targetType != typeof(string)
+                       && !targetTypeInfo.ContainsGenericParameters);
+#endif
+=======
             return context.Kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
                    || target.HasDefaultValue;
+>>>>>>> 45d53ce552af8a384c9fabf8d94867fd4164a4c5
         }
 
         private Type GetTargetType(ITarget target)

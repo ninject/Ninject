@@ -1,4 +1,8 @@
-Version 3.0.0.0
+Version 3.0.0 (final)
+- Change: The constructor scorer ignores implicit bindings
+- Change: The constructor scorer ignores self bindings
+
+Version 3.0.0-rc3
 ---------------
 - Added: Support for default parameters. If not explicit binding exists for a dependency but there is default value defined it is uesd instead.
 - Added: Support to define the constructor and constructor arguments using ToConstructor "to" overload
@@ -24,8 +28,9 @@ Version 3.0.0.0
 - Bugfix, Breaking change: Get all will now return all bindings and not skip unconditional ones anymore in case there is a conditional one. This is the same behavior as the version 2.0.1 and bevore had. 
 - Bugfix: Fixed that the CF and SL version of the activation cache did not properly remove the weak references
 - Bugfix (for CF): The CF version threw an exception when a class had a generic method on a base class. This bugfix has the side effect that the Inject attribute cannot be defined on base methods anymore. It has to be defined on the overriden method! 
-- Bugfix: The constructor scorer accepts self bindings
 - Bugfix. The constructor scorer accepts default values
+- Bugfix: The constructor scorer accepts self bindings
+
 
 Version 2.2.1.0
 ---------------

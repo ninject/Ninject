@@ -26,7 +26,7 @@ namespace Ninject.Syntax
     /// <summary>
     /// Passed to ToConstructor to specify that a constructor value is Injected.
     /// </summary>
-    public interface IConstructorArgumentSyntax
+    public interface IConstructorArgumentSyntax : IFluentSyntax
     {
         /// <summary>
         /// Gets the context.
