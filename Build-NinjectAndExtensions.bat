@@ -6,8 +6,8 @@ IF ERRORLEVEL 1 GOTO FAILED
 xcopy /S dist\* ..\dist-all
 cd ..
 
-IF NOT EXIST .\ninject.extensions.contextpreservation GOTO ENDFACTORY
-	cd ninject.extensions.contextpreservation
+IF NOT EXIST .\ninject.extensions.factory GOTO ENDFACTORY
+	cd ninject.extensions.factory
 	del lib\Ninject\*.zip
 	copy ..\Ninject\dist\*.zip lib\Ninject
 	call UnzipDependencies.cmd
