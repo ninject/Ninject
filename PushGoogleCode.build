@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="Ninject" default="build">
+	<property name="path.base" value="${project::get-base-directory()}"/>
+	<property name="path.tools" value="${path.base}\tools" dynamic="true"/>
+	<property name="path.tools.gcupload" value="${path.tools}\gcupload\gcupload.exe" dynamic="true"/>
+	<property name="path.releases" value="${path.base}/../dist-all" dynamic="true"/>
+	<property name="username" value="remo.gloor@gmail.com"/>
+	<property name="password" value=""/>
+
+	<target name="Push">
+        <foreach item="File" property="filename">
+            <in>
+                <items>
+                    <include name="${path.releases}/*.zip" />
+                    <exclude name="${path.releases}/*-source.zip" />
+                </items>
+            </in>
+			<do>
+			    <property name="fn" value="${path::get-file-name-without-extension(filename)}"/>			
+			    <property name="projectName" value="${string::substring(fn, 0, string::index-of(fn, '-'))}"/>
+				
+			    <property name="temp" value="${string::substring(fn, string::index-of(fn, '-') + 1, string::get-length(fn) - 1 - string::index-of(fn, '-'))}"/>
+			    <property name="fullversion" value="${string::substring(temp, 0, string::index-of(temp, '-'))}"/>
+			    <property name="version" value="${string::substring(fullversion, 0, string::last-index-of(fullversion, '.'))}"/>
+
+			    <property name="platform" value="${string::substring(fn, string::last-index-of(fn, 'release-') + 8, string::get-length(fn) - 8 - string::last-index-of(fn, 'release-'))}"/>				
+				
+				<exec program='${path.tools.gcupload}' 
+					  commandline='-u:${username} -p:${password} -n:ninject2 -s:${fn} -f:${filename} -l:${projectName},${version},${platform},Type-Archive'
+					  failonerror='false'/>
+			</do>
+        </foreach>	
+	</target>
+</project>
