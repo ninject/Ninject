@@ -23,6 +23,7 @@
         }
     }
 
+
     public class WhenBlockIsCreated : ActivationBlockContext
     {
         [Fact]
@@ -60,6 +61,7 @@
             instance.IsDisposed.Should().BeFalse();
         }
     }
+
 
     public class WhenBlockIsDisposed : ActivationBlockContext
     {

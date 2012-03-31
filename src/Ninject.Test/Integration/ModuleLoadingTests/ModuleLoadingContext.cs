@@ -1,9 +1,10 @@
-﻿#if !NO_MOQ
+﻿
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
-
+#if !NO_MOQ
     using Moq;
+#endif
     using Ninject.Modules;
 
     public class ModuleLoadingContext : IDisposable
@@ -24,7 +25,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             return "TestModuleName";
         }
-
+#if !NO_MOQ
         protected Mock<INinjectModule> CreateModuleMock(string name)
         {
             var moduleMock = new Mock<INinjectModule>();
@@ -37,6 +38,42 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         {
             return this.CreateModuleMock(name).Object;
         }
+#else
+
+        protected INinjectModule CreateModule(string name)
+        {
+            return new FakeModule(name);
+        }
+#endif
+
+        private class FakeModule : INinjectModule
+        {
+            public FakeModule(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; private set; }
+
+            public void OnLoad(IKernel kernel)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnUnload(IKernel kernel)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnVerifyRequiredModules()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IKernel Kernel
+            {
+                get { throw new NotImplementedException(); }
+            }
+        }
     }
 }
-#endif

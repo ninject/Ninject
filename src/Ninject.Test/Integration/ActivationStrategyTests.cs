@@ -8,6 +8,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
+
     public class ActivationStrategyTests
     {
         private readonly StandardKernel kernel;

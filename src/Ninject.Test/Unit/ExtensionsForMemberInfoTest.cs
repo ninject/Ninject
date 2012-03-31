@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Ninject.Tests.Unit
 {
     using System;
@@ -7,7 +9,12 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure.Language;
     using Xunit;
 
+#if WINRT
+    using System.Reflection.RuntimeExtensions;
+#endif
+
 #if !SILVERLIGHT
+
     public class ExtensionsForMemberInfoTest
     {
         [Fact]
@@ -23,7 +30,9 @@ namespace Ninject.Tests.Unit
         public void HasAttributeForAttributesOnBaseClass()
         {
             this.TestHasAttributeForAttributesOnBaseClass("PublicProperty");
+#if !WINRT
             this.TestHasAttributeForAttributesOnBaseClass("InternalProperty");
+#endif
             this.TestHasAttributeForAttributesOnBaseClass("ProtectedProperty");
         }
 
@@ -31,9 +40,12 @@ namespace Ninject.Tests.Unit
         public void GetCustomAttributesExtended()
         {
             this.TestGetCustomAttributesExtended("PublicProperty");
+#if !WINRT
             this.TestGetCustomAttributesExtended("InternalProperty");
-            this.TestGetCustomAttributesExtended("ProtectedProperty");
             this.TestGetCustomAttributesExtended("PrivateProperty");
+#endif
+            this.TestGetCustomAttributesExtended("ProtectedProperty");
+
         }
         
         [Fact]
@@ -60,7 +72,11 @@ namespace Ninject.Tests.Unit
         public void TestIndexerHasAttribute(Type testObjectType, Type indexerType, Type attributeType, bool expectedResult)
         {
             var propertyInfo =
+#if !WINRT
                 testObjectType.GetProperties()
+#else
+                testObjectType.GetTypeInfo().DeclaredProperties
+#endif
                     .First(pi => pi.Name == "Item" && pi.GetIndexParameters().Single().ParameterType == indexerType);
             var hasInjectAttribute = propertyInfo.HasAttribute(attributeType);
 
@@ -90,13 +106,24 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtended(propertyAttributeClass, propertyName, typeof(NamedAttribute), true, new NamedAttribute[0]);
         }
 
-        private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, object[] expectedAttributes)
+        private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, 
+#if !WINRT
+            object[] 
+#else
+            IEnumerable<Attribute>
+#endif
+                expectedAttributes)
         {
-            var propertyInfo = testObject.GetType()
-                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
 
-            attributes.Length.Should().Be(expectedAttributes.Length);
+            var propertyInfo = testObject.GetType()
+#if !WINRT
+                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#else
+                .GetRuntimeProperties().Single(pi => pi.Name == attributeName);
+#endif
+            var attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
+
+            attributes.Count().Should().Be(expectedAttributes.Count());
             foreach (var expectedAttribute in expectedAttributes)
             {
                 attributes.Should().Contain(expectedAttribute);
@@ -122,7 +149,11 @@ namespace Ninject.Tests.Unit
         private void TestHasAttribute(object testObject, string attributeName, Type attributeType, bool expectedValue)
         {
             var propertyInfo = testObject.GetType()
+#if !WINRT
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#else
+                .GetTypeInfo().GetDeclaredProperty(attributeName);
+#endif
             bool hasAttribute = propertyInfo.HasAttribute(attributeType);
 
             hasAttribute.Should().Be(expectedValue);

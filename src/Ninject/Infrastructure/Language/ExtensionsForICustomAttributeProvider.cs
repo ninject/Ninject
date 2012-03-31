@@ -8,13 +8,20 @@
 // 
 #endregion
 
+
 namespace Ninject.Infrastructure.Language
 {
     using System;
     using System.Reflection;
+    
+#if WINRT
+    using Ninject.Planning.Targets;
+#endif
 
     internal static class ExtensionsForICustomAttributeProvider
     {
+#if !WINRT
+
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {
             var memberInfo = member as MemberInfo;
@@ -36,5 +43,36 @@ namespace Ninject.Infrastructure.Language
 
             return member.GetCustomAttributes(attributeType, inherit);
         }
+        
+#else
+
+        public static bool HasAttribute(this PropertyInfo member, Type type)
+        {
+            var memberInfo = member as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.HasAttribute(type);
+            }
+
+            return member.IsDefined(type, true);
+        }
+
+        public static bool HasAttribute(this ParameterInfo member, Type type)
+        {
+            return member.IsDefined(type, true);
+        }
+
+        public static bool HasAttribute(this ITarget member, Type type)
+        {
+            var memberInfo = member as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.HasAttribute(type);
+            }
+
+            return member.IsDefined(type, true);
+        }
+
+#endif
     }
 }

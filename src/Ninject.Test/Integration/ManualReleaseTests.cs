@@ -6,6 +6,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
     
+    
     public class ManualReleaseContext : IDisposable
     {
         protected StandardKernel kernel;
@@ -20,6 +21,7 @@
             this.kernel.Dispose();
         }
     }
+
 
     public class WhenReleaseIsCalled : ManualReleaseContext
     {

@@ -6,6 +6,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
+
     public class WithPropertyValueTests : PropertyInjectionTests
     {
         [Fact]

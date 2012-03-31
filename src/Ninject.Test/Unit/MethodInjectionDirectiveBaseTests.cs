@@ -20,7 +20,11 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
         [Fact]
         public void CreatesTargetsForMethodParameters()
         {
+#if !WINRT
             var method = typeof(Dummy).GetMethod("MethodA");
+#else
+            var method = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("MethodA");
+#endif
             MethodInjector injector = delegate { };
 
             directive = new FakeMethodInjectionDirective(method, injector);

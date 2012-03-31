@@ -48,8 +48,12 @@ namespace Ninject.Modules
             var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
+#if !WINRT
                 .SelectMany(pattern => GetFilesMatchingPattern(pattern))
                 .GroupBy(filename => Path.GetExtension(filename).ToLowerInvariant());
+#else
+                .GroupBy(filename => GetExtension(filename).ToLowerInvariant());
+#endif          
 
             foreach (var fileGroup in fileGroups)
             {
@@ -61,6 +65,14 @@ namespace Ninject.Modules
             }
         }
 
+#if WINRT
+        private static string GetExtension(string filename)
+        {
+            var i = filename.LastIndexOf('.');
+            return filename.Substring(i);
+        }
+#endif
+#if !WINRT
         private static IEnumerable<string> GetFilesMatchingPattern(string pattern)
         {
             return NormalizePaths(Path.GetDirectoryName(pattern))
@@ -84,6 +96,7 @@ namespace Ninject.Modules
                 : searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path));
         }
+#endif
     }
 }
 #endif //!NO_ASSEMBLY_SCANNING

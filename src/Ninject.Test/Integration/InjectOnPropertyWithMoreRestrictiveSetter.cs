@@ -17,6 +17,7 @@ namespace Ninject.Tests.Integration
         }
     }
 
+
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
 #if !SILVERLIGHT
@@ -47,6 +48,7 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.Should().BeNull();
         }
     }
+
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {

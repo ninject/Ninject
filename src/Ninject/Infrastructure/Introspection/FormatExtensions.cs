@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+#if WINRT
+using System.Diagnostics;  
+#endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Infrastructure.Language;
@@ -115,6 +118,42 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+#if WINRT
+        private static MemberTypes GetMemberType(this MemberInfo member)
+        {
+            if (member is FieldInfo)
+                return MemberTypes.Field;
+            if (member is ConstructorInfo)
+                return MemberTypes.Constructor;
+            if (member is PropertyInfo)
+                return MemberTypes.Property;
+            if (member is EventInfo)
+                return MemberTypes.Event;
+            if (member is MethodInfo)
+                return MemberTypes.Method;
+
+            /*
+            var typeInfo = member as Type;
+            Debug.Assert(typeInfo != null);
+            if (!typeInfo.IsPublic && !typeInfo.IsNotPublic)
+                return MemberTypes.NestedType;
+            */
+            return MemberTypes.TypeInfo;
+        } 
+
+        private enum MemberTypes
+        {
+            Field,
+            Event,
+            Constructor,
+            Property,
+            Method,
+            NestedType,
+            TypeInfo
+
+        }
+
+#endif
         /// <summary>
         /// Formats the specified target into a meaningful string representation..
         /// </summary>
@@ -124,7 +163,11 @@ namespace Ninject.Infrastructure.Introspection
         {
             using (var sw = new StringWriter())
             {
+#if !WINRT
                 switch (target.Member.MemberType)
+#else
+                switch(target.Member.GetMemberType())
+#endif
                 {
                     case MemberTypes.Constructor:
                         sw.Write("parameter {0} of constructor", target.Name);
@@ -142,8 +185,11 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
+#if !WINRT
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
-
+#else
+                sw.Write("of type {0}", target.Member.DeclaringType.Format());
+#endif
                 return sw.ToString();
             }
         }
@@ -155,14 +201,28 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-            if (type.IsGenericType)
+            if (type
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .IsGenericType)
             {
                 var sb = new StringBuilder();
 
+#if !WINRT
                 sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
+#else
+                var ti = type.GetTypeInfo();
+                sb.Append(ti.Name.Substring(ti.Name.LastIndexOf('`')));
+#endif
                 sb.Append("{");
 
-                foreach (Type genericArgument in type.GetGenericArguments())
+#if !WINRT
+                var args = type.GetGenericArguments();
+#else
+                var args = type.GetTypeInfo().GenericTypeArguments;
+#endif
+                foreach (Type genericArgument in args)
                 {
                     sb.Append(genericArgument.Format());
                     sb.Append(", ");
@@ -174,7 +234,7 @@ namespace Ninject.Infrastructure.Introspection
                 return sb.ToString();
             }
 
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !WINRT
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Boolean: return "bool";
@@ -194,8 +254,10 @@ namespace Ninject.Infrastructure.Introspection
                 case TypeCode.String: return "string";
                 default: return type.Name;
             }
-#else
+#elif !WINRT
             return type.Name;
+#else
+            return type.GetTypeInfo().Name;
 #endif
         }
     }

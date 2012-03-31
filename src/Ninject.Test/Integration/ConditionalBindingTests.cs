@@ -7,6 +7,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
+
     public class ConditionalBindingTests: StandardKernelContext
     {
         [Fact]

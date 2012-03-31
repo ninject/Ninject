@@ -31,6 +31,7 @@ namespace Ninject.Tests.Unit
         }
     }
 
+
     public class PropertyInjectionSelectorTests : PropertyInjectionSelectorContext
     {
 #if !SILVERLIGHT

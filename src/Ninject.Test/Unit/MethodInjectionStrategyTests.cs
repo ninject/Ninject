@@ -1,4 +1,5 @@
 ﻿#if !NO_MOQ
+using System;
 using System.Linq;
 using System.Reflection;
 using Moq;
@@ -10,6 +11,8 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Ninject.Tests.Fakes;
 using Xunit;
+
+
 
 namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
@@ -29,8 +32,13 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
     {
         protected Dummy instance = new Dummy();
         protected InstanceReference reference;
+#if !WINRT
         protected MethodInfo method1 = typeof(Dummy).GetMethod("Foo");
         protected MethodInfo method2 = typeof(Dummy).GetMethod("Bar");
+#else
+        protected MethodInfo method1 = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("Foo");
+        protected MethodInfo method2 = typeof(Dummy).GetTypeInfo().GetDeclaredMethod("Bar");
+#endif
         protected Mock<IContext> contextMock;
         protected Mock<IPlan> planMock;
         protected FakeMethodInjectionDirective[] directives;

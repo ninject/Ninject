@@ -15,20 +15,26 @@ namespace Ninject.Infrastructure.Language
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    
+#if WINRT
+    using System.Reflection.RuntimeExtensions;
+#endif
 
     /// <summary>
     /// Extensions for MemberInfo
     /// </summary>
     public static class ExtensionsForMemberInfo
     {
+#if !WINRT
         const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 #if !NO_LCG && !SILVERLIGHT
         const BindingFlags Flags = DefaultFlags | BindingFlags.NonPublic;
 #else
         const BindingFlags Flags = DefaultFlags;
 #endif
+#endif
 
-#if !MONO
+#if !MONO && !WINRT
         private static MethodInfo parentDefinitionMethodInfo;
 
         private static MethodInfo ParentDefinitionMethodInfo
@@ -39,6 +45,7 @@ namespace Ninject.Infrastructure.Language
                 {
                     var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
                     parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
+
                 }
 
                 return parentDefinitionMethodInfo;
@@ -74,7 +81,6 @@ namespace Ninject.Infrastructure.Language
             {
                 return IsDefined(propertyInfo, type, true);
             }
-
 #if NETCF
             // Workaround for the CF bug that derived generic methods throw an exception for IsDefined
             // This means that the Inject attribute can not be defined on base methods for CF framework
@@ -84,7 +90,6 @@ namespace Ninject.Infrastructure.Language
                 return methodInfo.IsDefined(type, false);
             }
 #endif
-
             return member.IsDefined(type, true);
         }
 
@@ -97,9 +102,21 @@ namespace Ninject.Infrastructure.Language
         /// <returns>The property info from the declared type of the property.</returns>
         public static PropertyInfo GetPropertyFromDeclaredType(
             this MemberInfo memberInfo,
-            PropertyInfo propertyDefinition,
-            BindingFlags flags)
+            PropertyInfo propertyDefinition
+#if !WINRT
+            ,BindingFlags flags
+#endif
+            
+            )
         {
+#if WINRT
+            return memberInfo.DeclaringType.GetRuntimeProperties().FirstOrDefault(
+                p => p.Name == propertyDefinition.Name &&
+                    !p.GetMethod.IsStatic && 
+                     p.PropertyType == propertyDefinition.PropertyType &&
+                     p.GetIndexParameters().SequenceEqual(propertyDefinition.GetIndexParameters(), new ParameterInfoEqualityComparer())
+                );
+#else
             return memberInfo.DeclaringType.GetProperty(
                 propertyDefinition.Name,
                 flags,
@@ -107,7 +124,23 @@ namespace Ninject.Infrastructure.Language
                 propertyDefinition.PropertyType,
                 propertyDefinition.GetIndexParameters().Select(parameter => parameter.ParameterType).ToArray(),
                 null);
+#endif
         }
+
+#if WINRT
+        private class ParameterInfoEqualityComparer : IEqualityComparer<ParameterInfo>
+        {
+            public bool Equals(ParameterInfo x, ParameterInfo y)
+            {
+                return x.Position == y.Position && x.ParameterType == y.ParameterType;
+            }
+
+            public int GetHashCode(ParameterInfo obj)
+            {
+                return obj.Position.GetHashCode() ^ obj.ParameterType.GetHashCode();
+            }
+        }
+#endif
 
         /// <summary>
         /// Determines whether the specified property info is private.
@@ -118,10 +151,16 @@ namespace Ninject.Infrastructure.Language
         /// </returns>
         public static bool IsPrivate(this PropertyInfo propertyInfo)
         {
+#if !WINRT
             var getMethod = propertyInfo.GetGetMethod(true);
             var setMethod = propertyInfo.GetSetMethod(true);
+#else
+            var getMethod = propertyInfo.GetMethod;
+            var setMethod = propertyInfo.SetMethod;
+#endif
             return (getMethod == null || getMethod.IsPrivate) && (setMethod == null || setMethod.IsPrivate);
         }
+
 
         /// <summary>
         /// Gets the custom attributes.
@@ -131,9 +170,15 @@ namespace Ninject.Infrastructure.Language
         /// <param name="attributeType">Type of the attribute.</param>
         /// <param name="inherited">if set to <c>true</c> [inherited].</param>
         /// <returns></returns>
-        public static object[] GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
+        public static 
+#if !WINRT
+            object[] 
+#else
+            IEnumerable<Attribute>
+#endif
+            GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35 && !MONO_40
+#if !NET_35 && !MONO_40 && !WINRT
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;
@@ -146,31 +191,65 @@ namespace Ninject.Infrastructure.Language
 #endif
         }
 
+
         private static PropertyInfo GetParentDefinition(PropertyInfo property)
         {
+
+#if !WINRT
             var propertyMethod = property.GetGetMethod(true) ?? property.GetSetMethod(true);
+#else
+            var propertyMethod = property.GetMethod ?? property.SetMethod;
+#endif
+
             if (propertyMethod != null)
             {
-                propertyMethod = propertyMethod.GetParentDefinition(Flags);
+                propertyMethod = propertyMethod.GetParentDefinition(
+#if !WINRT
+                    Flags
+#endif
+                    );
                 if (propertyMethod != null)
                 {
-                    return propertyMethod.GetPropertyFromDeclaredType(property, Flags);
+                    return propertyMethod.GetPropertyFromDeclaredType(property
+#if !WINRT
+                        , Flags
+#endif
+                        );
                 }
             }
 
             return null;
         }
 
-        private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
+        private static MethodInfo GetParentDefinition(this MethodInfo method
+#if !WINRT
+            , BindingFlags flags
+#endif
+            )
         {
 #if MEDIUM_TRUST || MONO
+            
+#if !WINRT
             var baseDefinition = method.GetBaseDefinition(); 
-            var type = method.DeclaringType.BaseType;
+#else
+            var baseDefinition = method.GetRuntimeBaseDefinition();
+#endif
+            var type = method.DeclaringType
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .BaseType;
+
             MethodInfo result = null;
             while (result == null && type != null)
             {
+#if !WINRT
                 result = type.GetMethods(flags).Where(m => m.GetBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
                 type = type.BaseType;
+#else
+                result = type.GetRuntimeMethods().Where(m => !m.IsStatic && m.GetRuntimeBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
+                type = type.GetTypeInfo().BaseType;
+#endif
             }
 
             return result;
@@ -184,9 +263,10 @@ namespace Ninject.Infrastructure.Language
 #endif
         }
 
+
         private static bool IsDefined(PropertyInfo element, Type attributeType, bool inherit)
         {
-            if (element.IsDefined(attributeType, inherit))
+            if (element.IsDefined(attributeType, false))
             {
                 return true;
             }
@@ -209,38 +289,69 @@ namespace Ninject.Infrastructure.Language
                 }
             }
 
+
             return false;
         }
 
-        private static object[] GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
+        private static
+#if !WINRT
+            object[] 
+#else
+ IEnumerable<Attribute>
+#endif
+            GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
         {
             if (inherit)
             {
                 if (InternalGetAttributeUsage(attributeType).Inherited)
                 {
-                    var attributeUsages = new Dictionary<Type, bool>();
+#if !WINRT
                     var attributes = new List<object>();
+#else
+                    var attributes = new List<Attribute>();
+#endif
+                    var attributeUsages = new Dictionary<Type, bool>();
                     attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false));
                     for (var info = GetParentDefinition(propertyInfo);
                          info != null;
                          info = GetParentDefinition(info))
                     {
-                        object[] customAttributes = info.GetCustomAttributes(attributeType, false);
+                        var customAttributes = info.GetCustomAttributes(attributeType, false);
                         AddAttributes(attributes, customAttributes, attributeUsages);
                     }
 
+                    
+#if !WINRT
                     var result = Array.CreateInstance(attributeType, attributes.Count) as object[];
                     Array.Copy(attributes.ToArray(), result, result.Length);
                     return result;
+#else
+                    return attributes;
+#endif
+
                 }
             }
 
             return propertyInfo.GetCustomAttributes(attributeType, inherit);
         }
 
-        private static void AddAttributes(List<object> attributes, object[] customAttributes, Dictionary<Type, bool> attributeUsages)
+
+        private static void AddAttributes(
+#if !WINRT
+            List<object> 
+#else
+            List<Attribute>
+#endif
+            attributes,
+
+#if !WINRT
+            object[] 
+#else
+ IEnumerable<Attribute>
+#endif
+            customAttributes, Dictionary<Type, bool> attributeUsages)
         {
-            foreach (object attribute in customAttributes)
+            foreach (var attribute in customAttributes)
             {
                 Type type = attribute.GetType();
                 if (!attributeUsages.ContainsKey(type))
@@ -257,8 +368,13 @@ namespace Ninject.Infrastructure.Language
 
         private static AttributeUsageAttribute InternalGetAttributeUsage(Type type)
         {
+#if !WINRT
             object[] customAttributes = type.GetCustomAttributes(typeof(AttributeUsageAttribute), true);
             return (AttributeUsageAttribute)customAttributes[0];
+#else
+            var customAttributes = type.GetTypeInfo().GetCustomAttributes(typeof(AttributeUsageAttribute), true);
+            return (AttributeUsageAttribute)customAttributes.First();
+#endif
         } 
     }
 }

@@ -69,6 +69,7 @@
         }
     }
 
+
     public class ConditionalAttributeBindingTests : DisposableObject
     {
         protected IKernel kernel;

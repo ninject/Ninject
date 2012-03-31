@@ -25,7 +25,11 @@ namespace Ninject
     /// <summary>
     /// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
     /// </summary>
-    public interface IKernel : IBindingRoot, IResolutionRoot, IServiceProvider, IDisposableObject
+    public interface IKernel : IBindingRoot, IResolutionRoot, 
+#if !WINRT
+        IServiceProvider, 
+#endif
+        IDisposableObject
     {
         /// <summary>
         /// Gets the kernel settings.

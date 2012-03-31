@@ -22,6 +22,7 @@
         }
     }
 
+
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors()
@@ -43,6 +44,7 @@
             Assert.Throws<ActivationException>(() => kernel.Get<TwoWayConstructorFoo>());
         }
     }
+
 
     public class WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {
@@ -70,6 +72,7 @@
         }
     }
 
+
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
@@ -92,6 +95,7 @@
             Assert.Throws<ActivationException>(() => kernel.Get<ThreeWayConstructorFoo>());
         }
     }
+
 
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties : CircularDependenciesContext
     {

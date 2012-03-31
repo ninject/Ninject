@@ -26,7 +26,9 @@ namespace Ninject.Selection.Heuristics
     using System;
     using System.Collections;
     using System.Linq;
-
+#if WINRT
+    using System.Reflection;
+#endif
     using Ninject.Activation;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -98,15 +100,29 @@ namespace Ninject.Selection.Heuristics
         private Type GetTargetType(ITarget target)
         {
             var targetType = target.Type;
+            
             if (targetType.IsArray)
             {
                 targetType = targetType.GetElementType();
             }
 
+#if !WINRT
             if (targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
             {
+                
                 targetType = targetType.GetGenericArguments()[0];
             }
+
+#else
+            var typeInfo = targetType.GetTypeInfo();
+            if (typeInfo.IsGenericType)
+            {
+                if(typeInfo.ImplementedInterfaces.Any(type => type == typeof(IEnumerable)))
+                {
+                    targetType = typeInfo.GenericTypeArguments[0];
+                }
+            }
+#endif
 
             return targetType;
         }

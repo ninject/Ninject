@@ -30,6 +30,7 @@ namespace Ninject.Tests.Integration
 
     using Xunit;
 
+
     public class ConstructorArgumentTests : IDisposable
     {
         private StandardKernel kernel;

@@ -21,6 +21,7 @@
         }
     }
 
+
     public class WhenInjectIsCalled : ExternalInjectionContext
     {
         [Fact]
