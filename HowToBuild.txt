@@ -1,16 +1,23 @@
-If you are trying to build for a particular platform, please download and install the respective SDKs:
-    WP7, you need the Silverlight™ for Windows Phone Toolkit (http://silverlight.codeplex.com/releases).
+If you are trying to build for a particular platform, please download and install the respective SDKs:   
     .NET Compact Framework 3.5, you need .NET Compact Framework 3.5 Redistributable - http://www.microsoft.com/downloads/details.aspx?FamilyID=e3821449-3c6b-42f1-9fd9-0041345b3385
-    Microsoft® Silverlight™ 2: http://www.microsoft.com/downloads/details.aspx?FamilyID=8d933343-038f-499c-986c-c3c7e87a60b3
-    Microsoft® Silverlight™ 3: http://www.microsoft.com/downloads/details.aspx?FamilyID=1ea49236-0de7-41b1-81c8-a126ff39975b
-    Microsoft® Silverlight™ 4: follow directions on this page: http://www.silverlight.net/getstarted
+    Microsoft® Silverlight™ 2 SDK: http://www.microsoft.com/downloads/details.aspx?FamilyID=8d933343-038f-499c-986c-c3c7e87a60b3
+    Microsoft® Silverlight™ 3 SDK: http://www.microsoft.com/downloads/details.aspx?FamilyID=1ea49236-0de7-41b1-81c8-a126ff39975b
+    Microsoft® Silverlight™ 4 SDK: http://www.microsoft.com/download/en/details.aspx?id=7335
+    Microsoft® Silverlight™ 5 SDK: http://www.microsoft.com/download/en/details.aspx?id=28359
+    Microsoft® Silverlight™ 5 Runtime: Download depending on your OS from: http://www.silverlight.net/downloads - End-User Runtime is sufficient, though the Developer Runtime will work as well.
+    Microsoft® Windows Phone SDK 7.1: http://www.microsoft.com/download/en/details.aspx?id=27570
     Mono 2.X : http://www.go-mono.com/mono-downloads/download.html
 
-This rest of this file is only needed if you are running the NAnt scripts provided.
+If you like to work with the "Ninject with Silverlight and WP7 Unittesting.sln" Visual Studio Solution you additionally have to install the following:
+    Microsoft® Silverlight™ 5 Tools for VS2010 SP1: http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=28358
+    (it already contains Microsoft® Silverlight™ 5 SDK and Microsoft® Silverlight™ 5 Developer Runtime, so you can skip these above)
+	
+The rest of this file is only needed if you are running the NAnt scripts provided.
 
 If you do not need to run Microsoft® Silverlight™ unit tests, simply pass "-D:skip.silverlightTests=true" in the build command to skip them.
 
-If you would like to run Microsoft® Silverlight™ tests, you need to allow the creation of a local service host and need to follow the steps outlined below.
+If you would like to run Microsoft® Silverlight™ tests, you need to allow the creation of a local service host and need to follow the steps 
+outlined below (unless you run the scripts as Administrator).
 Before building the first time you have to perform the following steps:
 1. Run cmd.exe as Administrator.
 2. Enter the following command in the command prompt putting in your own domain and user name:
