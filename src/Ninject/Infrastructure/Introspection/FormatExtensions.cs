@@ -155,48 +155,102 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-            if (type.IsGenericType)
+            var friendlyName = GetFriendlyName(type);
+
+            switch (friendlyName.ToLowerInvariant())
             {
-                var sb = new StringBuilder();
+                case "int16": return "short";
+                case "int32": return "int";
+                case "int64": return "long";
+                case "string": return "string";
+                case "object": return "object";
+                case "boolean": return "bool";
+                case "void": return "void";
+                case "char": return "char";
+                case "byte": return "byte";
+                case "uint16": return "ushort";
+                case "uint32": return "uint";
+                case "uint64": return "ulong";
+                case "sbyte": return "sbyte";
+                case "single": return "float";
+                case "double": return "double";
+                case "decimal": return "decimal";
+            }
 
-                sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
-                sb.Append("{");
+            var genericArguments = type.GetGenericArguments();
+            if(genericArguments.Length > 0)
+                return FormatGenericType(friendlyName, genericArguments);
+            
+            return friendlyName;
+        }
 
-                foreach (Type genericArgument in type.GetGenericArguments())
+        private static string GetFriendlyName(Type type)
+        {
+            var friendlyName = type.FullName ?? type.Name;
+
+            // remove generic arguments
+            var firstBracket = friendlyName.IndexOf('[');
+            if (firstBracket > 0)
+                friendlyName = friendlyName.Substring(0, firstBracket);
+
+            // remove assembly info
+            var firstComma = friendlyName.IndexOf(',');
+            if (firstComma > 0)
+                friendlyName = friendlyName.Substring(0, firstComma);
+
+            // remove namespace
+            var lastPeriod = friendlyName.LastIndexOf('.');
+            if (lastPeriod >= 0)
+                friendlyName = friendlyName.Substring(lastPeriod + 1);
+
+            return friendlyName;
+        }
+
+        private static string FormatGenericType(string friendlyName, Type[] genericArguments)
+        {
+            //var genericTag = "`" + genericArguments.Length;
+            //var genericArgumentNames = new string[genericArguments.Length];
+            //for (int i = 0; i < genericArguments.Length; i++)
+            //    genericArgumentNames[i] = genericArguments[i].Format();
+
+            //return friendlyName.Replace(genericTag, string.Join(", ", genericArgumentNames));
+
+            var sb = new StringBuilder(friendlyName.Length + 10);
+
+            var genericArgumentIndex = 0;
+            var startIndex = 0;
+            for (var index = 0; index < friendlyName.Length; index++)
+            {
+                if (friendlyName[index] == '`')
                 {
-                    sb.Append(genericArgument.Format());
-                    sb.Append(", ");
+                    var numArguments = friendlyName[index+1] - 48;
+                    
+                    sb.Append(friendlyName.Substring(startIndex, index - startIndex));
+                    AppendGenericArguments(sb, genericArguments, genericArgumentIndex, numArguments);
+                    genericArgumentIndex += numArguments;
+
+                    startIndex = index + 2;
                 }
-
-                sb.Remove(sb.Length - 2, 2);
-                sb.Append("}");
-
-                return sb.ToString();
             }
+            if (startIndex < friendlyName.Length)
+                sb.Append(friendlyName.Substring(startIndex));
 
-#if !WINDOWS_PHONE
-            switch (Type.GetTypeCode(type))
+            return sb.ToString();
+        }
+
+        private static void AppendGenericArguments(StringBuilder sb, Type[] genericArguments, int start, int count)
+        {
+            sb.Append("{");
+
+            for(int i = 0; i < count; i++)
             {
-                case TypeCode.Boolean: return "bool";
-                case TypeCode.Char: return "char";
-                case TypeCode.SByte: return "sbyte";
-                case TypeCode.Byte: return "byte";
-                case TypeCode.Int16: return "short";
-                case TypeCode.UInt16: return "ushort";
-                case TypeCode.Int32: return "int";
-                case TypeCode.UInt32: return "uint";
-                case TypeCode.Int64: return "long";
-                case TypeCode.UInt64: return "ulong";
-                case TypeCode.Single: return "float";
-                case TypeCode.Double: return "double";
-                case TypeCode.Decimal: return "decimal";
-                case TypeCode.DateTime: return "DateTime";
-                case TypeCode.String: return "string";
-                default: return type.Name;
+                if (i != 0)
+                    sb.Append(", ");
+
+                sb.Append(genericArguments[start + i].Format());
             }
-#else
-            return type.Name;
-#endif
+            
+            sb.Append("}");
         }
     }
 }
