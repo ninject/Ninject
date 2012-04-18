@@ -11,6 +11,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 #endregion
 
 namespace Ninject.Infrastructure
@@ -24,6 +26,25 @@ namespace Ninject.Infrastructure
     {
         private readonly Dictionary<K, ICollection<V>> _items = new Dictionary<K, ICollection<V>>();
 
+
+        private TResult ActOn<TResult>(K key, Func<ICollection<V>, TResult> act, bool ignoreAbsent = false) 
+        {
+            ICollection<V> values;
+            if (_items.TryGetValue(key, out values))
+                return act(values);
+
+            if (ignoreAbsent)
+                return default(TResult);
+
+            // Only lock when we must create
+            lock (_items) {
+                if (!_items.TryGetValue(key, out values))
+                    _items[key] = values = new HashSet<V>();
+            }
+            return act(values);
+        }
+
+
         /// <summary>
         /// Gets the collection of values stored under the specified key.
         /// </summary>
@@ -33,11 +54,7 @@ namespace Ninject.Infrastructure
             get
             {
                 Ensure.ArgumentNotNull(key, "key");
-
-                if (!_items.ContainsKey(key))
-                    _items[key] = new List<V>();
-
-                return _items[key];
+                return ActOn(key, x => x);
             }
         }
 
@@ -67,7 +84,7 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            this[key].Add(value);
+            ActOn(key, x => { x.Add(value); return true; });
         }
 
         /// <summary>
@@ -81,10 +98,7 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            if (!_items.ContainsKey(key))
-                return false;
-
-            return _items[key].Remove(value);
+            return ActOn(key, x => x.Remove(value), ignoreAbsent: true);            
         }
 
         /// <summary>
@@ -127,8 +141,7 @@ namespace Ninject.Infrastructure
         {
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
-
-            return _items.ContainsKey(key) && _items[key].Contains(value);
+            return ActOn(key, x => x.Contains(value), ignoreAbsent: true);
         }
 
         /// <summary>
