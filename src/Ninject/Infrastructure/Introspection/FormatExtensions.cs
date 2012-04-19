@@ -157,6 +157,9 @@ namespace Ninject.Infrastructure.Introspection
         {
             var friendlyName = GetFriendlyName(type);
 
+            if (friendlyName.Contains("AnonymousType"))
+                return "AnonymousType";
+
             switch (friendlyName.ToLowerInvariant())
             {
                 case "int16": return "short";

@@ -70,5 +70,26 @@ namespace Ninject.Tests.Unit
             typeof(TestGenericType<>.InnerGenericType<>).Format().Should().Be("TestGenericType{TOuter}+InnerGenericType{TInner}");
             typeof(TestGenericType<int>.InnerGenericType<long>).Format().Should().Be("TestGenericType{int}+InnerGenericType{long}");
         }
+
+        [Fact]
+        public void AnonymousTypeFormattedSimply()
+        {
+            var o = new {
+                Hello = "World!",
+                a = 1,
+                b = false,
+                c = DateTime.MinValue,
+                d = new Uri("http://example.org"),
+                e = new {
+                    x = 0,
+                },
+                f = 3,
+                g = 4,
+                h = 5,
+                i = 15,
+            };
+
+            o.GetType().Format().Should().Be("AnonymousType");
+        }
     }
 }
