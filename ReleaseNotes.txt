@@ -1,3 +1,6 @@
+Version 3.0.1
+- Fixed race condition in the GarbageCollectionCachePruner
+
 Version 3.0.0 (final)
 - Change: The constructor scorer ignores implicit bindings
 - Change: The constructor scorer ignores self bindings
