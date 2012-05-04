@@ -1,5 +1,6 @@
 Version 3.0.1
-- Fixed race condition in the GarbageCollectionCachePruner
+- Change: Open generics can now be passed to WhenInjectedInto
+- Bugfix: Fixed race condition in the GarbageCollectionCachePruner
 
 Version 3.0.0 (final)
 - Change: The constructor scorer ignores implicit bindings

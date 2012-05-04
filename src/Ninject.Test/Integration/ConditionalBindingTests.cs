@@ -144,6 +144,42 @@ namespace Ninject.Tests.Integration
 
             warrior.Weapon.Should().BeOfType<Sword>();
         }
+
+        [Fact]
+        public void WhenInjectedIntoAppliesToOpenGenerics()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(IGenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<GenericService<int>>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+        }
+
+        [Fact]
+        public void WhenInjectedIntoAppliesToOpenGenericsWhenClosedGenericIsRequested()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<ClosedGenericService>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+        }
+        
+        [Fact]
+        public void WhenInjectedExactlyIntoAppliesToOpenGenerics()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<GenericService<int>>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+        }
     
         [Fact]
         public void WhenInjectedExactlyIntoAppliesNotToBaseTypes()
@@ -179,6 +215,28 @@ namespace Ninject.Tests.Integration
 
             barack.Weapon.Should().BeOfType<Sword>();
             barack.Warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        public interface IGenericService<T>
+        {
+        }
+
+        public class ClosedGenericService : GenericService<int>
+        {
+            public ClosedGenericService(IWarrior warrior)
+                : base(warrior)
+            {
+            }
+        }
+
+        public class GenericService<T> : IGenericService<T>
+        {
+            public GenericService(IWarrior warrior)
+            {
+                this.Warrior = warrior;
+            }
+
+            public IWarrior Warrior { get; private set; }
         }
     }
 }

@@ -24,6 +24,8 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
+    using System.Linq;
+
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
@@ -98,7 +100,30 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-            this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+            if (parent.IsGenericTypeDefinition)
+            {
+                if (parent.IsInterface)
+                {
+                    this.BindingConfiguration.Condition = r =>
+                        r.Target != null &&
+                        r.Target.Member.ReflectedType.GetInterfaces().Any(i => 
+                            i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == parent);
+                }
+                else
+                {
+                    this.BindingConfiguration.Condition = r => 
+                        r.Target != null &&
+                        r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
+                            i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == parent);
+                }
+            }
+            else
+            {
+                this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+            }
+
             return this;
         }
 
@@ -123,7 +148,17 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent)
         {
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
+            if (parent.IsGenericTypeDefinition)
+            {
+                this.BindingConfiguration.Condition = r =>
+                    r.Target != null &&
+                    r.Target.Member.ReflectedType.IsGenericType &&
+                    parent == r.Target.Member.ReflectedType.GetGenericTypeDefinition();
+            }
+            else
+            {
+                this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
+            }
             return this;
         }
 
