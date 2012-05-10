@@ -9,6 +9,8 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Activation;
+
 #endregion
 
 namespace Ninject
@@ -27,6 +29,11 @@ namespace Ninject
         /// Gets the interval at which the cache should be pruned.
         /// </summary>
         TimeSpan CachePruningInterval { get; }
+
+        /// <summary>
+        /// Gets the default scope callback.
+        /// </summary>
+        Func<IContext, object> DefaultScopeCallback { get; }
 
         #if !NO_ASSEMBLY_SCANNING
         /// <summary>
