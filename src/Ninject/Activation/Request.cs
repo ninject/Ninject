@@ -113,7 +113,7 @@ namespace Ninject.Activation
         /// <param name="service">The service that was requested.</param>
         /// <param name="target">The target that will receive the injection.</param>
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
-        public Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
+        private Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
         {
             Ensure.ArgumentNotNull(parentContext, "parentContext");
             Ensure.ArgumentNotNull(service, "service");
