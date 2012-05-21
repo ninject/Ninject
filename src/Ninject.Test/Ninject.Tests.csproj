@@ -94,6 +94,7 @@
     <Compile Include="Integration\ConstantTests.cs" />
     <Compile Include="Fakes\ResolveCountingProvider.cs" />
     <Compile Include="Integration\ConstructorArgumentTests.cs" />
+    <Compile Include="Integration\DefaultScopeCallbackTests.cs" />
     <Compile Include="Integration\InterfaceSegregationWithTwoServicesTests.cs" />
     <Compile Include="Integration\InterfaceSegregationWithFourServicesTests.cs" />
     <Compile Include="Integration\InterfaceSegregationWithThreeServicesTests.cs" />
