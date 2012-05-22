@@ -75,9 +75,17 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         }
 
         [Fact]
-        public void SelfBindedTypeShouldBeTransient()
+        public void ImplicitSelfBindedTypeShouldBeTransient()
         {
             TestSelfBindedTypesAreTransient();
+        }
+
+        [Fact]
+        public void ExplicitSelfBindedTypeShouldBeTransient()
+        {
+            kernel.Bind<SelfBindedType>().ToSelf();
+            var binding = kernel.GetBindings(typeof(SelfBindedType)).FirstOrDefault();
+            binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Transient);
         }
     }
 
@@ -92,9 +100,17 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         }
 
         [Fact]
-        public void SelfBindedTypeShouldBeTransient()
+        public void ImplicitSelfBindedTypeShouldBeTransient()
         {
             TestSelfBindedTypesAreTransient();
+        }
+
+        [Fact]
+        public void ExplicitSelfBindedTypeShouldHaveObjectScope()
+        {
+            kernel.Bind<SelfBindedType>().ToSelf();
+            var binding = kernel.GetBindings(typeof(SelfBindedType)).FirstOrDefault();
+            binding.ScopeCallback.Should().BeSameAs(scopeDelegate);
         }
 
         protected override void InitializeKernel()
@@ -134,9 +150,17 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         }
 
         [Fact]
-        public void SelfBindedTypeShouldBeTransient()
+        public void ImplicitSelfBindedTypeShouldBeTransient()
         {
             TestSelfBindedTypesAreTransient();
+        }
+
+        [Fact]
+        public void ExplicitSelfBindedTypeShouldHaveThreadScope()
+        {
+            kernel.Bind<SelfBindedType>().ToSelf();
+            var binding = kernel.GetBindings(typeof(SelfBindedType)).FirstOrDefault();
+            binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Thread);
         }
 
         protected override void InitializeKernel()
