@@ -30,9 +30,24 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             this.kernel = new StandardKernel();
         }
 
+        protected virtual void TestSelfBindedTypesAreTransient()
+        {
+            var firstInstance = kernel.Get<SelfBindedType>();
+            var secondInstance = kernel.Get<SelfBindedType>();
+            firstInstance.Should().NotBeSameAs(secondInstance, "because types are transient");
+        }
+
         public interface IService { }
 
         public class ServiceImpl : IService { }
+
+        public class SelfBindedType
+        {
+            public override string ToString()
+            {
+                return "SelfBindedType";
+            }
+        }
     }
 
     public class WhenKernelIsCreatedWithDefaults : DefaultScopeContext
@@ -58,6 +73,12 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         {
             kernel.Settings.DefaultScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Transient);
         }
+
+        [Fact]
+        public void SelfBindedTypeShouldBeTransient()
+        {
+            TestSelfBindedTypesAreTransient();
+        }
     }
 
     public class WhenKernelIsCreatedWithNewObjectScope : DefaultScopeContext
@@ -68,6 +89,12 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         public void ScopeShouldBeObject()
         {
             this.kernel.Settings.DefaultScopeCallback.Should().BeSameAs(scopeDelegate);
+        }
+
+        [Fact]
+        public void SelfBindedTypeShouldBeTransient()
+        {
+            TestSelfBindedTypesAreTransient();
         }
 
         protected override void InitializeKernel()
@@ -82,7 +109,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         }
     }
 
-    public class WhenKernelIsCreatedWithTheadScopeAsDefault : DefaultScopeContext
+    public class WhenKernelIsCreatedWithThreadScopeAsDefault : DefaultScopeContext
     {
         [Fact]
         public void CanOverrideDefaultScopeWithSingletonInBinding()
@@ -104,6 +131,12 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         public void ScopeShouldBeThread()
         {
             kernel.Settings.DefaultScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Thread);
+        }
+
+        [Fact]
+        public void SelfBindedTypeShouldBeTransient()
+        {
+            TestSelfBindedTypesAreTransient();
         }
 
         protected override void InitializeKernel()
