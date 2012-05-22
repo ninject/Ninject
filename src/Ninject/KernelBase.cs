@@ -281,7 +281,7 @@ namespace Ninject
             var planner = this.Components.Get<IPlanner>();
             var pipeline = this.Components.Get<IPipeline>();
 
-            var binding = new Binding(service, Settings.DefaultScopeCallback);
+            var binding = new Binding(service);
             var request = this.CreateRequest(service, null, parameters, false, false);
             var context = this.CreateContext(request, binding);
 

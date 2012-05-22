@@ -26,13 +26,22 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="Binding"/> class.
         /// </summary>
         /// <param name="service">The service that is controlled by the binding.</param>
-        /// <param name="defaultScopeCallback"></param>
-        public Binding(Type service, Func<IContext, object> defaultScopeCallback)
+        public Binding(Type service)
+            : this(service, StandardScopeCallbacks.Transient)
+        {            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Binding"/> class.
+        /// </summary>
+        /// <param name="service">The service that is controlled by the binding.</param>
+        /// <param name="scopeCallback">The scope callback for the service.</param>
+        public Binding(Type service, Func<IContext, object> scopeCallback)
         {
             Ensure.ArgumentNotNull(service, "service");
 
             this.Service = service;
-            this.BindingConfiguration = new BindingConfiguration(defaultScopeCallback);
+            this.BindingConfiguration = new BindingConfiguration(scopeCallback);
         }
 
         /// <summary>

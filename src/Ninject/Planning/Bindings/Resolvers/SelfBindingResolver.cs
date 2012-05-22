@@ -40,7 +40,7 @@ namespace Ninject.Planning.Bindings.Resolvers
             }
             return new[]
                         {
-                            new Binding(service, Settings.DefaultScopeCallback)
+                            new Binding(service)
                             {
                                 ProviderCallback = StandardProvider.GetCreationCallback(service)
                             }
