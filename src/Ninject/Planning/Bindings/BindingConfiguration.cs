@@ -36,18 +36,12 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingConfiguration"/> class.
         /// </summary>
         public BindingConfiguration()
-            : this(StandardScopeCallbacks.Transient) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BindingConfiguration"/> class.
-        /// </summary>
-        public BindingConfiguration(Func<IContext, object> scopeCallback)
         {
             this.Metadata = new BindingMetadata();
             this.Parameters = new List<IParameter>();
             this.ActivationActions = new List<Action<IContext, object>>();
             this.DeactivationActions = new List<Action<IContext, object>>();
-            this.ScopeCallback = scopeCallback ?? StandardScopeCallbacks.Transient;
+            this.ScopeCallback = StandardScopeCallbacks.Transient;
         }
 
         /// <summary>

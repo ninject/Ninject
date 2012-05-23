@@ -51,7 +51,7 @@ namespace Ninject.Syntax
         {
             Type service = typeof(T);
 
-            var binding = new Binding(service, KernelInstance.Settings.DefaultScopeCallback);
+            var binding = new Binding(service);
             this.AddBinding(binding);
 
             return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
@@ -65,7 +65,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
-            var firstBinding = new Binding(typeof(T1), KernelInstance.Settings.DefaultScopeCallback);
+            var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
@@ -82,7 +82,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
-            var firstBinding = new Binding(typeof(T1), KernelInstance.Settings.DefaultScopeCallback);
+            var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
@@ -101,7 +101,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
-            var firstBinding = new Binding(typeof(T1), KernelInstance.Settings.DefaultScopeCallback);
+            var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
@@ -124,7 +124,7 @@ namespace Ninject.Syntax
                 throw new ArgumentException("The services must contain at least one type", "services");                
             }
 
-            var firstBinding = new Binding(services[0], KernelInstance.Settings.DefaultScopeCallback);
+            var firstBinding = new Binding(services[0]);
             this.AddBinding(firstBinding);
 
             foreach (var service in services.Skip(1))

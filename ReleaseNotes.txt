@@ -1,4 +1,5 @@
 Version 3.0.1
+- Add: The default scope can be changed in the NinjectSettings
 - Change: Open generics can now be passed to WhenInjectedInto
 - Bugfix: Fixed race condition in the GarbageCollectionCachePruner
 

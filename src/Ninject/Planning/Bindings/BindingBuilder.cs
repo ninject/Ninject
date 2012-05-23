@@ -51,6 +51,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration = bindingConfiguration;
             this.Kernel = kernel;
             this.ServiceNames = serviceNames;
+            this.BindingConfiguration.ScopeCallback = kernel.Settings.DefaultScopeCallback;
         }
 
         /// <summary>
