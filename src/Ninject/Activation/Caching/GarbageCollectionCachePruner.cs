@@ -48,6 +48,8 @@ namespace Ninject.Activation.Caching
 #else
         private ThreadPoolTimer timer;
 #endif
+        private bool stop;
+
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
@@ -87,6 +89,11 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Stop()
         {
+            lock (this)
+            {
+                this.stop = true;
+            }
+
             using (var signal = new ManualResetEvent(false))
             {
 #if !NETCF && !WINRT
@@ -105,20 +112,27 @@ namespace Ninject.Activation.Caching
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
         {
-            try
+            lock (this)
             {
-                if (this.indicator.IsAlive)
+                if (this.stop)
                 {
                     return;
                 }
 
-                this.caches.Map(cache => cache.Prune());
-                this.indicator.Target = new object();
-            }
-            finally
-            {
+                try
+                {
+                    if (this.indicator.IsAlive)
+                    {
+                        return;
+                    }
+
+                    this.caches.Map(cache => cache.Prune());
+                    this.indicator.Target = new object();
+                }
+                finally
+                {
 #if !WINRT
-                this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+                    this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
 #endif
             }
         }

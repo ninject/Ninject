@@ -1,3 +1,8 @@
+Version 3.0.1
+- Add: The default scope can be changed in the NinjectSettings
+- Change: Open generics can now be passed to WhenInjectedInto
+- Bugfix: Fixed race condition in the GarbageCollectionCachePruner
+
 Version 3.0.0 (final)
 - Change: The constructor scorer ignores implicit bindings
 - Change: The constructor scorer ignores self bindings

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="Ninject" default="build">
+	<property name="path.base" value="${project::get-base-directory()}"/>
+	<property name="path.tools" value="${path.base}\tools" dynamic="true"/>
+	<property name="path.tools.nuget" value="${path.tools}\nuget\nuget.exe" dynamic="true"/>
+	<property name="path.nuget.packages" value="${path.base}/dist/NuGet" dynamic="true"/>
+	<property name="symbols" value="false" />
+
+	<target name="Push">
+        <foreach item="File" property="filename">
+            <in>
+                <items>
+                    <include name="${path.nuget.packages}/*.nupkg" unless="${symbols}" />
+                    <include name="${path.nuget.packages}/*.symbols.nupkg" if="${symbols}" />
+                    <exclude name="${path.nuget.packages}/*.symbols.nupkg" unless="${symbols}" />
+                </items>
+            </in>
+			<do>
+			    <echo message="${path.tools.nuget}" />
+				<echo message="${filename}" />
+				<exec program="${path.tools.nuget}" 
+					  commandline="push ${filename}"
+					  failonerror="false"/>
+			</do>
+        </foreach>	
+	</target>
+</project>

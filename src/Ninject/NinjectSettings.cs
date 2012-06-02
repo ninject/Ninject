@@ -10,6 +10,9 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Activation;
+using Ninject.Infrastructure;
+
 #endregion
 
 namespace Ninject
@@ -37,6 +40,15 @@ namespace Ninject
         {
             get { return Get("CachePruningInterval", TimeSpan.FromSeconds(30)); }
             set { Set("CachePruningInterval", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the default scope callback.
+        /// </summary>
+        public Func<IContext, object> DefaultScopeCallback
+        {
+            get { return Get("DefaultScopeCallback", StandardScopeCallbacks.Transient); }
+            set { Set("DefaultScopeCallback", value); }
         }
 
         #if !NO_ASSEMBLY_SCANNING

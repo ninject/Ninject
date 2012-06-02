@@ -3,7 +3,7 @@
 	<property name="path.base" value="${project::get-base-directory()}"/>
 	<property name="path.tools" value="${path.base}\tools" dynamic="true"/>
 	<property name="path.tools.gcupload" value="${path.tools}\gcupload\gcupload.exe" dynamic="true"/>
-	<property name="path.releases" value="${path.base}/dist" dynamic="true"/>
+	<property name="path.releases" value="${path.base}/../dist-all" dynamic="true"/>
 	<property name="username" value="remo.gloor@gmail.com"/>
 	<property name="password" value=""/>
 

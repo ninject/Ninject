@@ -122,7 +122,7 @@ namespace Ninject.Syntax
             if (services.Length == 0)
             {
                 throw new ArgumentException("The services must contain at least one type", "services");                
-            }    
+            }
 
             var firstBinding = new Binding(services[0]);
             this.AddBinding(firstBinding);
