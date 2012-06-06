@@ -801,7 +801,7 @@
             ExecutorWrapper instead.
             </summary>
         </member>
-        <member name="M:Xunit.Sdk.Executor.#ctor(System.String,System.Boolean)">
+        <member name="M:Xunit.Sdk.Executor.#ctor(System.String)">
             <summary/>
         </member>
         <member name="M:Xunit.Sdk.Executor.InitializeLifetimeService">

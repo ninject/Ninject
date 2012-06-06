@@ -19,10 +19,6 @@ using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
-
-#if WINRT
-using System.Reflection.RuntimeExtensions;
-#endif
 #endregion
 
 namespace Ninject.Activation.Strategies

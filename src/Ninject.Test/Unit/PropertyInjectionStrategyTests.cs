@@ -10,9 +10,6 @@ using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
 using Xunit;
 
-#if WINRT
-using System.Reflection.RuntimeExtensions;
-#endif
 namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
     using FluentAssertions;

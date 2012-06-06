@@ -9,10 +9,6 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure.Language;
     using Xunit;
 
-#if WINRT
-    using System.Reflection.RuntimeExtensions;
-#endif
-
 #if !SILVERLIGHT
 
     public class ExtensionsForMemberInfoTest

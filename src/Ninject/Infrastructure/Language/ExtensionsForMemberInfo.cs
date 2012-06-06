@@ -16,9 +16,6 @@ namespace Ninject.Infrastructure.Language
     using System.Linq;
     using System.Reflection;
     
-#if WINRT
-    using System.Reflection.RuntimeExtensions;
-#endif
 
     /// <summary>
     /// Extensions for MemberInfo

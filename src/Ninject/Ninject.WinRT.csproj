@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WinRT\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WinRT\Release\</OutputPath>
-    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST</DefineConstants>
+    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -94,6 +94,7 @@
     <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
     <Compile Include="Infrastructure\Multimap.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />

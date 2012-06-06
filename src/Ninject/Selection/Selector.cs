@@ -15,10 +15,6 @@ using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Selection.Heuristics;
-
-#if WINRT
-using System.Reflection.RuntimeExtensions;
-#endif
 #endregion
 
 namespace Ninject.Selection

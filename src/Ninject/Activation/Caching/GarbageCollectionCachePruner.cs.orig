@@ -45,11 +45,15 @@ namespace Ninject.Activation.Caching
         /// </summary>
 #if !WINRT
         private Timer timer;
+<<<<<<< HEAD
 #else
         private ThreadPoolTimer timer;
 #endif
+=======
+
         private bool stop;
 
+>>>>>>> 8989357f4a7b5acba2f0adef3acc521014e54302
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
@@ -119,6 +123,16 @@ namespace Ninject.Activation.Caching
                     return;
                 }
 
+<<<<<<< HEAD
+                this.caches.Map(cache => cache.Prune());
+                this.indicator.Target = new object();
+            }
+            finally
+            {
+#if !WINRT
+                this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+#endif
+=======
                 try
                 {
                     if (this.indicator.IsAlive)
@@ -131,10 +145,9 @@ namespace Ninject.Activation.Caching
                 }
                 finally
                 {
-#if !WINRT
                     this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
-#endif
                 }
+>>>>>>> 8989357f4a7b5acba2f0adef3acc521014e54302
             }
         }
 

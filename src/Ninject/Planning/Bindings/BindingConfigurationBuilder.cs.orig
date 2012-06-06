@@ -24,11 +24,14 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-    using System.Linq;
-
+<<<<<<< HEAD
 #if WINRT
     using System.Reflection;
 #endif
+=======
+    using System.Linq;
+
+>>>>>>> 8989357f4a7b5acba2f0adef3acc521014e54302
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
@@ -103,35 +106,15 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-
-#if WINRT
-            var pti = parent.GetTypeInfo();
-            if(pti.IsGenericTypeDefinition)
-            {
-                if(pti.IsInterface)
-                {
-                    this.BindingConfiguration.Condition = r =>
-                        r.Target != null &&
-                        r.Target.Member.DeclaringType.GetTypeInfo().ImplementedInterfaces.Any(i =>
-                            i.GetTypeInfo().IsGenericType &&
-                            i.GetTypeInfo().GetGenericTypeDefinition() == parent);
-                }
-                else
-                {
-                    this.BindingConfiguration.Condition = r =>
-                        r.Target != null &&
-                        r.Target.Member.DeclaringType.GetAllBaseTypes().Any(i =>
-                            i.GetTypeInfo().IsGenericType &&
-                            i.GetGenericTypeDefinition() == parent);
-                }
-            }
-            else
-            {
-                this.BindingConfiguration.Condition = r => r.Target != null && parent.GetTypeInfo().IsAssignableFrom(
+<<<<<<< HEAD
+            this.BindingConfiguration.Condition = r => r.Target != null &&
+#if !WINRT    
+                parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+#else                
+                                                       parent.GetTypeInfo().IsAssignableFrom(
                                                            r.Target.Member.DeclaringType.GetTypeInfo());
-            }
-#else
-
+#endif
+=======
             if (parent.IsGenericTypeDefinition)
             {
                 if (parent.IsInterface)
@@ -155,7 +138,7 @@ namespace Ninject.Planning.Bindings
             {
                 this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
             }
-#endif
+>>>>>>> 8989357f4a7b5acba2f0adef3acc521014e54302
 
             return this;
         }
@@ -181,19 +164,14 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent)
         {
-#if WINRT
-            if (parent.GetTypeInfo().IsGenericTypeDefinition)
-            {
-                this.BindingConfiguration.Condition = r =>
-                    r.Target != null &&
-                    r.Target.Member.DeclaringType.GetTypeInfo().IsGenericType &&
-                    parent == r.Target.Member.DeclaringType.GetGenericTypeDefinition();
-            }
-            else
-            {
-                this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.DeclaringType == parent;
-            }
+<<<<<<< HEAD
+            this.BindingConfiguration.Condition = r => r.Target != null &&
+#if !WINRT
+                r.Target.Member.ReflectedType == parent;
 #else
+ r.Target.Member.DeclaringType == parent;
+#endif
+=======
             if (parent.IsGenericTypeDefinition)
             {
                 this.BindingConfiguration.Condition = r =>
@@ -205,7 +183,7 @@ namespace Ninject.Planning.Bindings
             {
                 this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
             }
-#endif
+>>>>>>> 8989357f4a7b5acba2f0adef3acc521014e54302
             return this;
         }
 
