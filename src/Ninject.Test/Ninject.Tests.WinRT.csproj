@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WinRT\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE;NO_LCG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE;NO_LCG;NO_MOQ</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\WinRT\Release\</OutputPath>
-    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE;NO_LCG</DefineConstants>
+    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NETFX_CORE;NO_LCG;NO_MOQ</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
