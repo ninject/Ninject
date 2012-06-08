@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------
-// <copyright file="ConventionBindingBuilder.cs" company="Ninject Project Contributors">
+// <copyright file="ExtensionsForType.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
 //           
