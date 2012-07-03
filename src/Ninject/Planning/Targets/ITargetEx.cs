@@ -8,14 +8,21 @@
 // 
 #endregion
 #region Using Directives
+using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
+using Ninject.Activation;
+using Ninject.Planning.Bindings;
 #endregion
 
-[assembly: AssemblyTitle("Ninject Core Library")]
-
-#if !NO_PARTIAL_TRUST
-//[assembly: AllowPartiallyTrustedCallers]
+namespace Ninject.Planning.Targets
+{
+    /// <summary>
+    /// Represents a site on a type where a value will be injected.
+    /// </summary>
+    public interface ITargetEx : ITarget
+#if !WINRT
+        , ICustomAttributeProvider
 #endif
-[assembly: AssemblyDescriptionAttribute("IoC container")]
+    {
+    }
+}

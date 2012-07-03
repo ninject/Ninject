@@ -24,6 +24,19 @@ namespace Ninject
     {
         private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
 
+        public NinjectSettings()
+        {
+#if SILVERLIGHT
+            InjectNonPublic = false;
+            InjectParentPrivateProperties = false;
+
+#endif
+
+#if NO_LCG
+            UseReflectionBasedInjection = false;
+#endif
+        }
+
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
         /// </summary>
@@ -71,7 +84,7 @@ namespace Ninject
         }
         #endif //!NO_ASSEMBLY_SCANNING
 
-        #if !NO_LCG
+
         /// <summary>
         /// Gets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
@@ -81,9 +94,7 @@ namespace Ninject
             get { return Get("UseReflectionBasedInjection", false); }
             set { Set("UseReflectionBasedInjection", value); }
         }
-        #endif //!NO_LCG
-
-        #if !SILVERLIGHT
+        
         /// <summary>
         /// Gets a value indicating whether Ninject should inject non public members.
         /// </summary>
@@ -105,7 +116,6 @@ namespace Ninject
             get { return this.Get("InjectParentPrivateProperties", false); }
             set { this.Set("InjectParentPrivateProperties", value); }
         }
-        #endif //!SILVERLIGHT
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

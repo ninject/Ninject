@@ -26,10 +26,10 @@ namespace Ninject.Planning.Targets
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
 #if !WINRT
-    public abstract class Target<T> : ITarget
+    public abstract class Target<T> : ITargetEx
         where T : ICustomAttributeProvider
 #else
-    public abstract class Target : ITarget
+    public abstract class Target : ITargetEx
 #endif
     {
         private readonly Future<Func<IBindingMetadata, bool>> _constraint;
@@ -185,6 +185,16 @@ namespace Ninject.Planning.Targets
             return Site.IsDefined(attributeType, inherit);
         }
 #endif
+
+
+        public bool IsDefinedOnParent(Type attributeType, Type parent)
+        {
+#if !WINRT
+            return parent.HasAttribute(attributeType);
+#else
+            return parent.GetTypeInfo().HasAttribute(attributeType);
+#endif
+        }
 
         /// <summary>
         /// Resolves a value for the target within the specified parent context.

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 11
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E299B94-5F07-49DE-8226-55EDC56F13E3}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModules\TestModules.csproj", "{90F46524-0716-4180-8A5F-1CD1EB5686F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Common", "Ninject.Common\Ninject.Common.csproj", "{A07B8562-3304-4EF3-8A48-76AF89690545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BD94717-484B-4EB1-AF32-8D4244F02E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A07B8562-3304-4EF3-8A48-76AF89690545}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.ActiveCfg = AutomatedRelease|Any CPU
 		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.AutomatedRelease|Any CPU.Build.0 = AutomatedRelease|Any CPU
 		{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU

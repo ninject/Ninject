@@ -557,12 +557,10 @@ namespace Ninject
                 this.bindingCache.Clear();
         }
 
-#if !WINRT
         object IServiceProvider.GetService(Type service)
         {
             return this.Get(service);
         }
-#endif
 
         private class BindingPrecedenceComparer : IComparer<IBinding>
         {

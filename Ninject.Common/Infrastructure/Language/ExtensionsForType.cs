@@ -23,9 +23,6 @@ namespace Ninject.Infrastructure.Language
 {
     using System;
     using System.Collections.Generic;
-#if WINRT
-    using System.Reflection;
-#endif
 
     /// <summary>
     /// Extension methods for type
@@ -43,11 +40,8 @@ namespace Ninject.Infrastructure.Language
              while (type != null)
              {
                  yield return type;
-#if !WINRT
                  type = type.BaseType;
-#else
-                 type = type.GetTypeInfo().BaseType;
-#endif
+
              }
          }
     }

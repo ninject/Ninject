@@ -9,7 +9,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Infrastructure.Disposal

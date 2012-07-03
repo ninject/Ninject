@@ -77,12 +77,12 @@ namespace Ninject.Activation.Providers
                 context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
             }
 
-            if (!context.Plan.Has<ConstructorInjectionDirective>())
+            if (!context.Plan.Has<IConstructorInjectionDirective>())
             {
                 throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
             }
 
-            var directives = context.Plan.GetAll<ConstructorInjectionDirective>();
+            var directives = context.Plan.GetAll<IConstructorInjectionDirective>();
             var bestDirectives = directives
                 .GroupBy(option => this.ConstructorScorer.Score(context, option))
                 .OrderByDescending(g => g.Key)

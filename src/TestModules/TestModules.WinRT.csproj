@@ -36,6 +36,10 @@
     <Compile Include="TestModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Ninject.Common\Ninject.Common.csproj">
+      <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
+      <Name>Ninject.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ninject\Ninject.WinRT.csproj">
       <Project>{0ea44209-1324-4bee-a8d2-46163d26b504}</Project>
       <Name>Ninject.WinRT</Name>

@@ -103,35 +103,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-
-#if WINRT
-            var pti = parent.GetTypeInfo();
-            if(pti.IsGenericTypeDefinition)
-            {
-                if(pti.IsInterface)
-                {
-                    this.BindingConfiguration.Condition = r =>
-                        r.Target != null &&
-                        r.Target.Member.DeclaringType.GetTypeInfo().ImplementedInterfaces.Any(i =>
-                            i.GetTypeInfo().IsGenericType &&
-                            i.GetTypeInfo().GetGenericTypeDefinition() == parent);
-                }
-                else
-                {
-                    this.BindingConfiguration.Condition = r =>
-                        r.Target != null &&
-                        r.Target.Member.DeclaringType.GetAllBaseTypes().Any(i =>
-                            i.GetTypeInfo().IsGenericType &&
-                            i.GetGenericTypeDefinition() == parent);
-                }
-            }
-            else
-            {
-                this.BindingConfiguration.Condition = r => r.Target != null && parent.GetTypeInfo().IsAssignableFrom(
-                                                           r.Target.Member.DeclaringType.GetTypeInfo());
-            }
-#else
-
             if (parent.IsGenericTypeDefinition)
             {
                 if (parent.IsInterface)
@@ -155,7 +126,6 @@ namespace Ninject.Planning.Bindings
             {
                 this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
             }
-#endif
 
             return this;
         }
@@ -261,7 +231,7 @@ namespace Ninject.Planning.Bindings
 
             this.BindingConfiguration.Condition = r => r.Target != null &&
 #if !WINRT
-                r.Target.Member.ReflectedType.HasAttribute(attributeType);
+            r.Target.IsDefinedOnParent(attributeType, r.Target.Member.ReflectedType);
 #else
                                                        r.Target.Member.DeclaringType.GetTypeInfo().HasAttribute(
                                                            attributeType);
@@ -287,7 +257,8 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenMemberHas", attributeType));
             }
 
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
+            
+            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.IsDefined(attributeType, true);
 
             return this;
         }
@@ -309,7 +280,7 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenTargetHas", attributeType));                
             }
 
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
+            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.IsDefined(attributeType, true);
 
             return this;
         }
@@ -322,9 +293,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name)
         {
-#if !WINRT
-            String.Intern(name);
-#endif
             this.BindingConfiguration.Condition = r => r.ParentContext != null && string.Equals(r.ParentContext.Binding.Metadata.Name, name, StringComparison.Ordinal);
             return this;
         }
@@ -349,9 +317,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWithOrOnSyntax<T> Named(string name)
         {
-#if !WINRT
-            String.Intern(name);
-#endif
             this.BindingConfiguration.Metadata.Name = name;
             return this;
         }
@@ -382,13 +347,11 @@ namespace Ninject.Planning.Bindings
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
         /// <returns>The fluent syntax.</returns>
-#if !WINRT
         public IBindingNamedWithOrOnSyntax<T> InThreadScope()
         {
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Thread;
             return this;
         }
-#endif
 
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object

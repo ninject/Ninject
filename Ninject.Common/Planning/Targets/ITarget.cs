@@ -20,9 +20,6 @@ namespace Ninject.Planning.Targets
     /// Represents a site on a type where a value will be injected.
     /// </summary>
     public interface ITarget 
-#if !WINRT
-        : ICustomAttributeProvider
-#endif
     {
         /// <summary>
         /// Gets the type of the target.
@@ -67,8 +64,8 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         object ResolveWithin(IContext parent);
 
-#if WINRT
         bool IsDefined(Type attributeType, bool inherit);
-#endif
+
+        bool IsDefinedOnParent(Type attributeType, Type parent);
     }
 }

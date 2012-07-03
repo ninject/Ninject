@@ -17,6 +17,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyrightAttribute("Copyright © 2007-2011 Enkari, Ltd. and contributors")]
 [assembly: AssemblyVersionAttribute("2.3.0.0")]
 [assembly: AssemblyFileVersionAttribute("2.3.0.1")]
+#if !PCL
 [assembly: ComVisibleAttribute(false)]
+#endif
 [assembly: CLSCompliantAttribute(true)]
 
