@@ -5,6 +5,10 @@ using Ninject.Planning.Targets;
 
 namespace Ninject.Planning.Directives
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TInjector"></typeparam>
     public interface IMethodInjectionDirectiveBase<TInjector> : IDirective
     {
         /// <summary>

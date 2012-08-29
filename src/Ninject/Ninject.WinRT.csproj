@@ -30,6 +30,13 @@
     <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\WinRT\Release\Ninject.WinRT.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
@@ -99,6 +106,11 @@
     <Compile Include="Selection\Selector.cs" />
     <Compile Include="StandardKernel.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Ninject.snk">
+      <Link>Ninject.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,6 +3,9 @@ using Ninject.Injection;
 
 namespace Ninject.Planning.Directives
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IConstructorInjectionDirective : IMethodInjectionDirectiveBase<ConstructorInjector>
     {
         /// <summary>

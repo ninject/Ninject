@@ -64,8 +64,20 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         object ResolveWithin(IContext parent);
 
+        /// <summary>
+        /// Determines if an attribute is defined on the target
+        /// </summary>
+        /// <param name="attributeType">Type of attribute</param>
+        /// <param name="inherit">Check base types</param>
+        /// <returns></returns>
         bool IsDefined(Type attributeType, bool inherit);
 
+        /// <summary>
+        /// Determines if an attribute is defined on the target's parent
+        /// </summary>
+        /// <param name="attributeType">Type of attribute</param>
+        /// <param name="parent">Parent type to check</param>
+        /// <returns></returns>
         bool IsDefinedOnParent(Type attributeType, Type parent);
     }
 }
