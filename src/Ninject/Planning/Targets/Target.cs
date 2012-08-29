@@ -186,7 +186,14 @@ namespace Ninject.Planning.Targets
         }
 #endif
 
-
+        /// <summary>
+        /// Determines whether the parent has attribute.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="attributeType">The type of the attribute.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsDefinedOnParent(Type attributeType, Type parent)
         {
 #if !WINRT

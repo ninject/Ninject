@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProductAttribute("Ninject: Lightweight dependency injection for .NET")]
 [assembly: AssemblyCompanyAttribute("Enkari, Ltd.")]
 [assembly: AssemblyCopyrightAttribute("Copyright © 2007-2011 Enkari, Ltd. and contributors")]
-[assembly: AssemblyVersionAttribute("2.3.0.0")]
-[assembly: AssemblyFileVersionAttribute("2.3.0.1")]
+[assembly: AssemblyVersionAttribute("3.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("3.0.1.0")]
 #if !PCL
 [assembly: ComVisibleAttribute(false)]
 #endif

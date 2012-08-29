@@ -163,6 +163,10 @@ namespace Ninject.Activation
             return new Request(parentContext, service, target, ScopeCallback);
         }
 
+        /// <summary>
+        /// Formats this object into a meaningful string representation.
+        /// </summary>
+        /// <returns>The request formatted as string.</returns>
         public override string ToString()
         {
             return this.Format();

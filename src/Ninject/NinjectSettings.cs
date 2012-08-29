@@ -24,6 +24,9 @@ namespace Ninject
     {
         private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Creates a settings object
+        /// </summary>
         public NinjectSettings()
         {
 #if SILVERLIGHT
