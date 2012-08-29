@@ -67,7 +67,7 @@ namespace Ninject
             set { Set("DefaultScopeCallback", value); }
         }
 
-        #if !NO_ASSEMBLY_SCANNING
+
         /// <summary>
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
@@ -85,8 +85,6 @@ namespace Ninject
             get { return Get("ExtensionSearchPatterns", new [] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
             set { Set("ExtensionSearchPatterns", value); }
         }
-        #endif //!NO_ASSEMBLY_SCANNING
-
 
         /// <summary>
         /// Gets a value indicating whether Ninject should use reflection-based injection instead of

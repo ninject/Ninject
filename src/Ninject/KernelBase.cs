@@ -244,6 +244,24 @@ namespace Ninject
         {
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
         }
+#else
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="filePatterns"></param>
+        public void Load(IEnumerable<string> filePatterns)
+        {
+            
+        }
+
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="assembly"></param>
+        public void Load(IEnumerable<Assembly> assembly)
+        {
+            
+        }
 #endif //!NO_ASSEMBLY_SCANNING
 
         /// <summary>
