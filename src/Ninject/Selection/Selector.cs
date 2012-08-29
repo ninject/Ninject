@@ -26,6 +26,7 @@ namespace Ninject.Selection
     /// </summary>
     public class Selector : NinjectComponent, ISelector
     {
+#if !WINRT
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace Ninject.Selection
                 #endif
             }
         }
+#endif
 
         /// <summary>
         /// Gets or sets the constructor scorer.
@@ -76,8 +78,15 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 
+#if !WINRT
             var constructors = type.GetConstructors( Flags );
             return constructors.Length == 0 ? null : constructors;
+#else
+            var tInfo = type.GetTypeInfo();
+            var constructors = tInfo.DeclaredConstructors.FilterPublic(Settings.InjectNonPublic);
+            return constructors.Any() ? constructors : null;
+#endif
+            
         }
 
         /// <summary>
@@ -89,16 +98,38 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
             List<PropertyInfo> properties = new List<PropertyInfo>();
+            
+#if !WINRT
             properties.AddRange(
                 type.GetProperties(this.Flags)
                        .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
-#if !SILVERLIGHT
+#else
+            properties.AddRange(
+                type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic)
+                    .Select(p => p.GetPropertyFromDeclaredType(p))
+                    .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
+#endif
+#if !SILVERLIGHT 
             if (this.Settings.InjectParentPrivateProperties)
             {
-                for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
+                for (Type parentType = type
+#if WINRT
+                    .GetTypeInfo()
+#endif
+                    .BaseType; 
+                    parentType != null; 
+                    parentType = parentType
+#if WINRT
+.GetTypeInfo()
+#endif
+                    .BaseType)
                 {
-                    properties.AddRange(this.GetPrivateProperties(type.BaseType));
+                    properties.AddRange(this.GetPrivateProperties(type
+#if WINRT
+.GetTypeInfo()
+#endif
+                        .BaseType));
                 }
             }
 #endif
@@ -106,10 +137,16 @@ namespace Ninject.Selection
             return properties;
         }
 
+#if !SILVERLIGHT
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
+#if !WINRT
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
+#else
+            return type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic).Where(p => p.DeclaringType == type && p.IsPrivate());
+#endif
         }
+#endif
 
         /// <summary>
         /// Selects methods that should be injected.
@@ -119,7 +156,37 @@ namespace Ninject.Selection
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
+#if WINRT
+            return type.GetRuntimeMethods().FilterPublic(Settings.InjectNonPublic).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+#else
             return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+#endif
         }
     }
 }
+#if WINRT
+namespace Ninject
+{
+
+    internal static class WinRTFilters
+    {
+        public static IEnumerable<T> FilterPublic<T>(this IEnumerable<T> input, bool nonPublic)
+            where T : MethodBase
+        {
+            return input.Where(m => !m.IsStatic && nonPublic ? true : m.IsPublic);
+        }
+
+        public static IEnumerable<PropertyInfo> FilterPublic(this IEnumerable<PropertyInfo> input, bool nonPublic)
+       {
+           var toReturn = from pi in input
+                          let method = pi.SetMethod ?? pi.GetMethod
+                          where !method.IsStatic && nonPublic ? true : method.IsPublic
+                          select pi;
+
+           return toReturn;
+        }
+    }
+
+}
+
+#endif

@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+#if WINRT
+using System.Diagnostics;  
+#endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Infrastructure.Language;
@@ -25,77 +28,9 @@ namespace Ninject.Infrastructure.Introspection
     /// <summary>
     /// Provides extension methods for string formatting
     /// </summary>
-    public static class FormatExtensions
+    public static class FormatExtensionsEx
     {
-        /// <summary>
-        /// Formats the activation path into a meaningful string representation.
-        /// </summary>
-        /// <param name="request">The request to be formatted.</param>
-        /// <returns>The activation path formatted as string.</returns>
-        public static string FormatActivationPath(this IRequest request)
-        {
-            using (var sw = new StringWriter())
-            {
-                IRequest current = request;
-
-                while (current != null)
-                {
-                    sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
-                    current = current.ParentRequest;
-                }
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Formats the given binding into a meaningful string representation. 
-        /// </summary>
-        /// <param name="binding">The binding to be formatted.</param>
-        /// <param name="context">The context.</param>
-        /// <returns>The binding formatted as string</returns>
-        public static string Format(this IBinding binding, IContext context)
-        {
-            using (var sw = new StringWriter())
-            {
-                if (binding.Condition != null)
-                    sw.Write("conditional ");
-
-                if (binding.IsImplicit)
-                    sw.Write("implicit ");
-
-                IProvider provider = binding.GetProvider(context);
-
-                switch (binding.Target)
-                {
-                    case BindingTarget.Self:
-                        sw.Write("self-binding of {0}", binding.Service.Format());
-                        break;
-
-                    case BindingTarget.Type:
-                        sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
-                        break;
-
-                    case BindingTarget.Provider:
-                        sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
-                            provider.Type.Format(), provider.GetType().Format());
-                        break;
-
-                    case BindingTarget.Method:
-                        sw.Write("binding from {0} to method", binding.Service.Format());
-                        break;
-
-                    case BindingTarget.Constant:
-                        sw.Write("binding from {0} to constant value", binding.Service.Format());
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                return sw.ToString();
-            }
-        }
+    
 
         /// <summary>
         /// Formats the specified request into a meaningful string representation.
@@ -115,6 +50,42 @@ namespace Ninject.Infrastructure.Introspection
             }
         }
 
+#if WINRT
+        private static MemberTypes GetMemberType(this MemberInfo member)
+        {
+            if (member is FieldInfo)
+                return MemberTypes.Field;
+            if (member is ConstructorInfo)
+                return MemberTypes.Constructor;
+            if (member is PropertyInfo)
+                return MemberTypes.Property;
+            if (member is EventInfo)
+                return MemberTypes.Event;
+            if (member is MethodInfo)
+                return MemberTypes.Method;
+
+            /*
+            var typeInfo = member as Type;
+            Debug.Assert(typeInfo != null);
+            if (!typeInfo.IsPublic && !typeInfo.IsNotPublic)
+                return MemberTypes.NestedType;
+            */
+            return MemberTypes.TypeInfo;
+        } 
+
+        private enum MemberTypes
+        {
+            Field,
+            Event,
+            Constructor,
+            Property,
+            Method,
+            NestedType,
+            TypeInfo
+
+        }
+
+#endif
         /// <summary>
         /// Formats the specified target into a meaningful string representation..
         /// </summary>
@@ -124,7 +95,11 @@ namespace Ninject.Infrastructure.Introspection
         {
             using (var sw = new StringWriter())
             {
+#if !WINRT
                 switch (target.Member.MemberType)
+#else
+                switch(target.Member.GetMemberType())
+#endif
                 {
                     case MemberTypes.Constructor:
                         sw.Write("parameter {0} of constructor", target.Name);
@@ -142,61 +117,13 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
+#if !WINRT
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
-
+#else
+                sw.Write("of type {0}", target.Member.DeclaringType.Format());
+#endif
                 return sw.ToString();
             }
-        }
-
-        /// <summary>
-        /// Formats the specified type into a meaningful string representation..
-        /// </summary>
-        /// <param name="type">The type to be formatted.</param>
-        /// <returns>The type formatted as string.</returns>
-        public static string Format(this Type type)
-        {
-            if (type.IsGenericType)
-            {
-                var sb = new StringBuilder();
-
-                sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
-                sb.Append("{");
-
-                foreach (Type genericArgument in type.GetGenericArguments())
-                {
-                    sb.Append(genericArgument.Format());
-                    sb.Append(", ");
-                }
-
-                sb.Remove(sb.Length - 2, 2);
-                sb.Append("}");
-
-                return sb.ToString();
-            }
-
-#if !WINDOWS_PHONE
-            switch (Type.GetTypeCode(type))
-            {
-                case TypeCode.Boolean: return "bool";
-                case TypeCode.Char: return "char";
-                case TypeCode.SByte: return "sbyte";
-                case TypeCode.Byte: return "byte";
-                case TypeCode.Int16: return "short";
-                case TypeCode.UInt16: return "ushort";
-                case TypeCode.Int32: return "int";
-                case TypeCode.UInt32: return "uint";
-                case TypeCode.Int64: return "long";
-                case TypeCode.UInt64: return "ulong";
-                case TypeCode.Single: return "float";
-                case TypeCode.Double: return "double";
-                case TypeCode.Decimal: return "decimal";
-                case TypeCode.DateTime: return "DateTime";
-                case TypeCode.String: return "string";
-                default: return type.Name;
-            }
-#else
-            return type.Name;
-#endif
         }
     }
 }

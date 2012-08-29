@@ -6,7 +6,8 @@ namespace Ninject.Tests.Integration
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    
+
+
     public class NamedPropertyInjectionTests : IDisposable
     {
         private readonly IKernel kernel;

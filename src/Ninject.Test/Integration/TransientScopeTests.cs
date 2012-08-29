@@ -22,6 +22,7 @@
         }
     }
 
+
     public class WhenServiceIsBoundToInterfaceInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -53,6 +54,7 @@
         }
 #endif
     }
+
 
     public class WhenServiceIsBoundToSelfInTransientScope : TransientScopeContext
     {
@@ -91,6 +93,7 @@
 #endif
     }
 
+
     public class WhenServiceIsBoundToProviderInTransientScope : TransientScopeContext
     {
         [Fact]
@@ -122,6 +125,7 @@
         }
 #endif
     }
+
 
     public class WhenServiceIsBoundToMethodInTransientScope : TransientScopeContext
     {

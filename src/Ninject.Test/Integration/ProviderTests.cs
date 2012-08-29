@@ -5,6 +5,8 @@ namespace Ninject.Tests.Integration
     using Ninject.Activation;
     using Xunit;
 
+
+
     public class ProviderTests : IDisposable
     {
         private readonly IKernel kernel;

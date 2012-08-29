@@ -5,6 +5,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
     using Xunit;
 
+
     public class DefaultParameterTests
     {
         private readonly StandardKernel kernel;

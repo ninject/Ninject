@@ -15,7 +15,7 @@ using System.Security;
 
 [assembly: AssemblyTitle("Ninject Core Library")]
 
-#if !NO_PARTIAL_TRUST
+#if !NO_PARTIAL_TRUST && !SILVERLIGHT
 [assembly: AllowPartiallyTrustedCallers]
 #endif
 [assembly: AssemblyDescriptionAttribute("IoC container")]

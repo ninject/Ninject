@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ninject.Infrastructure;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
@@ -160,6 +161,15 @@ namespace Ninject.Activation
         public IRequest CreateChild(Type service, IContext parentContext, ITarget target)
         {
             return new Request(parentContext, service, target, ScopeCallback);
+        }
+
+        /// <summary>
+        /// Formats this object into a meaningful string representation.
+        /// </summary>
+        /// <returns>The request formatted as string.</returns>
+        public override string ToString()
+        {
+            return this.Format();
         }
     }
 }

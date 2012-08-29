@@ -10,6 +10,7 @@ namespace Ninject.Tests.Integration
 
     using Xunit;
 
+
     public class ConstructorSelectionTests
     {
         private readonly StandardKernel kernel;

@@ -24,6 +24,7 @@
         }
     }
 
+
     public class WhenGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -63,6 +64,7 @@
         }
     }
 
+
     public class WhenGetIsCalledForSelfBoundService : StandardKernelContext
     {
         [Fact]
@@ -89,6 +91,7 @@
             samurai.Weapon.Should().BeOfType<Sword>();
         }
     }
+
 
     public class WhenGetIsCalledForUnboundService : StandardKernelContext
     {
@@ -141,6 +144,7 @@
         }
     }
 
+
     public class WhenGetIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
         [Fact]
@@ -154,6 +158,7 @@
             service.Should().BeOfType<GenericService<int>>();
         }
     }
+
 
     public class WhenTryGetIsCalledForInterfaceBoundService : StandardKernelContext
     {
@@ -179,6 +184,7 @@
             weapon.Should().BeNull();
         }
     }
+
 
     public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
     {
@@ -238,6 +244,7 @@
         }
     }
 
+
     public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -274,6 +281,7 @@
             InitializableB.Count.Should().Be(1);
         }
     }
+
 
     public class WhenGetAllIsCalledForGenericServiceRegisteredViaOpenGenericType : StandardKernelContext
     {
@@ -313,7 +321,7 @@
 
             service.Should().BeOfType<OpenGenericCoContraVarianceService<string, int>>();
         }
-    
+
         [Fact]
         public void ClosedGenericsWithCoAndContraVarianceCanBeResolved()
         {
@@ -325,6 +333,7 @@
         }
 #endif
     }
+
 
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
     {
@@ -348,6 +357,7 @@
         }
     }
 
+
     public class WhenGetIsCalledForProviderBoundService : StandardKernelContext
     {
         [Fact]
@@ -357,7 +367,7 @@
             
             Assert.Throws<Ninject.ActivationException>(() => kernel.Get<IWeapon>());
         }
-    
+
         [Fact]
         public void WhenProviderReturnsNullButAllowedInSettingsThenNullIsResolved()
         {
@@ -369,6 +379,7 @@
             weapon.Should().BeNull();
         }
     }
+
 
     public class WhenGetIsCalledWithConstraints : StandardKernelContext
     {
@@ -397,6 +408,7 @@
         }
     }
 
+
     public class WhenUnbindIsCalled : StandardKernelContext
     {
         [Fact]
@@ -413,6 +425,7 @@
             bindings.Should().BeEmpty();
         }
     }
+
 
     public class WhenRebindIsCalled : StandardKernelContext
     {
@@ -431,6 +444,7 @@
         }
     }
 
+
     public class sdf : StandardKernelContext
     {
         [Fact]
@@ -442,7 +456,8 @@
             this.kernel.GetAll<IWarrior>().Count().Should().Be(2);
         }
     }
-     
+
+
     public class WhenCanResolveIsCalled : StandardKernelContext
     {
         [Fact]

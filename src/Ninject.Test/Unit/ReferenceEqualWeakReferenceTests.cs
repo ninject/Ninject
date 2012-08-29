@@ -4,6 +4,7 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure;
     using Xunit;
 
+
     public class ReferenceEqualWeakReferenceTests
     {
         [Fact]

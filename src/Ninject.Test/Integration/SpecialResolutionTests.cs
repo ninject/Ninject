@@ -21,6 +21,7 @@
         }
     }
 
+
     public class WhenServiceRequestsKernel : SpecialResolutionContext
     {
         [Fact]
@@ -35,6 +36,7 @@
         }
     }
 
+
     public class WhenServiceRequestsResolutionRoot : SpecialResolutionContext
     {
         [Fact]
@@ -48,6 +50,7 @@
             instance.ResolutionRoot.Should().BeSameAs(kernel);
         }
     }
+
 
     public class WhenServiceRequestsString : SpecialResolutionContext
     {

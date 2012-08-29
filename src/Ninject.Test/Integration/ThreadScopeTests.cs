@@ -23,6 +23,7 @@
         }
     }
 
+
     public class WhenServiceIsBoundWithThreadScope : ThreadScopeContext
     {
         [Fact]

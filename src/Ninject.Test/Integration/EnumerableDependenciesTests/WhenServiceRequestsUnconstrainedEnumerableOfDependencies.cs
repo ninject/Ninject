@@ -4,6 +4,7 @@
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
     using Xunit;
 
+
     public class WhenServiceRequestsUnconstrainedEnumerableOfDependencies : UnconstrainedDependenciesContext
     {
         [Fact]

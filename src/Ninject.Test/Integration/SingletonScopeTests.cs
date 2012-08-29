@@ -22,6 +22,7 @@
         }
     }
 
+
     public class WhenServiceIsBoundToInterfaceInSingletonScope : SingletonScopeContext
     {
         [Fact]
@@ -62,6 +63,7 @@
             instance.IsDisposed.Should().BeTrue();
         }
     }
+
 
     public class WhenServiceIsBoundToSelfInSingletonScope : SingletonScopeContext
     {
@@ -104,6 +106,7 @@
         }
     }
 
+
     public class WhenServiceIsBoundToProviderInSingletonScope : SingletonScopeContext
     {
         [Fact]
@@ -144,6 +147,7 @@
             instance.IsDisposed.Should().BeTrue();
         }
     }
+
 
     public class WhenServiceIsBoundToMethodInSingletonScope : SingletonScopeContext
     {

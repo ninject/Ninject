@@ -21,6 +21,7 @@
         }
     }
 
+
     public class WhenTypeIsBoundToAConstant : ConstantContext
     {
         [Fact]

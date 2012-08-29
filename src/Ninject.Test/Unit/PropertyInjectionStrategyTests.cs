@@ -27,8 +27,14 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
     public class WhenActivateIsCalled : PropertyInjectionDirectiveContext
     {
         protected Dummy instance = new Dummy();
+#if !WINRT
         protected PropertyInfo property1 = typeof(Dummy).GetProperty("Foo");
         protected PropertyInfo property2 = typeof(Dummy).GetProperty("Bar");
+#else
+        protected PropertyInfo property1 = typeof(Dummy).GetRuntimeProperty("Foo");
+        protected PropertyInfo property2 = typeof(Dummy).GetRuntimeProperty("Bar");
+#endif
+
         protected InstanceReference reference;
         protected Mock<IContext> contextMock;
         protected Mock<IPlan> planMock;

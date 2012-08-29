@@ -43,9 +43,13 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
         {
             moduleLoader.LoadModules(new[] { "TestModules/*" });
 
+#if !WINRT
             var fooFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.foo") };
             var barFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.bar") };
-
+#else
+            var fooFiles = new[] { @"TestModules\test.foo" };
+            var barFiles = new[] { @"TestModules\test.bar" };
+#endif
             fooPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(fooFiles))));
             barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));
         }

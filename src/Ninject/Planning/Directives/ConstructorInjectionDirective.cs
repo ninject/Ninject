@@ -19,7 +19,7 @@ namespace Ninject.Planning.Directives
     /// <summary>
     /// Describes the injection of a constructor.
     /// </summary>
-    public class ConstructorInjectionDirective : MethodInjectionDirectiveBase<ConstructorInfo, ConstructorInjector>
+    public class ConstructorInjectionDirective : MethodInjectionDirectiveBase<ConstructorInfo, ConstructorInjector>, IConstructorInjectionDirective
     {
         /// <summary>
         /// The base .ctor definition.
