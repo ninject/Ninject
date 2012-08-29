@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly.WinRT", "src\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules.WinRT", "src\TestModules\TestModules.WinRT.csproj", "{875065AA-EA3B-4C7A-B7DD-9B660AA76D27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Common", "Ninject.Common\Ninject.Common.csproj", "{A07B8562-3304-4EF3-8A48-76AF89690545}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Common", "src\Ninject.Common\Ninject.Common.csproj", "{A07B8562-3304-4EF3-8A48-76AF89690545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

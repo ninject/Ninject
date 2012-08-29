@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Common", "Ninject.Common\Ninject.Common.csproj", "{A07B8562-3304-4EF3-8A48-76AF89690545}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Common", "src\Ninject.Common\Ninject.Common.csproj", "{A07B8562-3304-4EF3-8A48-76AF89690545}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WinRT", "src\Ninject\Ninject.WinRT.csproj", "{0EA44209-1324-4BEE-A8D2-46163D26B504}"
 EndProject

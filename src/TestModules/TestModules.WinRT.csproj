@@ -36,7 +36,7 @@
     <Compile Include="TestModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Ninject.Common\Ninject.Common.csproj">
+    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
       <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
       <Name>Ninject.Common</Name>
     </ProjectReference>
