@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Microsoft.Practices.ServiceLocation</name>
+        <name>Microsoft.Practices.ServiceLocation.Portable</name>
     </assembly>
     <members>
         <member name="T:Microsoft.Practices.ServiceLocation.ActivationException">
