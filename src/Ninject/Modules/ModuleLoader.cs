@@ -43,7 +43,13 @@ namespace Ninject.Modules
         /// Loads any modules found in the files that match the specified patterns.
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
-        public void LoadModules(IEnumerable<string> patterns)
+        public
+#if !WINRT
+ void
+#else
+ async System.Threading.Tasks.Task
+#endif
+            LoadModules(IEnumerable<string> patterns)
         {
             var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
 
@@ -61,7 +67,10 @@ namespace Ninject.Modules
                 IModuleLoaderPlugin plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
                 if (plugin != null)
-                    plugin.LoadModules(fileGroup);
+#if WINRT
+                    await 
+#endif               
+                        plugin.LoadModules(fileGroup);
             }
         }
 

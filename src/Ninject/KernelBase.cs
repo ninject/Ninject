@@ -236,6 +236,18 @@ namespace Ninject
             moduleLoader.LoadModules(filePatterns);
         }
 
+#if WINRT
+        /// <summary>
+        /// Loads modules from the files that match the specified pattern(s).
+        /// </summary>
+        /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        public async System.Threading.Tasks.Task LoadAsync(IEnumerable<string> filePatterns)
+        {
+            var moduleLoader = this.Components.Get<IModuleLoader>();
+            await moduleLoader.LoadModules(filePatterns);
+        }
+#endif
+
         /// <summary>
         /// Loads modules defined in the specified assemblies.
         /// </summary>

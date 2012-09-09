@@ -17,9 +17,19 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 #endif
 
         [Fact]
-        public void ModulesContainedInAssembliesAreLoaded()
+        public 
+#if !WINRT
+        void
+#else
+            async System.Threading.Tasks.Task
+#endif
+            
+            ModulesContainedInAssembliesAreLoaded()
         {
-            this.Kernel.Load(this.ModuleFilename);
+#if WINRT
+            await 
+#endif
+                this.Kernel.Load(this.ModuleFilename);
 
             var modules = this.Kernel.GetModules().ToArray();
 

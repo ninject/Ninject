@@ -30,7 +30,12 @@ namespace Ninject.Modules
         /// Loads modules from the specified files.
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
-        void LoadModules(IEnumerable<string> filenames);
+#if !WINRT
+        void 
+#else
+        System.Threading.Tasks.Task
+#endif
+         LoadModules(IEnumerable<string> filenames);
     }
 }
 #endif

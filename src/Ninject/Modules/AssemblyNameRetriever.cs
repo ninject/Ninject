@@ -30,6 +30,10 @@ namespace Ninject.Modules
 
     using Ninject.Components;
 
+#if WINRT
+    using System.Threading.Tasks;
+#endif
+
     /// <summary>
     /// Retrieves assembly names from file names using a temporary app domain.
     /// </summary>
@@ -41,7 +45,13 @@ namespace Ninject.Modules
         /// <param name="filenames">The filenames.</param>
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-        public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+        public
+#if !WINRT
+        IEnumerable<AssemblyName> 
+#else
+ System.Threading.Tasks.Task<IEnumerable<AssemblyName>>
+#endif
+            GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
 #if !WINRT
             var assemblyCheckerType = typeof(AssemblyChecker);
@@ -51,10 +61,13 @@ namespace Ninject.Modules
                 var checker = (AssemblyChecker)temporaryDomain.CreateInstanceAndUnwrap(
                     assemblyCheckerType.Assembly.FullName,
                     assemblyCheckerType.FullName ?? string.Empty);
+
+                return checker.GetAssemblyNames(filenames.ToArray(), filter);
 #else
                 var checker = new AssemblyCheckerWinRT();
+                return checker.GetAssemblyListAsync(filenames.ToArray(), filter);
 #endif
-                return checker.GetAssemblyNames(filenames.ToArray(), filter);
+
 #if !WINRT
             }
             finally
@@ -129,12 +142,12 @@ namespace Ninject.Modules
 #else
         private sealed class AssemblyCheckerWinRT
         {
-            public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
-            {
-                return GetAssemblyListAsync(filenames, filter).Result;
-            }
+            //public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            //{
+            //    return GetAssemblyListAsync(filenames, filter).Result;
+            //}
 
-            private async System.Threading.Tasks.Task<IEnumerable<AssemblyName>> GetAssemblyListAsync(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            public async Task<IEnumerable<AssemblyName>> GetAssemblyListAsync(IEnumerable<string> filenames, Predicate<Assembly> filter)
             {
                 var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 
