@@ -69,7 +69,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <HintPath>..\..\packages\Portable.CommonServiceLocator.1.2\lib\net35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
