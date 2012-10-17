@@ -219,6 +219,7 @@ namespace Ninject.Planning.Bindings
         {
             var methodCall = argument as MethodCallExpression;
             if (methodCall == null ||
+                !methodCall.Method.IsGenericMethod ||
                 methodCall.Method.GetGenericMethodDefinition().DeclaringType != typeof(IConstructorArgumentSyntax))
             {
                 var compiledExpression = Expression.Lambda(argument, constructorArgumentSyntaxParameterExpression).Compile();
