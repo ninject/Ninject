@@ -156,6 +156,22 @@ namespace Ninject.Tests.Integration
         }
 #endif
 
+		private static Ninja CreateNinja()
+		{
+			return new Ninja(new Sword());
+		}
+
+		[Fact]
+		public void ResultsFromNonGenericMethodCallsCanBePassedToToConstructor()
+		{
+			kernel.Bind<Barracks>().ToConstructor(_ => new Barracks(CreateNinja()));
+
+			var barracks1 = kernel.Get<Barracks>();
+			var barracks2 = kernel.Get<Barracks>();
+
+			barracks1.Warrior.Should().NotBeSameAs(barracks2.Warrior);
+		}
+
         [Fact]
         public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
         {
