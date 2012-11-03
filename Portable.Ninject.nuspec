@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Portable.Ninject</id>
+        <version>3.0.3</version>
+        <title>Ninject for Portable Class Libraries</title>
+        <authors>Oren Novotny</authors>
+        <owners />
+        <licenseUrl>https://github.com/onovotny/ninject/raw/master/LICENSE.txt</licenseUrl>
+        <projectUrl>https://github.com/onovotny/ninject/</projectUrl>
+        <iconUrl>https://github.com/onovotny/ninject/raw/master/logos/Ninject-Logo32.png</iconUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
+
+Portable version of Ninject for .NET4, SL4 and Store apps</description>
+        <summary>IoC container for .NET</summary>
+        <releaseNotes>This version has been combined into a single package using NuGet 2.1</releaseNotes>
+        <tags>Ninject ioc di portable pcl</tags>
+    </metadata>
+    <files>
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\net40\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\net40\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\net40\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.dll" target="lib\net40\Ninject.NetFx.dll" />
+        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.pdb" target="lib\net40\Ninject.NetFx.pdb" />
+        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.xml" target="lib\net40\Ninject.NetFx.xml" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.Common.dll" target="lib\sl4-wp71\Ninject.Common.dll" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.Common.pdb" target="lib\sl4-wp71\Ninject.Common.pdb" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.Common.xml" target="lib\sl4-wp71\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.WP.dll" target="lib\sl4-wp71\Ninject.WP.dll" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.WP.pdb" target="lib\sl4-wp71\Ninject.WP.pdb" />
+        <file src="src\Ninject\bin\WP71\release\Ninject.WP.xml" target="lib\sl4-wp71\Ninject.WP.xml" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\sl40\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\sl40\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\sl40\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.dll" target="lib\sl40\Ninject.SL4.dll" />
+        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.pdb" target="lib\sl40\Ninject.SL4.pdb" />
+        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.xml" target="lib\sl40\Ninject.SL4.xml" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\winrt45\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\winrt45\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\winrt45\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.dll" target="lib\winrt45\Ninject.WinRT.dll" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pdb" target="lib\winrt45\Ninject.WinRT.pdb" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pri" target="lib\winrt45\Ninject.WinRT.pri" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.xml" target="lib\winrt45\Ninject.WinRT.xml" />
+    </files>
+</package>

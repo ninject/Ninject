@@ -17,7 +17,7 @@ Targets .NET 4, SL4, WP7.1, WinRT</description>
         </dependencies>
     </metadata>
     <files>
-        <file src="..\src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.Portable.dll" target="lib\portable-net4+sl4+wp71+win8\CommonServiceLocator.NinjectAdapter.Portable.dll" />
-        <file src="..\src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.Portable.pdb" target="lib\portable-net4+sl4+wp71+win8\CommonServiceLocator.NinjectAdapter.Portable.pdb" />
+        <file src="src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.Portable.dll" target="lib\portable-net4+sl4+wp71+win8\CommonServiceLocator.NinjectAdapter.Portable.dll" />
+        <file src="src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.Portable.pdb" target="lib\portable-net4+sl4+wp71+win8\CommonServiceLocator.NinjectAdapter.Portable.pdb" />
     </files>
 </package>
