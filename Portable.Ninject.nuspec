@@ -12,7 +12,7 @@
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
 
-Portable version of Ninject for .NET4, SL4 and Store apps</description>
+Portable version of Ninject for .NET4, SL4, WP7.5+ and Store apps</description>
         <summary>IoC container for .NET</summary>
         <releaseNotes>This version has been combined into a single package using NuGet 2.1</releaseNotes>
         <tags>Ninject ioc di portable pcl</tags>
@@ -24,6 +24,13 @@ Portable version of Ninject for .NET4, SL4 and Store apps</description>
         <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.dll" target="lib\net40\Ninject.NetFx.dll" />
         <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.pdb" target="lib\net40\Ninject.NetFx.pdb" />
         <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.xml" target="lib\net40\Ninject.NetFx.xml" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\netcore45\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\netcore45\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\netcore45\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.dll" target="lib\netcore45\Ninject.WinRT.dll" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pdb" target="lib\netcore45\Ninject.WinRT.pdb" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pri" target="lib\netcore45\Ninject.WinRT.pri" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.xml" target="lib\netcore45\Ninject.WinRT.xml" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.dll" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.pdb" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\portable-net4+sl4+wp71+win8\Ninject.Common.xml" />
@@ -38,13 +45,7 @@ Portable version of Ninject for .NET4, SL4 and Store apps</description>
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\sl40\Ninject.Common.xml" />
         <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.dll" target="lib\sl40\Ninject.SL4.dll" />
         <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.pdb" target="lib\sl40\Ninject.SL4.pdb" />
-        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.xml" target="lib\sl40\Ninject.SL4.xml" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\winrt45\Ninject.Common.dll" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\winrt45\Ninject.Common.pdb" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\winrt45\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.dll" target="lib\winrt45\Ninject.WinRT.dll" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pdb" target="lib\winrt45\Ninject.WinRT.pdb" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pri" target="lib\winrt45\Ninject.WinRT.pri" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.xml" target="lib\winrt45\Ninject.WinRT.xml" />
+        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.xml" target="lib\sl40\Ninject.SL4.xml" />        
+        <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />
     </files>
 </package>
