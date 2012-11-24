@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Portable.Ninject</id>
-        <version>3.0.3</version>
+        <version>3.0.3.1</version>
         <title>Ninject for Portable Class Libraries</title>
         <authors>Oren Novotny</authors>
         <owners />
@@ -18,12 +18,12 @@ Portable version of Ninject for .NET4, SL4, WP7.5+ and Store apps</description>
         <tags>Ninject ioc di portable pcl</tags>
     </metadata>
     <files>
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\net40\Ninject.Common.dll" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\net40\Ninject.Common.pdb" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\net40\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.dll" target="lib\net40\Ninject.NetFx.dll" />
-        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.pdb" target="lib\net40\Ninject.NetFx.pdb" />
-        <file src="src\Ninject\bin\.NET4\Release\Ninject.NetFx.xml" target="lib\net40\Ninject.NetFx.xml" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\net40-client\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\net40-client\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\net40-client\Ninject.Common.xml" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.dll" target="lib\net40-client\Ninject.NetFx.dll" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.pdb" target="lib\net40-client\Ninject.NetFx.pdb" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.xml" target="lib\net40-client\Ninject.NetFx.xml" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\netcore45\Ninject.Common.dll" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\netcore45\Ninject.Common.pdb" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\netcore45\Ninject.Common.xml" />
@@ -45,7 +45,7 @@ Portable version of Ninject for .NET4, SL4, WP7.5+ and Store apps</description>
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\sl40\Ninject.Common.xml" />
         <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.dll" target="lib\sl40\Ninject.SL4.dll" />
         <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.pdb" target="lib\sl40\Ninject.SL4.pdb" />
-        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.xml" target="lib\sl40\Ninject.SL4.xml" />        
-        <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />
+        <file src="src\Ninject\bin\SL4\Release\Ninject.SL4.xml" target="lib\sl40\Ninject.SL4.xml" />
+        <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />        
     </files>
 </package>
