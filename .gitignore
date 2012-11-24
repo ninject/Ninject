@@ -8,5 +8,6 @@ dist
 *.user
 *.cache
 *.dotCover
+Portable.Ninject*.nupkg
 /src/Ninject.SilverlightTests/Bin
 /TestResults/*
