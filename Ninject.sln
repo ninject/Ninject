@@ -39,8 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SL4", "src\Ninject\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SilverlightTests", "src\Ninject.SilverlightTests\Ninject.SilverlightTests.csproj", "{033B09D3-8532-419A-B906-36F8EB605B30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter.Portable", "src\CommonServiceLocator.NinjectAdapter\CommonServiceLocator.NinjectAdapter.Portable.csproj", "{DE69195E-F254-4F09-B784-7752809D0EA9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Phone", "Phone", "{D9374370-4F49-48DC-B89E-552A0743DAFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.WindowsPhone7Tests", "src\Ninject.WindowsPhone7Tests\Ninject.WindowsPhone7Tests.csproj", "{F7314647-1C1F-4960-A693-AA773C54C13D}"
@@ -424,34 +422,6 @@ Global
 		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|Windows Phone.ActiveCfg = Release|Any CPU
 		{033B09D3-8532-419A-B906-36F8EB605B30}.Release|x86.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|ARM.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|Mixed Platforms.Build.0 = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|Windows Phone.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.AutomatedRelease|x86.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|ARM.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|Windows Phone.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug .NET 4.0|x86.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|ARM.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|Windows Phone.ActiveCfg = Release|Any CPU
-		{DE69195E-F254-4F09-B784-7752809D0EA9}.Release|x86.ActiveCfg = Release|Any CPU
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
 		{F7314647-1C1F-4960-A693-AA773C54C13D}.AutomatedRelease|Any CPU.Deploy.0 = Release|Any CPU
@@ -573,7 +543,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9BD94717-484B-4EB1-AF32-8D4244F02E8E} = {C6D6D07A-67A0-4E16-8A41-415942C38137}
 		{7E7DE343-8DBD-42EE-94ED-036E9E0F5411} = {C6D6D07A-67A0-4E16-8A41-415942C38137}
 		{90F46524-0716-4180-8A5F-1CD1EB5686F6} = {C6D6D07A-67A0-4E16-8A41-415942C38137}
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468} = {C6D6D07A-67A0-4E16-8A41-415942C38137}

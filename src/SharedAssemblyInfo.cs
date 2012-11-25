@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Resources;
 using System.Runtime.InteropServices;
 
 //------------------------------------------------------------------------------
@@ -22,3 +23,4 @@ using System.Runtime.InteropServices;
 #endif
 [assembly: CLSCompliantAttribute(true)]
 
+[assembly: NeutralResourcesLanguage("en")]

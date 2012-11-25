@@ -9,5 +9,6 @@ dist
 *.cache
 *.dotCover
 Portable.Ninject*.nupkg
+Portable.CommonServiceLocator*.nupkg
 /src/Ninject.SilverlightTests/Bin
 /TestResults/*
