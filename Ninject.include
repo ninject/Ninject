@@ -258,6 +258,14 @@
 		<property name="build.platform" value="net-4.5" overwrite="true"/>
 	</target>
 
+	<target name="config-platform-net-4.5_medium_trust">
+		<property name="nant.settings.currentframework" value="net-4.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_45,MEDIUM_TRUST,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="net-4.5_medium_trust" overwrite="true"/>
+    </target>
+
 	<target name="config-platform-net-4.5">
 		<property name="nant.settings.currentframework" value="net-4.5"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_45,NO_PARTIAL_TRUST"/>
