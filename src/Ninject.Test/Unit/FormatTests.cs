@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using Microsoft.CSharp;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Tests.Fakes;
 using Xunit;
