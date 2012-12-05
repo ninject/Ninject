@@ -156,7 +156,11 @@ namespace Ninject.Tests.Integration
         }
 #endif
 
+#if !SILVERLIGHT
         private static Ninja CreateNinja()
+#else
+        public static Ninja CreateNinja()
+#endif
         {
             return new Ninja(new Sword());
         }
