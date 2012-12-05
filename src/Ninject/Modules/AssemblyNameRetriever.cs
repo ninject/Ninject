@@ -72,7 +72,7 @@ namespace Ninject.Modules
         }
 
         /// <summary>
-        /// This class is loaded into the temporary appdomain to load and check if the asseblies match the filter.
+        /// This class is loaded into the temporary appdomain to load and check if the assemblies match the filter.
         /// </summary>
         private class AssemblyChecker : MarshalByRefObject
         {
