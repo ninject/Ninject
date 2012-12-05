@@ -9,19 +9,18 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Ninject.Activation;
-using Ninject.Activation.Providers;
-using Ninject.Infrastructure.Language;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
 #endregion
 
 namespace Ninject.Infrastructure.Introspection
 {
+    using System.Globalization;
+
     /// <summary>
     /// Provides extension methods for string formatting
     /// </summary>
@@ -160,7 +159,7 @@ namespace Ninject.Infrastructure.Introspection
             if (friendlyName.Contains("AnonymousType"))
                 return "AnonymousType";
 
-            switch (friendlyName.ToLowerInvariant())
+            switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
             {
                 case "int16": return "short";
                 case "int32": return "int";
