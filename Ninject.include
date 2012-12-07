@@ -411,8 +411,10 @@
 	
 	<target name="buildServerPlatforms" depends="InitializeBuildSystem">
 		<foreach item="String" in="${product.buildserverPlatforms}" delim="," property="platform">
-			<property name="build.target" value="${platform}"/>
-			<call target="package-bin"/>
+		    <if test="${not(property::exists('skip.'platform))}">
+				<property name="build.target" value="${platform}"/>
+				<call target="package-bin"/>
+			</if>
 		</foreach>
 		<call target="package-source"/>
 	</target>
@@ -420,8 +422,10 @@
 	<target name="allPlatforms" depends="InitializeBuildSystem">
 		<call target="csproj"/>
 		<foreach item="String" in="${product.platforms}" delim="," property="platform">
-			<property name="build.target" value="${platform}"/>
-			<call target="package-bin"/>
+		    <if test="${not(property::exists('skip.'platform))}">
+				<property name="build.target" value="${platform}"/>
+				<call target="package-bin"/>
+			</if>
 		</foreach>
 		<call target="package-source"/>
 		<call target="nuget-all"/>
@@ -505,15 +509,17 @@
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
-			<call target="config-platform-${platform}"/>
-			<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
-				<fileset basedir="${nuget.releaseDirectory}">
-					<include name="${nuget.name}.dll" />
-					<include name="${nuget.name}.xml" />
-					<include name="${nuget.name}.pdb" />
-					<include name="${nuget.additionalFiles}" unless="${nuget.additionalFiles == '-'}"/>
-			    </fileset>
-			</copy>		
+		    <if test="${not(property::exists('skip.'platform))}">
+				<call target="config-platform-${platform}"/>
+				<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
+					<fileset basedir="${nuget.releaseDirectory}">
+						<include name="${nuget.name}.dll" />
+						<include name="${nuget.name}.xml" />
+						<include name="${nuget.name}.pdb" />
+						<include name="${nuget.additionalFiles}" unless="${nuget.additionalFiles == '-'}"/>
+					</fileset>
+				</copy>		
+			</if>
 		</foreach>
 
 		<copy overwrite="false" todir="${nuget.basedir}">
