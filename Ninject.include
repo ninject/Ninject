@@ -411,7 +411,7 @@
 	
 	<target name="buildServerPlatforms" depends="InitializeBuildSystem">
 		<foreach item="String" in="${product.buildserverPlatforms}" delim="," property="platform">
-		    <if test="${not(property::exists('skip.'platform))}">
+		    <if test="${not(property::exists('skip.' + platform))}">
 				<property name="build.target" value="${platform}"/>
 				<call target="package-bin"/>
 			</if>
@@ -422,7 +422,7 @@
 	<target name="allPlatforms" depends="InitializeBuildSystem">
 		<call target="csproj"/>
 		<foreach item="String" in="${product.platforms}" delim="," property="platform">
-		    <if test="${not(property::exists('skip.'platform))}">
+		    <if test="${not(property::exists('skip.' + platform))}">
 				<property name="build.target" value="${platform}"/>
 				<call target="package-bin"/>
 			</if>
@@ -509,7 +509,7 @@
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
-		    <if test="${not(property::exists('skip.'platform))}">
+		    <if test="${not(property::exists('skip.' + platform))}">
 				<call target="config-platform-${platform}"/>
 				<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
 					<fileset basedir="${nuget.releaseDirectory}">
