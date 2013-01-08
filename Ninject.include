@@ -457,6 +457,7 @@
 	</target>
 	
 	<target name="csproj">
+	    <property name="nant.settings.currentframework" value="net-4.5"/>
 		<msbuild project="${path.src}/${product.name}/${product.name}.csproj" />
 	</target>
 	
@@ -502,7 +503,10 @@
 
 	<target name="nuget-run" depends="get-git-revision" description="Copies the nuget output to the top bin directory">
 		<delete dir="${nuget.basedir}"/>
-		<delete dir="${nuget.symbol.basedir}"/>
+		<if test="${not(nuget.symbol.basedir == '')}"> <!-- unless does not work on delete -->
+		    <delete dir="${nuget.symbol.basedir}"/>
+		</if>
+		
 		<property name="nuget.platform" value=""/>
 		<property name="nuget.version" value="${build.version}" if="${product.additionalVersionTag == ''}"/>
 		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${product.additionalVersionTag}" unless="${product.additionalVersionTag == ''}"/>
@@ -597,20 +601,22 @@
 			</fileset>
 		</move>
 		
-		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
-		<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
-		<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
-		<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
-			<fileset basedir="${nuget.symbol.basedir}/source">
-				<include name="[Content_Types].xml" />
-				<include name="src/**" />
-			</fileset>
-		</copy>
-		<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.symbols.nupkg">
-			<fileset basedir="${nuget.symbol.basedir}/target">
-				<include name="**"/>
-			</fileset>
-		</zip>
+		<if test="${not(nuget.project == '')}">
+			<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
+			<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
+			<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
+			<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
+				<fileset basedir="${nuget.symbol.basedir}/source">
+					<include name="[Content_Types].xml" />
+					<include name="src/**" />
+				</fileset>
+			</copy>
+			<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.symbols.nupkg">
+				<fileset basedir="${nuget.symbol.basedir}/target">
+					<include name="**"/>
+				</fileset>
+			</zip>
+		</if>
 	</target>
 	
 	<target name="CopyDefaultTestInfrastructureAssemblies">
