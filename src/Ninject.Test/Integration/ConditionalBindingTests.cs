@@ -204,17 +204,33 @@ namespace Ninject.Tests.Integration
         }
     
         [Fact]
-        public void WhenAnyAnchestorNamedAppliesToGrandParentAndParent()
+        public void WhenAnyAncestorNamedAppliesToGrandParentAndParent()
         {
             const string Name = "SomeName";
             kernel.Bind<Barracks>().ToSelf().Named(Name);
             kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAnchestorNamed(Name);
+            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorNamed(Name);
 
             var barack = kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Sword>();
             barack.Warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenNoAncestorNamedAppliesToGrandParentAndParent()
+        {
+            const string Name = "SomeName";
+            kernel.Bind<Barracks>().ToSelf().Named(Name);
+            kernel.Bind<IWarrior>().To<Samurai>();
+
+            kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorNamed(Name);
+            kernel.Bind<IWeapon>().To<Dagger>();
+
+            var barack = kernel.Get<Barracks>();
+
+            barack.Weapon.Should().BeOfType<Dagger>();
+            barack.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
 
         public interface IGenericService<T>
