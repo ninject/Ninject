@@ -131,11 +131,25 @@ namespace Ninject.Syntax
         IBindingInNamedWithOrOnSyntax<T> WhenParentNamed(string name);
 
         /// <summary>
-        /// Indicates that the binding should be used only when the service is being requested
-        /// by a service bound with the specified name or any of its anchestor services bound with the specified name. 
+        /// Indicates that the binding should be used only when any ancestor is bound with the specified name.
         /// </summary>
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
+        [Obsolete("Use WhenAnyAncestorNamed(string name)")]
         IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name);
+
+        /// <summary>
+        /// Indicates that the binding should be used only when any ancestor is bound with the specified name.
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorNamed(string name);
+
+        /// <summary>
+        /// Indicates that the binding should be used only when no ancestor is bound with the specified name.
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name);
     }
 }
