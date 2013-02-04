@@ -151,5 +151,19 @@ namespace Ninject.Syntax
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name);
+    
+        /// <summary>
+        /// Indicates that the binding should be used only when any ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorMatches(Predicate<IContext> predicate);
+
+        /// <summary>
+        /// Indicates that the binding should be used only when no ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorMatches(Predicate<IContext> predicate);
     }
 }

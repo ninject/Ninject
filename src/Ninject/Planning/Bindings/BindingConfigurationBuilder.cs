@@ -280,18 +280,38 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorNamed(string name)
         {
-            this.BindingConfiguration.Condition = r => IsAnyAncestorNamed(r, name);
-            return this;
+            return this.WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Name == name);
         }
 
-                /// <summary>
+        /// <summary>
         /// Indicates that the binding should be used only when no ancestor is bound with the specified name.
         /// </summary>
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name)
         {
-            this.BindingConfiguration.Condition = r => !IsAnyAncestorNamed(r, name);
+            return this.WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Name == name);
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when any ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorMatches(Predicate<IContext> predicate)
+        {
+            this.BindingConfiguration.Condition = r => DoesAnyAncestorMatch(r, predicate);
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when no ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorMatches(Predicate<IContext> predicate)
+        {
+            this.BindingConfiguration.Condition = r => !DoesAnyAncestorMatch(r, predicate);
             return this;
         }
 
@@ -535,7 +555,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-        private static bool IsAnyAncestorNamed(IRequest request, string name)
+        private static bool DoesAnyAncestorMatch(IRequest request, Predicate<IContext> predicate)
         {
             var parentContext = request.ParentContext;
             if (parentContext == null)
@@ -544,8 +564,8 @@ namespace Ninject.Planning.Bindings
             }
 
             return
-                string.Equals(parentContext.Binding.Metadata.Name, name, StringComparison.Ordinal) ||
-                IsAnyAncestorNamed(parentContext.Request, name);
+                predicate(parentContext) ||
+                DoesAnyAncestorMatch(parentContext.Request, predicate);
         }
     }
 }
