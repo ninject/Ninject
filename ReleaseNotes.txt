@@ -1,4 +1,6 @@
-Version 3.0.1
+Version 3.0.2
+- Add: ToConstructor() can now accept results from methods as argument e.g. ToConstructor(_ => new Foo(this.GetBar())
+- Change: Added WhenAnyAncestorNamed and marked mispelled WhenAnyAnchestorNamed as obsolete 
 
 Version 3.0.1
 - Add: The default scope can be changed in the NinjectSettings using 
