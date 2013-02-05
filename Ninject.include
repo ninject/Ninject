@@ -192,7 +192,7 @@
 	</target>
 
 	<target name="config-build-release">
-		<property name="build.debug" value="true"/>
+		<property name="build.debug" value="PdbOnly"/>
 		<property name="build.optimize" value="true" overwrite="false"/>
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
@@ -594,17 +594,18 @@
 			</xmlpoke>
 		</foreach>
 
-		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec" />
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec -Exclude **\*.pdb" />
 		<move todir="${path.dist}\NuGet\">
 			<fileset basedir="${nuget.basedir}">
 				<include name="*.nupkg" />
 			</fileset>
 		</move>
 		
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec" />
 		<if test="${not(nuget.project == '')}">
 			<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
-			<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
-			<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
+			<unzip zipfile="${nuget.basedir}\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
+			<unzip zipfile="${nuget.basedir}\${nuget.packageName}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
 			<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
 				<fileset basedir="${nuget.symbol.basedir}/source">
 					<include name="[Content_Types].xml" />
