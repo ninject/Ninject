@@ -618,6 +618,9 @@
 				</fileset>
 			</zip>
 		</if>
+		<if test="${nuget.apiKey}">
+			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" />
+		</if>
 	</target>
 	
 	<target name="CopyDefaultTestInfrastructureAssemblies">
