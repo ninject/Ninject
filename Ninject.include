@@ -433,7 +433,7 @@
 	
 	<target name="package-bin" depends="create-assembly-info all">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
-		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag}-${build.config}-${build.platform}.zip" ziplevel="9">
+		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag-version.revision}-${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.*"/>
 			</fileset>
