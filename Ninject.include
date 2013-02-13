@@ -620,7 +620,7 @@
 			</zip>
 		</if>
 		<if test="${not(nuget.apiKey == '')}">
-			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" />
+			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" failonerror="false"/>
 		</if>
 	</target>
 	
