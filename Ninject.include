@@ -27,6 +27,7 @@
 	<property name="product.assembly.silverlighttest" value="${product.name}.SilverlightTests.xap" overwrite="false"/>
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
+	<property name="nuget.apiKey" value="" overwrite="false"/>
 	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	<property name="product.packagePostfix" value="" overwrite="false"/>
 	
@@ -618,7 +619,7 @@
 				</fileset>
 			</zip>
 		</if>
-		<if test="${nuget.apiKey}">
+		<if test="${not(nuget.apiKey == '')}">
 			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" />
 		</if>
 	</target>
