@@ -108,7 +108,8 @@ namespace Ninject.Selection
 
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
-            return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate());
+            return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
+                .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p)));
         }
 
         /// <summary>

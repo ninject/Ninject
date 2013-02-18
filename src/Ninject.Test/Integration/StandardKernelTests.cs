@@ -430,18 +430,6 @@
             bindings.Length.Should().Be(1);
         }
     }
-
-    public class sdf : StandardKernelContext
-    {
-        [Fact]
-        public void Ddd()
-        {
-            this.kernel.Bind<IWeapon>().To<Sword>();
-            this.kernel.Bind<IWarrior>().To<Ninja>();
-            this.kernel.Bind<IWarrior>().To<Samurai>().When(c => true);
-            this.kernel.GetAll<IWarrior>().Count().Should().Be(2);
-        }
-    }
      
     public class WhenCanResolveIsCalled : StandardKernelContext
     {
@@ -454,6 +442,24 @@
             this.kernel.CanResolve(request, true).Should().BeFalse();
             this.kernel.CanResolve(request, false).Should().BeTrue();
             this.kernel.CanResolve(request).Should().BeTrue();
+        }
+    }
+
+    public class WhenDerivedClassWithPrivateGetterIsResolved
+    {
+        [Fact]
+        public void ItCanBeResolved()
+        {
+            using (var kernel = new StandardKernel(
+                new NinjectSettings
+                {
+                    UseReflectionBasedInjection = true,
+                    InjectNonPublic = true,
+                    InjectParentPrivateProperties = true
+                }))
+            {
+                kernel.Get<DerivedClassWithPrivateGetter>();   
+            }
         }
     }
     
@@ -477,6 +483,15 @@
         }
     }
 
+    public class ClassWithPrivateGetter
+    {
+        float Value
+        {
+            get { return 0f; }
+        }
+    }
+
+    public class DerivedClassWithPrivateGetter : ClassWithPrivateGetter { }
     public interface IGeneric<T> { }
     public class GenericService<T> : IGeneric<T> { }
     public class GenericService2<T> : IGeneric<T> { }
