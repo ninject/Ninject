@@ -172,6 +172,7 @@
     <Compile Include="Unit\CompiledModuleLoaderPluginTests.cs" />
     <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
     <Compile Include="Unit\ExtensionsForMemberInfoTest.cs" />
+    <Compile Include="Unit\FormatTests.cs" />
     <Compile Include="Unit\ModuleLoaderTests.cs" />
     <Compile Include="Unit\NamedAttributeTests.cs" />
     <Compile Include="Fakes\Ninja.cs" />

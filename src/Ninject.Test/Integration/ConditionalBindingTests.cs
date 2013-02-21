@@ -205,17 +205,63 @@ namespace Ninject.Tests.Integration
         }
     
         [Fact]
-        public void WhenAnyAnchestorNamedAppliesToGrandParentAndParent()
+        public void WhenAnyAncestorNamedAppliesToGrandParentAndParent()
         {
             const string Name = "SomeName";
             kernel.Bind<Barracks>().ToSelf().Named(Name);
             kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAnchestorNamed(Name);
+            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorNamed(Name);
+            kernel.Bind<IWeapon>().To<Dagger>();
 
             var barack = kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Sword>();
             barack.Warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenNoAncestorNamedAppliesToGrandParentAndParent()
+        {
+            const string Name = "SomeName";
+            kernel.Bind<Barracks>().ToSelf().Named(Name);
+            kernel.Bind<IWarrior>().To<Samurai>();
+
+            kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorNamed(Name);
+            kernel.Bind<IWeapon>().To<Dagger>();
+
+            var barack = kernel.Get<Barracks>();
+
+            barack.Weapon.Should().BeOfType<Dagger>();
+            barack.Warrior.Weapon.Should().BeOfType<Dagger>();
+        }
+
+        [Fact]
+        public void WhenAnyAncestorMatchesAppliesToGrandParentAndParent()
+        {
+            kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
+            kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
+            kernel.Bind<IWeapon>().To<Dagger>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
+
+            var barack = kernel.Get<Barracks>();
+
+            barack.Weapon.Should().BeOfType<Sword>();
+            barack.Warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenNoAncestorMatchesAppliesToGrandParentAndParent()
+        {
+            kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
+            kernel.Bind<IWarrior>().To<Samurai>();
+
+            kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
+            kernel.Bind<IWeapon>().To<Dagger>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
+
+            var barack = kernel.Get<Barracks>();
+
+            barack.Weapon.Should().BeOfType<Dagger>();
+            barack.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
 
         public interface IGenericService<T>

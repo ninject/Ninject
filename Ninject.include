@@ -27,6 +27,7 @@
 	<property name="product.assembly.silverlighttest" value="${product.name}.SilverlightTests.xap" overwrite="false"/>
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
+	<property name="nuget.apiKey" value="" overwrite="false"/>
 	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	<property name="product.packagePostfix" value="" overwrite="false"/>
 	
@@ -34,6 +35,7 @@
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
 	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
+	<property name="version.prerelease" value="" dynamic="true"/>
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.assemblyversion" value="${version.major}.${version.minor}.0.0" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
@@ -44,6 +46,7 @@
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.silverlightTests" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.silverlightWPTests" value="false" readonly="false" overwrite="false"/>
 
 	<property name="Is64BitOperatingSystem" value="false" />
 	<property name="Is64BitProcess" value="false" />
@@ -121,6 +124,7 @@
 		<echo message="##teamcity[buildNumber '${build.version}']" />
 		<echo message="Assembly Version: '${build.assemblyversion}'" />
 		<echo message="Build Platform: '${build.platform}'" />
+		<echo message="Prerelease: '${version.prerelease}'" />
 		
 		<asminfo output="${path.build.assemblyinfo}" language="CSharp">
 			<imports>
@@ -192,7 +196,7 @@
 	</target>
 
 	<target name="config-build-release">
-		<property name="build.debug" value="true"/>
+		<property name="build.debug" value="PdbOnly"/>
 		<property name="build.optimize" value="true" overwrite="false"/>
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
@@ -257,6 +261,14 @@
 		<property name="nuget.add" value="true"/>
 		<property name="build.platform" value="net-4.5" overwrite="true"/>
 	</target>
+
+	<target name="config-platform-net-4.5_medium_trust">
+		<property name="nant.settings.currentframework" value="net-4.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_45,MEDIUM_TRUST,NO_PARTIAL_TRUST"/>
+		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
+		<property name="nuget.add" value="false"/>
+		<property name="build.platform" value="net-4.5_medium_trust" overwrite="true"/>
+    </target>
 
 	<target name="config-platform-net-4.5">
 		<property name="nant.settings.currentframework" value="net-4.5"/>
@@ -367,10 +379,12 @@
 	</target>
 
 	<target name="silverlight-test" depends="compile-silverlight-tests" unless="${skip.tests or skip.silverlightTests}" if="${string::contains(build.platform, 'silverlight')}">
-	    <property name="cmdLine" value='-x"${product.assembly.silverlighttest}" --teamcity --debug' if="${teamcity}"/>
-		<property name="cmdLine" value='-x"${product.assembly.silverlighttest}"' unless="${teamcity}"/>
-		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine}" failonerror="true" unless="${string::contains(build.platform, 'wp')}" />
-		<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine} --UsePhoneEmulator" failonerror="true" if="${string::contains(build.platform, 'wp')}" />
+	    <if test="${not(skip.silverlightWPTests) or not(string::contains(build.platform, 'wp'))}">
+			<property name="cmdLine" value='-x"${product.assembly.silverlighttest}" --teamcity --debug' if="${teamcity}"/>
+			<property name="cmdLine" value='-x"${product.assembly.silverlighttest}"' unless="${teamcity}"/>
+			<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine}" failonerror="true" unless="${string::contains(build.platform, 'wp')}" />
+			<exec program="${path.tools.statlight}" workingdir="${current.path.test}" commandline="${cmdLine} --UsePhoneEmulator" failonerror="true" if="${string::contains(build.platform, 'wp')}" />
+		</if>
 	</target>
 
 	<target name="UnzipDependencies">
@@ -403,8 +417,10 @@
 	
 	<target name="buildServerPlatforms" depends="InitializeBuildSystem">
 		<foreach item="String" in="${product.buildserverPlatforms}" delim="," property="platform">
-			<property name="build.target" value="${platform}"/>
-			<call target="package-bin"/>
+		    <if test="${not(property::exists('skip.' + platform))}">
+				<property name="build.target" value="${platform}"/>
+				<call target="package-bin"/>
+			</if>
 		</foreach>
 		<call target="package-source"/>
 	</target>
@@ -412,8 +428,10 @@
 	<target name="allPlatforms" depends="InitializeBuildSystem">
 		<call target="csproj"/>
 		<foreach item="String" in="${product.platforms}" delim="," property="platform">
-			<property name="build.target" value="${platform}"/>
-			<call target="package-bin"/>
+		    <if test="${not(property::exists('skip.' + platform))}">
+				<property name="build.target" value="${platform}"/>
+				<call target="package-bin"/>
+			</if>
 		</foreach>
 		<call target="package-source"/>
 		<call target="nuget-all"/>
@@ -421,7 +439,7 @@
 	
 	<target name="package-bin" depends="create-assembly-info all">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
-		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag}-${build.config}-${build.platform}.zip" ziplevel="9">
+		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${version.prerelease}-${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.build}">
 				<include name="**/*.*"/>
 			</fileset>
@@ -430,7 +448,7 @@
 
 	<target name="package-source" depends="create-assembly-info">
 		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
-		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${product.additionalVersionTag}-source.zip" ziplevel="9">
+		<zip zipfile="${path.dist}\${product.name}${product.packagePostfix}-${build.version}${version.prerelease}-source.zip" ziplevel="9">
 			<fileset basedir="${path.base}">
 				<include name="lib/*.*"/>
 				<include name="**/*.cs"/>
@@ -445,6 +463,7 @@
 	</target>
 	
 	<target name="csproj">
+	    <property name="nant.settings.currentframework" value="net-4.5"/>
 		<msbuild project="${path.src}/${product.name}/${product.name}.csproj" />
 	</target>
 	
@@ -471,6 +490,26 @@
 		<property name="version.revision" value="${gitrevisionnumber}" overwrite="true" />
 		
 		<delete file="${temp.revision.file}" failonerror="false"/>
+		
+		<exec
+			program="${path.tools.git}/git.exe"
+			commandline='describe --match ${gitmajor}.${gitminor}.${gitbuild}* --tags --long'
+			failonerror="true" 
+			output="${temp.revision.file}"/>		
+		<loadfile file="${temp.revision.file}" property="actual.git.revision"/>
+		<regex pattern="(?&lt;gitmajor&gt;\d+)\.(?&lt;gitminor&gt;\d+)\.(?&lt;gitbuild&gt;\d+)(\.(?&lt;gitrevision&gt;\d+))?-((?&lt;gitprerelease&gt;[^-]+)-)?(?&lt;gitrevisionnumber&gt;\d+)-.*" input="${actual.git.revision}"/>
+		<if test="${gitrevisionnumber == '0' and not(gitprerelease == '')}">
+			<property name="version.prerelease" value="-${gitprerelease}" overwrite="true" />
+		</if>
+		<delete file="${temp.revision.file}" failonerror="false"/>
+		
+		<if test="${(not(product.additionalVersionTag == '') and not(product.additionalVersionTag == '-unstable')) or version.prerelease == ''}">
+			<property name="version.prerelease" value="${product.additionalVersionTag}" overwrite="true" />
+		</if>
+		
+		<if test="${version.prerelease == '-final'}">
+			<property name="version.prerelease" value="" overwrite="true" />			
+		</if>
 	</target>
 	
 	<target name="nuget">
@@ -490,22 +529,27 @@
 
 	<target name="nuget-run" depends="get-git-revision" description="Copies the nuget output to the top bin directory">
 		<delete dir="${nuget.basedir}"/>
-		<delete dir="${nuget.symbol.basedir}"/>
+		<if test="${not(nuget.symbol.basedir == '')}"> <!-- unless does not work on delete -->
+		    <delete dir="${nuget.symbol.basedir}"/>
+		</if>
+		
 		<property name="nuget.platform" value=""/>
-		<property name="nuget.version" value="${build.version}" if="${product.additionalVersionTag == ''}"/>
-		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${product.additionalVersionTag}" unless="${product.additionalVersionTag == ''}"/>
+		<property name="nuget.version" value="${build.version}" if="${version.prerelease == ''}"/>
+		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${version.prerelease}-${version.revision}" unless="${version.prerelease == ''}"/>
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">
-			<call target="config-platform-${platform}"/>
-			<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
-				<fileset basedir="${nuget.releaseDirectory}">
-					<include name="${nuget.name}.dll" />
-					<include name="${nuget.name}.xml" />
-					<include name="${nuget.name}.pdb" />
-					<include name="${nuget.additionalFiles}" unless="${nuget.additionalFiles == '-'}"/>
-			    </fileset>
-			</copy>		
+		    <if test="${not(property::exists('skip.' + platform))}">
+				<call target="config-platform-${platform}"/>
+				<copy overwrite="false" todir="${nuget.basedir}\lib\${nuget.platform}" flatten="true" if="${nuget.add}">
+					<fileset basedir="${nuget.releaseDirectory}">
+						<include name="${nuget.name}.dll" />
+						<include name="${nuget.name}.xml" />
+						<include name="${nuget.name}.pdb" />
+						<include name="${nuget.additionalFiles}" unless="${nuget.additionalFiles == '-'}"/>
+					</fileset>
+				</copy>		
+			</if>
 		</foreach>
 
 		<copy overwrite="false" todir="${nuget.basedir}">
@@ -553,11 +597,11 @@
 				<property name="versionPrerelease" value="${versionPrerelease + versionPart}" unless="${i == '4'}"/>
 			</foreach>
 			
-		    <property name="versionPrerelease" value="${versionPrerelease + product.additionalVersionTag}"/>
+		    <property name="versionPrerelease" value="${versionPrerelease + version.prerelease}"/>
 			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
 			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
 					 value="${'[' + version + ',' + maxVersion + ')'}"
-					 if="${product.additionalVersionTag == ''}">
+					 if="${version.prerelease == ''}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 					<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
@@ -567,7 +611,7 @@
 			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
 			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
 					 value="${versionPrerelease}"
-					 unless="${product.additionalVersionTag == ''}">
+					 unless="${version.prerelease == ''}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
 					<namespace prefix="xsd" uri="http://www.w3.org/2001/XMLSchema" />
@@ -576,27 +620,33 @@
 			</xmlpoke>
 		</foreach>
 
-		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec" />
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec -Exclude **\*.pdb" />
 		<move todir="${path.dist}\NuGet\">
 			<fileset basedir="${nuget.basedir}">
 				<include name="*.nupkg" />
 			</fileset>
 		</move>
 		
-		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
-		<unzip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
-		<unzip zipfile="${nuget.basedir}\${nuget.name}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
-		<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
-			<fileset basedir="${nuget.symbol.basedir}/source">
-				<include name="[Content_Types].xml" />
-				<include name="src/**" />
-			</fileset>
-		</copy>
-		<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.symbols.nupkg">
-			<fileset basedir="${nuget.symbol.basedir}/target">
-				<include name="**"/>
-			</fileset>
-		</zip>
+		<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.basedir}\${nuget.name}.nuspec" />
+		<if test="${not(nuget.project == '')}">
+			<exec program="${path.tools.nuget}" workingdir="${nuget.basedir}" commandline="pack ${nuget.project} -symbols" />
+			<unzip zipfile="${nuget.basedir}\${nuget.packageName}.${nuget.version}.nupkg" todir="${nuget.symbol.basedir}/target"/>
+			<unzip zipfile="${nuget.basedir}\${nuget.packageName}.${version.major}.${version.minor}.0.0.symbols.nupkg" todir="${nuget.symbol.basedir}/source"/>
+			<copy overwrite="false" todir="${nuget.symbol.basedir}/target">
+				<fileset basedir="${nuget.symbol.basedir}/source">
+					<include name="[Content_Types].xml" />
+					<include name="src/**" />
+				</fileset>
+			</copy>
+			<zip zipfile="${path.dist}\NuGet\${nuget.packageName}.${nuget.version}.symbols.nupkg">
+				<fileset basedir="${nuget.symbol.basedir}/target">
+					<include name="**"/>
+				</fileset>
+			</zip>
+		</if>
+		<if test="${not(nuget.apiKey == '')}">
+			<exec program="${path.tools.nuget}" workingdir="${path.dist}\NuGet\" commandline="push ${nuget.packageName}.${nuget.version}.nupkg ${nuget.apiKey} -NonInteractive" failonerror="false"/>
+		</if>
 	</target>
 	
 	<target name="CopyDefaultTestInfrastructureAssemblies">

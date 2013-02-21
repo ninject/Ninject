@@ -92,8 +92,20 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         protected virtual bool BindingExists(IContext context, ITarget target)
         {
+			return this.BindingExists(context.Kernel, context, target);
+		}
+
+        /// <summary>
+        /// Checkes whether a binding exists for a given target on the specified kernel.
+        /// </summary>
+        /// <param name="kernel">The kernel.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>Whether a binding exists for the target in the given context.</returns>
+        protected virtual bool BindingExists(IKernel kernel, IContext context, ITarget target)
+        {
             var targetType = GetTargetType(target);
-            return context.Kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
+            return kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
                    || target.HasDefaultValue;
         }
 

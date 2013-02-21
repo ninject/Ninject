@@ -298,14 +298,55 @@ namespace Ninject.Planning.Bindings
         }
 
         /// <summary>
-        /// Indicates that the binding should be used only when the service is being requested
-        /// by a service bound with the specified name or any of its anchestor services bound with the specified name. 
+        /// Indicates that the binding should be used only when any ancestor is bound with the specified name.
         /// </summary>
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
+        [Obsolete("Use WhenAnyAncestorNamed(string name)")]
         public IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name)
         {
-            this.BindingConfiguration.Condition = r => IsAnyAnchestorNamed(r, name);
+            return this.WhenAnyAncestorNamed(name);
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when any ancestor is bound with the specified name.
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorNamed(string name)
+        {
+            return this.WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Name == name);
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when no ancestor is bound with the specified name.
+        /// </summary>
+        /// <param name="name">The name to expect.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name)
+        {
+            return this.WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Name == name);
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when any ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorMatches(Predicate<IContext> predicate)
+        {
+            this.BindingConfiguration.Condition = r => DoesAnyAncestorMatch(r, predicate);
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only when no ancestor matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to match.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorMatches(Predicate<IContext> predicate)
+        {
+            this.BindingConfiguration.Condition = r => !DoesAnyAncestorMatch(r, predicate);
             return this;
         }
 
@@ -548,7 +589,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-        private static bool IsAnyAnchestorNamed(IRequest request, string name)
+        private static bool DoesAnyAncestorMatch(IRequest request, Predicate<IContext> predicate)
         {
             var parentContext = request.ParentContext;
             if (parentContext == null)
@@ -557,8 +598,8 @@ namespace Ninject.Planning.Bindings
             }
 
             return
-                string.Equals(parentContext.Binding.Metadata.Name, name, StringComparison.Ordinal) ||
-                IsAnyAnchestorNamed(parentContext.Request, name);
+                predicate(parentContext) ||
+                DoesAnyAncestorMatch(parentContext.Request, predicate);
         }
     }
 }

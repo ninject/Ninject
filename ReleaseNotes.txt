@@ -1,5 +1,11 @@
+Version 3.0.2
+- Add: ToConstructor() can now accept results from methods as argument e.g. ToConstructor(_ => new Foo(this.GetBar())
+- Add: WhenNoAncestorMatches, WhenAnyAncestorMatches and WhenNoAncestorNamed When overloads
+- Change: Added WhenAnyAncestorNamed and marked mispelled WhenAnyAnchestorNamed as obsolete 
+- Bugfix: Private properties of base class were not checked for existence of setter and Inject attribute 
+
 Version 3.0.1
-- Add: The default scope can be changed in the NinjectSettings
+- Add: The default scope can be changed in the NinjectSettings using 
 - Change: Open generics can now be passed to WhenInjectedInto
 - Bugfix: Fixed race condition in the GarbageCollectionCachePruner
 
