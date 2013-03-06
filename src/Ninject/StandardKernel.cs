@@ -83,7 +83,11 @@ namespace Ninject
             Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
 
             Components.Add<IPipeline, Pipeline>();
-            Components.Add<IActivationStrategy, ActivationCacheStrategy>();
+            if (!Settings.ActivationCacheDisabled)
+            {
+                Components.Add<IActivationStrategy, ActivationCacheStrategy>();
+            }
+
             Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
             Components.Add<IActivationStrategy, MethodInjectionStrategy>();
             Components.Add<IActivationStrategy, InitializableStrategy>();
