@@ -33,13 +33,19 @@ namespace Ninject.Planning
         public ICollection<IDirective> Directives { get; private set; }
 
         /// <summary>
+        /// Gets the constructor injection directives defined in the plan.
+        /// </summary>
+        public IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Plan"/> class.
         /// </summary>
         /// <param name="type">The type the plan describes.</param>
         public Plan(Type type)
         {
             Type = type;
-            Directives = new List<IDirective>();
+            this.Directives = new List<IDirective>();
+            this.ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
         }
 
         /// <summary>
@@ -48,8 +54,10 @@ namespace Ninject.Planning
         /// <param name="directive">The directive.</param>
         public void Add(IDirective directive)
         {
-            Directives.Add(directive);
-        }
+            var constructorInjectionDirective = directive as ConstructorInjectionDirective;
+            if (constructorInjectionDirective != null) ConstructorInjectionDirectives.Add(constructorInjectionDirective);
+            else Directives.Add(directive);
+        }        
 
         /// <summary>
         /// Determines whether the plan contains one or more directives of the specified type.

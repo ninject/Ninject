@@ -71,22 +71,32 @@ namespace Ninject.Activation.Providers
                 context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
             }
 
-            if (!context.Plan.Has<ConstructorInjectionDirective>())
-            {
-                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
-            }
 
-            var directives = context.Plan.GetAll<ConstructorInjectionDirective>();
-            var bestDirectives = directives
-                .GroupBy(option => this.ConstructorScorer.Score(context, option))
-                .OrderByDescending(g => g.Key)
-                .First();
-            if (bestDirectives.Skip(1).Any())
+            var directives = context.Plan.ConstructorInjectionDirectives;
+            ConstructorInjectionDirective directive = null;
+            if (directives.Count == 1)
             {
-                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
+                directive = directives[0];
             }
+            else
+            {
+                var bestDirectives = directives
+                      .GroupBy(option => this.ConstructorScorer.Score(context, option))
+                      .OrderByDescending(g => g.Key)
+                      .FirstOrDefault();
+                if (bestDirectives == null || !bestDirectives.Any())
+                {
+                    throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+                }
 
-            var directive = bestDirectives.Single();
+                if (bestDirectives.Skip(1).Any())
+                {
+                    throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
+                }         
+        
+                directive = bestDirectives.Single();
+            }
+  
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
             return directive.Injector(arguments);
         }
