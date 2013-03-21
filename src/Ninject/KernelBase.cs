@@ -42,6 +42,8 @@ namespace Ninject
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
+        private readonly BindingPrecedenceComparer bindingPrecedenceComparer = new BindingPrecedenceComparer();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
@@ -339,7 +341,6 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(request, "request");
 
-            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             var resolveBindings = Enumerable.Empty<IBinding>();
 
             if (this.CanResolve(request) || this.HandleMissingBinding(request))
@@ -361,7 +362,7 @@ namespace Ninject
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                resolveBindings = resolveBindings.ToList();
                 var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
                 resolveBindings =
                     resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
@@ -426,9 +427,11 @@ namespace Ninject
                 if (!this.bindingCache.ContainsKey(service))
                 {
                     var resolvers = this.Components.GetAll<IBindingResolver>();
-
+                    var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
+            
                     resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
+                        .OrderByDescending(b => b, bindingPrecedenceComparer)
                         .Map(binding => this.bindingCache.Add(service, binding));
                 }
 
@@ -442,7 +445,7 @@ namespace Ninject
         /// <returns>An IComparer that is used to determine resolution precedence.</returns>
         protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
         {
-            return new BindingPrecedenceComparer();
+            return this.bindingPrecedenceComparer;
         }
 
         /// <summary>
