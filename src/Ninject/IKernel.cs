@@ -22,6 +22,8 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
     using Ninject.Planning;
 
     /// <summary>
@@ -44,6 +46,18 @@ namespace Ninject
         /// </summary>
         /// <value>The planner.</value>
         IPlanner Planner { get; }
+
+        /// <summary>
+        /// Gets the pipeline.
+        /// </summary>
+        /// <value>The pipeline.</value>
+        IPipeline Pipeline { get; }
+
+        /// <summary>
+        /// Gets the cache.
+        /// </summary>
+        /// <value>The cache.</value>
+        ICache Cache { get; }
 
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.

@@ -64,39 +64,17 @@ namespace Ninject.Activation
         public bool HasInferredGenericArguments { get; private set; }
 
         /// <summary>
-        /// Gets or sets the cache component.
-        /// </summary>
-        public ICache Cache { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the planner component.
-        /// </summary>
-        public IPlanner Planner { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the pipeline component.
-        /// </summary>
-        public IPipeline Pipeline { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
         /// <param name="kernel">The kernel managing the resolution.</param>
         /// <param name="request">The context's request.</param>
         /// <param name="binding">The context's binding.</param>
-        /// <param name="cache">The cache component.</param>
-        /// <param name="planner">The planner component.</param>
-        /// <param name="pipeline">The pipeline component.</param>
-        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IKernel kernel, IRequest request, IBinding binding)
         {
             Kernel = kernel;
             Request = request;
             Binding = binding;
             Parameters = request.Parameters.Union(binding.Parameters).ToList();
-
-            Cache = cache;
-            Planner = planner;
-            Pipeline = pipeline;
 
             if (binding.Service.IsGenericTypeDefinition)
             {
@@ -137,7 +115,7 @@ namespace Ninject.Activation
                 try
                 {
                     this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
-                    var cachedInstance = Cache.TryGet(this);
+                    var cachedInstance = this.Kernel.Cache.TryGet(this);
 
                     if (cachedInstance != null) return cachedInstance;
 
@@ -156,17 +134,17 @@ namespace Ninject.Activation
 
                         if (this.Plan == null)
                         {
-                            this.Plan = this.Planner.GetPlan(this.Request.Service);
+                            this.Plan = this.Kernel.Planner.GetPlan(this.Request.Service);
                         }
 
                         return null;
                     }
 
-                    if (GetScope() != null) Cache.Remember(this, reference);
+                    if (GetScope() != null) this.Kernel.Cache.Remember(this, reference);
 
-                    if (Plan == null) Plan = Planner.GetPlan(reference.Instance.GetType());
+                    if (Plan == null) Plan = this.Kernel.Planner.GetPlan(reference.Instance.GetType());
 
-                    Pipeline.Activate(this, reference);
+                    this.Kernel.Pipeline.Activate(this, reference);
 
                     return reference.Instance;
                 }

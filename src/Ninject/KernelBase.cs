@@ -606,7 +606,7 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            return new Context(this, request, binding, this.Cache, this.Planner, this.Pipeline);
+            return new Context(this, request, binding);
         }
 
         private void AddBindings(IEnumerable<IBinding> bindings)
