@@ -139,7 +139,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
         public IPlan Plan { get; set; }
 
-        public ICollection<IParameter> Parameters { get; set; }
+        public IEnumerable<IParameter> Parameters { get; set; }
 
         public Type[] GenericArguments
         {
