@@ -370,7 +370,7 @@ namespace Ninject
         public virtual bool CanResolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
+            return this.GetBindings(request.Service).Any(b => this.SatifiesRequest(b, request));
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(request, "request");
             return this.GetBindings(request.Service)
-                .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
+                .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(binding, request));
         }
 
         /// <summary>
@@ -402,7 +402,44 @@ namespace Ninject
 
         private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
         {
-            var resolveBindings = this.GetBindings(request.Service).Where(this.SatifiesRequest(request));
+            var resolveBindings = this.GetBindings(request.Service).Where(b => this.SatifiesRequest(b, request));
+            var resolveBindingsIterator = resolveBindings.GetEnumerator();
+            if (!resolveBindingsIterator.MoveNext())
+            {
+                return this.ResolveWithMissingBindings(request, handleMissingBindings);
+            }
+
+            if (request.IsUnique)
+            {
+                var first = resolveBindingsIterator.Current;
+                if (resolveBindingsIterator.MoveNext() &&
+                    this.bindingPrecedenceComparer.Compare(first, resolveBindingsIterator.Current) == 0)
+                {
+                    if (request.IsOptional)
+                    {
+                        return Enumerable.Empty<object>();
+                    }
+
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+                }
+
+                return new object[] { this.CreateContext(request, first).Resolve() };
+            }
+            else
+            {
+                if (resolveBindings.Any(binding => !binding.IsImplicit))
+                {
+                    resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
+                }
+            }
+
+            return resolveBindings
+                .Select(binding => this.CreateContext(request, binding).Resolve());
+        }
+        
+        private IEnumerable<object> Resolve_(IRequest request, bool handleMissingBindings)
+        {
+            var resolveBindings = this.GetBindings(request.Service).Where(b => this.SatifiesRequest(b, request));
             var resolveBindingsArray = resolveBindings.ToArray();
             if (resolveBindingsArray.Length == 0)
             {
@@ -524,11 +561,12 @@ namespace Ninject
         /// <summary>
         /// Returns a predicate that can determine if a given IBinding matches the request.
         /// </summary>
+        /// <param name="binding">the binding</param>
         /// <param name="request">The request/</param>
         /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
-        protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
+        protected virtual bool SatifiesRequest(IBinding binding, IRequest request)
         {
-            return binding => binding.Matches(request) && request.Matches(binding);
+            return binding.Matches(request) && request.Matches(binding);
         }
 
         /// <summary>
