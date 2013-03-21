@@ -51,7 +51,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the parameters that were passed to manipulate the activation process.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; set; }
+        public IEnumerable<IParameter> Parameters { get; set; }
 
         /// <summary>
         /// Gets the generic arguments for the request, if any.
@@ -74,7 +74,7 @@ namespace Ninject.Activation
             Kernel = kernel;
             Request = request;
             Binding = binding;
-            Parameters = request.Parameters.Union(binding.Parameters).ToList();
+            Parameters = request.Parameters.Union(binding.Parameters);
 
             if (binding.Service.IsGenericTypeDefinition)
             {

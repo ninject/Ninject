@@ -52,7 +52,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the parameters that affect the resolution.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; private set; }
+        public IEnumerable<IParameter> Parameters { get; private set; }
 
         /// <summary>
         /// Gets the stack of bindings which have been activated by either this request or its ancestors.
@@ -95,7 +95,7 @@ namespace Ninject.Activation
         {
             Service = service;
             Constraint = constraint;
-            Parameters = parameters.ToList();
+            Parameters = parameters;
             ScopeCallback = scopeCallback;
             ActiveBindings = new Stack<IBinding>();
             Depth = 0;
@@ -150,7 +150,7 @@ namespace Ninject.Activation
         /// <param name="parentContext">The context in which the request was made.</param>
         /// <param name="target">The target that will receive the injection.</param>
         /// <returns>The child request.</returns>
-        public IRequest CreateChild(Type service, IContext parentContext, ITarget target)
+        public virtual IRequest CreateChild(Type service, IContext parentContext, ITarget target)
         {
             return new Request(parentContext, service, target, ScopeCallback);
         }

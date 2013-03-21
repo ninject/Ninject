@@ -45,7 +45,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the parameters that were passed to manipulate the activation process.
         /// </summary>
-        ICollection<IParameter> Parameters { get; }
+        IEnumerable<IParameter> Parameters { get; }
 
         /// <summary>
         /// Gets the generic arguments for the request, if any.
