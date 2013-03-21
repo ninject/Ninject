@@ -7,14 +7,13 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
-#region Using Directives
-using System;
-using System.Collections;
-using System.Collections.Generic;
-#endregion
 
 namespace Ninject.Infrastructure
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     /// <summary>
     /// A data structure that contains multiple values for a each key.
     /// </summary>
@@ -22,7 +21,7 @@ namespace Ninject.Infrastructure
     /// <typeparam name="V">The type of value.</typeparam>
     public class Multimap<K, V> : IEnumerable<KeyValuePair<K, ICollection<V>>>
     {
-        private readonly Dictionary<K, ICollection<V>> _items = new Dictionary<K, ICollection<V>>();
+        private readonly Dictionary<K, ICollection<V>> items = new Dictionary<K, ICollection<V>>();
 
         /// <summary>
         /// Gets the collection of values stored under the specified key.
@@ -34,10 +33,15 @@ namespace Ninject.Infrastructure
             {
                 Ensure.ArgumentNotNull(key, "key");
 
-                if (!_items.ContainsKey(key))
-                    _items[key] = new List<V>();
+                ICollection<V> result;
+                if (this.items.TryGetValue(key, out result))
+                {
+                    return result;
+                }
 
-                return _items[key];
+                result = new List<V>();
+                this.items[key] = result;
+                return result;
             }
         }
 
@@ -46,7 +50,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public ICollection<K> Keys
         {
-            get { return _items.Keys; }
+            get { return this.items.Keys; }
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public ICollection<ICollection<V>> Values
         {
-            get { return _items.Values; }
+            get { return this.items.Values; }
         }
 
         /// <summary>
@@ -81,10 +85,10 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            if (!_items.ContainsKey(key))
+            if (!this.items.ContainsKey(key))
                 return false;
 
-            return _items[key].Remove(value);
+            return this.items[key].Remove(value);
         }
 
         /// <summary>
@@ -95,7 +99,7 @@ namespace Ninject.Infrastructure
         public bool RemoveAll(K key)
         {
             Ensure.ArgumentNotNull(key, "key");
-            return _items.Remove(key);
+            return this.items.Remove(key);
         }
 
         /// <summary>
@@ -103,7 +107,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public void Clear()
         {
-            _items.Clear();
+            this.items.Clear();
         }
 
         /// <summary>
@@ -114,7 +118,7 @@ namespace Ninject.Infrastructure
         public bool ContainsKey(K key)
         {
             Ensure.ArgumentNotNull(key, "key");
-            return _items.ContainsKey(key);
+            return this.items.ContainsKey(key);
         }
 
         /// <summary>
@@ -128,7 +132,7 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            return _items.ContainsKey(key) && _items[key].Contains(value);
+            return this.items.ContainsKey(key) && this.items[key].Contains(value);
         }
 
         /// <summary>
@@ -137,12 +141,12 @@ namespace Ninject.Infrastructure
         /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the multimap.</returns>
         public IEnumerator GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return this.items.GetEnumerator();
         }
 
         IEnumerator<KeyValuePair<K, ICollection<V>>> IEnumerable<KeyValuePair<K, ICollection<V>>>.GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return this.items.GetEnumerator();
         }
     }
 }
