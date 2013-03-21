@@ -39,6 +39,10 @@ namespace Ninject
         /// </summary>
         IComponentContainer Components { get; }
 
+        /// <summary>
+        /// Gets the planner.
+        /// </summary>
+        /// <value>The planner.</value>
         IPlanner Planner { get; }
 
         /// <summary>

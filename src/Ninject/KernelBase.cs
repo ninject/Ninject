@@ -37,12 +37,15 @@ namespace Ninject
         protected readonly object HandleMissingBindingLockObject = new object();        
         
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
-
         private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
-
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
-
         private readonly BindingPrecedenceComparer bindingPrecedenceComparer = new BindingPrecedenceComparer();
+
+        private ICache cache;
+        private IPlanner planner;
+        private IPipeline pipeline;
+        private IEnumerable<IMissingBindingResolver> missingBindingResolvers;
+        private IEnumerable<IBindingResolver> bindingResolvers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -130,7 +133,10 @@ namespace Ninject
             base.Dispose(disposing);
         }
 
-        private ICache cache;
+        /// <summary>
+        /// Gets the cache.
+        /// </summary>
+        /// <value>The cache.</value>
         public ICache Cache
         {
             get
@@ -139,7 +145,10 @@ namespace Ninject
             }
         }
 
-        private IPlanner planner;
+        /// <summary>
+        /// Gets the planner.
+        /// </summary>
+        /// <value>The planner.</value>
         public IPlanner Planner
         {
             get
@@ -148,7 +157,10 @@ namespace Ninject
             }
         }
 
-        private IPipeline pipeline;
+        /// <summary>
+        /// Gets the pipeline.
+        /// </summary>
+        /// <value>The pipeline.</value>
         public IPipeline Pipeline
         {
             get
@@ -157,7 +169,10 @@ namespace Ninject
             }
         }
 
-        private IEnumerable<IBindingResolver> bindingResolvers;
+        /// <summary>
+        /// Gets the binding resolvers.
+        /// </summary>
+        /// <value>The binding resolvers.</value>
         public IEnumerable<IBindingResolver> BindingResolvers
         {
             get
@@ -166,7 +181,10 @@ namespace Ninject
             }
         }
 
-        private IEnumerable<IMissingBindingResolver> missingBindingResolvers;
+        /// <summary>
+        /// Gets the missing binding resolvers.
+        /// </summary>
+        /// <value>The missing binding resolvers.</value>
         public IEnumerable<IMissingBindingResolver> MissingBindingResolvers
         {
             get
@@ -379,34 +397,22 @@ namespace Ninject
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
+            return Resolve(request, true);
+        }
 
-            var resolveBindings = Enumerable.Empty<IBinding>();
-
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
+        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
+        {
+            var resolveBindings = this.GetBindings(request.Service).Where(this.SatifiesRequest(request));
+            var resolveBindingsArray = resolveBindings.ToArray();
+            if (resolveBindingsArray.Length == 0)
             {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request));
-
-            }
-
-            if (!resolveBindings.Any())
-            {
-                if (request.IsOptional)
-                {
-                    return Enumerable.Empty<object>();
-                }
-
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+                return this.ResolveWithMissingBindings(request, handleMissingBindings);
             }
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.ToList();
-                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
-                resolveBindings =
-                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
-
-                if (resolveBindings.Count() > 1)
+                if (resolveBindingsArray.Length > 1 && 
+                    this.bindingPrecedenceComparer.Compare(resolveBindingsArray[0], resolveBindingsArray[1]) == 0)
                 {
                     if (request.IsOptional)
                     {
@@ -415,16 +421,43 @@ namespace Ninject
 
                     throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
                 }
-            }
 
-            if(resolveBindings.Any(binding => !binding.IsImplicit))
+                resolveBindings = resolveBindingsArray.Take(1);
+            }
+            else
             {
-                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
+                if (resolveBindingsArray.Any(binding => !binding.IsImplicit))
+                {
+                    resolveBindings = resolveBindingsArray.Where(binding => !binding.IsImplicit);
+                }      
+                else
+                {
+                    resolveBindings = resolveBindingsArray;
+                }
             }
 
             return resolveBindings
                 .Select(binding => this.CreateContext(request, binding).Resolve());
         }
+
+        private IEnumerable<object> ResolveWithMissingBindings(IRequest request, bool handleMissingBindings)
+        {
+            if (handleMissingBindings)
+            {
+                if (this.HandleMissingBinding(request))
+                {
+                    return this.Resolve(request, false);
+                }
+            }
+
+            if (request.IsOptional)
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+        }
+
 
         /// <summary>
         /// Creates a request for the specified service.
