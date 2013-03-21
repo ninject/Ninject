@@ -89,13 +89,6 @@ namespace Ninject.Activation
         /// <param name="pipeline">The pipeline component.</param>
         public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(cache, "cache");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(pipeline, "pipeline");
-
             Kernel = kernel;
             Request = request;
             Binding = binding;

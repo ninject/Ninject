@@ -93,9 +93,6 @@ namespace Ninject.Activation
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
-
             Service = service;
             Constraint = constraint;
             Parameters = parameters.ToList();
@@ -115,10 +112,6 @@ namespace Ninject.Activation
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
         public Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
         {
-            Ensure.ArgumentNotNull(parentContext, "parentContext");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(target, "target");
-
             ParentContext = parentContext;
             ParentRequest = parentContext.Request;
             Service = service;

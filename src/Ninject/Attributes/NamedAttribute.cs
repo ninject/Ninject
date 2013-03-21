@@ -32,7 +32,6 @@ namespace Ninject
         /// <param name="name">The name of the binding(s) to use.</param>
         public NamedAttribute(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
             Name = name;
         }
 
@@ -43,7 +42,6 @@ namespace Ninject
         /// <returns><c>True</c> if the metadata matches; otherwise <c>false</c>.</returns>
         public override bool Matches(IBindingMetadata metadata)
         {
-            Ensure.ArgumentNotNull(metadata, "metadata");
             return metadata.Name == Name;
         }
     }

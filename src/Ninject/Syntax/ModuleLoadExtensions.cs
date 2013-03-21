@@ -29,7 +29,6 @@ namespace Ninject
         public static void Load<TModule>(this IKernel kernel)
             where TModule : INinjectModule, new()
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
             kernel.Load(new TModule());
         }
 

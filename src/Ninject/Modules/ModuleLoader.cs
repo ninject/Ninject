@@ -35,7 +35,6 @@ namespace Ninject.Modules
         /// <param name="kernel">The kernel into which modules will be loaded.</param>
         public ModuleLoader(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
             Kernel = kernel;
         }
 

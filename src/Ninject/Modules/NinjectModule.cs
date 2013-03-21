@@ -80,7 +80,6 @@ namespace Ninject.Modules
         /// <param name="kernel">The kernel that is loading the module.</param>
         public void OnLoad(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.Kernel = kernel;
             this.Load();
         }
@@ -91,7 +90,6 @@ namespace Ninject.Modules
         /// <param name="kernel">The kernel that is unloading the module.</param>
         public void OnUnload(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.Unload();
             this.Bindings.Map(this.Kernel.RemoveBinding);
             this.Kernel = null;

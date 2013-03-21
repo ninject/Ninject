@@ -41,7 +41,6 @@ namespace Ninject.Activation.Blocks
         /// <param name="parent">The parent resolution root.</param>
         public ActivationBlock(IResolutionRoot parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
             Parent = parent;
         }
 
@@ -70,7 +69,6 @@ namespace Ninject.Activation.Blocks
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
             return this.Parent.CanResolve(request);
         }
 
@@ -84,7 +82,6 @@ namespace Ninject.Activation.Blocks
         /// </returns>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
             return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
@@ -96,7 +93,6 @@ namespace Ninject.Activation.Blocks
         /// <returns>An enumerator of instances that match the request.</returns>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
             return Parent.Resolve(request);
         }
 
@@ -111,8 +107,6 @@ namespace Ninject.Activation.Blocks
         /// <returns>The created request.</returns>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
             return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
         }
     }

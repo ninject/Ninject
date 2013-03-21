@@ -34,7 +34,6 @@ namespace Ninject.Activation
         /// <returns>The created instance.</returns>
         public object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return this.CreateInstance(context);
         }
 

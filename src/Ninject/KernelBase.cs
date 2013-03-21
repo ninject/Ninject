@@ -79,7 +79,6 @@ namespace Ninject
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
-            Ensure.ArgumentNotNull(components, "components");
             Ensure.ArgumentNotNull(settings, "settings");
             Ensure.ArgumentNotNull(modules, "modules");
 
@@ -481,8 +480,6 @@ namespace Ninject
         /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
         protected virtual bool HandleMissingBinding(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
-
 #pragma warning disable 612,618
             if (this.HandleMissingBinding(request.Service))
             {
@@ -537,9 +534,6 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
-
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
         }
 

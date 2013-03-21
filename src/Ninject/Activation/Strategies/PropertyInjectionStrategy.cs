@@ -64,9 +64,6 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
-
             var propertyValues = context.Parameters.Where(parameter => parameter is PropertyValue);
             IEnumerable<string> parameterNames = propertyValues.Select(parameter => parameter.Name);
 
@@ -116,9 +113,6 @@ namespace Ninject.Activation.Strategies
         /// <returns>The value to inject into the specified target.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
-
             var parameter = context.Parameters.OfType<PropertyValue>().Where(p => p.Name == target.Name).SingleOrDefault();
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }

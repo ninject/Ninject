@@ -60,9 +60,6 @@ namespace Ninject.Selection
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
-
             ConstructorScorer = constructorScorer;
             InjectionHeuristics = injectionHeuristics.ToList();
         }
@@ -74,8 +71,6 @@ namespace Ninject.Selection
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
         public  virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
-
             var constructors = type.GetConstructors( Flags );
             return constructors.Length == 0 ? null : constructors;
         }
@@ -87,7 +82,6 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
             List<PropertyInfo> properties = new List<PropertyInfo>();
             properties.AddRange(
                 type.GetProperties(this.Flags)

@@ -92,8 +92,6 @@ namespace Ninject.Components
         /// <param name="component">The component type.</param>
         public void RemoveAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
-
             foreach (Type implementation in _mappings[component])
             {
                 if (_instances.ContainsKey(implementation))
@@ -134,8 +132,6 @@ namespace Ninject.Components
         /// <returns>The instance of the component.</returns>
         public object Get(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
-
             if (component == typeof(IKernel))
                 return Kernel;
 
@@ -169,8 +165,6 @@ namespace Ninject.Components
         /// <returns>A series of instances of the specified component.</returns>
         public IEnumerable<object> GetAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
-
             return _mappings[component]
                 .Select(implementation => ResolveInstance(component, implementation));
         }

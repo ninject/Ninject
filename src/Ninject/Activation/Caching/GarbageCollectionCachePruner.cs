@@ -59,8 +59,6 @@ namespace Ninject.Activation.Caching
         /// <param name="pruneable">The pruneable that will be pruned.</param>
         public void Start(IPruneable pruneable)
         {
-            Ensure.ArgumentNotNull(pruneable, "pruneable");
-
             this.caches.Add(pruneable);
             if (this.timer == null)
             {

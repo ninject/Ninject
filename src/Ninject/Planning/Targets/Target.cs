@@ -91,9 +91,6 @@ namespace Ninject.Planning.Targets
         /// <param name="site">The site represented by the target.</param>
         protected Target(MemberInfo member, T site)
         {
-            Ensure.ArgumentNotNull(member, "member");
-            Ensure.ArgumentNotNull(site, "site");
-
             Member = member;
             Site = site;
 
@@ -109,7 +106,6 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes of the specified type.</returns>
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.GetCustomAttributesExtended(attributeType, inherit);
         }
 
@@ -131,7 +127,6 @@ namespace Ninject.Planning.Targets
         /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
         public bool IsDefined(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.IsDefined(attributeType, inherit);
         }
 
@@ -142,8 +137,6 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         public object ResolveWithin(IContext parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
-
             if (Type.IsArray)
             {
                 Type service = Type.GetElementType();
@@ -173,9 +166,6 @@ namespace Ninject.Planning.Targets
         /// <returns>A series of values that are available for injection.</returns>
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsOptional = true;
             return parent.Kernel.Resolve(request);
@@ -189,9 +179,6 @@ namespace Ninject.Planning.Targets
         /// <returns>The value that is to be injected.</returns>
         protected virtual object GetValue(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
             return parent.Kernel.Resolve(request).SingleOrDefault();

@@ -38,8 +38,6 @@ namespace Ninject.Planning
         /// <param name="type">The type the plan describes.</param>
         public Plan(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
-
             Type = type;
             Directives = new List<IDirective>();
         }
@@ -50,7 +48,6 @@ namespace Ninject.Planning
         /// <param name="directive">The directive.</param>
         public void Add(IDirective directive)
         {
-            Ensure.ArgumentNotNull(directive, "directive");
             Directives.Add(directive);
         }
 
