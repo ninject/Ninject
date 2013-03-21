@@ -496,15 +496,17 @@ namespace Ninject
 
             lock (this.bindingCache)
             {
-                if (!this.bindingCache.ContainsKey(service))
+                ICollection<IBinding> result;
+                if (this.bindingCache.TryGet(service, out result))
                 {
-                    var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            
-                    this.BindingResolvers
-                        .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .OrderByDescending(b => b, bindingPrecedenceComparer)
-                        .Map(binding => this.bindingCache.Add(service, binding));
+                    return result;
                 }
+
+                var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
+                this.BindingResolvers
+                    .SelectMany(resolver => resolver.Resolve(this.bindings, service))
+                    .OrderByDescending(b => b, bindingPrecedenceComparer)
+                    .Map(binding => this.bindingCache.Add(service, binding));
 
                 return this.bindingCache[service];
             }

@@ -14,6 +14,8 @@ namespace Ninject.Infrastructure
     using System.Collections;
     using System.Collections.Generic;
 
+    using Ninject.Planning.Bindings;
+
     /// <summary>
     /// A data structure that contains multiple values for a each key.
     /// </summary>
@@ -41,6 +43,17 @@ namespace Ninject.Infrastructure
                 this.items[key] = result;
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Tries to get the specified values.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>true if the key was found; false otherwise</returns>
+        public bool TryGet(K key, out ICollection<V> result)
+        {
+            return this.items.TryGetValue(key, out result);
         }
 
         /// <summary>
