@@ -121,8 +121,7 @@ namespace Ninject
                 if (this.Components != null)
                 {
                     // Deactivate all cached instances before shutting down the kernel.
-                    var cache = this.Components.Get<ICache>();
-                    cache.Clear();
+                    this.Cache.Clear();
 
                     this.Components.Dispose();
                 }
@@ -131,6 +130,51 @@ namespace Ninject
             base.Dispose(disposing);
         }
 
+        private ICache cache;
+        public ICache Cache
+        {
+            get
+            {
+                return this.cache ?? (this.cache = this.Components.Get<ICache>());
+            }
+        }
+
+        private IPlanner planner;
+        public IPlanner Planner
+        {
+            get
+            {
+                return this.planner ?? (this.planner = this.Components.Get<IPlanner>());
+            }
+        }
+
+        private IPipeline pipeline;
+        public IPipeline Pipeline
+        {
+            get
+            {
+                return this.pipeline ?? (this.pipeline = this.Components.Get<IPipeline>());
+            }
+        }
+
+        private IEnumerable<IBindingResolver> bindingResolvers;
+        public IEnumerable<IBindingResolver> BindingResolvers
+        {
+            get
+            {
+                return this.bindingResolvers ?? (this.bindingResolvers = this.Components.GetAll<IBindingResolver>());
+            }
+        }
+
+        private IEnumerable<IMissingBindingResolver> missingBindingResolvers;
+        public IEnumerable<IMissingBindingResolver> MissingBindingResolvers
+        {
+            get
+            {
+                return this.missingBindingResolvers ?? (this.missingBindingResolvers = this.Components.GetAll<IMissingBindingResolver>());
+            }
+        }
+        
         /// <summary>
         /// Unregisters all bindings for the specified service.
         /// </summary>
@@ -279,17 +323,14 @@ namespace Ninject
 
             Type service = instance.GetType();
 
-            var planner = this.Components.Get<IPlanner>();
-            var pipeline = this.Components.Get<IPipeline>();
-
             var binding = new Binding(service);
             var request = this.CreateRequest(service, null, parameters, false, false);
             var context = this.CreateContext(request, binding);
 
-            context.Plan = planner.GetPlan(service);
+            context.Plan = this.Planner.GetPlan(service);
 
             var reference = new InstanceReference { Instance = instance };
-            pipeline.Activate(context, reference);
+            this.Pipeline.Activate(context, reference);
         }
 
         /// <summary>
@@ -300,8 +341,7 @@ namespace Ninject
         public virtual bool Release(object instance)
         {
             Ensure.ArgumentNotNull(instance, "instance");
-            var cache = this.Components.Get<ICache>();
-            return cache.Release(instance);
+            return this.Cache.Release(instance);
         }
 
         /// <summary>
@@ -425,10 +465,9 @@ namespace Ninject
             {
                 if (!this.bindingCache.ContainsKey(service))
                 {
-                    var resolvers = this.Components.GetAll<IBindingResolver>();
                     var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             
-                    resolvers
+                    this.BindingResolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
                         .OrderByDescending(b => b, bindingPrecedenceComparer)
                         .Map(binding => this.bindingCache.Add(service, binding));
@@ -487,7 +526,7 @@ namespace Ninject
             }
 #pragma warning restore 612,618
 
-            var components = this.Components.GetAll<IMissingBindingResolver>();
+            var components = this.MissingBindingResolvers;
             
             // Take the first set of bindings that resolve.
             var bindings = components
@@ -534,7 +573,7 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
+            return new Context(this, request, binding, this.Cache, this.Planner, this.Pipeline);
         }
 
         private void AddBindings(IEnumerable<IBinding> bindings)

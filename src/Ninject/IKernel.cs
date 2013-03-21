@@ -22,6 +22,8 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
+    using Ninject.Planning;
+
     /// <summary>
     /// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
     /// </summary>
@@ -36,6 +38,8 @@ namespace Ninject
         /// Gets the component container, which holds components that contribute to Ninject.
         /// </summary>
         IComponentContainer Components { get; }
+
+        IPlanner Planner { get; }
 
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.

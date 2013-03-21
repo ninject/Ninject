@@ -124,7 +124,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created callback.</returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
         {
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<ISelector>().ConstructorScorer);
+            return ctx => new StandardProvider(prototype, ctx.Kernel.Planner, ctx.Kernel.Components.Get<ISelector>().ConstructorScorer);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created callback.</returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
         {
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), new SpecificConstructorSelector(constructor));
+            return ctx => new StandardProvider(prototype, ctx.Kernel.Planner, new SpecificConstructorSelector(constructor));
         }
     }
 }
