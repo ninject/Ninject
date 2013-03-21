@@ -5,6 +5,7 @@
 	<property name="path.base" value="${project::get-base-directory()}"/>
 	<property name="path.build" value="${path.base}/build" dynamic="true"/>
 	<property name="path.lib" value="${path.base}/lib" dynamic="true"/>
+	<property name="path.packages" value="${path.base}/packages" dynamic="true"/>
 	<property name="path.dist" value="${path.base}/dist" dynamic="true"/>
 	<property name="path.docs" value="${path.base}/docs" dynamic="true"/>
 	<property name="path.src" value="${path.base}/src" dynamic="true"/>
