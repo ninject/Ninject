@@ -26,7 +26,7 @@ namespace Ninject.Activation
     /// </summary>
     public class Context : IContext
     {
-        private WeakReference cachedScope;
+        private object cachedScope;
 
         /// <summary>
         /// Gets the kernel that is driving the activation.
@@ -111,13 +111,7 @@ namespace Ninject.Activation
         /// <returns>The object that acts as the scope.</returns>
         public object GetScope()
         {
-            if (this.cachedScope == null)
-            {
-                var scope = this.Request.GetScope() ?? this.Binding.GetScope(this);
-                this.cachedScope = new WeakReference(scope);
-            }
-            
-            return this.cachedScope.Target;
+            return this.cachedScope;
         }
 
         /// <summary>
@@ -140,41 +134,46 @@ namespace Ninject.Activation
                 if (Request.ActiveBindings.Contains(Binding))
                     throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
 
-                var cachedInstance = Cache.TryGet(this);
-
-                if (cachedInstance != null)
-                    return cachedInstance;
-
-                Request.ActiveBindings.Push(Binding);
-
-                var reference = new InstanceReference { Instance = GetProvider().Create(this) };
-
-                Request.ActiveBindings.Pop();
-
-                if (reference.Instance == null)
+                try
                 {
-                    if (!this.Kernel.Settings.AllowNullInjection)
+                    this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
+                    var cachedInstance = Cache.TryGet(this);
+
+                    if (cachedInstance != null) return cachedInstance;
+
+                    Request.ActiveBindings.Push(Binding);
+
+                    var reference = new InstanceReference { Instance = GetProvider().Create(this) };
+
+                    Request.ActiveBindings.Pop();
+
+                    if (reference.Instance == null)
                     {
-                        throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                        if (!this.Kernel.Settings.AllowNullInjection)
+                        {
+                            throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                        }
+
+                        if (this.Plan == null)
+                        {
+                            this.Plan = this.Planner.GetPlan(this.Request.Service);
+                        }
+
+                        return null;
                     }
 
-                    if (this.Plan == null)
-                    {
-                        this.Plan = this.Planner.GetPlan(this.Request.Service);
-                    }
+                    if (GetScope() != null) Cache.Remember(this, reference);
 
-                    return null;
+                    if (Plan == null) Plan = Planner.GetPlan(reference.Instance.GetType());
+
+                    Pipeline.Activate(this, reference);
+
+                    return reference.Instance;
                 }
-
-                if (GetScope() != null)
-                    Cache.Remember(this, reference);
-
-                if (Plan == null)
-                    Plan = Planner.GetPlan(reference.Instance.GetType());
-
-                Pipeline.Activate(this, reference);
-
-                return reference.Instance;
+                finally
+                {
+                    this.cachedScope = null;
+                }
             }
         }
     }
