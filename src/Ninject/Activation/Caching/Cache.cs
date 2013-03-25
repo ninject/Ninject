@@ -151,7 +151,7 @@ namespace Ninject.Activation.Caching
             lock(this.entries)
             {
                 var instanceFound = false;
-                foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values))
+                foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values).ToList())
                 {
                     var instanceEntries = bindingEntry.Where(cacheEntry => ReferenceEquals(instance, cacheEntry.Reference.Instance)).ToList();
                     foreach (var cacheEntry in instanceEntries)
