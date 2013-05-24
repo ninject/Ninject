@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules", "src\TestModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter.Tests", "src\CommonServiceLocator.NinjectAdapter.Tests\CommonServiceLocator.NinjectAdapter.Tests.csproj", "{3B703A23-DB64-4606-B124-16BA83C461B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutomatedRelease|Any CPU = AutomatedRelease|Any CPU
@@ -67,6 +69,14 @@ Global
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9F6CFE7-44B2-4D55-9307-33C34C045468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B703A23-DB64-4606-B124-16BA83C461B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
