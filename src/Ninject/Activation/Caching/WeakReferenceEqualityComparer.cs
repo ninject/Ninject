@@ -5,6 +5,9 @@ namespace Ninject.Activation.Caching
 
     using Ninject.Infrastructure;
 
+    /// <summary>
+    /// Compares ReferenceEqualWeakReferences to objects
+    /// </summary>
     public class WeakReferenceEqualityComparer : IEqualityComparer<object>
     {
         /// <summary>
