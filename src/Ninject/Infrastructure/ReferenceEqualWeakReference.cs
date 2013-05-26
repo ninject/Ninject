@@ -11,8 +11,9 @@ namespace Ninject.Infrastructure
 {
     using System;
     using System.Runtime.CompilerServices;
-    using System.Runtime.Serialization;
-    using System.Security;
+#if SILVERLIGHT
+    using WeakReference = BaseWeakReference;
+#endif
 
     /// <summary>
     /// Weak reference that can be used in collections. It is equal to the
