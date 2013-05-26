@@ -10,6 +10,7 @@
 namespace Ninject.Infrastructure
 {
     using System;
+    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Security;
 
@@ -17,18 +18,17 @@ namespace Ninject.Infrastructure
     /// Weak reference that can be used in collections. It is equal to the
     /// object it references and has the same hash code.
     /// </summary>
-    public class ReferenceEqualWeakReference
+    public class ReferenceEqualWeakReference : WeakReference
     {
-        private int cashedHashCode;
-        private WeakReference weakReference;
+        private readonly int cashedHashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
         /// </summary>
         /// <param name="target">The target.</param>
-        public ReferenceEqualWeakReference(object target)
+        public ReferenceEqualWeakReference(object target) : base(target)
         {
-            this.weakReference = new WeakReference(target);
+            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
         /// <summary>
@@ -36,40 +36,11 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="target">The target.</param>
         /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
-        public ReferenceEqualWeakReference(object target, bool trackResurrection)
+        public ReferenceEqualWeakReference(object target, bool trackResurrection) : base(target, trackResurrection)
         {
-            this.weakReference = new WeakReference(target, trackResurrection);
+            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is alive.
-        /// </summary>
-        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
-        public bool IsAlive
-        {
-            get
-            {
-                return this.weakReference.IsAlive;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the target of this weak reference.
-        /// </summary>
-        /// <value>The target of this weak reference.</value>
-        public object Target
-        {
-            get
-            {
-                return this.weakReference.Target;
-            }
-
-            set
-            {
-                this.weakReference.Target = value;
-            }
-        }
-        
         /// <summary>
         /// Determines whether the specified <see cref="object"/> is equal to this instance.
         /// </summary>
@@ -82,37 +53,15 @@ namespace Ninject.Infrastructure
         /// </exception>
         public override bool Equals(object obj)
         {
-            if (!this.IsAlive)
-            {
-                return base.Equals(obj);
-            }
+            var thisInstance = this.IsAlive ? this.Target : this;
 
-            var referenceEqualWeakReference = obj as ReferenceEqualWeakReference;
-            if (referenceEqualWeakReference != null)
+            var referenceEqualWeakReference = obj as WeakReference;
+            if (referenceEqualWeakReference != null && referenceEqualWeakReference.IsAlive)
             {
                 obj = referenceEqualWeakReference.Target;
-
-                if (obj == null)
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-                var weakReference = obj as WeakReference;
-                if (weakReference != null)
-                {
-                    obj = weakReference.Target;
-
-                    if (obj == null)
-                    {
-                        return false;
-                    }
-                }
             }
 
-            return ReferenceEquals(this.Target, obj);
+            return ReferenceEquals(thisInstance, obj);
         }
 
         /// <summary>
@@ -123,12 +72,6 @@ namespace Ninject.Infrastructure
         /// </returns>
         public override int GetHashCode()
         {
-            var target = this.Target;
-            if (target != null)
-            {
-                this.cashedHashCode = target.GetHashCode();
-            }
-
             return this.cashedHashCode;
         }
     }

@@ -12,6 +12,7 @@ namespace Ninject.Activation.Caching
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
@@ -27,7 +28,7 @@ namespace Ninject.Activation.Caching
         /// This is a dictionary of scopes to a multimap for bindings to cache entries.
         /// </summary>
         private readonly IDictionary<object, Multimap<IBindingConfiguration, CacheEntry>> entries =
-            new Dictionary<object, Multimap<IBindingConfiguration, CacheEntry>>();
+            new Dictionary<object, Multimap<IBindingConfiguration, CacheEntry>>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cache"/> class.
