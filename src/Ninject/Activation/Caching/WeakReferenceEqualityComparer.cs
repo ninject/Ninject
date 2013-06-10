@@ -29,7 +29,12 @@ namespace Ninject.Activation.Caching
         public int GetHashCode(object obj)
         {
             var weakReference = obj as ReferenceEqualWeakReference;
-            return weakReference != null ? weakReference.GetHashCode() : RuntimeHelpers.GetHashCode(obj);
+            return weakReference != null ? weakReference.GetHashCode() : 
+#if !NETCF
+                RuntimeHelpers.GetHashCode(obj);
+#else
+                obj.GetHashCode();
+#endif
         }
     }
 }

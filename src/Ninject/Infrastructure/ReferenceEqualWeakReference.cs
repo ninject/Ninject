@@ -29,7 +29,11 @@ namespace Ninject.Infrastructure
         /// <param name="target">The target.</param>
         public ReferenceEqualWeakReference(object target) : base(target)
         {
+#if !NETCF
             this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
+#else
+            this.cashedHashCode = target.GetHashCode();
+#endif
         }
 
         /// <summary>
@@ -39,7 +43,11 @@ namespace Ninject.Infrastructure
         /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
         public ReferenceEqualWeakReference(object target, bool trackResurrection) : base(target, trackResurrection)
         {
+#if !NETCF
             this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
+#else
+            this.cashedHashCode = target.GetHashCode();
+#endif
         }
 
         /// <summary>
