@@ -158,6 +158,27 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
+        public void WhenInjectedIntoAppliesToOneOfMultipleServiceType()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWarrior>().To<FootSoldier>();
+            kernel.Bind<IWeapon>().To<Shuriken>()
+                .WhenInjectedExactlyIntoOneOf(typeof(Samurai), typeof(Barracks));
+
+            kernel.Bind<Samurai>().ToSelf();
+            kernel.Bind<Barracks>().ToSelf();
+            kernel.Bind<NinjaBarracks>().ToSelf();
+
+            var warrior = kernel.Get<Samurai>();
+            var barracks = kernel.Get<Barracks>();
+            var ninja = kernel.Get<NinjaBarracks>();
+
+            warrior.Weapon.Should().BeOfType<Shuriken>();
+            barracks.Weapon.Should().BeOfType<Shuriken>();
+            ninja.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
         public void WhenInjectedIntoAppliesToOpenGenericsWhenClosedGenericIsRequested()
         {
             kernel.Bind(typeof(GenericService<>)).ToSelf();
@@ -201,6 +222,27 @@ namespace Ninject.Tests.Integration
             var warrior = kernel.Get<IWarrior>();
 
             warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenInjectedExactlyIntoAppliesToOneOfMultipleServiceType()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWarrior>().To<FootSoldier>();
+            kernel.Bind<IWeapon>().To<Shuriken>()
+                .WhenInjectedExactlyIntoOneOf(typeof(Samurai), typeof(Barracks));
+
+            kernel.Bind<Samurai>().ToSelf();
+            kernel.Bind<Barracks>().ToSelf();
+            kernel.Bind<NinjaBarracks>().ToSelf();
+
+            var warrior = kernel.Get<Samurai>();
+            var barracks = kernel.Get<Barracks>();
+            var ninja = kernel.Get<NinjaBarracks>();
+
+            warrior.Weapon.Should().BeOfType<Shuriken>();
+            barracks.Weapon.Should().BeOfType<Shuriken>();
+            ninja.Weapon.Should().BeOfType<Sword>();
         }
     
         [Fact]

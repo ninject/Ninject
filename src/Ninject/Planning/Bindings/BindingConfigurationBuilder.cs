@@ -129,6 +129,46 @@ namespace Ninject.Planning.Bindings
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
+        /// Types that derive from the specified type are considered as valid targets.
+        /// </summary>
+        /// <param name="parent">The type.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents)
+        {
+            this.BindingConfiguration.Condition = r =>
+            {
+                foreach (var parent in parents)
+                {
+                    bool matches = false;
+
+                    if (parent.IsInterface)
+                    {
+                        matches =
+                            r.Target != null &&
+                            r.Target.Member.ReflectedType.GetInterfaces().Any(i =>
+                                i.IsGenericType &&
+                                i.GetGenericTypeDefinition() == parent);
+                    }
+                    else
+                    {
+                        matches =
+                            r.Target != null &&
+                            r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
+                                i.IsGenericType &&
+                                i.GetGenericTypeDefinition() == parent);
+                    }
+
+                    if (matches) return true;
+                }
+
+                return false;
+            };
+
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
         /// will not be considered as valid target.  
         /// </summary>
@@ -159,6 +199,41 @@ namespace Ninject.Planning.Bindings
             {
                 this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.ReflectedType == parent;
             }
+            return this;
+        }
+
+        /// <summary>
+        /// Indicates that the binding should be used only for injections on the specified type.
+        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// will not be considered as valid target.  
+        /// Should match at least one of the specified targets
+        /// </summary>
+        /// <param name="parent">The types.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents)
+        {
+            this.BindingConfiguration.Condition = r => {
+                foreach (var parent in parents)
+                {
+                    bool matches = false;
+                    if (parent.IsGenericTypeDefinition)
+                    {
+                        matches =
+                            r.Target != null &&
+                            r.Target.Member.ReflectedType.IsGenericType &&
+                            parent == r.Target.Member.ReflectedType.GetGenericTypeDefinition();
+                    }
+                    else
+                    {
+                        matches = r.Target != null && r.Target.Member.ReflectedType == parent;
+                    }
+
+                    if(matches) return true;
+                }
+
+                return false;
+            };
+
             return this;
         }
 
