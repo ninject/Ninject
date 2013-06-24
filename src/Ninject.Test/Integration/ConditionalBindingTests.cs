@@ -158,6 +158,20 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
+        public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenerics()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedIntoOneOf(typeof(IGenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<GenericService<int>>();
+            var anotherService = kernel.Get<AnotherGenericService<int>>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+            anotherService.Warrior.Should().BeOfType<Samurai>();
+        }
+
+        [Fact]
         public void WhenInjectedIntoAppliesToOneOfMultipleServiceType()
         {
             kernel.Bind<IWeapon>().To<Sword>();
@@ -189,7 +203,21 @@ namespace Ninject.Tests.Integration
 
             service.Warrior.Should().BeOfType<Samurai>();
         }
-        
+
+        [Fact]
+        public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenericsWhenClosedGenericIsRequested()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedIntoOneOf(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<ClosedGenericService>();
+            var anotherService = kernel.Get<ClosedAnotherGenericService>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+            anotherService.Warrior.Should().BeOfType<Samurai>();
+        }
+
         [Fact]
         public void WhenInjectedExactlyIntoAppliesToOpenGenerics()
         {
@@ -201,7 +229,21 @@ namespace Ninject.Tests.Integration
 
             service.Warrior.Should().BeOfType<Samurai>();
         }
-    
+
+        [Fact]
+        public void WhenInjectedExactlyIntoOneOfMultipleTypesAppliesToOpenGenerics()
+        {
+            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyIntoOneOf(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var service = kernel.Get<GenericService<int>>();
+            var anotherService = kernel.Get<AnotherGenericService<int>>();
+
+            service.Warrior.Should().BeOfType<Samurai>();
+            anotherService.Warrior.Should().BeOfType<Samurai>();
+        }
+
         [Fact]
         public void WhenInjectedExactlyIntoAppliesNotToBaseTypes()
         {
@@ -317,6 +359,14 @@ namespace Ninject.Tests.Integration
             }
         }
 
+        public class ClosedAnotherGenericService : AnotherGenericService<int>
+        {
+            public ClosedAnotherGenericService(IWarrior warrior)
+                : base(warrior)
+            {
+            }
+        }
+
         public class GenericService<T> : IGenericService<T>
         {
             public GenericService(IWarrior warrior)
@@ -325,6 +375,16 @@ namespace Ninject.Tests.Integration
             }
 
             public IWarrior Warrior { get; private set; }
+        }
+
+        public class AnotherGenericService<T> : IGenericService<T>
+        {
+            public AnotherGenericService(IWarrior warrior)
+            {
+                this.Warrior = warrior;
+            }
+
+            public IWarrior Warrior { get; protected set; }
         }
     }
 }
