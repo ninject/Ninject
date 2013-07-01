@@ -219,6 +219,17 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
+        public void WhenInjectedIntoOneOfMultipleDoesNotApplyForConcreteTypes()
+        {
+
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedIntoOneOf(typeof(Samurai));
+            kernel.Bind<Samurai>().ToSelf();
+            var warrior = kernel.Get<Samurai>();
+            warrior.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
         public void WhenInjectedExactlyIntoAppliesToOpenGenerics()
         {
             kernel.Bind(typeof(GenericService<>)).ToSelf();
