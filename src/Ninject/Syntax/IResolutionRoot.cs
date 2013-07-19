@@ -57,5 +57,12 @@ namespace Ninject.Syntax
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         /// <returns>The created request.</returns>
         IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
+
+        /// <summary>
+        /// Deactivates and releases the specified instance if it is currently managed by Ninject.
+        /// </summary>
+        /// <param name="instance">The instance to release.</param>
+        /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+        bool Release(object instance);
     }
 }
