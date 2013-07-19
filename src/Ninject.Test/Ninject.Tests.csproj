@@ -91,6 +91,7 @@
     <Compile Include="Fakes\ICleric.cs" />
     <Compile Include="Fakes\Monk.cs" />
     <Compile Include="Fakes\Shield.cs" />
+    <Compile Include="Integration\GenericBindings.cs" />
     <Compile Include="Integration\WhenReleasingAnObject.cs" />
     <Compile Include="Integration\ConstantTests.cs" />
     <Compile Include="Fakes\ResolveCountingProvider.cs" />
