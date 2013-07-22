@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Portable.CommonServiceLocator.NinjectAdapter</id>
-        <version>1.2.2</version>
+        <version>1.2.3</version>
         <title>CommonServiceLocator.NinjectAdapter (Portable)</title>
         <authors>Oren Novotny</authors>
         <owners />
