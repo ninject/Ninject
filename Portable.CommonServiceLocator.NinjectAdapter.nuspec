@@ -12,7 +12,7 @@
 Targets .NET 4, SL4, WP7.1, WinRT</description>
         <summary>An adapter to implement CommonServiceLocator on top of Ninject 3.0</summary>
         <dependencies>
-            <dependency id="Portable.Ninject" version="3.0.5" />
+            <dependency id="Portable.Ninject" version="3.0.7" />
             <dependency id="Portable.CommonServiceLocator" version="1.2" />
         </dependencies>
     </metadata>
