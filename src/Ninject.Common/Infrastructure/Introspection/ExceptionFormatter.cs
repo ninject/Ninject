@@ -103,14 +103,20 @@ namespace Ninject.Infrastructure.Introspection
         /// Generates a message saying that the binding could not be uniquely resolved.
         /// </summary>
         /// <param name="request">The request.</param>
+        /// <param name="formattedMatchingBindings">The matching bindings, already formatted as strings</param>
         /// <returns>The exception message.</returns>
-        public static string CouldNotUniquelyResolveBinding(IRequest request)
+        public static string CouldNotUniquelyResolveBinding(IRequest request, string[] formattedMatchingBindings)
         {
             using (var sw = new StringWriter())
             {
                 sw.WriteLine("Error activating {0}", request.Service.Format());
                 sw.WriteLine("More than one matching bindings are available.");
 
+                sw.WriteLine("Matching bindings:");
+                for (int i = 0; i < formattedMatchingBindings.Length; i++)
+                {
+                    sw.WriteLine("  {0}) {1}", i + 1, formattedMatchingBindings[i]);
+                }
                 sw.WriteLine("Activation path:");
                 sw.WriteLine(request.FormatActivationPath());
 

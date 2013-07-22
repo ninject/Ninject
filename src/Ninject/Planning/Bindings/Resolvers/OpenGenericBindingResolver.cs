@@ -39,7 +39,11 @@ namespace Ninject.Planning.Bindings.Resolvers
 #if WINRT
                 .GetTypeInfo()
 #endif
-                .IsGenericType || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
+.IsGenericType || service
+#if WINRT
+                .GetTypeInfo()
+#endif
+.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
                 return Enumerable.Empty<IBinding>();
 
             return bindings[service.GetGenericTypeDefinition()].ToEnumerable();

@@ -47,6 +47,8 @@
             var exception = Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
             
             exception.Message.Should().Contain("More than one matching bindings are available.");
+            exception.Message.Should().Contain("1) binding from IWeapon to Sword");
+            exception.Message.Should().Contain("2) binding from IWeapon to Shuriken");
         }
 
         [Fact]

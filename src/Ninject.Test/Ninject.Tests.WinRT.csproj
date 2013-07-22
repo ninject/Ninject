@@ -142,6 +142,7 @@
     <Compile Include="Unit\PropertyInjectionStrategyTests.cs" />
     <Compile Include="Unit\ReferenceEqualWeakReferenceTests.cs" />
     <Compile Include="Unit\StartableStrategyTests.cs" />
+    <Compile Include="Unit\TestObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

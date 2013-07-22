@@ -330,6 +330,9 @@
     <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
       <Link>Unit\StartableStrategyTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ninject.Test\Unit\TestObject.cs">
+      <Link>Unit\TestObject.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

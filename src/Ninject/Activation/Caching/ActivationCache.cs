@@ -15,22 +15,22 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly IDictionary<object, bool> activatedObjects = new Dictionary<object, bool>();
+        private readonly IDictionary<object, bool> activatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly IDictionary<object, bool> deactivatedObjects = new Dictionary<object, bool>();
+        private readonly IDictionary<object, bool> deactivatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
 #else
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly HashSet<object> activatedObjects = new HashSet<object>();
+        private readonly HashSet<object> activatedObjects = new HashSet<object>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly HashSet<object> deactivatedObjects = new HashSet<object>();
+        private readonly HashSet<object> deactivatedObjects = new HashSet<object>(new WeakReferenceEqualityComparer());
 #endif
 
         /// <summary>

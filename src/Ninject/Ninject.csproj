@@ -82,13 +82,15 @@
     <Compile Include="Activation\Caching\Cache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
-    <Compile Include="GlobalKernelRegistration.cs" />
-    <Compile Include="GlobalKernelRegistrationModule.cs" />
     <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
+    <Compile Include="Activation\Caching\WeakReferenceEqualityComparer.cs" />
+    <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
+    <Compile Include="GlobalKernelRegistration.cs" />
+    <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="Infrastructure\BaseWeakReference.cs" />
     <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />
     <Compile Include="Modules\IAssemblyNameRetriever.cs" />

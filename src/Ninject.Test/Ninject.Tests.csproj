@@ -93,6 +93,8 @@
     <Compile Include="Fakes\ICleric.cs" />
     <Compile Include="Fakes\Monk.cs" />
     <Compile Include="Fakes\Shield.cs" />
+    <Compile Include="Integration\GenericBindings.cs" />
+    <Compile Include="Integration\WhenReleasingAnObject.cs" />
     <Compile Include="Integration\ConstantTests.cs" />
     <Compile Include="Fakes\ResolveCountingProvider.cs" />
     <Compile Include="Integration\ConstructorArgumentTests.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <Compile Include="Unit\TestObject.cs" />
     <None Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
