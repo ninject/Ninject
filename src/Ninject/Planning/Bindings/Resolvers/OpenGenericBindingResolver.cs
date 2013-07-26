@@ -32,7 +32,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <returns>The series of matching bindings.</returns>
         public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
         {
-            if (!service.IsGenericType || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
+            if (!service.IsGenericType || service.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
                 return Enumerable.Empty<IBinding>();
 
             return bindings[service.GetGenericTypeDefinition()].ToEnumerable();

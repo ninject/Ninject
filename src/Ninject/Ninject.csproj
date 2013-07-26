@@ -86,10 +86,12 @@
     <Compile Include="Activation\Caching\IActivationCache.cs" />
     <Compile Include="Activation\Caching\ICachePruner.cs" />
     <Compile Include="Activation\Caching\IPruneable.cs" />
+    <Compile Include="Activation\Caching\WeakReferenceEqualityComparer.cs" />
     <Compile Include="Activation\IProvider{T}.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="Infrastructure\BaseWeakReference.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
     <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />

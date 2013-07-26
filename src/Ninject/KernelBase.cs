@@ -456,7 +456,11 @@ namespace Ninject
                         return Enumerable.Empty<object>();
                     }
 
-                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request));
+                    var formattedBindings =
+                        from binding in resolveBindings
+                        let context = this.CreateContext(request, binding)
+                        select binding.Format(context);
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request, formattedBindings.ToArray()));
                 }
 
                 resolveBindings = resolveBindingsArray.Take(1);

@@ -14,19 +14,19 @@ namespace Ninject.Tests.Unit.CacheTests
     public class CacheContext
     {
         protected Mock<ICachePruner> cachePrunerMock;
-        protected Mock<IBindingConfiguration> bindingConfigurationMock;
+        protected IBindingConfiguration bindingConfiguration;
         protected Cache cache;
         protected Mock<IPipeline> pipelineMock;
 
         public CacheContext()
         {
             this.cachePrunerMock = new Mock<ICachePruner>();
-            this.bindingConfigurationMock = new Mock<IBindingConfiguration>();
+            this.bindingConfiguration = new Mock<IBindingConfiguration>().Object;
             this.pipelineMock = new Mock<IPipeline>();
             this.cache = new Cache(this.pipelineMock.Object, this.cachePrunerMock.Object);
         }
 
-        protected static Mock<IContext> CreateContextMock(object scope, IBindingConfiguration bindingConfiguration, params Type[] genericArguments)
+        protected static IContext CreateContext(object scope, IBindingConfiguration bindingConfiguration, params Type[] genericArguments)
         {
             var contextMock = new Mock<IContext>();
             var bindingMock = new Mock<IBinding>();
@@ -35,7 +35,7 @@ namespace Ninject.Tests.Unit.CacheTests
             contextMock.Setup(context => context.GetScope()).Returns(scope);
             contextMock.SetupGet(context => context.GenericArguments).Returns(genericArguments);
             contextMock.SetupGet(context => context.HasInferredGenericArguments).Returns(genericArguments != null && genericArguments.Length > 0);
-            return contextMock;
+            return contextMock.Object;
         }
     }
 
@@ -44,10 +44,10 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsNullIfNoInstancesHaveBeenAddedToCache()
         {
-            var scope = new object();
-            var contextMock = CreateContextMock(scope, this.bindingConfigurationMock.Object);
+            var scope = new TestObject(42);
+            var context = CreateContext(scope, this.bindingConfiguration);
 
-            var instance = cache.TryGet(contextMock.Object);
+            var instance = cache.TryGet(context);
 
             instance.Should().BeNull();
         }
@@ -55,13 +55,13 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsCachedInstanceIfOneHasBeenAddedWithinSpecifiedScope()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var reference = new InstanceReference { Instance = new Sword() };
-            var contextMock1 = CreateContextMock(scope, this.bindingConfigurationMock.Object);
-            var contextMock2 = CreateContextMock(scope, this.bindingConfigurationMock.Object);
+            var context1 = CreateContext(scope, this.bindingConfiguration);
+            var context2 = CreateContext(scope, this.bindingConfiguration);
 
-            cache.Remember(contextMock1.Object, reference);
-            object instance = cache.TryGet(contextMock2.Object);
+            cache.Remember(context1, reference);
+            object instance = cache.TryGet(context2);
 
             instance.Should().BeSameAs(reference.Instance);
         }
@@ -70,11 +70,11 @@ namespace Ninject.Tests.Unit.CacheTests
         public void ReturnsNullIfNoInstancesHaveBeenAddedWithinSpecifiedScope()
         {
             var reference = new InstanceReference { Instance = new Sword() };
-            var contextMock1 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
-            var contextMock2 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
+            var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
+            var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(contextMock1.Object, reference);
-            object instance = cache.TryGet(contextMock2.Object);
+            cache.Remember(context1, reference);
+            object instance = cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -83,11 +83,11 @@ namespace Ninject.Tests.Unit.CacheTests
         public void ReturnsNullIfScopeIsNull()
         {
             var reference = new InstanceReference { Instance = new Sword() };
-            var contextMock1 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
-            var contextMock2 = CreateContextMock(null, this.bindingConfigurationMock.Object);
+            var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
+            var context2 = CreateContext(null, this.bindingConfiguration);
 
-            cache.Remember(contextMock1.Object, reference);
-            object instance = cache.TryGet(contextMock2.Object);
+            cache.Remember(context1, reference);
+            object instance = cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -98,13 +98,13 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsInstanceIfOneHasBeenCachedWithSameGenericParameters()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var reference = new InstanceReference { Instance = new Sword() };
-            var contextMock1 = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
-            var contextMock2 = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
+            var context1 = CreateContext(scope, this.bindingConfiguration, typeof(int));
+            var context2 = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(contextMock1.Object, reference);
-            object instance = cache.TryGet(contextMock2.Object);
+            cache.Remember(context1, reference);
+            object instance = cache.TryGet(context2);
 
             instance.Should().BeSameAs(reference.Instance);
         }
@@ -112,13 +112,13 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsNullIfInstanceAddedToCacheHasDifferentGenericParameters()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var reference = new InstanceReference { Instance = new Sword() };
-            var contextMock1 = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
-            var contextMock2 = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(double));
+            var context1 = CreateContext(scope, this.bindingConfiguration, typeof(int));
+            var context2 = CreateContext(scope, this.bindingConfiguration, typeof(double));
 
-            cache.Remember(contextMock1.Object, reference);
-            object instance = cache.TryGet(contextMock2.Object);
+            cache.Remember(context1, reference);
+            object instance = cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -129,19 +129,19 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsFalseIfInstanceIsNotTracked()
         {
-            bool result = cache.Release(new object());
+            bool result = cache.Release(new TestObject(42));
             result.Should().BeFalse();
         }
 
         [Fact]
         public void ReturnsTrueIfInstanceIsTracked()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var instance = new Sword();
             var reference = new InstanceReference { Instance = instance };
-            var writeContext = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
+            var writeContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(writeContext.Object, reference);
+            cache.Remember(writeContext, reference);
             bool result = cache.Release(instance);
 
             result.Should().BeTrue();
@@ -150,16 +150,16 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void InstanceIsRemovedFromCache()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var sword = new Sword();
             var reference = new InstanceReference { Instance = sword };
-            var writeContext = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
-            var readContext = CreateContextMock(scope, this.bindingConfigurationMock.Object, typeof(int));
+            var writeContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
+            var readContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(writeContext.Object, reference);
-            object instance1 = cache.TryGet(readContext.Object);
+            cache.Remember(writeContext, reference);
+            object instance1 = cache.TryGet(readContext);
             bool result = cache.Release(instance1);
-            object instance2 = cache.TryGet(readContext.Object);
+            object instance2 = cache.TryGet(readContext);
 
             instance1.Should().BeSameAs(reference.Instance);
             result.Should().BeTrue();
@@ -172,17 +172,17 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void WhenScopeIsDefinedItsEntriesAreReleased()
         {
-            var scope = new object();
+            var scope = new TestObject(42);
             var sword = new Sword();
             var reference = new InstanceReference { Instance = sword };
-            var context1 = CreateContextMock(scope, this.bindingConfigurationMock.Object);
-            var context2 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
+            var context1 = CreateContext(scope, this.bindingConfiguration);
+            var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(context1.Object, reference);
-            cache.Remember(context2.Object, reference);
+            cache.Remember(context1, reference);
+            cache.Remember(context2, reference);
             cache.Clear(scope);
-            var instance1 = cache.TryGet(context1.Object);
-            var instance2 = cache.TryGet(context2.Object);
+            var instance1 = cache.TryGet(context1);
+            var instance2 = cache.TryGet(context2);
 
             instance1.Should().BeNull();
             instance2.Should().NotBeNull();
@@ -193,14 +193,14 @@ namespace Ninject.Tests.Unit.CacheTests
          {
             var sword = new Sword();
             var reference = new InstanceReference { Instance = sword };
-            var context1 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
-            var context2 = CreateContextMock(new object(), this.bindingConfigurationMock.Object);
+            var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
+            var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(context1.Object, reference);
-            cache.Remember(context2.Object, reference);
+            cache.Remember(context1, reference);
+            cache.Remember(context2, reference);
             cache.Clear();
-            var instance1 = cache.TryGet(context1.Object);
-            var instance2 = cache.TryGet(context2.Object);
+            var instance1 = cache.TryGet(context1);
+            var instance2 = cache.TryGet(context2);
 
             instance1.Should().BeNull();
             instance2.Should().BeNull();
@@ -215,11 +215,11 @@ namespace Ninject.Tests.Unit.CacheTests
             var scopeMock = new Mock<INotifyWhenDisposed>();
             var sword = new Sword();
             var reference = new InstanceReference { Instance = sword };
-            var context = CreateContextMock(scopeMock.Object, this.bindingConfigurationMock.Object);
+            var context = CreateContext(scopeMock.Object, this.bindingConfiguration);
 
-            cache.Remember(context.Object, reference);
+            cache.Remember(context, reference);
             scopeMock.Raise(scope => scope.Disposed += null, EventArgs.Empty);
-            object instance = cache.TryGet(context.Object);
+            object instance = cache.TryGet(context);
 
             instance.Should().BeNull();
 
@@ -231,15 +231,15 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void CachedObjectsAreReleased()
         {
-            var scope = new object();
-            var scopeOfScope = new object();
+            var scope = new TestObject(42);
+            var scopeOfScope = new TestObject(42);
             var sword = new Sword();
-            var context = CreateContextMock(scope, this.bindingConfigurationMock.Object);
+            var context = CreateContext(scope, this.bindingConfiguration);
 
-            cache.Remember(context.Object, new InstanceReference { Instance = sword });
-            cache.Remember(CreateContextMock(scopeOfScope, this.bindingConfigurationMock.Object).Object, new InstanceReference { Instance = scope });
+            cache.Remember(context, new InstanceReference { Instance = sword });
+            cache.Remember(CreateContext(scopeOfScope, this.bindingConfiguration), new InstanceReference { Instance = scope });
             cache.Clear(scopeOfScope);
-            var instance = cache.TryGet(context.Object);
+            var instance = cache.TryGet(context);
 
             instance.Should().BeNull();
         }

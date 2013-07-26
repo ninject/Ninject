@@ -253,6 +253,92 @@ namespace Ninject
             return GetResolutionIterator(root, service, constraint, parameters, true, false);
         }
 
+        /// <summary>
+        /// Evaluates if an instance of the specified service can be resolved.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static bool CanResolve<T>(this IResolutionRoot root, params IParameter[] parameters)
+        {
+            return CanResolve(root, typeof(T), null, parameters, false, true);
+        }
+
+        /// <summary>
+        /// Evaluates if  an instance of the specified service by using the first binding with the specified name can be resolved.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="name">The name of the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static bool CanResolve<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
+        {
+            return CanResolve(root, typeof(T), b => b.Name == name, parameters, false, true);
+        }
+
+        /// <summary>
+        /// Evaluates if  an instance of the specified service by using the first binding that matches the specified constraint can be resolved.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="constraint">The constraint to apply to the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static bool CanResolve<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        {
+            return CanResolve(root, typeof(T), constraint, parameters, false, true);
+        }
+
+        /// <summary>
+        /// Gets an instance of the specified service.
+        /// </summary>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="service">The service to resolve.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static object CanResolve(this IResolutionRoot root, Type service, params IParameter[] parameters)
+        {
+            return CanResolve(root, service, null, parameters, false, true);
+        }
+
+        /// <summary>
+        /// Gets an instance of the specified service by using the first binding with the specified name.
+        /// </summary>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="service">The service to resolve.</param>
+        /// <param name="name">The name of the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static object CanResolve(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
+        {
+            return CanResolve(root, service, b => b.Name == name, parameters, false, true);
+        }
+
+        /// <summary>
+        /// Gets an instance of the specified service by using the first binding that matches the specified constraint.
+        /// </summary>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="service">The service to resolve.</param>
+        /// <param name="constraint">The constraint to apply to the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service.</returns>
+        public static object CanResolve(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        {
+            return CanResolve(root, service, constraint, parameters, false, true);
+        }
+
+        private static bool CanResolve(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        {
+            Ensure.ArgumentNotNull(root, "root");
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parameters, "parameters");
+
+            IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+            return root.CanResolve(request);
+        }
+
         private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(root, "root");
