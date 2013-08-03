@@ -61,7 +61,7 @@ namespace Ninject.Syntax
         /// Types that derive from the specified type are considered as valid targets.
         /// Should match at one of the targets.
         /// </summary>
-        /// <param name="parent">The types to match.</param>
+        /// <param name="parents">The types to match.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents);
 
@@ -89,7 +89,7 @@ namespace Ninject.Syntax
         /// will not be considered as valid target.  
         /// Should match at least one of the specified targets
         /// </summary>
-        /// <param name="parent">The types.</param>
+        /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents);
 
