@@ -131,7 +131,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the binding should be used only for injections on the specified type.
         /// Types that derive from the specified type are considered as valid targets.
         /// </summary>
-        /// <param name="parent">The type.</param>
+        /// <param name="parents">The type.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents)
         {
@@ -214,7 +214,7 @@ namespace Ninject.Planning.Bindings
         /// will not be considered as valid target.  
         /// Should match at least one of the specified targets
         /// </summary>
-        /// <param name="parent">The types.</param>
+        /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents)
         {
