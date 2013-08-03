@@ -226,7 +226,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedIntoOneOf(typeof(Samurai));
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
-            warrior.Weapon.Should().BeOfType<Sword>();
+            warrior.Weapon.Should().BeOfType<Shuriken>();
         }
 
         [Fact]

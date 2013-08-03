@@ -140,22 +140,28 @@ namespace Ninject.Planning.Bindings
                 foreach (var parent in parents)
                 {
                     bool matches = false;
-
-                    if (parent.IsInterface)
+                    if (parent.IsGenericTypeDefinition)
                     {
-                        matches =
-                            r.Target != null &&
-                            r.Target.Member.ReflectedType.GetInterfaces().Any(i =>
-                                i.IsGenericType &&
-                                i.GetGenericTypeDefinition() == parent);
+                        if (parent.IsInterface)
+                        {
+                            matches =
+                                r.Target != null &&
+                                r.Target.Member.ReflectedType.GetInterfaces().Any(i =>
+                                    i.IsGenericType &&
+                                    i.GetGenericTypeDefinition() == parent);
+                        }
+                        else
+                        {
+                            matches =
+                                r.Target != null &&
+                                r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
+                                    i.IsGenericType &&
+                                    i.GetGenericTypeDefinition() == parent);
+                        }
                     }
                     else
                     {
-                        matches =
-                            r.Target != null &&
-                            r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
-                                i.IsGenericType &&
-                                i.GetGenericTypeDefinition() == parent);
+                        matches = r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
                     }
 
                     if (matches) return true;
