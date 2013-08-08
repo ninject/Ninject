@@ -99,6 +99,9 @@
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
     <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
     <Compile Include="Parameters\IConstructorArgument.cs" />
+    <Compile Include="Parameters\IPropertyValue.cs" />
+    <Compile Include="Parameters\WeakConstructorArgument.cs" />
+    <Compile Include="Parameters\WeakPropertyValue.cs" />
     <Compile Include="Planning\Bindings\BindingBuilder.cs" />
     <Compile Include="Planning\Bindings\BindingConfiguration.cs" />
     <Compile Include="Planning\Bindings\BindingConfigurationBuilder.cs" />

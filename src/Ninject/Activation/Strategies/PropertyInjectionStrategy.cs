@@ -53,7 +53,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
         {
-            InjectorFactory = injectorFactory;
+            this.InjectorFactory = injectorFactory;
         }
 
         /// <summary>
@@ -64,20 +64,15 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            var propertyValues = context.Parameters.Where(parameter => parameter is PropertyValue);
-            IEnumerable<string> parameterNames = propertyValues.Select(parameter => parameter.Name);
+            var propertyValues = context.Parameters.OfType<IPropertyValue>().ToList();
 
             foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
             {
-                PropertyInjectionDirective propertyInjectionDirective = directive;
-                if (parameterNames.Any(name => string.Equals(name, propertyInjectionDirective)))
-                    continue;
-
-                object value = GetValue(context, directive.Target);
+                object value = this.GetValue(context, directive.Target, propertyValues);
                 directive.Injector(reference.Instance, value);
             }
 
-            AssignProperyOverrides( context, reference, propertyValues );
+            this.AssignProperyOverrides(context, reference, propertyValues);
         }
 
         /// <summary>
@@ -85,22 +80,22 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
-        /// <param name="propertyValues">The parameter ovverride value accessors.</param>
-        private void AssignProperyOverrides( IContext context, InstanceReference reference, IEnumerable<IParameter> propertyValues )
+        /// <param name="propertyValues">The parameter override value accessors.</param>
+        private void AssignProperyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
         {
-            var properties = reference.Instance.GetType().GetProperties( Flags );
+            var properties = reference.Instance.GetType().GetProperties(this.Flags);
             foreach (var propertyValue in propertyValues)
             {
                 string propertyName = propertyValue.Name;
-                var propertyInfo = properties
-                    .Where(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal))
-                    .FirstOrDefault();
+                var propertyInfo = properties.FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal));
 
-                if(propertyInfo == null)
+                if (propertyInfo == null)
+                {
                     throw new ActivationException(ExceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyName));
-                
-                var target = new PropertyInjectionDirective( propertyInfo, InjectorFactory.Create( propertyInfo ) );
-                object value = GetValue(context, target.Target);
+                }
+
+                var target = new PropertyInjectionDirective(propertyInfo, this.InjectorFactory.Create(propertyInfo));
+                object value = this.GetValue(context, target.Target, propertyValues);
                 target.Injector(reference.Instance, value);
             }
         }
@@ -110,10 +105,11 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
+        /// <param name="allPropertyValues">all property values of the current request.</param>
         /// <returns>The value to inject into the specified target.</returns>
-        public object GetValue(IContext context, ITarget target)
+        private object GetValue(IContext context, ITarget target, IEnumerable<IPropertyValue> allPropertyValues)
         {
-            var parameter = context.Parameters.OfType<PropertyValue>().Where(p => p.Name == target.Name).SingleOrDefault();
+            var parameter = allPropertyValues.SingleOrDefault(p => p.Name == target.Name);
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }
     }

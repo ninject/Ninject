@@ -19,7 +19,7 @@ namespace Ninject.Parameters
     /// <summary>
     /// Overrides the injected value of a property.
     /// </summary>
-    public class PropertyValue : Parameter
+    public class PropertyValue : Parameter, IPropertyValue
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyValue"/> class.

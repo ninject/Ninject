@@ -76,5 +76,35 @@ namespace Ninject.Tests.Integration
             baracks.Weapon.Should().BeOfType<Sword>();
             baracks.Warrior.Weapon.Should().BeOfType<Sword>();
         }
+
+#if !MONO
+        [Fact]
+        public void WeakConstructorArgument()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Dagger>();
+            this.kernel.Bind<Barracks>().ToSelf().InSingletonScope();
+
+            var weakReference = this.Process();
+
+            var baracks = this.kernel.Get<Barracks>();
+
+            baracks.Weapon.Should().BeOfType<Sword>();
+            baracks.Warrior.Weapon.Should().BeOfType<Dagger>();
+            baracks.Weapon.Should().BeSameAs(weakReference.Target);
+            baracks.Weapon = null;
+
+            GC.Collect();
+
+            weakReference.IsAlive.Should().BeFalse();
+        }
+#endif
+
+        private WeakReference Process()
+        {
+            var sword = new Sword();
+            this.kernel.Get<Barracks>(new WeakConstructorArgument("weapon", sword));
+            return new WeakReference(sword);
+        }
     }
 }
