@@ -133,7 +133,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="parents">The type.</param>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents)
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(params Type[] parents)
         {
             this.BindingConfiguration.Condition = r =>
             {
@@ -216,7 +216,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents)
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(params Type[] parents)
         {
             this.BindingConfiguration.Condition = r => {
                 foreach (var parent in parents)

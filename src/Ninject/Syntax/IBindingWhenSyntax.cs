@@ -58,12 +58,12 @@ namespace Ninject.Syntax
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified types.
-        /// Types that derive from the specified type are considered as valid targets.
-        /// Should match at one of the targets.
+        /// Types that derive from one of the specified types are considered as valid targets.
+        /// Should match at lease one of the targets.
         /// </summary>
         /// <param name="parents">The types to match.</param>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents);
+        IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(params Type[] parents);
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
@@ -85,13 +85,13 @@ namespace Ninject.Syntax
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
-        /// The type must match exactly the specified type. Types that derive from the specified type
+        /// The type must match one of the specified types exactly. Types that derive from one of the specified types
         /// will not be considered as valid target.  
         /// Should match at least one of the specified targets
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents);
+        IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(params Type[] parents);
 
         /// <summary>
         /// Indicates that the binding should be used only when the class being injected has
