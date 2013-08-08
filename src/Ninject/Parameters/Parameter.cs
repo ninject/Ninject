@@ -35,7 +35,7 @@ namespace Ninject.Parameters
         /// <summary>
         /// Gets or sets the callback that will be triggered to get the parameter's value.
         /// </summary>
-        public Func<IContext, ITarget, object> ValueCallback { get; private set; }
+        public Func<IContext, ITarget, object> ValueCallback { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
