@@ -26,7 +26,7 @@ namespace Ninject.Components
     public class ComponentContainer : DisposableObject, IComponentContainer
     {
         private readonly Multimap<Type, Type> _mappings = new Multimap<Type, Type>();
-        private readonly Dictionary<Type, INinjectComponent> _instances = new Dictionary<Type, INinjectComponent>();
+		private readonly ConcurrentDictionaryEx<Type, INinjectComponent> _instances = new ConcurrentDictionaryEx<Type, INinjectComponent>();
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
@@ -96,10 +96,9 @@ namespace Ninject.Components
 
             foreach (Type implementation in _mappings[component])
             {
-                if (_instances.ContainsKey(implementation))
-                    _instances[implementation].Dispose();
-
-                _instances.Remove(implementation);
+				INinjectComponent removedValue;
+	            if (_instances.TryRemove(implementation, out removedValue))
+		            removedValue.Dispose();
             }
 
             _mappings.RemoveAll(component);
@@ -177,8 +176,11 @@ namespace Ninject.Components
 
         private object ResolveInstance(Type component, Type implementation)
         {
-            lock (_instances)
-                return _instances.ContainsKey(implementation) ? _instances[implementation] : CreateNewInstance(component, implementation);
+	        INinjectComponent result;
+			if (_instances.TryGetValue(implementation, out result))
+				return result;
+
+			return CreateNewInstance(component, implementation);
         }
 
         private object CreateNewInstance(Type component, Type implementation)
@@ -188,12 +190,12 @@ namespace Ninject.Components
 
             try
             {
-                var instance = constructor.Invoke(arguments) as INinjectComponent;
+                var instance = (INinjectComponent) constructor.Invoke(arguments);
                 instance.Settings = Kernel.Settings;
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {
-                    _instances.Add(implementation, instance);                    
+                    return _instances.GetOrAdd(implementation, instance);                    
                 }
 
                 return instance;
