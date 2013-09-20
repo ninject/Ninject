@@ -27,8 +27,8 @@ namespace Ninject.Activation.Caching
         /// Contains all cached instances.
         /// This is a dictionary of scopes to a multimap for bindings to cache entries.
         /// </summary>
-        private readonly IDictionary<object, Multimap<IBindingConfiguration, CacheEntry>> entries =
-            new Dictionary<object, Multimap<IBindingConfiguration, CacheEntry>>(new WeakReferenceEqualityComparer());
+        private readonly ConcurrentDictionaryEx<object, Multimap<IBindingConfiguration, CacheEntry>> entries =
+			new ConcurrentDictionaryEx<object, Multimap<IBindingConfiguration, CacheEntry>>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cache"/> class.
@@ -114,32 +114,29 @@ namespace Ninject.Activation.Caching
                 return null;
             }
 
-            lock (this.entries)
+            Multimap<IBindingConfiguration, CacheEntry> bindings;
+            if (!this.entries.TryGetValue(scope, out bindings))
             {
-                Multimap<IBindingConfiguration, CacheEntry> bindings;
-                if (!this.entries.TryGetValue(scope, out bindings))
-                {
-                    return null;
-                }
-
-                foreach (var entry in bindings[context.Binding.BindingConfiguration])
-                {
-                    if (context.HasInferredGenericArguments)
-                    {
-                        var cachedArguments = entry.Context.GenericArguments;
-                        var arguments = context.GenericArguments;
-
-                        if (!cachedArguments.SequenceEqual(arguments))
-                        {
-                            continue;
-                        }
-                    }
-
-                    return entry.Reference.Instance;
-                }
-
                 return null;
             }
+
+            foreach (var entry in bindings[context.Binding.BindingConfiguration])
+            {
+                if (context.HasInferredGenericArguments)
+                {
+                    var cachedArguments = entry.Context.GenericArguments;
+                    var arguments = context.GenericArguments;
+
+                    if (!cachedArguments.SequenceEqual(arguments))
+                    {
+                        continue;
+                    }
+                }
+
+                return entry.Reference.Instance;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -178,7 +175,8 @@ namespace Ninject.Activation.Caching
                 foreach (var disposedScope in disposedScopes)
                 {
                     this.Forget(GetAllBindingEntries(disposedScope.Value));
-                    this.entries.Remove(disposedScope.Key);
+	                Multimap<IBindingConfiguration, CacheEntry> ignored;
+	                this.entries.TryRemove(disposedScope.Key, out ignored);
                 }
             }
         }
@@ -193,11 +191,8 @@ namespace Ninject.Activation.Caching
             lock (this.entries)
             {
                 Multimap<IBindingConfiguration, CacheEntry> bindings;
-                if (this.entries.TryGetValue(scope, out bindings))
-                {
+	            if (this.entries.TryRemove(scope, out bindings))
                     this.Forget(GetAllBindingEntries(bindings));
-                    this.entries.Remove(scope);
-                }
             }
         }
 
