@@ -11,27 +11,15 @@ namespace Ninject.Activation.Caching
     /// </summary>
     public class ActivationCache : NinjectComponent, IActivationCache, IPruneable
     {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly IDictionary<object, bool> activatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
+        private readonly ConcurrentDictionaryEx<object, bool> activatedObjects = new ConcurrentDictionaryEx<object, bool>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
-        private readonly IDictionary<object, bool> deactivatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
-#else
-        /// <summary>
-        /// The objects that were activated as reference equal weak references.
-        /// </summary>
-        private readonly HashSet<object> activatedObjects = new HashSet<object>(new WeakReferenceEqualityComparer());
-
-        /// <summary>
-        /// The objects that were activated as reference equal weak references.
-        /// </summary>
-        private readonly HashSet<object> deactivatedObjects = new HashSet<object>(new WeakReferenceEqualityComparer());
-#endif
+		private readonly ConcurrentDictionaryEx<object, bool> deactivatedObjects = new ConcurrentDictionaryEx<object, bool>(new WeakReferenceEqualityComparer());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivationCache"/> class.
@@ -71,15 +59,8 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Clear()
         {
-            lock (this.activatedObjects)
-            {
-                this.activatedObjects.Clear();
-            }
-
-            lock (this.deactivatedObjects)
-            {
-                this.deactivatedObjects.Clear();
-            }
+            this.activatedObjects.Clear();
+            this.deactivatedObjects.Clear();
         }
 
         /// <summary>
@@ -88,14 +69,7 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddActivatedInstance(object instance)
         {
-            lock (this.activatedObjects)
-            {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
-                this.activatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
-#else
-                this.activatedObjects.Add(new ReferenceEqualWeakReference(instance));
-#endif
-            }
+			this.activatedObjects.TryAdd(new ReferenceEqualWeakReference(instance), true);
         }
 
         /// <summary>
@@ -104,14 +78,7 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddDeactivatedInstance(object instance)
         {
-            lock (this.deactivatedObjects)
-            {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
-                this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
-#else
-                this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance));
-#endif
-            }
+			this.deactivatedObjects.TryAdd(new ReferenceEqualWeakReference(instance), true);
         }
 
         /// <summary>
@@ -123,11 +90,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsActivated(object instance)
         {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
             return this.activatedObjects.ContainsKey(instance);
-#else
-            return this.activatedObjects.Contains(instance);
-#endif
         }
 
         /// <summary>
@@ -139,11 +102,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsDeactivated(object instance)
         {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
-            return this.deactivatedObjects.ContainsKey(instance);
-#else
-            return this.deactivatedObjects.Contains(instance);
-#endif        
+			return this.deactivatedObjects.ContainsKey(instance);
         }
 
         /// <summary>
@@ -162,28 +121,19 @@ namespace Ninject.Activation.Caching
             }
         }
 
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+
         /// <summary>
         /// Removes all dead objects.
         /// </summary>
         /// <param name="objects">The objects collection to be freed of dead objects.</param>
-        private static void RemoveDeadObjects(IDictionary<object, bool> objects)
+        private static void RemoveDeadObjects(ConcurrentDictionaryEx<object, bool> objects)
         {
-            var deadObjects = objects.Where(entry => !((ReferenceEqualWeakReference)entry.Key).IsAlive).ToList();
-            foreach (var deadObject in deadObjects)
-            {
-                objects.Remove(deadObject.Key);
-            }
+	        var keysToRemove = objects.Keys.Where(reference => !((ReferenceEqualWeakReference) reference).IsAlive).ToArray();
+
+	        foreach (var key in keysToRemove) {
+		        bool ignored;
+		        objects.TryRemove(key, out ignored);
+	        }
         }
-#else
-        /// <summary>
-        /// Removes all dead objects.
-        /// </summary>
-        /// <param name="objects">The objects collection to be freed of dead objects.</param>
-        private static void RemoveDeadObjects(HashSet<object> objects)
-        {
-            objects.RemoveWhere(reference => !((ReferenceEqualWeakReference)reference).IsAlive);
-        }
-#endif
     }
 }
