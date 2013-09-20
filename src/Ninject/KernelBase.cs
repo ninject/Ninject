@@ -329,6 +329,18 @@ namespace Ninject
                 .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
         }
 
+		/// <summary>
+		/// Retrieve binding information that can satisfy the specified request
+		/// </summary>
+		/// <param name="request">The request to resolve.</param>
+		/// <returns>A list of instances that match the request.</returns>
+		IList<IBinding> GetBindingsThatSatisfyRequest(IRequest request)
+		{
+			return this.GetBindings(request.Service)
+				.Where(this.SatifiesRequest(request))
+				.ToArray();
+		}
+
         /// <summary>
         /// Resolves instances for the specified request. The instances are not actually resolved
         /// until a consumer iterates over the enumerator.
@@ -340,14 +352,11 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
 
             var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            var resolveBindings = Enumerable.Empty<IBinding>();
+	        var resolveBindings = GetBindingsThatSatisfyRequest(request);
 
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
-            {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request));
-
-            }
+			// Re-fetch bindings that satisfy this request if HandleMissingBinding indicates a retry should occur
+			if (resolveBindings.Count == 0 && this.HandleMissingBinding(request))
+				resolveBindings = GetBindingsThatSatisfyRequest(request);
 
             if (!resolveBindings.Any())
             {
@@ -364,7 +373,7 @@ namespace Ninject
                 resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
                 var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
                 resolveBindings =
-                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
+                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0).ToArray();
 
                 if (resolveBindings.Count() > 1)
                 {
@@ -383,7 +392,7 @@ namespace Ninject
 
             if(resolveBindings.Any(binding => !binding.IsImplicit))
             {
-                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
+                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit).ToArray();
             }
 
             return resolveBindings
