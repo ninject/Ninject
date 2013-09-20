@@ -140,10 +140,7 @@ namespace Ninject
 
             this.bindings.RemoveAll(service);
 
-            lock (this.bindingCache)
-            {
-                this.bindingCache.Clear();
-            }
+            this.bindingCache.Clear();
         }
 
         /// <summary>
@@ -167,8 +164,7 @@ namespace Ninject
 
             this.bindings.Remove(binding.Service, binding);
 
-            lock (this.bindingCache)
-                this.bindingCache.Clear();
+            this.bindingCache.Clear();
         }
 
         /// <summary>
@@ -434,19 +430,19 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            lock (this.bindingCache)
-            {
-                if (!this.bindingCache.ContainsKey(service))
-                {
-                    var resolvers = this.Components.GetAll<IBindingResolver>();
+	        Func<Type, ICollection<IBinding>> createFunc = x =>
+		        {
+			        var resolvers = this.Components.GetAll<IBindingResolver>();
+			        var bindersToAdd = new List<IBinding>();
 
-                    resolvers
-                        .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .Map(binding => this.bindingCache.Add(service, binding));
-                }
+			        resolvers
+						.SelectMany(resolver => resolver.Resolve(this.bindings, x))
+				        .Map(bindersToAdd.Add);
 
-                return this.bindingCache[service];
-            }
+			        return bindersToAdd;
+		        };
+
+            return this.bindingCache.GetOrAdd(service, createFunc);
         }
 
         /// <summary>
@@ -557,8 +553,7 @@ namespace Ninject
         {
             bindings.Map(binding => this.bindings.Add(binding.Service, binding));
 
-            lock (this.bindingCache)
-                this.bindingCache.Clear();
+            this.bindingCache.Clear();
         }
 
         object IServiceProvider.GetService(Type service)
