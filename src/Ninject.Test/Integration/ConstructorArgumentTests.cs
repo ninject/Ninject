@@ -47,7 +47,10 @@ namespace Ninject.Tests.Integration
                 // ReSharper disable CoVariantArrayConversion
                 yield return new Func<bool, IConstructorArgument>[] { inherited => new ConstructorArgument("weapon", new Sword(), inherited) };
                 yield return new Func<bool, IConstructorArgument>[] { inherited => new WeakConstructorArgument("weapon", new Sword(), inherited),  };
-                yield return new Func<bool, IConstructorArgument>[] { inherited => new TypeMatchingConstructorArgument(typeof(IWeapon), new Sword(), inherited) };
+                yield return new Func<bool, IConstructorArgument>[]
+                             {
+                                 inherited => new TypeMatchingConstructorArgument(typeof(IWeapon), (context, target) => new Sword(), inherited)
+                             };
                 // ReSharper restore CoVariantArrayConversion
             }
         }
@@ -59,7 +62,7 @@ namespace Ninject.Tests.Integration
                 // ReSharper disable CoVariantArrayConversion
                 yield return new Func<IConstructorArgument>[] { () => new ConstructorArgument("weapon", new Sword()) };
                 yield return new Func<IConstructorArgument>[] { () => new WeakConstructorArgument("weapon", new Sword()),  };
-                yield return new Func<IConstructorArgument>[] { () => new TypeMatchingConstructorArgument(typeof(IWeapon), new Sword()) };
+                yield return new Func<IConstructorArgument>[] { () => new TypeMatchingConstructorArgument(typeof(IWeapon), (context, target) => new Sword()) };
                 // ReSharper restore CoVariantArrayConversion
             }
         }

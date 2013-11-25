@@ -16,20 +16,9 @@
         /// Initializes a new instance of the <see cref="TypeMatchingConstructorArgument"/> class.
         /// </summary>
         /// <param name="type">The type of the argument to override.</param>
-        /// <param name="value">The value to inject into the property.</param>
-        public TypeMatchingConstructorArgument(Type type, object value)
-            : this(type, value, false)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeMatchingConstructorArgument"/> class.
-        /// </summary>
-        /// <param name="type">The type of the argument to override.</param>
-        /// <param name="value">The value to inject into the property.</param>
-        /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
-        public TypeMatchingConstructorArgument(Type type, object value, bool shouldInherit)
-            : this(type, (ctx, target) => value, shouldInherit)
+        /// <param name="valueCallback">The callback that will be triggered to get the parameter's value.</param>
+        public TypeMatchingConstructorArgument(Type type, Func<IContext, ITarget, object> valueCallback)
+            : this(type, valueCallback, false)
         {
         }
 
@@ -56,7 +45,7 @@
         {
             get
             {
-                throw new NotSupportedException("Name is not supported.");
+                throw new NotImplementedException();
             }
         }
 
