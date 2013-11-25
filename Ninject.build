@@ -115,6 +115,7 @@
 				<include name="System.Core.dll"/>
 				<include name="Moq.dll"/>
 				<include name="xunit.dll"/>
+				<include name="xunit.extensions.dll"/>
 				<include name="FluentAssertions.dll"/>
 				<include name="System.Web.dll"/>
 				<include name="${product.assembly}"/>
@@ -155,6 +156,7 @@
 				<include name="FluentAssertions.Silverlight.dll"/>
 				<include name="xunit.runner.silverlight.dll"/>
 				<include name="xunit-silverlight.dll"/>
+				<include name="xunit.extensions-silverlight.dll"/>
 				<include name="${product.assembly}"/>
 			</references>
 			<nowarn>
