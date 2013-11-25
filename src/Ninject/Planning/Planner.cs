@@ -37,8 +37,7 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-        private readonly ReaderWriterLock plannerLock = new ReaderWriterLock();
-        private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
+        private readonly ConcurrentDictionaryEx<Type, IPlan> plans = new ConcurrentDictionaryEx<Type, IPlan>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Planner"/> class.
@@ -63,17 +62,7 @@ namespace Ninject.Planning
         public IPlan GetPlan(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
-
-            this.plannerLock.AcquireReaderLock(Timeout.Infinite);
-            try
-            {
-                IPlan plan;
-                return this.plans.TryGetValue(type, out plan) ? plan : this.CreateNewPlan(type);
-            }
-            finally
-            {
-                this.plannerLock.ReleaseReaderLock();
-            }
+	        return this.plans.GetOrAdd(type, CreateNewPlan);
         }
 
         /// <summary>
@@ -95,25 +84,10 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
-            var lockCooki = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
-            try
-            {
-                IPlan plan;
-                if (this.plans.TryGetValue(type, out plan))
-                {
-                    return plan;
-                }
+            var plan = this.CreateEmptyPlan(type);
+            this.Strategies.Map(s => s.Execute(plan));
 
-                plan = this.CreateEmptyPlan(type);
-                this.plans.Add(type, plan);
-                this.Strategies.Map(s => s.Execute(plan));
-
-                return plan;
-            }
-            finally
-            {
-                this.plannerLock.DowngradeFromWriterLock(ref lockCooki);
-            }
+            return plan;
         }
     }
 }

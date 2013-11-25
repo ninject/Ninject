@@ -92,6 +92,7 @@
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
     <Compile Include="Infrastructure\BaseWeakReference.cs" />
+    <Compile Include="Infrastructure\ConcurrentDictionaryEx.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
     <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />

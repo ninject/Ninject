@@ -22,7 +22,7 @@ namespace Ninject.Infrastructure
     /// <typeparam name="V">The type of value.</typeparam>
     public class Multimap<K, V> : IEnumerable<KeyValuePair<K, ICollection<V>>>
     {
-        private readonly Dictionary<K, ICollection<V>> _items = new Dictionary<K, ICollection<V>>();
+        private readonly ConcurrentDictionaryEx<K, ICollection<V>> _items = new ConcurrentDictionaryEx<K, ICollection<V>>();
 
         /// <summary>
         /// Gets the collection of values stored under the specified key.
@@ -34,10 +34,7 @@ namespace Ninject.Infrastructure
             {
                 Ensure.ArgumentNotNull(key, "key");
 
-                if (!_items.ContainsKey(key))
-                    _items[key] = new List<V>();
-
-                return _items[key];
+	            return _items.GetOrAdd(key, x => new List<V>());
             }
         }
 
@@ -70,6 +67,19 @@ namespace Ninject.Infrastructure
             this[key].Add(value);
         }
 
+	    /// <summary>
+	    /// Adds the specified value for the specified key.
+	    /// </summary>
+	    /// <param name="key">The key.</param>
+	    /// <param name="valueFactory">The method that can create the value if required.</param>
+	    public ICollection<V> GetOrAdd(K key, Func<K, ICollection<V>> valueFactory)
+		{
+			Ensure.ArgumentNotNull(key, "key");
+			Ensure.ArgumentNotNull((object) valueFactory, "valueFactory");
+
+		    return _items.GetOrAdd(key, valueFactory);
+		}
+
         /// <summary>
         /// Removes the specified value for the specified key.
         /// </summary>
@@ -81,10 +91,8 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            if (!_items.ContainsKey(key))
-                return false;
-
-            return _items[key].Remove(value);
+			ICollection<V> collection;
+			return _items.TryGetValue(key, out collection) && collection.Remove(value);
         }
 
         /// <summary>
@@ -95,7 +103,9 @@ namespace Ninject.Infrastructure
         public bool RemoveAll(K key)
         {
             Ensure.ArgumentNotNull(key, "key");
-            return _items.Remove(key);
+
+	        ICollection<V> ignored;
+	        return _items.TryRemove(key, out ignored);
         }
 
         /// <summary>
@@ -128,7 +138,8 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            return _items.ContainsKey(key) && _items[key].Contains(value);
+	        ICollection<V> collection;
+	        return _items.TryGetValue(key, out collection) && collection.Contains(value);
         }
 
         /// <summary>
