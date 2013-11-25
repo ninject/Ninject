@@ -60,6 +60,38 @@ namespace Ninject.Syntax
         IBindingWithOrOnSyntax<T> WithConstructorArgument(string name, Func<IContext, ITarget, object> callback);
 
         /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <typeparam name="TValue">Specifies the argument type to override.</typeparam>
+        /// <param name="value">The value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(TValue value);
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="value">The value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, object value);
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, object> callback);
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>    
+        /// <returns>The fluent syntax.</returns>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback);
+
+        /// <summary>
         /// Indicates that the specified property should be injected with the specified value.
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
