@@ -107,52 +107,73 @@ namespace Ninject.Activation
         /// <returns>The resolved instance.</returns>
         public object Resolve()
         {
-            lock (Binding)
+            if (Request.ActiveBindings.Contains(Binding)) throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+
+            try
             {
-                if (Request.ActiveBindings.Contains(Binding))
-                    throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
-
-                try
+                this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
+                
+                if (this.cachedScope == null)
                 {
-                    this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
-                    var cachedInstance = this.Kernel.Cache.TryGet(this);
-
-                    if (cachedInstance != null) return cachedInstance;
-
-                    Request.ActiveBindings.Push(Binding);
-
-                    var reference = new InstanceReference { Instance = GetProvider().Create(this) };
-
-                    Request.ActiveBindings.Pop();
-
-                    if (reference.Instance == null)
-                    {
-                        if (!this.Kernel.Settings.AllowNullInjection)
-                        {
-                            throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
-                        }
-
-                        if (this.Plan == null)
-                        {
-                            this.Plan = this.Kernel.Planner.GetPlan(this.Request.Service);
-                        }
-
-                        return null;
-                    }
-
-                    if (GetScope() != null) this.Kernel.Cache.Remember(this, reference);
-
-                    if (Plan == null) Plan = this.Kernel.Planner.GetPlan(reference.Instance.GetType());
-
-                    this.Kernel.Pipeline.Activate(this, reference);
-
-                    return reference.Instance;
+                    return this.ResolveInternal();
                 }
-                finally
+
+                lock (this.Binding)
                 {
-                    this.cachedScope = null;
+                    return this.ResolveInternal();
                 }
             }
+            finally
+            {
+                this.cachedScope = null;
+            }
+        }
+
+        private object ResolveInternal()
+        {
+            var cachedInstance = this.Kernel.Cache.TryGet(this);
+
+            if (cachedInstance != null)
+            {
+                return cachedInstance;
+            }
+
+            this.Request.ActiveBindings.Push(this.Binding);
+
+            var reference = new InstanceReference { Instance = this.GetProvider().Create(this) };
+
+            this.Request.ActiveBindings.Pop();
+
+            if (reference.Instance == null)
+            {
+                if (!this.Kernel.Settings.AllowNullInjection)
+                {
+                    throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                }
+
+                if (this.Plan == null)
+                {
+                    this.Plan = this.Kernel.Planner.GetPlan(this.Request.Service);
+                }
+
+                {
+                    return null;
+                }
+            }
+
+            if (this.GetScope() != null)
+            {
+                this.Kernel.Cache.Remember(this, reference);
+            }
+
+            if (this.Plan == null)
+            {
+                this.Plan = this.Kernel.Planner.GetPlan(reference.Instance.GetType());
+            }
+
+            this.Kernel.Pipeline.Activate(this, reference);
+
+            return reference.Instance;
         }
     }
 }
