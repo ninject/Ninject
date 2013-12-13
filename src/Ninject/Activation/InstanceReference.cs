@@ -17,8 +17,6 @@ using Ninject.Planning.Bindings;
 
 namespace Ninject.Activation
 {
-    using System.Runtime.Remoting;
-
     /// <summary>
     /// Holds an instance during activation or after it has been cached.
     /// </summary>
@@ -36,7 +34,9 @@ namespace Ninject.Activation
         /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
         public bool Is<T>()
         {
-            if (RemotingServices.IsTransparentProxy(Instance)) return false;
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return false;
+#endif
 
             return Instance is T;
         }
@@ -58,7 +58,9 @@ namespace Ninject.Activation
         /// <param name="action">The action to execute.</param>
         public void IfInstanceIs<T>(Action<T> action)
         {
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
             if (RemotingServices.IsTransparentProxy(Instance)) return;
+#endif
 
             if (Instance is T)
                 action((T)Instance);
