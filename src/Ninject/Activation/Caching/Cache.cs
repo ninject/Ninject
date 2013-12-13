@@ -171,8 +171,8 @@ namespace Ninject.Activation.Caching
                 var disposedScopes = this.entries.Where(scope => !((ReferenceEqualWeakReference)scope.Key).IsAlive).Select(scope => scope).ToList();
                 foreach (var disposedScope in disposedScopes)
                 {
-                    this.Forget(GetAllBindingEntries(disposedScope.Value));
                     this.entries.Remove(disposedScope.Key);
+                    this.Forget(GetAllBindingEntries(disposedScope.Value));
                 }
             }
         }
@@ -189,8 +189,8 @@ namespace Ninject.Activation.Caching
                 Multimap<IBindingConfiguration, CacheEntry> bindings;
                 if (this.entries.TryGetValue(scope, out bindings))
                 {
-                    this.Forget(GetAllBindingEntries(bindings));
                     this.entries.Remove(scope);
+                    this.Forget(GetAllBindingEntries(bindings));
                 }
             }
         }

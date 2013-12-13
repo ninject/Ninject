@@ -161,7 +161,7 @@ namespace Ninject.Tests.Integration
         public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenerics()
         {
             kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedIntoOneOf(typeof(IGenericService<>));
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(new[] { typeof(IGenericService<>) });
             kernel.Bind<IWeapon>().To<Sword>();
 
             var service = kernel.Get<GenericService<int>>();
@@ -177,7 +177,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Sword>();
             kernel.Bind<IWarrior>().To<FootSoldier>();
             kernel.Bind<IWeapon>().To<Shuriken>()
-                .WhenInjectedExactlyIntoOneOf(typeof(Samurai), typeof(Barracks));
+                .WhenInjectedExactlyInto(typeof(Samurai), typeof(Barracks));
 
             kernel.Bind<Samurai>().ToSelf();
             kernel.Bind<Barracks>().ToSelf();
@@ -208,7 +208,7 @@ namespace Ninject.Tests.Integration
         public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenericsWhenClosedGenericIsRequested()
         {
             kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedIntoOneOf(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
             kernel.Bind<IWeapon>().To<Sword>();
 
             var service = kernel.Get<ClosedGenericService>();
@@ -223,7 +223,7 @@ namespace Ninject.Tests.Integration
         {
 
             kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedIntoOneOf(typeof(Samurai));
+            this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto(new[] { typeof(Samurai) });
             kernel.Bind<Samurai>().ToSelf();
             var warrior = kernel.Get<Samurai>();
             warrior.Weapon.Should().BeOfType<Shuriken>();
@@ -245,7 +245,7 @@ namespace Ninject.Tests.Integration
         public void WhenInjectedExactlyIntoOneOfMultipleTypesAppliesToOpenGenerics()
         {
             kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyIntoOneOf(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
             kernel.Bind<IWeapon>().To<Sword>();
 
             var service = kernel.Get<GenericService<int>>();
@@ -283,7 +283,7 @@ namespace Ninject.Tests.Integration
             kernel.Bind<IWeapon>().To<Sword>();
             kernel.Bind<IWarrior>().To<FootSoldier>();
             kernel.Bind<IWeapon>().To<Shuriken>()
-                .WhenInjectedExactlyIntoOneOf(typeof(Samurai), typeof(Barracks));
+                .WhenInjectedExactlyInto(typeof(Samurai), typeof(Barracks));
 
             kernel.Bind<Samurai>().ToSelf();
             kernel.Bind<Barracks>().ToSelf();

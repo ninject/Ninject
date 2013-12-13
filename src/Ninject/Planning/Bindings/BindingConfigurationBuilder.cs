@@ -133,7 +133,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="parents">The type.</param>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedIntoOneOf(params Type[] parents)
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(params Type[] parents)
         {
             this.BindingConfiguration.Condition = r =>
             {
@@ -216,7 +216,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyIntoOneOf(params Type[] parents)
+        public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(params Type[] parents)
         {
             this.BindingConfiguration.Condition = r => {
                 foreach (var parent in parents)
@@ -488,7 +488,52 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Parameters.Add(new ConstructorArgument(name, callback));
             return this;
         }
-        
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <typeparam name="TValue">Specifies the argument type to override.</typeparam>
+        /// <param name="value">The value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(TValue value)
+        {
+            return this.WithConstructorArgument(typeof(TValue), (context, target) => value);
+        }
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="value">The value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, object value)
+        {
+            return this.WithConstructorArgument(type, (context, target) => value);
+        }
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, object> callback)
+        {
+            return this.WithConstructorArgument(type, (context, target) => callback(context));
+        }
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>    
+        /// <returns>The fluent syntax.</returns>
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback)
+        {
+            this.BindingConfiguration.Parameters.Add(new TypeMatchingConstructorArgument(type, callback));
+            return this;
+        }
+
         /// <summary>
         /// Indicates that the specified property should be injected with the specified value.
         /// </summary>

@@ -46,6 +46,13 @@ namespace Ninject.Components
         void RemoveAll(Type component);
 
         /// <summary>
+        /// Removes the specified registration.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The implementation type.</typeparam>
+        void Remove<T, TImplementation>() where T : INinjectComponent where TImplementation : T;
+
+        /// <summary>
         /// Gets one instance of the specified component.
         /// </summary>
         /// <typeparam name="T">The component type.</typeparam>
