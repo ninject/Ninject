@@ -1,4 +1,5 @@
-﻿#if !NO_MOQ
+﻿using Ninject.Infrastructure.Language;
+#if !NO_MOQ
 using System.Reflection;
 using Moq;
 using Ninject.Activation;

@@ -1,4 +1,5 @@
-﻿#if !NO_MOQ
+﻿
+#if !NO_MOQ
 using System;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
 using Ninject.Injection;
+using Ninject.Infrastructure.Language;
 using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;

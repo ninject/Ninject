@@ -1,4 +1,6 @@
-﻿#if !NO_MOQ
+﻿using Ninject.Infrastructure.Language;
+
+#if !NO_MOQ
 namespace Ninject.Tests.Unit.PipelineTests
 {
     using System.Collections.Generic;
