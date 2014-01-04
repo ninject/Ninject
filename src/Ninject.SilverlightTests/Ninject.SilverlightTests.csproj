@@ -369,9 +369,9 @@
       <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
       <Name>Ninject.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ninject\Ninject.SL4.csproj">
+    <ProjectReference Include="..\Ninject\Ninject.SL.csproj">
       <Project>{58d24eb0-14b2-4942-97de-3b2ac31f8dea}</Project>
-      <Name>Ninject.SL4</Name>
+      <Name>Ninject.SL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly.WinRT", "src\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestModules.WinRT", "src\TestModules\TestModules.WinRT.csproj", "{875065AA-EA3B-4C7A-B7DD-9B660AA76D27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SL4", "src\Ninject\Ninject.SL4.csproj", "{58D24EB0-14B2-4942-97DE-3B2AC31F8DEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SL", "src\Ninject\Ninject.SL.csproj", "{58D24EB0-14B2-4942-97DE-3B2AC31F8DEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.SilverlightTests", "src\Ninject.SilverlightTests\Ninject.SilverlightTests.csproj", "{033B09D3-8532-419A-B906-36F8EB605B30}"
 EndProject
