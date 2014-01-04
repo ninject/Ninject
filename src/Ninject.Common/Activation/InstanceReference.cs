@@ -34,6 +34,10 @@ namespace Ninject.Activation
         /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
         public bool Is<T>()
         {
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !PCL
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return false;
+#endif
+
             return Instance is T;
         }
 
@@ -54,6 +58,10 @@ namespace Ninject.Activation
         /// <param name="action">The action to execute.</param>
         public void IfInstanceIs<T>(Action<T> action)
         {
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !PCL
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return;
+#endif
+
             if (Instance is T)
                 action((T)Instance);
         }

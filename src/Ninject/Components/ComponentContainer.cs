@@ -87,6 +87,23 @@ namespace Ninject.Components
         }
 
         /// <summary>
+        /// Removes the specified registration.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The implementation type.</typeparam>
+        public void Remove<T, TImplementation>()
+            where T : INinjectComponent
+            where TImplementation : T
+        {
+            var implementation = typeof(TImplementation);
+            if (_instances.ContainsKey(implementation))
+                _instances[implementation].Dispose();
+
+            _instances.Remove(implementation);
+
+            _mappings[typeof(T)].Remove(typeof(TImplementation));
+        }
+        /// <summary>
         /// Removes all registrations for the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>

@@ -93,8 +93,12 @@
     <Compile Include="Parameters\ConstructorArgument.cs" />
     <Compile Include="Parameters\IConstructorArgument.cs" />
     <Compile Include="Parameters\IParameter.cs" />
+    <Compile Include="Parameters\IPropertyValue.cs" />
     <Compile Include="Parameters\Parameter.cs" />
     <Compile Include="Parameters\PropertyValue.cs" />
+    <Compile Include="Parameters\TypeMatchingConstructorArgument.cs" />
+    <Compile Include="Parameters\WeakConstructorArgument.cs" />
+    <Compile Include="Parameters\WeakPropertyValue.cs" />
     <Compile Include="Planning\Bindings\Binding.cs" />
     <Compile Include="Planning\Bindings\BindingBuilder.cs" />
     <Compile Include="Planning\Bindings\BindingBuilder{T1,T2,T3,T4}.cs" />

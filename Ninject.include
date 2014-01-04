@@ -535,8 +535,11 @@
 		</if>
 		
 		<property name="nuget.platform" value=""/>
+		<property name="prereleaseversionnumber" value="${string::pad-left(version.revision, 3, '0')}" unless="${version.major == '3' and version.minor == '0' and version.build == '2'}"/>
+		<property name="prereleaseversionnumber" value="9${string::pad-left(version.revision, 3, '0')}" if="${version.major == '3' and version.minor == '0' and version.build == '2'}"/>
+		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${version.prerelease}"/>
 		<property name="nuget.version" value="${build.version}" if="${version.prerelease == ''}"/>
-		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${version.prerelease}-${version.revision}" unless="${version.prerelease == ''}"/>
+		<property name="nuget.version" value="${version.major}.${version.minor}.${version.build}${version.prerelease}-${prereleaseversionnumber}" if="${version.prerelease == '-unstable'}"/>
 		
 		<call target="config-build-${build.config}"/>
 		<foreach item="String" in="${nuget.platforms}" delim="," property="platform">

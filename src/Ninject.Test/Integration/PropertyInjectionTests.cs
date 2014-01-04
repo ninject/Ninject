@@ -1,5 +1,7 @@
 namespace Ninject.Tests.Integration
 {
+    using System;
+
     using FluentAssertions;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Parameters;
@@ -75,6 +77,34 @@ namespace Ninject.Tests.Integration
             ValidateNinjaWarriorWithOverides(warrior);
         }
 #endif //!SILVERLIGHT
+
+#if !MONO
+        [Fact]
+        public void WeakPropertyValue()
+        {
+            this.kernel.Bind<FootSoldier>().ToSelf().InSingletonScope();
+            this.kernel.Bind<IWeapon>().To<Dagger>();
+
+            var weakReference = this.Process();
+
+            var warrior = this.kernel.Get<FootSoldier>();
+
+            warrior.Weapon.Should().BeOfType<Sword>();
+            warrior.Weapon.Should().BeSameAs(weakReference.Target);
+            warrior.Weapon = null;
+
+            GC.Collect();
+
+            weakReference.IsAlive.Should().BeFalse();
+        }
+#endif
+
+        private WeakReference Process()
+        {
+            var sword = new Sword();
+            this.kernel.Get<FootSoldier>(new WeakPropertyValue("Weapon", sword));
+            return new WeakReference(sword);
+        }
     }
 
     public class WhenNoPropertyOverridesAreSupplied : PropertyInjectionTests

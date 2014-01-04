@@ -1,9 +1,13 @@
 Version 3.0.2
+- Add: TypeMatchingConstructorArgument introduced.
 - Add: ToConstructor() can now accept results from methods as argument e.g. ToConstructor(_ => new Foo(this.GetBar())
 - Add: WhenNoAncestorMatches, WhenAnyAncestorMatches and WhenNoAncestorNamed When overloads
+- Add: WeakConstructorArgument and WeakPropertyValue that keep a weak reference to the value only so that Ninject has no reference on them when caching the created instance.
+- Add: Overloads for WhenInjectedInto and WhenInjectedExactlyInto that take multiple types to support multiple allowed parents.
 - Change: Added WhenAnyAncestorNamed and marked mispelled WhenAnyAnchestorNamed as obsolete 
+- Change: Release method was moved from IKernel to the IResolutionRoot interface 
 - Bugfix: Private properties of base class were not checked for existence of setter and Inject attribute
-- Bugfix: When an object that is the scope of another object is released an Exception was thrown.
+- Bugfix: When an object that is the scope of another object is released an Exception was thrown. 
 
 Version 3.0.1
 - Add: The default scope can be changed in the NinjectSettings using 
