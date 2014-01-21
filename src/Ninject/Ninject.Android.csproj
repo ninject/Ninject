@@ -9,9 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ninject</RootNamespace>
     <AssemblyName>Ninject</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\build\Android\debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
@@ -33,7 +33,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\build\Android\release\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS</DefineConstants>
+    <DefineConstants>TRACE;NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
