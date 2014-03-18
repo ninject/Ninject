@@ -102,6 +102,44 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Tries to get an instance of the specified service.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+        public static T TryGetAndThrowOnInvalidBinding<T>(this IResolutionRoot root, params IParameter[] parameters)
+        {
+            return DoTryGetAndThrowOnInvalidBinding<T>(root, null, parameters);
+        }
+
+        /// <summary>
+        /// Tries to get an instance of the specified service by using the first binding with the specified name.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="name">The name of the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+        public static T TryGetAndThrowOnInvalidBinding<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
+        {
+            return DoTryGetAndThrowOnInvalidBinding<T>(root, b => b.Name == name, parameters);
+        }
+
+        /// <summary>
+        /// Tries to get an instance of the specified service by using the first binding that matches the specified constraint.
+        /// </summary>
+        /// <typeparam name="T">The service to resolve.</typeparam>
+        /// <param name="root">The resolution root.</param>
+        /// <param name="constraint">The constraint to apply to the binding.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
+        public static T TryGetAndThrowOnInvalidBinding<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        {
+            return DoTryGetAndThrowOnInvalidBinding<T>(root, constraint, parameters);
+        }
+
+        /// <summary>
         /// Gets all available instances of the specified service.
         /// </summary>
         /// <typeparam name="T">The service to resolve.</typeparam>
@@ -359,6 +397,11 @@ namespace Ninject
             {
                 return default(T);
             }
+        }
+
+        private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+        {
+            return GetResolutionIterator(root, typeof(T), constraint, parameters, true, true).Cast<T>().SingleOrDefault();
         }
     }
 }
