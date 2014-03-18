@@ -368,7 +368,7 @@ namespace Ninject
 
                 if (resolveBindings.Count() > 1)
                 {
-                    if (request.IsOptional)
+                    if (request.IsOptional && !request.ForceUnique)
                     {
                         return Enumerable.Empty<object>();
                     }

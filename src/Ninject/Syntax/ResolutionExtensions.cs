@@ -386,6 +386,17 @@ namespace Ninject
             IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             return root.Resolve(request);
         }
+        
+        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
+        {
+            Ensure.ArgumentNotNull(root, "root");
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parameters, "parameters");
+
+            IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+            request.ForceUnique = forceUnique;
+            return root.Resolve(request);
+        }
 
         private static T TryGet<T>(IEnumerable<T> iterator)
         {
@@ -401,7 +412,7 @@ namespace Ninject
 
         private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
         {
-            return GetResolutionIterator(root, typeof(T), constraint, parameters, true, true).Cast<T>().SingleOrDefault();
+            return GetResolutionIterator(root, typeof(T), constraint, parameters, true, true, true).Cast<T>().SingleOrDefault();
         }
     }
 }
