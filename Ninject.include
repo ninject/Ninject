@@ -29,9 +29,11 @@
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
 	<property name="nuget.apiKey" value="" overwrite="false"/>
+	<property name="nuget.publish" value="false" overwrite="false"/>
 	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	<property name="product.packagePostfix" value="" overwrite="false"/>
 	
+	<property name="version.useZero" value="${not(nuget.publish)}" dynamic="true"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
@@ -476,7 +478,7 @@
 			failonerror="false"/>
 	</target>	
 
-	<target name="get-git-revision">
+	<target name="get-git-revision" unless="${version.useZero}">
 		<property name="temp.revision.file" value="RevisionNr.tmp" />
 		<exec
 			program="${path.tools.git}/git.exe"
