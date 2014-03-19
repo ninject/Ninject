@@ -1,4 +1,6 @@
 Version 3.0.2
+- Add: bool IRequest.ForceUnique: In case there is an uncoditional and a conditional binding, return the conditional one. In case there are multiple uncoditional or conditional bindings, throw an exception.
+- Add: IResolutionRoot.TryGetAndThrowOnInvalidBinding<T> (extension method): Returns null if there is no binding, but throws ActivationException in case there is a binding which could not be activated.
 - Add: TypeMatchingConstructorArgument introduced.
 - Add: ToConstructor() can now accept results from methods as argument e.g. ToConstructor(_ => new Foo(this.GetBar())
 - Add: WhenNoAncestorMatches, WhenAnyAncestorMatches and WhenNoAncestorNamed When overloads
