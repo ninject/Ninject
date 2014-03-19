@@ -29,7 +29,7 @@
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
 	<property name="nuget.apiKey" value="" overwrite="false"/>
-	<property name="nuget.publish" value="false" overwrite="false"/>
+	<property name="nuget.publish" value="true" overwrite="false"/>
 	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	<property name="product.packagePostfix" value="" overwrite="false"/>
 	
