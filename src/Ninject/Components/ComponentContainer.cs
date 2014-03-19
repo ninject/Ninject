@@ -232,14 +232,14 @@ namespace Ninject.Components
             return constructor;
         }
 
-#if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35
+#if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35 || MONO
         private class HashSet<T>
         {
-            private IDictionary<T, object> data = new Dictionary<T,object>();
+            private IDictionary<T, object> data = new Dictionary<T,bool>();
  
             public void Add(T o)
             {
-                this.data.Add(o, null);
+                this.data.Add(o, true);
             }
 
             public bool Contains(T o)
