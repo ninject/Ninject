@@ -235,7 +235,7 @@ namespace Ninject.Components
 #if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35 || MONO
         private class HashSet<T>
         {
-            private IDictionary<T, object> data = new Dictionary<T,bool>();
+            private IDictionary<T, bool> data = new Dictionary<T,bool>();
  
             public void Add(T o)
             {
