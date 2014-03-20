@@ -45,11 +45,14 @@
 	<property name="build.platform" value="net-3.5" overwrite="true"/>
 	<property name="build.target" value="net-3.5" overwrite="false"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
+	
+	<property name="OsMajorVersion" value="${version::get-major(operating-system::get-version(environment::get-operating-system()))}" dynamic="true" />
+	<property name="OsMinorVersion" value="${version::get-minor(operating-system::get-version(environment::get-operating-system()))}" dynamic="true" />
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.silverlightTests" value="false" readonly="false" overwrite="false"/>
-	<property name="skip.silverlightWPTests" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.silverlightWPTests" value="${OsMajorVersion > '6' or (OsMajorVersion == '6' and OsMinorVersion > '1')}" readonly="false" overwrite="false"/>
 
 	<property name="Is64BitOperatingSystem" value="false" />
 	<property name="Is64BitProcess" value="false" />
@@ -101,6 +104,10 @@
 	
 		<property name="IsWow64Process" value="${PInvoke::IsWow64Process()}" />
 		<echo message="Setting the [IsWow64Process] property to ${IsWow64Process}." />
+		
+		<echo message="OSVersion: ${OsMajorVersion}.${OsMinorVersion}" />
+		<echo message="Skipping Silverlight UnitTests" if="${skip.silverlightTests}" />
+		<echo message="Skipping WP7 UnitTests" if="${skip.silverlightWPTests}" />
 	</target>
 	 
 	<target name="DetectIf64BitProcess">

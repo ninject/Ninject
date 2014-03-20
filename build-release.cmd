@@ -8,7 +8,7 @@ set unittestlog=Ninject-Nant-unit-tests.log
 IF ERRORLEVEL 1 GOTO Failed
 %nantexe% -buildfile:%nantfile% package-source %1 %2 %3 %4 %5 %6 %7 %8
 IF ERRORLEVEL 1 GOTO Failed
-%nantexe% -buildfile:%nantfile% "-D:build.config=release" "-D:skip.silverlightWPTests=true" allPlatforms %1 %2 %3 %4 %5 %6 %7 %8
+%nantexe% -buildfile:%nantfile% "-D:build.config=release" allPlatforms %1 %2 %3 %4 %5 %6 %7 %8
 IF ERRORLEVEL 1 GOTO Failed
 %nantexe% -buildfile:%nantfile% -q -nologo revert
 
