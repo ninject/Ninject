@@ -594,11 +594,11 @@
 			<property name="asm" value="${asm2}" if="${file::exists(asm2)}"/>
 			<property name="asm" value="${asm1}" if="${file::exists(asm1)}"/>
 			
-			<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
+			<property name="dependencyVersion" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
 			<property name="maxVersion" value=""/>
 			<property name="versionPrerelease" value=""/>
 			<property name="i" value="0"/>
-			<foreach item="String" in="${version}" delim="." property="versionPart">
+			<foreach item="String" in="${dependencyVersion}" delim="." property="versionPart">
 				<property name="i" value="${int::parse(i) + 1}"/>
 				<property name="maxVersion" value="${maxVersion + '.'}" unless="${i == '1'}"/>
 				<property name="maxVersion" value="${maxVersion + versionPart}" if="${i == '1'}"/>
@@ -613,7 +613,7 @@
 		    <property name="versionPrerelease" value="${versionPrerelease + version.prerelease}"/>
 			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
 			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
-					 value="${'[' + version + ',' + maxVersion + ')'}"
+					 value="${'[' + dependencyVersion + ',' + maxVersion + ')'}"
 					 if="${version.prerelease == ''}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
