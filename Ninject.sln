@@ -8,14 +8,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-release.cmd = build-release.cmd
 		build.cmd = build.cmd
 		LICENSE.txt = LICENSE.txt
+		Portable.CommonServiceLocator.NinjectAdapter.nuspec = Portable.CommonServiceLocator.NinjectAdapter.nuspec
+		Portable.Ninject.nuspec = Portable.Ninject.nuspec
 		README.markdown = README.markdown
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F70D1D4-2ED2-45A8-89D8-6444B24DC2A8}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject", "src\Ninject\Ninject.csproj", "{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}"
@@ -1033,7 +1033,6 @@ Global
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|iPhoneSimulator.Deploy.0 = Debug|iPhoneSimulator
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|Mixed Platforms.ActiveCfg = Debug|iPhone
-		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|Mixed Platforms.Build.0 = Debug|iPhone
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|Mixed Platforms.Deploy.0 = Debug|iPhone
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Debug|x86.ActiveCfg = Debug|iPhone
 		{870B949B-B45B-4CB7-B089-3A30F0B28F74}.Release|Any CPU.ActiveCfg = Release|iPhone
@@ -1079,6 +1078,7 @@ Global
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1120,6 +1120,7 @@ Global
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Release|Any CPU.Build.0 = Release|Any CPU

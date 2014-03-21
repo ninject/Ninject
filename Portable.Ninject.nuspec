@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Portable.Ninject</id>
-        <version>3.0.7</version>
+        <version>3.2</version>
         <title>Ninject for Portable Class Libraries</title>
         <authors>Oren Novotny</authors>
         <owners />
@@ -18,35 +18,45 @@ Portable version of Ninject for .NET4, SL4, WP7.5+ and Store apps</description>
         <tags>Ninject ioc di portable pcl</tags>
     </metadata>
     <files>
+    <!-- .NET 4 -->
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\net40-client\Ninject.Common.dll" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\net40-client\Ninject.Common.pdb" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\net40-client\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.dll" target="lib\net40-client\Ninject.NetFx.dll" />
-        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.pdb" target="lib\net40-client\Ninject.NetFx.pdb" />
-        <file src="src\Ninject\bin\NET4\Release\Ninject.NetFx.xml" target="lib\net40-client\Ninject.NetFx.xml" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.Platform.dll" target="lib\net40-client\Ninject.Platform.dll" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.Platform.pdb" target="lib\net40-client\Ninject.Platform.pdb" />
+        <file src="src\Ninject\bin\NET4\Release\Ninject.Platform.xml" target="lib\net40-client\Ninject.Platform.xml" />
+      
+      <!-- Win8 -->
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\netcore45\Ninject.Common.dll" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\netcore45\Ninject.Common.pdb" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\netcore45\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.dll" target="lib\netcore45\Ninject.WinRT.dll" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pdb" target="lib\netcore45\Ninject.WinRT.pdb" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.pri" target="lib\netcore45\Ninject.WinRT.pri" />
-        <file src="src\Ninject\bin\WinRT\Release\Ninject.WinRT.xml" target="lib\netcore45\Ninject.WinRT.xml" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\portable-net4+sl5+wp8+win8+monotouch10+monoandroid10\Ninject.Common.dll" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\portable-net4+sl5+wp8+win8+monotouch10+monoandroid10\Ninject.Common.pdb" />
-        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\portable-net4+sl5+wp8+win8+monotouch10+monoandroid10\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\WP8\release\Ninject.Common.dll" target="lib\wp8\Ninject.Common.dll" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.Platform.dll" target="lib\netcore45\Ninject.Platform.dll" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.Platform.pdb" target="lib\netcore45\Ninject.Platform.pdb" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.Platform.pri" target="lib\netcore45\Ninject.Platform.pri" />
+        <file src="src\Ninject\bin\WinRT\Release\Ninject.Platform.xml" target="lib\netcore45\Ninject.Platform.xml" />
+        
+      <!-- PCL -->
+      <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\portable-net4+sl5+wp8+win8\Ninject.Common.dll" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\portable-net4+sl5+wp8+win8\Ninject.Common.pdb" />
+        <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\portable-net4+sl5+wp8+win8\Ninject.Common.xml" />
+        
+      <!-- WP8 -->
+      <file src="src\Ninject\bin\WP8\release\Ninject.Common.dll" target="lib\wp8\Ninject.Common.dll" />
         <file src="src\Ninject\bin\WP8\release\Ninject.Common.pdb" target="lib\wp8\Ninject.Common.pdb" />
         <file src="src\Ninject\bin\WP8\release\Ninject.Common.xml" target="lib\wp8\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\WP8\release\Ninject.WP.dll" target="lib\wp8\Ninject.WP.dll" />
-        <file src="src\Ninject\bin\WP8\release\Ninject.WP.pdb" target="lib\wp8\Ninject.WP.pdb" />
-        <file src="src\Ninject\bin\WP8\release\Ninject.WP.xml" target="lib\wp8\Ninject.WP.xml" />
+        <file src="src\Ninject\bin\WP8\release\Ninject.Platform.dll" target="lib\wp8\Ninject.Platform.dll" />
+        <file src="src\Ninject\bin\WP8\release\Ninject.Platform.pdb" target="lib\wp8\Ninject.Platform.pdb" />
+        <file src="src\Ninject\bin\WP8\release\Ninject.Platform.xml" target="lib\wp8\Ninject.Platform.xml" />
+      
+      <!-- SL5 -->
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.dll" target="lib\sl5\Ninject.Common.dll" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.pdb" target="lib\sl5\Ninject.Common.pdb" />
         <file src="src\Ninject.Common\bin\Release\Ninject.Common.xml" target="lib\sl5\Ninject.Common.xml" />
-        <file src="src\Ninject\bin\SL\Release\Ninject.SL.dll" target="lib\sl5\Ninject.SL.dll" />
-        <file src="src\Ninject\bin\SL\Release\Ninject.SL.pdb" target="lib\sl5\Ninject.SL.pdb" />
-        <file src="src\Ninject\bin\SL\Release\Ninject.SL.xml" target="lib\sl5\Ninject.SL.xml" />
+        <file src="src\Ninject\bin\SL\Release\Ninject.Platform.dll" target="lib\sl5\Ninject.Platform.dll" />
+        <file src="src\Ninject\bin\SL\Release\Ninject.Platform.pdb" target="lib\sl5\Ninject.Platform.pdb" />
+        <file src="src\Ninject\bin\SL\Release\Ninject.Platform.xml" target="lib\sl5\Ninject.Platform.xml" />
 
+<!-- These are not ready/tested yet
       <file src="src\Ninject\bin\iPhone\release\Ninject.Common.dll" target="lib\monotouch10\Ninject.Common.dll" />
       <file src="src\Ninject\bin\iPhone\release\Ninject.Common.pdb" target="lib\monotouch10\Ninject.Common.pdb" />
       <file src="src\Ninject\bin\iPhone\release\Ninject.Common.xml" target="lib\monotouch10\Ninject.Common.xml" />
@@ -60,6 +70,7 @@ Portable version of Ninject for .NET4, SL4, WP7.5+ and Store apps</description>
       <file src="src\Ninject\bin\Android\release\Ninject.WP.dll" target="lib\monoandroid10\Ninject.Android.dll" />
       <file src="src\Ninject\bin\Android\release\Ninject.WP.pdb" target="lib\monoandroid10\Ninject.Android.pdb" />
       <file src="src\Ninject\bin\Android\release\Ninject.WP.xml" target="lib\monoandroid10\Ninject.Android.xml" />
+      -->
       
         <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />        
     </files>
