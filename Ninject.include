@@ -29,9 +29,11 @@
 	<property name="product.assembly.silverlighttestdll" value="${product.name}.SilverlightTests.dll" overwrite="false"/>
 	<property name="product.additionalVersionTag" value="" overwrite="false"/>
 	<property name="nuget.apiKey" value="" overwrite="false"/>
+	<property name="nuget.publish" value="true" overwrite="false"/>
 	<property name="product.clsCompliant" value="true" overwrite="false"/>
 	<property name="product.packagePostfix" value="" overwrite="false"/>
 	
+	<property name="version.useZero" value="${not(nuget.publish)}" dynamic="true"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
@@ -43,11 +45,14 @@
 	<property name="build.platform" value="net-3.5" overwrite="true"/>
 	<property name="build.target" value="net-3.5" overwrite="false"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
+	
+	<property name="OsMajorVersion" value="${version::get-major(operating-system::get-version(environment::get-operating-system()))}" dynamic="true" />
+	<property name="OsMinorVersion" value="${version::get-minor(operating-system::get-version(environment::get-operating-system()))}" dynamic="true" />
 
 	<property name="package" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
 	<property name="skip.silverlightTests" value="false" readonly="false" overwrite="false"/>
-	<property name="skip.silverlightWPTests" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.silverlightWPTests" value="${OsMajorVersion > '6' or (OsMajorVersion == '6' and OsMinorVersion > '1')}" readonly="false" overwrite="false"/>
 
 	<property name="Is64BitOperatingSystem" value="false" />
 	<property name="Is64BitProcess" value="false" />
@@ -99,6 +104,10 @@
 	
 		<property name="IsWow64Process" value="${PInvoke::IsWow64Process()}" />
 		<echo message="Setting the [IsWow64Process] property to ${IsWow64Process}." />
+		
+		<echo message="OSVersion: ${OsMajorVersion}.${OsMinorVersion}" />
+		<echo message="Skipping Silverlight UnitTests" if="${skip.silverlightTests}" />
+		<echo message="Skipping WP7 UnitTests" if="${skip.silverlightWPTests}" />
 	</target>
 	 
 	<target name="DetectIf64BitProcess">
@@ -476,7 +485,7 @@
 			failonerror="false"/>
 	</target>	
 
-	<target name="get-git-revision">
+	<target name="get-git-revision" unless="${version.useZero}">
 		<property name="temp.revision.file" value="RevisionNr.tmp" />
 		<exec
 			program="${path.tools.git}/git.exe"
@@ -585,11 +594,11 @@
 			<property name="asm" value="${asm2}" if="${file::exists(asm2)}"/>
 			<property name="asm" value="${asm1}" if="${file::exists(asm1)}"/>
 			
-			<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
+			<property name="dependencyVersion" value="${assemblyname::get-version(assemblyname::get-assembly-name(asm))}"/>
 			<property name="maxVersion" value=""/>
 			<property name="versionPrerelease" value=""/>
 			<property name="i" value="0"/>
-			<foreach item="String" in="${version}" delim="." property="versionPart">
+			<foreach item="String" in="${dependencyVersion}" delim="." property="versionPart">
 				<property name="i" value="${int::parse(i) + 1}"/>
 				<property name="maxVersion" value="${maxVersion + '.'}" unless="${i == '1'}"/>
 				<property name="maxVersion" value="${maxVersion + versionPart}" if="${i == '1'}"/>
@@ -604,7 +613,7 @@
 		    <property name="versionPrerelease" value="${versionPrerelease + version.prerelease}"/>
 			<xmlpoke file="${nuget.basedir}/${nuget.name}.nuspec" 
 			         xpath="//package/nu:metadata/nu:dependencies/nu:dependency[@id='${dependency}']/@version" 
-					 value="${'[' + version + ',' + maxVersion + ')'}"
+					 value="${'[' + dependencyVersion + ',' + maxVersion + ')'}"
 					 if="${version.prerelease == ''}">
 				<namespaces>
 					<namespace prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />

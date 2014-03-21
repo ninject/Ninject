@@ -29,8 +29,9 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Fakes;
 
     using Xunit;
+#if !WINRT
     using Xunit.Extensions;
-
+#endif
 
     public class ConstructorArgumentTests : IDisposable
     {
@@ -72,7 +73,7 @@ namespace Ninject.Tests.Integration
         {
             this.kernel.Dispose();
         }
-
+#if !WINRT
         [Theory]
         [PropertyData("ConstructorArguments")]
         public void ConstructorArgumentsArePassedToFirstLevel(Func<bool, IConstructorArgument> constructorArgument)
@@ -108,6 +109,7 @@ namespace Ninject.Tests.Integration
             baracks.Weapon.Should().BeOfType<Sword>();
             baracks.Warrior.Weapon.Should().BeOfType<Sword>();
         }
+#endif
 
 #if !MONO
         [Fact]

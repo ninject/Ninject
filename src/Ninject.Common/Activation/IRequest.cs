@@ -74,6 +74,17 @@ namespace Ninject.Activation
         bool IsUnique { get; set; }
 
         /// <summary>
+        /// Gets or sets value indicating whether the request should force to return a unique value even if the request is optional.
+        /// If this value is set true the request will throw an ActivationException if there are multiple satisfying bingings rather
+        /// than returning null for the request is optional. For none optional requests this parameter does not change anything.
+        /// </summary>
+        bool ForceUnique
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Determines whether the specified binding satisfies the constraint defined on this request.
         /// </summary>
         /// <param name="binding">The binding.</param>
