@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="Ninject" default="build">
-	<property name="version" value="2.2.0.0" overwrite="true"/>
+	<property name="version" value="0.0.0.0" overwrite="true"/>
 	<property name="product.name" value="Ninject" overwrite="false"/>
 	<property name="product.company" value="Ninject Project Contributors" overwrite="false"/>
 	<property name="product.duration" value="2007-2012" overwrite="false"/>

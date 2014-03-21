@@ -455,7 +455,7 @@ namespace Ninject
                 if (resolveBindingsArray.Length > 1 && 
                     this.bindingPrecedenceComparer.Compare(resolveBindingsArray[0], resolveBindingsArray[1]) == 0)
                 {
-                    if (request.IsOptional)
+                    if (request.IsOptional && !request.ForceUnique)
                     {
                         return Enumerable.Empty<object>();
                     }

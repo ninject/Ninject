@@ -240,6 +240,112 @@
         }
     }
 
+    public class WhenTryGetAndThrowOnInvalidBindingIsCalledForInterfaceBoundService : StandardKernelContext
+    {
+        [Fact]
+        public void SingleInstanceIsReturnedWhenOneBindingIsRegistered()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<IWeapon>();
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void ConditionalBindingInstanceIsReturnedWhenConditionalAndUnconditionalBindingAreRegisteredAndConditionIsMet()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>().When(ctx => true);
+
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<IWeapon>();
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Shuriken>();
+        }
+
+        [Fact]
+        public void UnconditionalBindingInstanceIsReturnedWhenConditionalAndUnconditionalBindingAreRegisteredAndConditionIsUnmet()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>().When(ctx => false);
+
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<IWeapon>();
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void ThrowsActivationExceptionWhenSingleInvalidBindingIsRegistered()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+
+            kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
+                .ShouldThrow<ActivationException>();
+        }
+
+        [Fact]
+        public void ThrowsActivationExceptionWhenMultipleBindingsAreRegistered()
+        {
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>();
+
+            kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWeapon>())
+                .ShouldThrow<ActivationException>();
+        }
+
+        [Fact]
+        public void ThrowsActivationExceptionWhenMultipleBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Shuriken>();
+
+            kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
+                .ShouldThrow<ActivationException>();
+        }
+
+        [Fact]
+        public void ThrowsActivationExceptionWhenOnlyUnmetConditionalBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
+                .ShouldThrow<ActivationException>();
+        }
+    }
+
+    public class WhenTryGetAndThrowOnInvalidBindingIsCalledForUnboundService : StandardKernelContext
+    {
+        [Fact]
+        public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
+        {
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<Sword>();
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void ReturnsNullIfTypeIsNotSelfBindable()
+        {
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<IWeapon>();
+            weapon.Should().BeNull();
+        }
+
+        [Fact]
+        public void ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var weapon = kernel.TryGetAndThrowOnInvalidBinding<IWeapon>();
+            weapon.Should().BeNull();
+        }
+    }
+
     public class WhenGetAllIsCalledForInterfaceBoundService : StandardKernelContext
     {
         [Fact]
@@ -302,7 +408,6 @@
             var service = kernel.Get<IGeneric<int>>();
 
             service.Should().BeOfType<ClosedGenericService>();
-
         }
 
 #if NET_40
@@ -357,7 +462,7 @@
         {
             kernel.Bind<IWeapon>().ToProvider<NullProvider>();
             
-            Assert.Throws<Ninject.ActivationException>(() => kernel.Get<IWeapon>());
+            Assert.Throws<ActivationException>(() => kernel.Get<IWeapon>());
         }
     
         [Fact]

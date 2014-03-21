@@ -78,6 +78,16 @@ namespace Ninject.Activation
         }
 
         /// <summary>
+        /// Gets or sets value indicating whether the request should force to return a unique value even if the request is optional.
+        /// If this value is set true the request will throw an ActivationException if there are multiple satisfying bingings rather
+        /// than returning null for the request is optional. For none optional requests this parameter does not change anything.
+        /// </summary>
+        public bool ForceUnique
+        {
+            get; set;
+        }
+        
+        /// <summary>
         /// Gets the callback that resolves the scope for the request, if an external scope was provided.
         /// </summary>
         public Func<object> ScopeCallback { get; private set; }

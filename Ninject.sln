@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E299B94-5F07-49DE-8226-55EDC56F13E3}"
 	ProjectSection(SolutionItems) = preProject
 		build-release.cmd = build-release.cmd
@@ -20,6 +22,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAssembly", "src\TestAssembly\TestAssembly.csproj", "{C9F6CFE7-44B2-4D55-9307-33C34C045468}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.NinjectAdapter.Tests", "src\CommonServiceLocator.NinjectAdapter.Tests\CommonServiceLocator.NinjectAdapter.Tests.csproj", "{3B703A23-DB64-4606-B124-16BA83C461B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingTestServer", "RemotingServer\RemotingTestServer.csproj", "{E2FCFE04-2D57-4F43-8E13-12B47B878C18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingTestClient", "RemotingTestClient\RemotingTestClient.csproj", "{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +83,22 @@ Global
 		{3B703A23-DB64-4606-B124-16BA83C461B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B703A23-DB64-4606-B124-16BA83C461B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B703A23-DB64-4606-B124-16BA83C461B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2FCFE04-2D57-4F43-8E13-12B47B878C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.AutomatedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.AutomatedRelease|Any CPU.Build.0 = Release|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug .NET 4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug .NET 4.0|Any CPU.Build.0 = Debug|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BAD25A0-BE8E-4D8F-9EB2-AB7B307B9D94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
