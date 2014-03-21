@@ -32,10 +32,13 @@ namespace Ninject.Activation
         /// </summary>
         /// <typeparam name="T">The type in question.</typeparam>
         /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
-        public bool Is<T>()
+        public bool Is<T>() where T : class
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return false;
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) 
+            {
+                return (Instance as T) != null;
+            }
 #endif
 
             return Instance is T;
@@ -46,9 +49,9 @@ namespace Ninject.Activation
         /// </summary>
         /// <typeparam name="T">The requested type.</typeparam>
         /// <returns>The instance.</returns>
-        public T As<T>()
+        public T As<T>() where T : class
         {
-            return (T)Instance;
+            return Instance as T;
         }
 
         /// <summary>
@@ -56,10 +59,14 @@ namespace Ninject.Activation
         /// </summary>
         /// <typeparam name="T">The type in question.</typeparam>
         /// <param name="action">The action to execute.</param>
-        public void IfInstanceIs<T>(Action<T> action)
+        public void IfInstanceIs<T>(Action<T> action) where T : class
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return;
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) && (Instance as T) != null)
+            {
+                action((T)Instance);
+                return;
+            }
 #endif
 
             if (Instance is T)
