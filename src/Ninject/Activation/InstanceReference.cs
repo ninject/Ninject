@@ -65,8 +65,8 @@ namespace Ninject.Activation
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) && (Instance as T) != null)
             {
                 action((T)Instance);
+                return;
             }
-            return;
 #endif
 
             if (Instance is T)
