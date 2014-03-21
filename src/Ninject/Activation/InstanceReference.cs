@@ -35,7 +35,10 @@ namespace Ninject.Activation
         public bool Is<T>()
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return false;
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) 
+            {
+                return (Instance as T) != null;
+            }
 #endif
 
             return Instance is T;
@@ -59,7 +62,11 @@ namespace Ninject.Activation
         public void IfInstanceIs<T>(Action<T> action)
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)) return;
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) && (Instance as T) != null)
+            {
+                action((T)Instance);
+            }
+            return;
 #endif
 
             if (Instance is T)
