@@ -397,8 +397,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions.WindowsPhone">
-      <HintPath>..\..\packages\FluentAssertions.2.2.0.0\lib\sl4-windowsphone71\FluentAssertions.WindowsPhone.dll</HintPath>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.0.0-alpha4\lib\windowsphone8\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.WindowsPhone, Version=3.0.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FluentAssertions.3.0.0-alpha4\lib\windowsphone8\FluentAssertions.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Moq.Silverlight">
       <HintPath>..\..\tools\moq\Silverlight4\Moq.Silverlight.dll</HintPath>

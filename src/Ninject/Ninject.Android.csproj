@@ -35,6 +35,12 @@
     <DocumentationFile>bin\Android\Release\Ninject.Android.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions.Android">
+      <HintPath>..\..\packages\FluentAssertions.Xamarin.3.0.0-alpha4\lib\monoandroid\FluentAssertions.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.0.0-alpha4\lib\portable-net40+sl5+win8+wp8\FluentAssertions.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -114,6 +120,9 @@
       <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
       <Name>Ninject.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -400,6 +400,13 @@
     <BundleResource Include="Resources\Default-568h@2x.png" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\packages\FluentAssertions.3.0.0-alpha4\lib\portable-net40+sl5+win8+wp8\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.iOS">
+      <HintPath>..\packages\FluentAssertions.Xamarin.3.0.0-alpha4\lib\monotouch\FluentAssertions.iOS.dll</HintPath>
+    </Reference>
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
