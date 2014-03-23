@@ -35,7 +35,7 @@ namespace Ninject.Activation
         public bool Is<T>()
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance))
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) && System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance).GetHashCode() != Instance.GetHashCode())
             {
 // ReSharper disable UseIsOperator.2 
 // ReSharper disable PossibleMistakenCallToGetType.1
