@@ -38,12 +38,14 @@ namespace Ninject.Activation
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) &&
                 !object.ReferenceEquals(System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance), Instance))
             {
-// ReSharper disable UseIsOperator.2 
+// ReSharper disable UseIsOperator.1
 // ReSharper disable PossibleMistakenCallToGetType.1
-// Must call Instance.GetType() to convert the TransparentProxy to the actual proxy type 
+// ReSharper disable UseMethodIsInstanceOfType 
+// Must call typeof(T).IsAssignableFrom(Instance.GetType()) to convert the TransparentProxy to the actual proxy type 
                 return typeof(T).IsAssignableFrom(Instance.GetType());
+// ReSharper restore UseMethodIsInstanceOfType
 // ReSharper restore PossibleMistakenCallToGetType.1
-// ReSharper restore UseIsOperator.2
+// ReSharper restore UseIsOperator.1
             };
 #endif
 
