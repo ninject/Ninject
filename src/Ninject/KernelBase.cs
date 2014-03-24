@@ -415,7 +415,7 @@ namespace Ninject
                 if (resolveBindingsIterator.MoveNext() &&
                     this.bindingPrecedenceComparer.Compare(first, resolveBindingsIterator.Current) == 0)
                 {
-                    if (request.IsOptional)
+                    if (request.IsOptional && !request.ForceUnique)
                     {
                         return Enumerable.Empty<object>();
                     }
