@@ -35,8 +35,11 @@ namespace Ninject.Activation
         public bool Is<T>()
         {
 #if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance) &&
-                !object.ReferenceEquals(System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance), Instance))
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)
+#if !MONO
+                && !object.ReferenceEquals(System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance), Instance)
+#endif
+                )
             {
 // ReSharper disable UseIsOperator.1
 // ReSharper disable PossibleMistakenCallToGetType.1
