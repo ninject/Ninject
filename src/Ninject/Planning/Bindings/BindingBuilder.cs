@@ -42,27 +42,19 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder"/> class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding to build.</param>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="settings">The ninject configuration settings.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel, string serviceNames)
+        public BindingBuilder(IBindingConfiguration bindingConfiguration, INinjectSettings settings, string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.BindingConfiguration = bindingConfiguration;
-            this.Kernel = kernel;
             this.ServiceNames = serviceNames;
-            this.BindingConfiguration.ScopeCallback = kernel.Settings.DefaultScopeCallback;
+            this.BindingConfiguration.ScopeCallback = settings.DefaultScopeCallback;
         }
 
         /// <summary>
         /// Gets the binding being built.
         /// </summary>
         public IBindingConfiguration BindingConfiguration { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Gets the names of the services.

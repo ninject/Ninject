@@ -44,10 +44,10 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder{T1, T2, T3, T4}"/> class.
         /// </summary>
         /// <param name="bindingConfigurationConfiguration">The binding to build.</param>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="settings">The ninject configuration settings.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, IKernel kernel, string serviceNames)
-            : base(bindingConfigurationConfiguration, kernel, serviceNames)
+        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, INinjectSettings settings, string serviceNames)
+            : base(bindingConfigurationConfiguration, settings, serviceNames)
         {
         }
 #pragma warning restore 1584
