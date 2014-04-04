@@ -41,6 +41,8 @@ namespace Ninject
         private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
+        
+        private readonly INinjectSettings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -81,7 +83,7 @@ namespace Ninject
             Ensure.ArgumentNotNull(settings, "settings");
             Ensure.ArgumentNotNull(modules, "modules");
 
-            this.Settings = settings;
+            this.settings = settings;
 
             this.Components = components;
             components.Kernel = this;
@@ -92,9 +94,9 @@ namespace Ninject
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
 #if !NO_ASSEMBLY_SCANNING
-            if (this.Settings.LoadExtensions)
+            if (this.settings.LoadExtensions)
             {
-                this.Load(this.Settings.ExtensionSearchPatterns);
+                this.Load(this.settings.ExtensionSearchPatterns);
             }
 #endif
             this.Load(modules);
@@ -103,7 +105,10 @@ namespace Ninject
         /// <summary>
         /// Gets the kernel settings.
         /// </summary>
-        public INinjectSettings Settings { get; private set; }
+        public override INinjectSettings Settings
+        {
+            get { return settings; }
+        }
 
         /// <summary>
         /// Gets the component container, which holds components that contribute to Ninject.

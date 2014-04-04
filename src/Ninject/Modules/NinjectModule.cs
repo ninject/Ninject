@@ -45,6 +45,18 @@ namespace Ninject.Modules
         }
 
         /// <summary>
+        /// Gets the ninject settings.
+        /// </summary>
+        /// <value>The ninject settings.</value>
+        public override INinjectSettings Settings
+        {
+            get
+            {
+                return this.Kernel.Settings;
+            }
+        }
+
+        /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
         public IKernel Kernel { get; private set; }
@@ -61,18 +73,6 @@ namespace Ninject.Modules
         /// Gets the bindings that were registered by the module.
         /// </summary>
         public ICollection<IBinding> Bindings { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        /// <value>The kernel.</value>
-        protected override IKernel KernelInstance
-        {
-            get
-            {
-                return this.Kernel;
-            }
-        }
         
         /// <summary>
         /// Called when the module is loaded into a kernel.
