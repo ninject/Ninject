@@ -51,22 +51,14 @@ namespace Ninject.Planning.Bindings
         public IBindingConfiguration BindingConfiguration { get; private set; }
 
         /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        public IKernel Kernel { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
-        /// <param name="kernel">The kernel.</param>
-        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames, IKernel kernel)
+        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
         {
             Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.BindingConfiguration = bindingConfiguration;
-            this.Kernel = kernel;
             this.serviceNames = serviceNames;
         }
 

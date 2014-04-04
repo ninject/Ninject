@@ -28,7 +28,7 @@ namespace Ninject.Syntax
     /// <summary>
     /// Used to define a basic binding syntax builder.
     /// </summary>
-    public interface IBindingSyntax : IHaveBindingConfiguration, IHaveKernel, IFluentSyntax
+    public interface IBindingSyntax : IHaveBindingConfiguration, IFluentSyntax
     {
     }
 }

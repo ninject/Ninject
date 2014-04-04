@@ -68,7 +68,7 @@ namespace Ninject.Planning.Bindings
             this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>

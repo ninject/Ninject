@@ -91,7 +91,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
             this.BindingConfiguration.Target = BindingTarget.Type;
 
-            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
         }
         
         /// <summary>
@@ -106,7 +106,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Target = BindingTarget.Constant;
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
             this.BindingConfiguration.Target = BindingTarget.Method;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => provider;
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
@@ -150,14 +150,14 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.
         /// The instance will be activated via the kernel when an instance of the service is activated.
         /// </summary>
-        /// <typeparam name="T">The type of the returned fleunt syntax</typeparam>
+        /// <typeparam name="T">The type of the returned fluent syntax</typeparam>
         /// <param name="providerType">The type of provider to activate.</param>
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> ToProviderInternal<T>(Type providerType)
@@ -165,7 +165,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
         }
 
 #if !NETCF
@@ -188,7 +188,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Target = BindingTarget.Type;
             this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
