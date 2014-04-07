@@ -34,15 +34,18 @@ namespace Ninject.Activation
         /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
         public bool Is<T>()
         {
-#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !PCL
-            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance))
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !MONO && !PCL
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)
+                && System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance).GetType().Name == "RemotingProxy")
             {
-// ReSharper disable UseIsOperator.2 
+// ReSharper disable UseIsOperator.1
 // ReSharper disable PossibleMistakenCallToGetType.1
-// Must call Instance.GetType() to convert the TransparentProxy to the actual proxy type 
-                return typeof(T).IsInstanceOfType(Instance.GetType());
+// ReSharper disable UseMethodIsInstanceOfType 
+// Must call typeof(T).IsAssignableFrom(Instance.GetType()) to convert the TransparentProxy to the actual proxy type 
+                return typeof(T).IsAssignableFrom(Instance.GetType());
+// ReSharper restore UseMethodIsInstanceOfType
 // ReSharper restore PossibleMistakenCallToGetType.1
-// ReSharper restore UseIsOperator.2
+// ReSharper restore UseIsOperator.1
             };
 #endif
 
