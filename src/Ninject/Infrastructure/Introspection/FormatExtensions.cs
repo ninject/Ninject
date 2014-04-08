@@ -156,14 +156,8 @@ namespace Ninject.Infrastructure.Introspection
         {
             var friendlyName = GetFriendlyName(type);
 
-#if !MONO
-            if (friendlyName.Contains("AnonymousType"))
+            if (friendlyName.Contains("AnonymousType") || friendlyName.Contains("__AnonType"))
                 return "AnonymousType";
-#else
-
-            if (friendlyName.Contains("__AnonType"))
-                return "AnonymousType";
-#endif
 
             switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
             {
