@@ -91,6 +91,7 @@
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="IKernelConfiguration.cs" />
     <Compile Include="Infrastructure\BaseWeakReference.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
     <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />

@@ -19,6 +19,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+
+/* Temporary disabled feature
 #if !SILVERLIGHT && !NETCF
 namespace Ninject
 {
@@ -50,3 +52,4 @@ namespace Ninject
     }
 }
 #endif
+*/

@@ -28,14 +28,14 @@ namespace Ninject.Modules
         /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
-        /// <param name="kernel">The kernel that is loading the module.</param>
-        void OnLoad(IKernel kernel);
+        /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
+        void OnLoad(IKernelConfiguration kernelConfiguration);
 
         /// <summary>
         /// Called when the module is unloaded from a kernel.
         /// </summary>
-        /// <param name="kernel">The kernel that is unloading the module.</param>
-        void OnUnload(IKernel kernel);
+        /// <param name="kernelConfiguration">The kernel configuration that is unloading the module.</param>
+        void OnUnload(IKernelConfiguration kernelConfiguration);
 
         /// <summary>
         /// Called after loading the modules. A module can verify here if all other required modules are loaded.

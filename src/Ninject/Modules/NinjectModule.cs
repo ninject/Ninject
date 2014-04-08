@@ -52,15 +52,22 @@ namespace Ninject.Modules
         {
             get
             {
-                return this.Kernel.Settings;
+                return this.KernelConfiguration.Settings;
             }
         }
-
+        
         /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
+        [Obsolete()]
         public IKernel Kernel { get; private set; }
 
+        /// <summary>
+        /// Gets the kernel configuration that the module is loaded into.
+        /// </summary>
+        /// <value>The kernel configuration that the module is loaded into.</value>
+        public IKernelConfiguration KernelConfiguration { get; private set; }
+        
         /// <summary>
         /// Gets the module's name. Only a single module with a given name can be loaded at one time.
         /// </summary>
@@ -77,24 +84,22 @@ namespace Ninject.Modules
         /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
-        /// <param name="kernel">The kernel that is loading the module.</param>
-        public void OnLoad(IKernel kernel)
+        /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
+        public void OnLoad(IKernelConfiguration kernelConfiguration)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            this.Kernel = kernel;
+            this.KernelConfiguration = kernelConfiguration;
             this.Load();
         }
 
         /// <summary>
         /// Called when the module is unloaded from a kernel.
         /// </summary>
-        /// <param name="kernel">The kernel that is unloading the module.</param>
-        public void OnUnload(IKernel kernel)
+        /// <param name="kernelConfiguration">The kernel configuration that is unloading the module.</param>
+        public void OnUnload(IKernelConfiguration kernelConfiguration)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.Unload();
-            this.Bindings.Map(this.Kernel.RemoveBinding);
-            this.Kernel = null;
+            this.Bindings.Map(this.KernelConfiguration.RemoveBinding);
+            this.KernelConfiguration = null;
         }
 
         /// <summary>
@@ -130,7 +135,7 @@ namespace Ninject.Modules
         /// <param name="service">The service to unbind.</param>
         public override void Unbind(Type service)
         {
-            this.Kernel.Unbind(service);
+            this.KernelConfiguration.Unbind(service);
         }
 
         /// <summary>
@@ -141,7 +146,7 @@ namespace Ninject.Modules
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            this.Kernel.AddBinding(binding);
+            this.KernelConfiguration.AddBinding(binding);
             this.Bindings.Add(binding);
         }
 
@@ -153,7 +158,7 @@ namespace Ninject.Modules
         {
             Ensure.ArgumentNotNull(binding, "binding");
 
-            this.Kernel.RemoveBinding(binding);
+            this.KernelConfiguration.RemoveBinding(binding);
             this.Bindings.Remove(binding);
         }
     }
