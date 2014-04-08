@@ -11,10 +11,9 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Activation.Blocks;
-using Ninject.Infrastructure.Disposal;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
-using Ninject.Syntax;
+
 #endregion
 
 namespace Ninject
@@ -22,26 +21,8 @@ namespace Ninject
     /// <summary>
     /// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
     /// </summary>
-    public interface IKernel : IKernelConfiguration, IResolutionRoot, IServiceProvider, IDisposableObject
+    [Obsolete("Use IKernelConfiguration and IReadonlyKernel")]
+    public interface IKernel : IKernelConfiguration, IReadonlyKernel
     {
-        /// <summary>
-        /// Injects the specified existing instance, without managing its lifecycle.
-        /// </summary>
-        /// <param name="instance">The instance to inject.</param>
-        /// <param name="parameters">The parameters to pass to the request.</param>
-        void Inject(object instance, params IParameter[] parameters);
-
-        /// <summary>
-        /// Gets the bindings registered for the specified service.
-        /// </summary>
-        /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
-        IEnumerable<IBinding> GetBindings(Type service);
-
-        /// <summary>
-        /// Begins a new activation block, which can be used to deterministically dispose resolved instances.
-        /// </summary>
-        /// <returns>The new activation block.</returns>
-        IActivationBlock BeginBlock();
     }
 }

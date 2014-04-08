@@ -17,6 +17,8 @@ using Ninject.Infrastructure.Introspection;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
+using Ninject.Syntax;
+
 #endregion
 
 namespace Ninject.Activation
@@ -31,7 +33,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the kernel that is driving the activation.
         /// </summary>
-        public IKernel Kernel { get; set; }
+        public IReadonlyKernel Kernel { get; set; }
 
         /// <summary>
         /// Gets the request.
@@ -81,22 +83,15 @@ namespace Ninject.Activation
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
-        /// <param name="kernel">The kernel managing the resolution.</param>
+        /// <param name="readonlyKernel">The kernel managing the resolution.</param>
         /// <param name="request">The context's request.</param>
         /// <param name="binding">The context's binding.</param>
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IReadonlyKernel readonlyKernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(cache, "cache");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(pipeline, "pipeline");
-
-            Kernel = kernel;
+            Kernel = readonlyKernel;
             Request = request;
             Binding = binding;
             Parameters = request.Parameters.Union(binding.Parameters).ToList();

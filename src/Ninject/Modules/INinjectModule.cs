@@ -16,10 +16,16 @@ using Ninject.Syntax;
 namespace Ninject.Modules
 {
     /// <summary>
-    /// A pluggable unit that can be loaded into an <see cref="IKernel"/>.
+    /// A pluggable unit that can be loaded into an <see cref="IKernelConfiguration"/>.
     /// </summary>
-    public interface INinjectModule : IHaveKernel
+    public interface INinjectModule
     {
+        /// <summary>
+        /// Gets the kernel configuration that the module is loaded into.
+        /// </summary>
+        /// <value>The kernel configuration that the module is loaded into.</value>
+        IKernelConfiguration KernelConfiguration { get; }
+        
         /// <summary>
         /// Gets the module's name.
         /// </summary>

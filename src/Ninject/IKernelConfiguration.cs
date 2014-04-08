@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Ninject.Components;
 using Ninject.Modules;
+using Ninject.Planning.Bindings;
 using Ninject.Syntax;
 
 namespace Ninject
@@ -9,18 +10,8 @@ namespace Ninject
     /// <summary>
     /// Configuration for a Ninject kernel.
     /// </summary>
-    public interface IKernelConfiguration : IBindingRoot
+    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IHaveNinjectComponents
     {
-        /// <summary>
-        /// Gets the kernel settings.
-        /// </summary>
-        INinjectSettings Settings { get; }
-
-        /// <summary>
-        /// Gets the component container, which holds components that contribute to Ninject.
-        /// </summary>
-        IComponentContainer Components { get; }
-
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.
         /// </summary>
@@ -59,5 +50,12 @@ namespace Ninject
         /// </summary>
         /// <param name="name">The plugin's name.</param>
         void Unload(string name);
+
+        /// <summary>
+        /// Gets the bindings registered for the specified service.
+        /// </summary>
+        /// <param name="service">The service in question.</param>
+        /// <returns>A series of bindings that are registered for the service.</returns>
+        IEnumerable<IBinding> GetBindings(Type service);
     }
 }

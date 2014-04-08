@@ -22,7 +22,7 @@ namespace Ninject.Components
         /// <summary>
         /// Gets or sets the kernel that owns the component container.
         /// </summary>
-        IKernel Kernel { get; set; }
+        IReadonlyKernel Kernel { get; set; }
 
         /// <summary>
         /// Registers a component in the container.

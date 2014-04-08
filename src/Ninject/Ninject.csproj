@@ -91,10 +91,13 @@
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="IHaveNinjectComponents.cs" />
+    <Compile Include="IHaveNinjectSettings.cs" />
     <Compile Include="IKernelConfiguration.cs" />
     <Compile Include="Infrastructure\BaseWeakReference.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
     <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
+    <Compile Include="IReadonlyKernel.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />
     <Compile Include="Modules\IAssemblyNameRetriever.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
@@ -198,7 +201,6 @@
     <Compile Include="Syntax\IBindingWithSyntax.cs" />
     <Compile Include="Syntax\IConstructorArgumentSyntax.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
-    <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IStartable.cs" />
     <Compile Include="Modules\IModuleLoader.cs" />

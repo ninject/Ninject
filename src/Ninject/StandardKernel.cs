@@ -21,6 +21,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+
 namespace Ninject
 {
     using Ninject.Activation;
@@ -37,6 +39,7 @@ namespace Ninject
     /// <summary>
     /// The standard implementation of a kernel.
     /// </summary>
+    [Obsolete("Use StandardKernelConfiguration and StandardReadonlyKernel")]
     public class StandardKernel : KernelBase
     {
         /// <summary>

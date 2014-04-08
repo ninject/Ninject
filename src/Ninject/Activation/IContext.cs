@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
+using Ninject.Syntax;
+
 #endregion
 
 namespace Ninject.Activation
@@ -25,7 +27,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the kernel that is driving the activation.
         /// </summary>
-        IKernel Kernel { get; }
+        IReadonlyKernel Kernel { get; }
 
         /// <summary>
         /// Gets the request.

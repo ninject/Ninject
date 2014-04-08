@@ -29,6 +29,7 @@ namespace Ninject
     /// <summary>
     /// The base implementation of an <see cref="IKernel"/>.
     /// </summary>
+    [Obsolete("Use ReadonlyKernelBase and KernelConfigurationBase")]
     public abstract class KernelBase : BindingRoot, IKernel
     {
         /// <summary>

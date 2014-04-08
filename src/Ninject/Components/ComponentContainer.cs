@@ -32,7 +32,7 @@ namespace Ninject.Components
         /// <summary>
         /// Gets or sets the kernel that owns the component container.
         /// </summary>
-        public IKernel Kernel { get; set; }
+        public IReadonlyKernel Kernel { get; set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -153,7 +153,9 @@ namespace Ninject.Components
         {
             Ensure.ArgumentNotNull(component, "component");
 
-            if (component == typeof(IKernel))
+            if (component == typeof(IReadonlyKernel))
+                return Kernel;
+            if (component == typeof(IKernelConfiguration))
                 return Kernel;
 
             if (component.IsGenericType)
