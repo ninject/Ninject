@@ -172,6 +172,7 @@ namespace Ninject.Activation.Caching
             void Prune();
         }
 
+#if !SILVERLIGHT_20 && !SILVERLIGHT_30 && !WINDOWS_PHONE && !NETCF
         private class HashSetBasedActivationCacheImpl : IActivationCacheImpl
         {
             /// <summary>
@@ -297,6 +298,7 @@ namespace Ninject.Activation.Caching
                 objects.RemoveWhere(reference => !((ReferenceEqualWeakReference)reference).IsAlive);
             }
         }
+#endif
 
         private class DictionaryBasedActivationCacheImpl : IActivationCacheImpl
         {
