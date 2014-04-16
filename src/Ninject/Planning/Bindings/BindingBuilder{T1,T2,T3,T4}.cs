@@ -24,9 +24,7 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif    
     using Ninject.Activation;
     using Ninject.Syntax;
 
@@ -73,7 +71,6 @@ namespace Ninject.Planning.Bindings
             return this.InternalTo<object>(implementation);
         }
 
-  #if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the speecified constructor.
         /// </summary>
@@ -86,7 +83,6 @@ namespace Ninject.Planning.Bindings
         {
             return this.InternalToConstructor(newExpression);
         }
-#endif
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.

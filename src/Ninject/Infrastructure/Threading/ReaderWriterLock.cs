@@ -13,7 +13,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-#if SILVERLIGHT || NETCF
+#if SILVERLIGHT
 namespace System.Threading
 {
     using System.Diagnostics;
@@ -269,7 +269,6 @@ namespace System.Threading
         {
             for (int i = 0;; i++)
             {
-#if !NETCF
                 if (i < 3 && Environment.ProcessorCount > 1)
                 {
                     Thread.SpinWait(20); // Wait a few dozen instructions to let another processor release lock. 
@@ -278,9 +277,6 @@ namespace System.Threading
                 {
                     Thread.Sleep(0); // Give up my quantum.  
                 }
-#else
-                Thread.Sleep(0); // Give up my quantum.  
-#endif
 
                 if (Interlocked.CompareExchange(ref this.myLock, 1, 0) == 0)
                 {
@@ -384,17 +380,10 @@ namespace System.Threading
             this.ExitMyLock(); // Do the wait outside of any lock 
             try
             {
-#if !NETCF
                 if (!waitEvent.WaitOne(millisecondsTimeout))
                 {
                     throw new InvalidOperationException("ReaderWriterLock timeout expired");
                 }
-#else
-                if (!waitEvent.WaitOne(millisecondsTimeout, false))
-                {
-                    throw new InvalidOperationException("ReaderWriterLock timeout expired");
-                }
-#endif
 
                 waitSuccessful = true;
             }

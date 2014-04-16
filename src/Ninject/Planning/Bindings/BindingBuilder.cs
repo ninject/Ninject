@@ -24,9 +24,7 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -160,7 +158,6 @@ namespace Ninject.Planning.Bindings
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the speecified constructor.
         /// </summary>
@@ -255,6 +252,5 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only! Never call it directly.");
             }
         }
-#endif
     }
 }
