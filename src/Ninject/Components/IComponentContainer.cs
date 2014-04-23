@@ -24,6 +24,9 @@ namespace Ninject.Components
         /// </summary>
         IReadonlyKernel Kernel { get; set; }
 
+        /// <summary>
+        /// Get or sets the kernel configuration
+        /// </summary>
         IKernelConfiguration KernelConfiguration { get; set; }
 
         /// <summary>

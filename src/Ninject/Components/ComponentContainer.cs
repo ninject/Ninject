@@ -34,6 +34,9 @@ namespace Ninject.Components
         /// </summary>
         public IReadonlyKernel Kernel { get; set; }
 
+        /// <summary>
+        /// Gets or sets the kernel configuration
+        /// </summary>
         public IKernelConfiguration KernelConfiguration { get; set; }
 
         /// <summary>
@@ -103,7 +106,7 @@ namespace Ninject.Components
 
             _instances.Remove(implementation);
 
-            _mappings[typeof(T)].Remove(typeof(TImplementation));
+            _mappings.Remove(typeof(T), typeof(TImplementation));
         }
         /// <summary>
         /// Removes all registrations for the specified component.

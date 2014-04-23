@@ -218,9 +218,9 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="bindings">The bindings.</param>
         /// <returns>All bindings of a binding.</returns>
-        private static IEnumerable<CacheEntry> GetAllBindingEntries(IEnumerable<KeyValuePair<IBindingConfiguration, ICollection<CacheEntry>>> bindings)
+        private static IEnumerable<CacheEntry> GetAllBindingEntries(Multimap<IBindingConfiguration, CacheEntry> bindings)
         {
-            return bindings.SelectMany(bindingEntries => bindingEntries.Value);
+            return bindings.Values.SelectMany(bindingEntries => bindingEntries);
         }
 
         /// <summary>

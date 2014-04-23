@@ -39,6 +39,8 @@ namespace Ninject
 
         private IReadonlyKernel kernel;
 
+        private bool isDirty = true;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
@@ -75,6 +77,8 @@ namespace Ninject
         protected KernelBase(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
             this.kernelConfiguration = new KernelConfiguration(components, settings, modules);
+            this.kernelConfiguration.Bind<IKernel>().ToMethod(ctx => this);
+            this.kernelConfiguration.Bind<IResolutionRoot>().ToMethod(ctx => this).When(ctx => true);
         }
 
         /// <summary>
@@ -100,7 +104,11 @@ namespace Ninject
         {
             if (disposing && !IsDisposed)
             {
-                //this.kernel.Dispose();
+                if (this.kernel != null)
+                {
+                    this.kernel.Dispose();
+                }
+
                 //this.kernelConfiguration.Dispose();
             }
 
@@ -114,6 +122,7 @@ namespace Ninject
         public override void Unbind(Type service)
         {
             this.kernelConfiguration.Unbind(service);
+            this.isDirty = true;
         }
 
         /// <summary>
@@ -123,6 +132,7 @@ namespace Ninject
         public override void AddBinding(IBinding binding)
         {
             this.kernelConfiguration.AddBinding(binding);
+            this.isDirty = true;
         }
 
         /// <summary>
@@ -132,6 +142,7 @@ namespace Ninject
         public override void RemoveBinding(IBinding binding)
         {
             this.kernelConfiguration.RemoveBinding(binding);
+            this.isDirty = true;
         }
 
         /// <summary>
@@ -160,6 +171,7 @@ namespace Ninject
         public void Load(IEnumerable<INinjectModule> m)
         {
             this.kernelConfiguration.Load(m);
+            this.isDirty = true;
         }
 
 #if !NO_ASSEMBLY_SCANNING
@@ -170,6 +182,7 @@ namespace Ninject
         public void Load(IEnumerable<string> filePatterns)
         {
             this.kernelConfiguration.Load(filePatterns);
+            this.isDirty = true;
         }
 
         /// <summary>
@@ -179,6 +192,7 @@ namespace Ninject
         public void Load(IEnumerable<Assembly> assemblies)
         {
             this.kernelConfiguration.Load(assemblies);
+            this.isDirty = true;
         }
 #endif //!NO_ASSEMBLY_SCANNING
 
@@ -189,21 +203,24 @@ namespace Ninject
         public void Unload(string name)
         {
             this.kernelConfiguration.Unload(name);
+            this.isDirty = true;
         }
 
         private IReadonlyKernel ReadonlyKernel
         {
             get
             {
-                if (this.kernel != null)
+                if (!this.isDirty)
                 {
                     return this.kernel;
                 }
+
                 lock (this.kernelLockObject)
                 {
-                    if (this.kernel == null)
+                    if (this.isDirty)
                     {
                         this.kernel = this.kernelConfiguration.BuildReadonlyKernel();
+                        this.isDirty = false;
                     }
 
                     return this.kernel;
@@ -299,60 +316,44 @@ namespace Ninject
         }
 
         // Todo: Remove
+        /// <summary>
+        /// Gets the planner
+        /// </summary>
         public IPlanner Planner { get; private set; }
 
         // Todo: Remove
+        /// <summary>
+        /// Gets the selector
+        /// </summary>
         public ISelector Selector { get; private set; }
 
+        /// <inheritdoc />
         public IReadonlyKernel BuildReadonlyKernel()
         {
             throw new NotSupportedException("Kernel is built internally.");
         }
 
-        /// <summary>
-        /// Returns an IComparer that is used to determine resolution precedence.
-        /// </summary>
-        /// <returns>An IComparer that is used to determine resolution precedence.</returns>
-        /// Todo: Add
+        // Todo: Add
         //protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
         //{
         //    return new BindingPrecedenceComparer();
         //}
 
-        /// <summary>
-        /// Returns a predicate that can determine if a given IBinding matches the request.
-        /// </summary>
-        /// <param name="request">The request/</param>
-        /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
-        /// Todo: Add
+        // Todo: Add
         //protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
         //{
         //    return binding => binding.Matches(request) && request.Matches(binding);
         //}
 
-        /// <summary>
-        /// Adds components to the kernel during startup.
-        /// </summary>
-        /// Todo: Add
+        // Todo: Add
         //protected abstract void AddComponents();
 
-        /// <summary>
-        /// Attempts to handle a missing binding for a request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
-        /// Todo: Add
+        // Todo: Add
         //protected virtual bool HandleMissingBinding(IRequest request)
         //{
         //}
 
-        /// <summary>
-        /// Creates a context for the specified request and binding.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="binding">The binding.</param>
-        /// <returns>The created context.</returns>
-        /// Todo: Add
+        // Todo: Add
         //protected virtual IContext CreateContext(IRequest request, IBinding binding)
         //{
         //    Ensure.ArgumentNotNull(request, "request");

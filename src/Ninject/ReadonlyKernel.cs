@@ -16,44 +16,64 @@
     using Ninject.Planning.Bindings;
     using Ninject.Planning.Bindings.Resolvers;
     using Ninject.Selection;
+    using Ninject.Syntax;
 
+    /// <summary>
+    /// The readonly kernel
+    /// </summary>
     public class ReadonlyKernel : DisposableObject, IReadonlyKernel
     {
-        /// <summary>
-        /// Lock used when adding missing bindings.
-        /// </summary>
-        //protected readonly object HandleMissingBindingLockObject = new object();
-
-        private readonly Multimap<Type, IBinding> bindings;
-
-        private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
-
         private readonly ICache cache;
-
         private readonly IPlanner planner;
-
         private readonly IPipeline pipeline;
+        private readonly IEnumerable<IBindingResolver> bindingResolvers;
+        private readonly IEnumerable<IMissingBindingResolver> missingBindingResolvers;
+        private readonly object missingBindingCacheLock = new object();
 
-        private IEnumerable<IBindingResolver> bindingResolvers;
+        private Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
+        private Dictionary<Type, IEnumerable<IBinding>> bindings = new Dictionary<Type, IEnumerable<IBinding>>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadonlyKernel"/> class.
+        /// </summary>
+        /// <param name="bindings">The preconfigured bindings</param>
+        /// <param name="cache">Dependency injection for <see cref="ICache"/></param>
+        /// <param name="planner">Dependency injection for <see cref="IPlanner"/></param>
+        /// <param name="pipeline">Dependency injection for <see cref="IPipeline"/></param>
+        /// <param name="bindingResolvers">Dependency injection for all binding resolvers</param>
+        /// <param name="missingBindingResolvers">Dependency injection for all missng binding resolvers</param>
+        /// <param name="settings">Dependency injection for for <see cref="INinjectSettings"/></param>
+        /// <param name="selector">Dependency injection for <see cref="ISelector"/></param>
         public ReadonlyKernel(
             Multimap<Type, IBinding> bindings, 
             ICache cache, 
             IPlanner planner, 
             IPipeline pipeline, 
             IEnumerable<IBindingResolver> bindingResolvers,
+            IEnumerable<IMissingBindingResolver> missingBindingResolvers,
             INinjectSettings settings,
             ISelector selector)
         {
-            this.bindings = bindings;
-
             this.bindingResolvers = bindingResolvers;
+            this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
             this.planner = planner;
             this.pipeline = pipeline;
             this.Planner = planner;
             this.Selector = selector;
             this.Settings = settings;
+
+            this.AddReadonlyKernelBinding<IReadonlyKernel>(this, bindings);
+            this.AddReadonlyKernelBinding<IResolutionRoot>(this, bindings);
+
+            this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
+        }
+
+        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
+        {
+            var binding = new Binding(typeof(T));
+            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            bindings.Add(typeof(T), binding);
         }
 
         /// <inheritdoc />
@@ -101,7 +121,6 @@
             {
                 resolveBindings = this.GetBindings(request.Service)
                                       .Where(this.SatifiesRequest(request));
-
             }
 
             if (!resolveBindings.Any())
@@ -178,14 +197,7 @@
         {
             if (disposing && !IsDisposed)
             {
-                if (this.Components != null)
-                {
-                    // Deactivate all cached instances before shutting down the kernel.
-                    var cache = this.Components.Get<ICache>();
-                    cache.Clear();
-
-                    this.Components.Dispose();
-                }
+                this.cache.Clear();
             }
 
             base.Dispose(disposing);
@@ -196,23 +208,41 @@
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            lock (this.bindingCache)
+            List<IBinding> result;
+            if (this.bindingCache.TryGetValue(service, out result))
             {
-                if (!this.bindingCache.ContainsKey(service))
-                {
-                    this.bindingResolvers
-                        .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .Map(binding => this.bindingCache.Add(service, binding));
-                }
-
-                return this.bindingCache[service];
+                return result;
             }
+
+            var newBindingCache = new Dictionary<Type, List<IBinding>>(this.bindingCache);
+            if (newBindingCache.TryGetValue(service, out result))
+            {
+                return result;
+            }
+
+            result = bindingResolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service)).ToList();
+            if (result.Count > 0)
+            {
+                newBindingCache[service] = result;
+
+                // We might loose other entries in case multiple cache entries are added at the same time
+                // But this is no problem in this case they will be added later again.
+                this.bindingCache = newBindingCache;
+            }
+
+            return result;
         }
 
         // Todo: Remove
+        /// <summary>
+        /// Gets the planner
+        /// </summary>
         public IPlanner Planner { get; private set; }
 
         // Todo: Remove
+        /// <summary>
+        /// Gets the selector
+        /// </summary>
         public ISelector Selector { get; private set; }
 
         /// <summary>
@@ -241,42 +271,51 @@
         /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
         protected virtual bool HandleMissingBinding(IRequest request)
         {
-            return false;
+            Ensure.ArgumentNotNull(request, "request");
 
-            // Todo: Add support for missing bindings
-            //Ensure.ArgumentNotNull(request, "request");
+            var bindings = this.GetBindingsFromFirstResolverThatReturnsAtLeastOneBinding(request);
+            if (bindings == null)
+            {
+                return false;
+            }
 
-            //var components = this.Components.GetAll<IMissingBindingResolver>();
+            bindings.Map(binding => binding.IsImplicit = true);
 
-            //// Take the first set of bindings that resolve.
-            //var bindings = components
-            //    .Select(c => c.Resolve(this.bindings, request).ToList())
-            //    .FirstOrDefault(b => b.Any());
+            lock (this.missingBindingCacheLock)
+            {
+                if (CanResolve(request)) return true;
 
-            //if (bindings == null)
-            //{
-            //    return false;
-            //}
+                var newBindings = new Dictionary<Type, IEnumerable<IBinding>>(this.bindings);
+                bindings.GroupBy(b => b.Service, b => b, (service, b) => new { service, bindings = b })
+                    .Map(
+                        serviceGroup =>
+                            {
+                                IEnumerable<IBinding> existingBindings;
+                                if (newBindings.TryGetValue(serviceGroup.service, out existingBindings))
+                                {
+                                    var newBindingList = new List<IBinding>(existingBindings);
+                                    newBindingList.AddRange(serviceGroup.bindings);
+                                    newBindings[serviceGroup.service] = newBindingList;
+                                }
+                                else
+                                {
+                                    newBindings[serviceGroup.service] =
+                                        new List<IBinding>(serviceGroup.bindings);
+                                }
+                            });
 
-            //lock (this.HandleMissingBindingLockObject)
-            //{
-            //    if (!this.CanResolve(request))
-            //    {
-            //        bindings.Map(binding => binding.IsImplicit = true);
-            //        this.AddBindings(bindings);
-            //    }
-            //}
+                this.bindings = newBindings;
+            }
 
-            //return true;
+            return true;
         }
 
-        //private void AddBindings(IEnumerable<IBinding> bindings)
-        //{
-        //    bindings.Map(binding => this.bindings.Add(binding.Service, binding));
-
-        //    lock (this.bindingCache)
-        //        this.bindingCache.Clear();
-        //}
+        private List<IBinding> GetBindingsFromFirstResolverThatReturnsAtLeastOneBinding(IRequest request)
+        {
+            return this.missingBindingResolvers
+                .Select(c => c.Resolve(this.bindings, request).ToList())
+                .FirstOrDefault(b => b.Any());
+        }
 
         /// <summary>
         /// Creates a context for the specified request and binding.

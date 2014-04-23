@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Design;
     using System.Linq;
     using System.Reflection;
 
@@ -23,6 +22,9 @@
     using Ninject.Selection.Heuristics;
     using Ninject.Syntax;
 
+    /// <summary>
+    /// The kernel configuration
+    /// </summary>
     public class KernelConfiguration : BindingRoot, IKernelConfiguration
     {
         private readonly INinjectSettings settings;
@@ -199,7 +201,9 @@
             Ensure.ArgumentNotNull(service, "service");
             var resolvers = this.Components.GetAll<IBindingResolver>();
 
-            return resolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service));
+            return resolvers.SelectMany(resolver => resolver.Resolve(
+                bindings.Keys.ToDictionary(type => type, type => bindings[type]), 
+                service));
         }
 
         /// <inheritdoc />
@@ -212,25 +216,16 @@
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IPipeline>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
+                this.Components.GetAll<IMissingBindingResolver>().ToList(),
                 this.Settings, // Todo: Clone and make readonly
                 this.Components.Get<ISelector>());
-
-            
-            this.AddReadonlyKernelBinding<IReadonlyKernel>(readonlyKernel, bindings);
-            this.AddReadonlyKernelBinding<IResolutionRoot>(readonlyKernel, bindings);
 
             return readonlyKernel;
         }
 
-        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
-        {
-            var binding = new Binding(typeof(T));
-            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
-            bindings.Add(typeof(T), binding);
-        }
-
         private Multimap<Type, IBinding> CloneBindings()
         {
+            // Todo: Clone
             return this.bindings;
         }
 
