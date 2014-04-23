@@ -15,6 +15,7 @@
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
     using Ninject.Planning.Bindings.Resolvers;
+    using Ninject.Selection;
 
     public class ReadonlyKernel : DisposableObject, IReadonlyKernel
     {
@@ -33,13 +34,26 @@
 
         private readonly IPipeline pipeline;
 
-        public ReadonlyKernel(Multimap<Type, IBinding> bindings, ICache cache, IPlanner planner, IPipeline pipeline)
+        private IEnumerable<IBindingResolver> bindingResolvers;
+
+        public ReadonlyKernel(
+            Multimap<Type, IBinding> bindings, 
+            ICache cache, 
+            IPlanner planner, 
+            IPipeline pipeline, 
+            IEnumerable<IBindingResolver> bindingResolvers,
+            INinjectSettings settings,
+            ISelector selector)
         {
             this.bindings = bindings;
 
+            this.bindingResolvers = bindingResolvers;
             this.cache = cache;
             this.planner = planner;
             this.pipeline = pipeline;
+            this.Planner = planner;
+            this.Selector = selector;
+            this.Settings = settings;
         }
 
         /// <inheritdoc />
@@ -186,9 +200,7 @@
             {
                 if (!this.bindingCache.ContainsKey(service))
                 {
-                    var resolvers = this.Components.GetAll<IBindingResolver>();
-
-                    resolvers
+                    this.bindingResolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
                         .Map(binding => this.bindingCache.Add(service, binding));
                 }
@@ -196,6 +208,12 @@
                 return this.bindingCache[service];
             }
         }
+
+        // Todo: Remove
+        public IPlanner Planner { get; private set; }
+
+        // Todo: Remove
+        public ISelector Selector { get; private set; }
 
         /// <summary>
         /// Returns a predicate that can determine if a given IBinding matches the request.

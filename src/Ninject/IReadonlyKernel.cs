@@ -6,6 +6,9 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
+    using Ninject.Planning;
+    using Ninject.Selection;
+
     /// <summary>
     /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore
     /// </summary>
@@ -19,5 +22,11 @@ namespace Ninject
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
         IEnumerable<IBinding> GetBindings(Type service);
+
+        // Todo: Remove
+        IPlanner Planner { get; }
+
+        // Todo: Remove
+        ISelector Selector { get; }
     }
 }

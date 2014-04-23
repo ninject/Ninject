@@ -34,6 +34,8 @@ namespace Ninject.Components
         /// </summary>
         public IReadonlyKernel Kernel { get; set; }
 
+        public IKernelConfiguration KernelConfiguration { get; set; }
+
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
@@ -156,7 +158,7 @@ namespace Ninject.Components
             if (component == typeof(IReadonlyKernel))
                 return Kernel;
             if (component == typeof(IKernelConfiguration))
-                return Kernel;
+                return KernelConfiguration;
 
             if (component.IsGenericType)
             {
@@ -208,7 +210,9 @@ namespace Ninject.Components
             try
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
-                instance.Settings = Kernel.Settings;
+
+                // Todo: Clone Settings during kernel build
+                instance.Settings = KernelConfiguration.Settings;
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {

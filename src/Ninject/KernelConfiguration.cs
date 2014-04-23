@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Design;
     using System.Linq;
     using System.Reflection;
 
@@ -34,7 +35,7 @@
         /// Initializes a new instance of the <see cref="KernelConfiguration"/> class.
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
-        protected KernelConfiguration(params INinjectModule[] modules)
+        public KernelConfiguration(params INinjectModule[] modules)
             : this(new ComponentContainer(), new NinjectSettings(), modules)
         {
         }
@@ -44,7 +45,7 @@
         /// </summary>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
-        protected KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
+        public KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
             : this(new ComponentContainer(), settings, modules)
         {
         }
@@ -55,7 +56,7 @@
         /// <param name="components">The component container to use.</param>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
-        protected KernelConfiguration(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
+        public KernelConfiguration(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
             Ensure.ArgumentNotNull(components, "components");
             Ensure.ArgumentNotNull(settings, "settings");
@@ -67,12 +68,9 @@
             
             // Todo: Fix this
             //components.Kernel = this;
+            components.KernelConfiguration = this;
 
             this.AddComponents();
-
-            // Todo: Add in build 
-            //this.Bind<IKernel>().ToConstant(this).InTransientScope();
-            //this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
 #if !NO_ASSEMBLY_SCANNING
             if (this.settings.LoadExtensions)
@@ -202,6 +200,38 @@
             var resolvers = this.Components.GetAll<IBindingResolver>();
 
             return resolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service));
+        }
+
+        /// <inheritdoc />
+        public IReadonlyKernel BuildReadonlyKernel()
+        {
+            var bindings = this.CloneBindings();
+            var readonlyKernel = new ReadonlyKernel(
+                bindings,
+                this.Components.Get<ICache>(),
+                this.Components.Get<IPlanner>(),
+                this.Components.Get<IPipeline>(),
+                this.Components.GetAll<IBindingResolver>().ToList(),
+                this.Settings, // Todo: Clone and make readonly
+                this.Components.Get<ISelector>());
+
+            
+            this.AddReadonlyKernelBinding<IReadonlyKernel>(readonlyKernel, bindings);
+            this.AddReadonlyKernelBinding<IResolutionRoot>(readonlyKernel, bindings);
+
+            return readonlyKernel;
+        }
+
+        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
+        {
+            var binding = new Binding(typeof(T));
+            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            bindings.Add(typeof(T), binding);
+        }
+
+        private Multimap<Type, IBinding> CloneBindings()
+        {
+            return this.bindings;
         }
 
         /// <summary>
