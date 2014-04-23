@@ -184,9 +184,6 @@
         public INinjectSettings Settings { get; private set; }
 
         /// <inheritdoc />
-        public IComponentContainer Components { get; private set; }
-
-        /// <inheritdoc />
         public object GetService(Type serviceType)
         {
             return this.Get(serviceType);

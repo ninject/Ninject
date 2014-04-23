@@ -12,9 +12,8 @@ namespace Ninject
     /// <summary>
     /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore
     /// </summary>
-    /// ToDo: Remove IHaveNinjectComponents
     public interface IReadonlyKernel :
-        IResolutionRoot, IHaveNinjectSettings, IHaveNinjectComponents, IServiceProvider, IDisposableObject
+        IResolutionRoot, IHaveNinjectSettings, IServiceProvider, IDisposableObject
     {
         /// <summary>
         /// Gets the bindings registered for the specified service.
