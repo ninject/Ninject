@@ -11,7 +11,6 @@
 namespace Ninject.Activation
 {
     using System;
-    using Ninject.Infrastructure;
 
     /// <summary>
     /// A simple abstract provider for instances of a specific type.
@@ -34,7 +33,6 @@ namespace Ninject.Activation
         /// <returns>The created instance.</returns>
         public object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return this.CreateInstance(context);
         }
 

@@ -146,8 +146,6 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to add.</param>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.KernelConfiguration.AddBinding(binding);
             this.Bindings.Add(binding);
         }
@@ -158,8 +156,6 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to remove.</param>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.KernelConfiguration.RemoveBinding(binding);
             this.Bindings.Remove(binding);
         }

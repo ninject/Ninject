@@ -41,11 +41,8 @@ namespace Ninject.Planning.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public MethodReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
-
-            Selector = selector;
-            InjectorFactory = injectorFactory;
+            this.Selector = selector;
+            this.InjectorFactory = injectorFactory;
         }
 
         /// <summary>
@@ -55,8 +52,6 @@ namespace Ninject.Planning.Strategies
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
-
             foreach (MethodInfo method in Selector.SelectMethodsForInjection(plan.Type))
                 plan.Add(new MethodInjectionDirective(method, InjectorFactory.Create(method)));
         }

@@ -57,7 +57,6 @@ namespace Ninject.Planning.Bindings
         /// <param name="serviceNames">The names of the configured services.</param>
         public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
             this.BindingConfiguration = bindingConfiguration;
             this.serviceNames = serviceNames;
         }

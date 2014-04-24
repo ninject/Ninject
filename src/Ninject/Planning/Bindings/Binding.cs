@@ -30,8 +30,6 @@ namespace Ninject.Planning.Bindings
         /// <param name="service">The service that is controlled by the binding.</param>
         public Binding(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
-
             this.Service = service;
             this.BindingConfiguration = new BindingConfiguration();
         }
@@ -43,9 +41,6 @@ namespace Ninject.Planning.Bindings
         /// <param name="configuration">The binding configuration.</param>
         public Binding(Type service, IBindingConfiguration configuration)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(configuration, "configuration");
-
             this.Service = service;
             this.BindingConfiguration = configuration;
         }

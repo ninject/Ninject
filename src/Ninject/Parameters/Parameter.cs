@@ -53,9 +53,6 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public Parameter(string name, Func<IContext, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
-
             Name = name;
             ValueCallback = (ctx, target) => valueCallback(ctx);
             ShouldInherit = shouldInherit;
@@ -69,9 +66,6 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public Parameter(string name, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
-
             Name = name;
             ValueCallback = valueCallback;
             ShouldInherit = shouldInherit;
@@ -85,7 +79,6 @@ namespace Ninject.Parameters
         /// <returns>The value for the parameter.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return ValueCallback(context, target);
         }
 

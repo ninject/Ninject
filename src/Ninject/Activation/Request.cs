@@ -103,17 +103,14 @@ namespace Ninject.Activation
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
-
-            Service = service;
-            Constraint = constraint;
-            Parameters = parameters.ToList();
-            ScopeCallback = scopeCallback;
-            ActiveBindings = new Stack<IBinding>();
-            Depth = 0;
-            IsOptional = isOptional;
-            IsUnique = isUnique;
+            this.Service = service;
+            this.Constraint = constraint;
+            this.Parameters = parameters.ToList();
+            this.ScopeCallback = scopeCallback;
+            this.ActiveBindings = new Stack<IBinding>();
+            this.Depth = 0;
+            this.IsOptional = isOptional;
+            this.IsUnique = isUnique;
         }
 
         /// <summary>
@@ -125,20 +122,16 @@ namespace Ninject.Activation
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
         public Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
         {
-            Ensure.ArgumentNotNull(parentContext, "parentContext");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(target, "target");
-
-            ParentContext = parentContext;
-            ParentRequest = parentContext.Request;
-            Service = service;
-            Target = target;
-            Constraint = target.Constraint;
-            IsOptional = target.IsOptional;
-            Parameters = parentContext.Parameters.Where(p => p.ShouldInherit).ToList();
-            ScopeCallback = scopeCallback;
-            ActiveBindings = new Stack<IBinding>(ParentRequest.ActiveBindings);
-            Depth = ParentRequest.Depth + 1;
+            this.ParentContext = parentContext;
+            this.ParentRequest = parentContext.Request;
+            this.Service = service;
+            this.Target = target;
+            this.Constraint = target.Constraint;
+            this.IsOptional = target.IsOptional;
+            this.Parameters = parentContext.Parameters.Where(p => p.ShouldInherit).ToList();
+            this.ScopeCallback = scopeCallback;
+            this.ActiveBindings = new Stack<IBinding>(ParentRequest.ActiveBindings);
+            this.Depth = ParentRequest.Depth + 1;
         }
 
         /// <summary>
