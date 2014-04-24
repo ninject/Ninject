@@ -1,84 +1,40 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Ninject.Activation.Caching;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-
-#endregion
+//-------------------------------------------------------------------------------
+// <copyright file="Context.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2009-2014 Ninject Project Contributors
+//   
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   You may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//   
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//   
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
 
 namespace Ninject.Activation
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Ninject.Activation.Caching;
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+
     /// <summary>
     /// Contains information about the activation of a single instance.
     /// </summary>
     public class Context : IContext
     {
-        private WeakReference cachedScope;
-
-        /// <summary>
-        /// Gets the kernel that is driving the activation.
-        /// </summary>
-        public IReadonlyKernel Kernel { get; set; }
-
-        /// <summary>
-        /// Gets the request.
-        /// </summary>
-        public IRequest Request { get; set; }
-
-        /// <summary>
-        /// Gets the binding.
-        /// </summary>
-        public IBinding Binding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the activation plan.
-        /// </summary>
-        public IPlan Plan { get; set; }
-
-        /// <summary>
-        /// Gets the parameters that were passed to manipulate the activation process.
-        /// </summary>
-        public ICollection<IParameter> Parameters { get; set; }
-
-        /// <summary>
-        /// Gets the generic arguments for the request, if any.
-        /// </summary>
-        public Type[] GenericArguments { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether the request involves inferred generic arguments.
-        /// </summary>
-        public bool HasInferredGenericArguments { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the cache component.
-        /// </summary>
-        public ICache Cache { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the planner component.
-        /// </summary>
-        public IPlanner Planner { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the pipeline component.
-        /// </summary>
-        public IPipeline Pipeline { get; private set; }
+        private object cachedScope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
@@ -91,74 +47,94 @@ namespace Ninject.Activation
         /// <param name="pipeline">The pipeline component.</param>
         public Context(IReadonlyKernel readonlyKernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
-            Kernel = readonlyKernel;
-            Request = request;
-            Binding = binding;
-            Parameters = request.Parameters.Union(binding.Parameters).ToList();
-
-            Cache = cache;
-            Planner = planner;
-            Pipeline = pipeline;
+            this.Kernel = readonlyKernel;
+            this.Request = request;
+            this.Binding = binding;
+            this.Parameters = request.Parameters.Union(binding.Parameters).ToList();
+            this.Cache = cache;
+            this.Planner = planner;
+            this.Pipeline = pipeline;
 
             if (binding.Service.IsGenericTypeDefinition)
             {
-                HasInferredGenericArguments = true;
-                GenericArguments = request.Service.GetGenericArguments();
+                this.HasInferredGenericArguments = true;
+                this.GenericArguments = request.Service.GetGenericArguments();
             }
         }
 
-        /// <summary>
-        /// Gets the scope for the context that "owns" the instance activated therein.
-        /// </summary>
-        /// <returns>The object that acts as the scope.</returns>
+        /// <inheritdoc />
+        public IReadonlyKernel Kernel { get; set; }
+
+        /// <inheritdoc />
+        public IRequest Request { get; set; }
+
+        /// <inheritdoc />
+        public IBinding Binding { get; set; }
+
+        /// <inheritdoc />
+        public IPlan Plan { get; set; }
+
+        /// <inheritdoc />
+        public ICollection<IParameter> Parameters { get; set; }
+
+        /// <inheritdoc />
+        public Type[] GenericArguments { get; private set; }
+
+        /// <inheritdoc />
+        public bool HasInferredGenericArguments { get; private set; }
+
+        /// <inheritdoc />
+        public ICache Cache { get; private set; }
+
+        /// <inheritdoc />
+        public IPlanner Planner { get; private set; }
+
+        /// <inheritdoc />
+        public IPipeline Pipeline { get; private set; }
+
+        /// <inheritdoc />
         public object GetScope()
         {
-            if (this.cachedScope == null)
-            {
-                var scope = this.Request.GetScope() ?? this.Binding.GetScope(this);
-                this.cachedScope = new WeakReference(scope);
-            }
-            
-            return this.cachedScope.Target;
+            return this.cachedScope ?? this.Request.GetScope() ?? this.Binding.GetScope(this);
         }
 
-        /// <summary>
-        /// Gets the provider that should be used to create the instance for this context.
-        /// </summary>
-        /// <returns>The provider that should be used.</returns>
+        /// <inheritdoc />
         public IProvider GetProvider()
         {
-            return Binding.GetProvider(this);
+            return this.Binding.GetProvider(this);
         }
 
-        /// <summary>
-        /// Resolves the instance associated with this hook.
-        /// </summary>
-        /// <returns>The resolved instance.</returns>
+        /// <inheritdoc />
         public object Resolve()
         {
-            if (Request.ActiveBindings.Contains(Binding))
-                throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
-
-            var scope = this.GetScope();
-
-            if (scope != null)
+            if (this.Request.ActiveBindings.Contains(this.Binding))
             {
-                lock (scope)
+                throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+            }
+
+            try
+            {
+                this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
+
+                if (this.cachedScope != null)
                 {
-                    return this.ResolveInternal(scope);
+                    lock (this.cachedScope)
+                    {
+                        return this.ResolveInternal(this.cachedScope);
+                    }
+                }
+                else
+                {
+                    return this.ResolveInternal(null);
                 }
             }
-            else
+            finally 
             {
-                return this.ResolveInternal(null);
+                this.cachedScope = null;
             }
         }
 
-        /// <summary>
-        /// Builds the activation plan for a given type
-        /// </summary>
-        /// <param name="type">The type</param>
+        /// <inheritdoc />
         public void BuildPlan(Type type)
         {
             if (this.Plan == null)
