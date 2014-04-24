@@ -1,0 +1,66 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">-------------------------------------------------------------------------------&#xD;
+ &lt;copyright file="$FILENAME$" company="Ninject Project Contributors"&gt;&#xD;
+   Copyright (c) 2009-$CURRENT_YEAR$ Ninject Project Contributors&#xD;
+   &#xD;
+   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).&#xD;
+   You may not use this file except in compliance with one of the Licenses.&#xD;
+   You may obtain a copy of the License at&#xD;
+   &#xD;
+       http://www.apache.org/licenses/LICENSE-2.0&#xD;
+   or&#xD;
+       http://www.microsoft.com/opensource/licenses.mspx&#xD;
+   &#xD;
+   Unless required by applicable law or agreed to in writing, software&#xD;
+   distributed under the License is distributed on an "AS IS" BASIS,&#xD;
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;
+   See the License for the specific language governing permissions and&#xD;
+   limitations under the License.&#xD;
+ &lt;/copyright&gt;&#xD;
+-------------------------------------------------------------------------------&#xD;
+</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Description/@EntryValue">Add file header for ninject</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=CurrentYear/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=CurrentYear/Expression/@EntryValue">getCurrentDate("yyyy")</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=CurrentYear/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=CurrentYear/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=Filename/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=Filename/Expression/@EntryValue">getFileName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=Filename/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Field/=Filename/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Shortcut/@EntryValue">fhdr</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6D8EB31B4A9AC341A548F2008973AA69/Text/@EntryValue">//-------------------------------------------------------------------------------&#xD;
+// &lt;copyright file="$Filename$" company="Ninject Project Contributors"&gt;&#xD;
+//   Copyright (c) 2009-$CurrentYear$ Ninject Project Contributors&#xD;
+//   &#xD;
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).&#xD;
+//   You may not use this file except in compliance with one of the Licenses.&#xD;
+//   You may obtain a copy of the License at&#xD;
+//   &#xD;
+//       http://www.apache.org/licenses/LICENSE-2.0&#xD;
+//   or&#xD;
+//       http://www.microsoft.com/opensource/licenses.mspx&#xD;
+//   &#xD;
+//   Unless required by applicable law or agreed to in writing, software&#xD;
+//   distributed under the License is distributed on an "AS IS" BASIS,&#xD;
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#xD;
+//   See the License for the specific language governing permissions and&#xD;
+//   limitations under the License.&#xD;
+// &lt;/copyright&gt;&#xD;
+//-------------------------------------------------------------------------------</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Shortcut/@EntryValue">inheritdoc</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=D370C4E4387D9146B1A6A3D34BF212B3/Text/@EntryValue">/// &lt;inheritdoc /&gt;</s:String></wpf:ResourceDictionary>
