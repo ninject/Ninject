@@ -68,8 +68,6 @@
 
             this.Components = components;
             
-            // Todo: Fix this
-            //components.Kernel = this;
             components.KernelConfiguration = this;
 
             this.AddComponents();
@@ -209,15 +207,15 @@
         /// <inheritdoc />
         public IReadonlyKernel BuildReadonlyKernel()
         {
-            var bindings = this.CloneBindings();
             var readonlyKernel = new ReadonlyKernel(
-                bindings,
+                this.CloneBindings(),
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IPipeline>(),
+                this.Components.Get<IBindingPrecedenceComparer>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
                 this.Components.GetAll<IMissingBindingResolver>().ToList(),
-                this.Settings, // Todo: Clone and make readonly
+                this.Settings.Clone(),
                 this.Components.Get<ISelector>());
 
             return readonlyKernel;
@@ -255,6 +253,8 @@
             Components.Add<IActivationStrategy, StartableStrategy>();
             Components.Add<IActivationStrategy, BindingActionStrategy>();
             Components.Add<IActivationStrategy, DisposableStrategy>();
+
+            Components.Add<IBindingPrecedenceComparer, BindingPrecedenceComparer>();
 
             Components.Add<IBindingResolver, StandardBindingResolver>();
             Components.Add<IBindingResolver, OpenGenericBindingResolver>();

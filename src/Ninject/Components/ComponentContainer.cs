@@ -30,11 +30,6 @@ namespace Ninject.Components
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
-        /// Gets or sets the kernel that owns the component container.
-        /// </summary>
-        public IReadonlyKernel Kernel { get; set; }
-
-        /// <summary>
         /// Gets or sets the kernel configuration
         /// </summary>
         public IKernelConfiguration KernelConfiguration { get; set; }
@@ -158,8 +153,6 @@ namespace Ninject.Components
         {
             Ensure.ArgumentNotNull(component, "component");
 
-            if (component == typeof(IReadonlyKernel))
-                return Kernel;
             if (component == typeof(IKernelConfiguration))
                 return KernelConfiguration;
 
@@ -214,8 +207,8 @@ namespace Ninject.Components
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
 
-                // Todo: Clone Settings during kernel build
-                instance.Settings = KernelConfiguration.Settings;
+                // Todo: Clone Settings during kernel build (is this still important? Can clone settings now)
+                instance.Settings = KernelConfiguration.Settings.Clone();
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {

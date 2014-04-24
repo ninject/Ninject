@@ -22,13 +22,6 @@ namespace Ninject
         /// <returns>A series of bindings that are registered for the service.</returns>
         IEnumerable<IBinding> GetBindings(Type service);
 
-        
-        // Todo: Remove
-        /// <summary>
-        /// Gets the planner
-        /// </summary>
-        IPlanner Planner { get; }
-
         // Todo: Remove
         /// <summary>
         /// Gets the selector
