@@ -90,9 +90,10 @@ namespace Ninject.Planning.Bindings
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="value">The constant value.</param>
         /// <returns>The fluent syntax.</returns>
-        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value) 
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value)
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
+            var constantProvider = new ConstantProvider<TImplementation>(value);
+            this.BindingConfiguration.ProviderCallback = ctx => constantProvider;
             this.BindingConfiguration.Target = BindingTarget.Constant;
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
 
@@ -107,7 +108,8 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToMethod<TImplementation>(Func<IContext, TImplementation> method)
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
+            var callbackProvider = new CallbackProvider<TImplementation>(method);
+            this.BindingConfiguration.ProviderCallback = ctx => callbackProvider;
             this.BindingConfiguration.Target = BindingTarget.Method;
 
             return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);

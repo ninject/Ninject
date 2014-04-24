@@ -92,8 +92,10 @@
     <Compile Include="Activation\Caching\WeakReferenceEqualityComparer.cs" />
     <Compile Include="Activation\IProvider{T}.cs" />
     <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
+    <Compile Include="BindingPrecedenceComparer.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="IBindingPrecedenceComparer.cs" />
     <Compile Include="IHaveNinjectComponents.cs" />
     <Compile Include="IHaveNinjectSettings.cs" />
     <Compile Include="IKernelConfiguration.cs" />

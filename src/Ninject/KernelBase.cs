@@ -10,20 +10,13 @@ namespace Ninject
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using Ninject.Activation;
     using Ninject.Activation.Blocks;
-    using Ninject.Activation.Caching;
     using Ninject.Components;
-    using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
-    using Ninject.Infrastructure.Language;
     using Ninject.Modules;
     using Ninject.Parameters;
-    using Ninject.Planning;
     using Ninject.Planning.Bindings;
-    using Ninject.Planning.Bindings.Resolvers;
     using Ninject.Selection;
     using Ninject.Syntax;
 
@@ -317,12 +310,6 @@ namespace Ninject
 
         // Todo: Remove
         /// <summary>
-        /// Gets the planner
-        /// </summary>
-        public IPlanner Planner { get; private set; }
-
-        // Todo: Remove
-        /// <summary>
         /// Gets the selector
         /// </summary>
         public ISelector Selector { get; private set; }
@@ -347,11 +334,6 @@ namespace Ninject
 
         // Todo: Add
         //protected abstract void AddComponents();
-
-        // Todo: Add
-        //protected virtual bool HandleMissingBinding(IRequest request)
-        //{
-        //}
 
         // Todo: Add
         //protected virtual IContext CreateContext(IRequest request, IBinding binding)

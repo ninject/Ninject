@@ -155,6 +155,14 @@ namespace Ninject.Activation
             }
         }
 
+        public void BuildPlan(Type type)
+        {
+            if (this.Plan == null)
+            {
+                this.Plan = this.Planner.GetPlan(type);
+            }
+        }
+
         private object ResolveInternal(object scope)
         {
             var cachedInstance = this.Cache.TryGet(this);

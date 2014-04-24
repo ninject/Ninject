@@ -26,6 +26,7 @@
         private readonly ICache cache;
         private readonly IPlanner planner;
         private readonly IPipeline pipeline;
+        private readonly IBindingPrecedenceComparer bindingPrecedenceComparer;
         private readonly IEnumerable<IBindingResolver> bindingResolvers;
         private readonly IEnumerable<IMissingBindingResolver> missingBindingResolvers;
         private readonly object missingBindingCacheLock = new object();
@@ -40,6 +41,7 @@
         /// <param name="cache">Dependency injection for <see cref="ICache"/></param>
         /// <param name="planner">Dependency injection for <see cref="IPlanner"/></param>
         /// <param name="pipeline">Dependency injection for <see cref="IPipeline"/></param>
+        /// <param name="bindingPrecedenceComparer">Dependency injection for <see cref="IBindingPrecedenceComparer"/></param>
         /// <param name="bindingResolvers">Dependency injection for all binding resolvers</param>
         /// <param name="missingBindingResolvers">Dependency injection for all missng binding resolvers</param>
         /// <param name="settings">Dependency injection for for <see cref="INinjectSettings"/></param>
@@ -49,6 +51,7 @@
             ICache cache, 
             IPlanner planner, 
             IPipeline pipeline, 
+            IBindingPrecedenceComparer bindingPrecedenceComparer,
             IEnumerable<IBindingResolver> bindingResolvers,
             IEnumerable<IMissingBindingResolver> missingBindingResolvers,
             INinjectSettings settings,
@@ -59,7 +62,7 @@
             this.cache = cache;
             this.planner = planner;
             this.pipeline = pipeline;
-            this.Planner = planner;
+            this.bindingPrecedenceComparer = bindingPrecedenceComparer;
             this.Selector = selector;
             this.Settings = settings;
 
@@ -114,7 +117,6 @@
         {
             Ensure.ArgumentNotNull(request, "request");
 
-            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             var resolveBindings = Enumerable.Empty<IBinding>();
 
             if (this.CanResolve(request) || this.HandleMissingBinding(request))
@@ -135,10 +137,10 @@
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                resolveBindings = resolveBindings.OrderByDescending(b => b, this.bindingPrecedenceComparer).ToList();
                 var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
                 resolveBindings =
-                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
+                    resolveBindings.TakeWhile(binding => this.bindingPrecedenceComparer.Compare(binding, model) == 0);
 
                 if (resolveBindings.Count() > 1)
                 {
@@ -232,12 +234,6 @@
 
         // Todo: Remove
         /// <summary>
-        /// Gets the planner
-        /// </summary>
-        public IPlanner Planner { get; private set; }
-
-        // Todo: Remove
-        /// <summary>
         /// Gets the selector
         /// </summary>
         public ISelector Selector { get; private set; }
@@ -250,15 +246,6 @@
         protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
         {
             return binding => binding.Matches(request) && request.Matches(binding);
-        }
-
-        /// <summary>
-        /// Returns an IComparer that is used to determine resolution precedence.
-        /// </summary>
-        /// <returns>An IComparer that is used to determine resolution precedence.</returns>
-        protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
-        {
-            return new BindingPrecedenceComparer();
         }
 
         /// <summary>
@@ -326,36 +313,6 @@
             Ensure.ArgumentNotNull(binding, "binding");
 
             return new Context(this, request, binding, this.cache, this.planner, this.pipeline);
-        }
-
-        // ToDo: Configure in ComponentContainer
-        private class BindingPrecedenceComparer : IComparer<IBinding>
-        {
-            public int Compare(IBinding x, IBinding y)
-            {
-                if (x == y)
-                {
-                    return 0;
-                }
-
-                // Each function represents a level of precedence.
-                var funcs = new List<Func<IBinding, bool>>
-                            {
-                                b => b != null,       // null bindings should never happen, but just in case
-                                b => b.IsConditional, // conditional bindings > unconditional
-                                b => !b.Service.ContainsGenericParameters, // closed generics > open generics
-                                b => !b.IsImplicit,   // explicit bindings > implicit
-                            };
-
-                var q = from func in funcs
-                        let xVal = func(x)
-                        where xVal != func(y)
-                        select xVal ? 1 : -1;
-
-                // returns the value of the first function that represents a difference
-                // between the bindings, or else returns 0 (equal)
-                return q.FirstOrDefault();
-            }
         }
     }
 }
