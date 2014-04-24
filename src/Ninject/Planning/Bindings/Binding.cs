@@ -17,6 +17,8 @@ using Ninject.Parameters;
 
 namespace Ninject.Planning.Bindings
 {
+    using Ninject.Selection;
+
     /// <summary>
     /// Contains information about a service registration.
     /// </summary>
@@ -235,6 +237,22 @@ namespace Ninject.Planning.Bindings
         public bool Matches(IRequest request)
         {
             return this.BindingConfiguration.Matches(request);
+        }
+
+        /// <summary>
+        /// Gets or sets the InitizalizeProviderCallback action
+        /// </summary>
+        public Action<ISelector> InitializeProviderCallback
+        {
+            get
+            {
+                return this.BindingConfiguration.InitializeProviderCallback;
+            }
+
+            set
+            {
+                this.BindingConfiguration.InitializeProviderCallback = value;
+            }
         }
     }
 }

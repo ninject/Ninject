@@ -6,7 +6,6 @@ using Ninject.Syntax;
 
 namespace Ninject
 {
-    using Ninject.Planning;
     using Ninject.Selection;
 
     /// <summary>
@@ -21,11 +20,5 @@ namespace Ninject
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
         IEnumerable<IBinding> GetBindings(Type service);
-
-        // Todo: Remove
-        /// <summary>
-        /// Gets the selector
-        /// </summary>
-        ISelector Selector { get; }
     }
 }

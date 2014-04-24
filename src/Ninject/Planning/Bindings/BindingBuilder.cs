@@ -78,7 +78,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> InternalTo<T>(Type implementation)
         {
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
+            StandardProvider.AssignProviderCallback(this.BindingConfiguration, implementation);
             this.BindingConfiguration.Target = BindingTarget.Type;
 
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);

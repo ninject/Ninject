@@ -308,12 +308,6 @@ namespace Ninject
             return this.kernelConfiguration.GetBindings(service);
         }
 
-        // Todo: Remove
-        /// <summary>
-        /// Gets the selector
-        /// </summary>
-        public ISelector Selector { get; private set; }
-
         /// <inheritdoc />
         public IReadonlyKernel BuildReadonlyKernel()
         {

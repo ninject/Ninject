@@ -6,7 +6,6 @@
 
     using Ninject.Activation;
     using Ninject.Activation.Caching;
-    using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Infrastructure.Introspection;
@@ -63,20 +62,13 @@
             this.planner = planner;
             this.pipeline = pipeline;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
-            this.Selector = selector;
             this.Settings = settings;
 
             this.AddReadonlyKernelBinding<IReadonlyKernel>(this, bindings);
             this.AddReadonlyKernelBinding<IResolutionRoot>(this, bindings);
 
             this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
-        }
-
-        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
-        {
-            var binding = new Binding(typeof(T));
-            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
-            bindings.Add(typeof(T), binding);
+            this.InitializeBindings(selector);
         }
 
         /// <inheritdoc />
@@ -232,12 +224,6 @@
             return result;
         }
 
-        // Todo: Remove
-        /// <summary>
-        /// Gets the selector
-        /// </summary>
-        public ISelector Selector { get; private set; }
-
         /// <summary>
         /// Returns a predicate that can determine if a given IBinding matches the request.
         /// </summary>
@@ -294,13 +280,6 @@
             return true;
         }
 
-        private List<IBinding> GetBindingsFromFirstResolverThatReturnsAtLeastOneBinding(IRequest request)
-        {
-            return this.missingBindingResolvers
-                .Select(c => c.Resolve(this.bindings, request).ToList())
-                .FirstOrDefault(b => b.Any());
-        }
-
         /// <summary>
         /// Creates a context for the specified request and binding.
         /// </summary>
@@ -313,6 +292,29 @@
             Ensure.ArgumentNotNull(binding, "binding");
 
             return new Context(this, request, binding, this.cache, this.planner, this.pipeline);
+        }
+
+        private List<IBinding> GetBindingsFromFirstResolverThatReturnsAtLeastOneBinding(IRequest request)
+        {
+            return this.missingBindingResolvers
+                .Select(c => c.Resolve(this.bindings, request).ToList())
+                .FirstOrDefault(b => b.Any());
+        }
+
+        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
+        {
+            var binding = new Binding(typeof(T));
+            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            bindings.Add(typeof(T), binding);
+        }
+
+        private void InitializeBindings(ISelector selector)
+        {
+            foreach (var binding in bindings.Values.SelectMany(b => b))
+            {
+                binding.InitializeProviderCallback(selector);
+                this.GetBindings(binding.Service);
+            }
         }
     }
 }

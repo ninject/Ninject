@@ -21,6 +21,9 @@ using Ninject.Planning.Targets;
 namespace Ninject.Activation.Providers
 {
     using System.Reflection;
+
+    using Ninject.Planning.Bindings;
+    using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
     /// <summary>
@@ -107,10 +110,13 @@ namespace Ninject.Activation.Providers
         /// for the specified type.
         /// </summary>
         /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="selector">The selector</param>
         /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
         {
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Selector.ConstructorScorer);
+            var provider = new StandardProvider(prototype, selector.ConstructorScorer);
+            // providerInitilizationCallback = selector => provider.ConstructorScorer = selector.ConstructorScorer;
+            return ctx => provider;
         }
 
         /// <summary>
@@ -124,6 +130,19 @@ namespace Ninject.Activation.Providers
         {
             var provider = new StandardProvider(prototype, new SpecificConstructorSelector(constructor));
             return ctx => provider;
+        }
+
+        /// <summary>
+        /// Assigns the provider callback to the building configuration.
+        /// </summary>
+        /// <param name="bindingConfiguration">The building configuration</param>
+        /// <param name="prototype">The prototype</param>
+        public static void AssignProviderCallback(IBindingConfiguration bindingConfiguration, Type prototype)
+        {
+            var provider = new StandardProvider(prototype, null);
+            bindingConfiguration.ProviderCallback = ctx => provider;
+            bindingConfiguration.InitializeProviderCallback =
+                selector => provider.ConstructorScorer = selector.ConstructorScorer;
         }
     }
 }

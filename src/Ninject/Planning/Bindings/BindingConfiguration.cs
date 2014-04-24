@@ -26,6 +26,7 @@ namespace Ninject.Planning.Bindings
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
+    using Ninject.Selection;
 
     /// <summary>
     /// The configuration of a binding.
@@ -42,6 +43,7 @@ namespace Ninject.Planning.Bindings
             this.ActivationActions = new List<Action<IContext, object>>();
             this.DeactivationActions = new List<Action<IContext, object>>();
             this.ScopeCallback = StandardScopeCallbacks.Transient;
+            this.InitializeProviderCallback = s => { };
         }
 
         /// <summary>
@@ -128,6 +130,11 @@ namespace Ninject.Planning.Bindings
         {
             Ensure.ArgumentNotNull(request, "request");
             return this.Condition == null || this.Condition(request);
-        }    
+        }
+
+        /// <summary>
+        /// Gets or sets the InitizalizeProviderCallback action
+        /// </summary>
+        public Action<ISelector> InitializeProviderCallback { get; set; }
     }
 }

@@ -21,10 +21,23 @@ using Ninject.Infrastructure;
 
 namespace Ninject.Planning.Bindings.Resolvers
 {
+    using Ninject.Selection;
+
     ///<summary>
     ///</summary>
     public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
     {
+        private readonly ISelector selector;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadonlyKernel"/> class.
+        /// </summary>
+        /// <param name="selector">Dependency injection for <see cref="ISelector"/></param>
+        public SelfBindingResolver(ISelector selector)
+        {
+            this.selector = selector;
+        }
+
         /// <summary>
         /// Returns any bindings from the specified collection that match the specified service.
         /// </summary>
@@ -42,7 +55,7 @@ namespace Ninject.Planning.Bindings.Resolvers
                         {
                             new Binding(service)
                             {
-                                ProviderCallback = StandardProvider.GetCreationCallback(service)
+                                ProviderCallback = StandardProvider.GetCreationCallback(service, selector)
                             }
                         };
         }

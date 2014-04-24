@@ -155,6 +155,10 @@ namespace Ninject.Activation
             }
         }
 
+        /// <summary>
+        /// Builds the activation plan for a given type
+        /// </summary>
+        /// <param name="type">The type</param>
         public void BuildPlan(Type type)
         {
             if (this.Plan == null)
