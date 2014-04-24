@@ -25,6 +25,7 @@ namespace Ninject.Planning.Bindings
     using System.Collections.Generic;
     using Ninject.Activation;
     using Ninject.Parameters;
+    using Ninject.Selection;
 
     /// <summary>
     /// The configuration of a binding.
@@ -101,6 +102,11 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns><c>True</c> if the request satisfies the condition; otherwise <c>false</c>.</returns>
-        bool Matches(IRequest request);        
+        bool Matches(IRequest request);
+
+        /// <summary>
+        /// Gets or sets the InitizalizeProviderCallback action
+        /// </summary>
+        Action<ISelector> InitializeProviderCallback { get; set; }
     }
 }

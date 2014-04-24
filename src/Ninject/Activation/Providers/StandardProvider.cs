@@ -10,19 +10,20 @@
 #region Using Directives
 using System;
 using System.Linq;
-using Ninject.Infrastructure;
+
 using Ninject.Infrastructure.Introspection;
 using Ninject.Parameters;
-using Ninject.Planning;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
-using Ninject.Selection;
 
 #endregion
 
 namespace Ninject.Activation.Providers
 {
     using System.Reflection;
+
+    using Ninject.Planning.Bindings;
+    using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
     /// <summary>
@@ -36,11 +37,6 @@ namespace Ninject.Activation.Providers
         public Type Type { get; private set; }
 
         /// <summary>
-        /// Gets or sets the planner component.
-        /// </summary>
-        public IPlanner Planner { get; private set; }
-
-        /// <summary>
         /// Gets or sets the selector component.
         /// </summary>
         public IConstructorScorer ConstructorScorer { get; private set; }
@@ -49,17 +45,10 @@ namespace Ninject.Activation.Providers
         /// Initializes a new instance of the <see cref="StandardProvider"/> class.
         /// </summary>
         /// <param name="type">The type (or prototype) of instances the provider creates.</param>
-        /// <param name="planner">The planner component.</param>
         /// <param name="constructorScorer">The constructor scorer component.</param>
-        public StandardProvider(Type type, IPlanner planner, IConstructorScorer constructorScorer
-            )
+        public StandardProvider(Type type, IConstructorScorer constructorScorer)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-
             Type = type;
-            Planner = planner;
             ConstructorScorer = constructorScorer;
         }
 
@@ -70,13 +59,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created instance.</returns>
         public virtual object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
-
-            if (context.Plan == null)
-            {
-                context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
-            }
-
+            context.BuildPlan(this.GetImplementationType(context.Request.Service));
             if (!context.Plan.Has<ConstructorInjectionDirective>())
             {
                 throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
@@ -105,12 +88,9 @@ namespace Ninject.Activation.Providers
         /// <returns>The value to inject into the specified target.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
-
             var parameter = context
                 .Parameters.OfType<IConstructorArgument>()
-                .Where(p => p.AppliesToTarget(context, target)).SingleOrDefault();
+                .SingleOrDefault(p => p.AppliesToTarget(context, target));
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }
 
@@ -122,7 +102,6 @@ namespace Ninject.Activation.Providers
         /// <returns>The implementation type that will be activated.</returns>
         public Type GetImplementationType(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
             return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
         }
 
@@ -131,11 +110,12 @@ namespace Ninject.Activation.Providers
         /// for the specified type.
         /// </summary>
         /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="selector">The selector</param>
         /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
         {
-            Ensure.ArgumentNotNull(prototype, "prototype");
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<ISelector>().ConstructorScorer);
+            var provider = new StandardProvider(prototype, selector.ConstructorScorer);
+            return ctx => provider;
         }
 
         /// <summary>
@@ -147,8 +127,21 @@ namespace Ninject.Activation.Providers
         /// <returns>The created callback.</returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
         {
-            Ensure.ArgumentNotNull(prototype, "prototype");
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), new SpecificConstructorSelector(constructor));
+            var provider = new StandardProvider(prototype, new SpecificConstructorSelector(constructor));
+            return ctx => provider;
+        }
+
+        /// <summary>
+        /// Assigns the provider callback to the building configuration.
+        /// </summary>
+        /// <param name="bindingConfiguration">The building configuration</param>
+        /// <param name="prototype">The prototype</param>
+        public static void AssignProviderCallback(IBindingConfiguration bindingConfiguration, Type prototype)
+        {
+            var provider = new StandardProvider(prototype, null);
+            bindingConfiguration.ProviderCallback = ctx => provider;
+            bindingConfiguration.InitializeProviderCallback =
+                selector => provider.ConstructorScorer = selector.ConstructorScorer;
         }
     }
 }

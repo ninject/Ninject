@@ -21,7 +21,7 @@
 
 
 /* Temporary disabled feature
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT
 namespace Ninject
 {
     using Ninject.Modules;

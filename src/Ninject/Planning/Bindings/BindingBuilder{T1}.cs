@@ -24,9 +24,7 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif    
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -63,7 +61,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToSelf()
         {
-            this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service);
+            StandardProvider.AssignProviderCallback(this.BindingConfiguration, this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
             return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);
@@ -90,7 +88,6 @@ namespace Ninject.Planning.Bindings
             return this.InternalTo<T1>(implementation);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the speecified constructor.
         /// </summary>
@@ -103,7 +100,6 @@ namespace Ninject.Planning.Bindings
         {
             return this.InternalToConstructor(newExpression);
         }
-#endif
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.

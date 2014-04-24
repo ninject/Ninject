@@ -18,6 +18,8 @@ using Ninject.Infrastructure.Language;
 
 namespace Ninject.Planning.Bindings.Resolvers
 {
+    using System.Linq;
+
     /// <summary>
     /// Resolves bindings that have been registered directly for the service.
     /// </summary>
@@ -29,9 +31,12 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
+        public IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, Type service)
         {
-            return bindings[service].ToEnumerable();
+            IEnumerable<IBinding> result;
+            return bindings.TryGetValue(service, out result) 
+                ? result 
+                : Enumerable.Empty<IBinding>();
         }
     }
 }

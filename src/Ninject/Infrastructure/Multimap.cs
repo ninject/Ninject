@@ -15,29 +15,28 @@ using System.Collections.Generic;
 
 namespace Ninject.Infrastructure
 {
+    using System.Linq;
+
     /// <summary>
     /// A data structure that contains multiple values for a each key.
     /// </summary>
     /// <typeparam name="K">The type of key.</typeparam>
     /// <typeparam name="V">The type of value.</typeparam>
-    public class Multimap<K, V> : IEnumerable<KeyValuePair<K, ICollection<V>>>
+    public class Multimap<K, V> //: IEnumerable<KeyValuePair<K, ICollection<V>>>
     {
-        private readonly Dictionary<K, ICollection<V>> _items = new Dictionary<K, ICollection<V>>();
+        private readonly Dictionary<K, ICollection<V>> items = new Dictionary<K, ICollection<V>>();
 
         /// <summary>
         /// Gets the collection of values stored under the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public ICollection<V> this[K key]
+        public IEnumerable<V> this[K key]
         {
             get
             {
-                Ensure.ArgumentNotNull(key, "key");
+                ICollection<V> result;
 
-                if (!_items.ContainsKey(key))
-                    _items[key] = new List<V>();
-
-                return _items[key];
+                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<V>();
             }
         }
 
@@ -46,7 +45,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public ICollection<K> Keys
         {
-            get { return _items.Keys; }
+            get { return this.items.Keys; }
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public ICollection<ICollection<V>> Values
         {
-            get { return _items.Values; }
+            get { return this.items.Values; }
         }
 
         /// <summary>
@@ -64,10 +63,7 @@ namespace Ninject.Infrastructure
         /// <param name="value">The value.</param>
         public void Add(K key, V value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
-
-            this[key].Add(value);
+            this.GetValues(key).Add(value);
         }
 
         /// <summary>
@@ -78,13 +74,10 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
         public bool Remove(K key, V value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            ICollection<V> values;
 
-            if (!_items.ContainsKey(key))
-                return false;
-
-            return _items[key].Remove(value);
+            return this.items.TryGetValue(key, out values) && 
+                   values.Remove(value);
         }
 
         /// <summary>
@@ -94,8 +87,7 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
         public bool RemoveAll(K key)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            return _items.Remove(key);
+            return this.items.Remove(key);
         }
 
         /// <summary>
@@ -103,7 +95,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public void Clear()
         {
-            _items.Clear();
+            this.items.Clear();
         }
 
         /// <summary>
@@ -113,36 +105,49 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(K key)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            return _items.ContainsKey(key);
+            return this.items.ContainsKey(key);
         }
-
-        /// <summary>
-        /// Determines whether the multimap contains the specified value for the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <returns><c>True</c> if the multimap contains such a value; otherwise, <c>false</c>.</returns>
-        public bool ContainsValue(K key, V value)
-        {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
-
-            return _items.ContainsKey(key) && _items[key].Contains(value);
-        }
-
+        /*
         /// <summary>
         /// Returns an enumerator that iterates through a the multimap.
         /// </summary>
         /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the multimap.</returns>
         public IEnumerator GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return this.items.GetEnumerator();
         }
 
         IEnumerator<KeyValuePair<K, ICollection<V>>> IEnumerable<KeyValuePair<K, ICollection<V>>>.GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return this.items.GetEnumerator();
+        }*/
+
+        /// <summary>
+        /// Gets the values associated with the given key
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <param name="values">The values</param>
+        /// <returns><c>True</c> when values are found or <c>false</c> if not</returns>
+        public bool TryGetValues(K key, out IEnumerable<V> values)
+        {
+            ICollection<V> tempValues;
+
+            var result = this.items.TryGetValue(key, out tempValues);
+            values = tempValues;
+
+            return result;
+        }
+
+        private ICollection<V> GetValues(K key)
+        {
+            ICollection<V> result;
+            if (!this.items.TryGetValue(key, out result))
+            {
+                result = new List<V>();
+                this.items[key] = result;
+            }
+
+            return result;
         }
     }
 }

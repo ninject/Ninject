@@ -80,12 +80,8 @@ namespace Ninject.Activation.Caching
 
             using (var signal = new ManualResetEvent(false))
             {
-#if !NETCF
                 this.timer.Dispose(signal);
                 signal.WaitOne();
-#else
-                this.timer.Dispose();
-#endif
 
                 this.timer = null;
                 this.caches.Clear();

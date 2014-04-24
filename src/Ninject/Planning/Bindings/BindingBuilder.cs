@@ -24,9 +24,7 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -80,7 +78,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> InternalTo<T>(Type implementation)
         {
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
+            StandardProvider.AssignProviderCallback(this.BindingConfiguration, implementation);
             this.BindingConfiguration.Target = BindingTarget.Type;
 
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
@@ -92,9 +90,10 @@ namespace Ninject.Planning.Bindings
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="value">The constant value.</param>
         /// <returns>The fluent syntax.</returns>
-        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value) 
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value)
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
+            var constantProvider = new ConstantProvider<TImplementation>(value);
+            this.BindingConfiguration.ProviderCallback = ctx => constantProvider;
             this.BindingConfiguration.Target = BindingTarget.Constant;
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
 
@@ -109,7 +108,8 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToMethod<TImplementation>(Func<IContext, TImplementation> method)
         {
-            this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
+            var callbackProvider = new CallbackProvider<TImplementation>(method);
+            this.BindingConfiguration.ProviderCallback = ctx => callbackProvider;
             this.BindingConfiguration.Target = BindingTarget.Method;
 
             return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
@@ -160,7 +160,6 @@ namespace Ninject.Planning.Bindings
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the speecified constructor.
         /// </summary>
@@ -255,6 +254,5 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only! Never call it directly.");
             }
         }
-#endif
     }
 }

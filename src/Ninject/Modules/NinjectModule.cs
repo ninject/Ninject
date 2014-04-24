@@ -55,12 +55,14 @@ namespace Ninject.Modules
                 return this.KernelConfiguration.Settings;
             }
         }
-        
+
+#pragma warning disable 618
         /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
-        [Obsolete()]
+        [Obsolete]
         public IKernel Kernel { get; private set; }
+#pragma warning restore 618
 
         /// <summary>
         /// Gets the kernel configuration that the module is loaded into.

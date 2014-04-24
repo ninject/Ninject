@@ -30,9 +30,9 @@ namespace Ninject.Components
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
-        /// Gets or sets the kernel that owns the component container.
+        /// Gets or sets the kernel configuration
         /// </summary>
-        public IReadonlyKernel Kernel { get; set; }
+        public IKernelConfiguration KernelConfiguration { get; set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -101,7 +101,7 @@ namespace Ninject.Components
 
             _instances.Remove(implementation);
 
-            _mappings[typeof(T)].Remove(typeof(TImplementation));
+            _mappings.Remove(typeof(T), typeof(TImplementation));
         }
         /// <summary>
         /// Removes all registrations for the specified component.
@@ -153,10 +153,8 @@ namespace Ninject.Components
         {
             Ensure.ArgumentNotNull(component, "component");
 
-            if (component == typeof(IReadonlyKernel))
-                return Kernel;
             if (component == typeof(IKernelConfiguration))
-                return Kernel;
+                return KernelConfiguration;
 
             if (component.IsGenericType)
             {
@@ -208,7 +206,9 @@ namespace Ninject.Components
             try
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
-                instance.Settings = Kernel.Settings;
+
+                // Todo: Clone Settings during kernel build (is this still important? Can clone settings now)
+                instance.Settings = KernelConfiguration.Settings.Clone();
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {
@@ -234,7 +234,7 @@ namespace Ninject.Components
             return constructor;
         }
 
-#if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35 || MONO
+#if WINDOWS_PHONE || MONO
         private class HashSet<T>
         {
             private IDictionary<T, bool> data = new Dictionary<T,bool>();
