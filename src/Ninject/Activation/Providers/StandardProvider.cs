@@ -115,7 +115,6 @@ namespace Ninject.Activation.Providers
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
         {
             var provider = new StandardProvider(prototype, selector.ConstructorScorer);
-            // providerInitilizationCallback = selector => provider.ConstructorScorer = selector.ConstructorScorer;
             return ctx => provider;
         }
 
