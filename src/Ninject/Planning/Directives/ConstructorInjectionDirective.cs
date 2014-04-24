@@ -27,6 +27,11 @@ namespace Ninject.Planning.Directives
         public ConstructorInfo Constructor { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="Constructor"/> has inject attribute.
+        /// </summary>
+        public bool HasInjectAttribute { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorInjectionDirective"/> class.
         /// </summary>
         /// <param name="constructor">The constructor described by the directive.</param>

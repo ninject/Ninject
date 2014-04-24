@@ -49,7 +49,7 @@ namespace Ninject.Selection.Heuristics
         /// <returns>The constructor's score.</returns>
         public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
-            if (directive.Constructor.HasAttribute(Settings.InjectAttribute))
+            if (directive.HasInjectAttribute)
             {
                 return int.MaxValue;
             }
