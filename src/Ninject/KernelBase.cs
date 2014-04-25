@@ -342,20 +342,22 @@ namespace Ninject
         /// <returns>An enumerator of instances that match the request.</returns>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            return this.Resolve(request, true);
+        }
 
-            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            var resolveBindings = Enumerable.Empty<IBinding>();
+        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
+        {
+            var satisfiedBindings = this.GetBindings(request.Service)
+                                        .Where(this.SatifiesRequest(request));
+            var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
+            if (!satisfiedBindingEnumerator.MoveNext())
             {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request));
+                if (handleMissingBindings && this.HandleMissingBinding(request))
+                {
+                    return this.Resolve(request, false);
+                }
 
-            }
-
-            if (!resolveBindings.Any())
-            {
                 if (request.IsOptional)
                 {
                     return Enumerable.Empty<object>();
@@ -366,11 +368,10 @@ namespace Ninject
 
             if (request.IsUnique)
             {
-                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
-                resolveBindings =
-                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
+                var selectedBinding = satisfiedBindingEnumerator.Current;
 
-                if (resolveBindings.Count() > 1)
+                if (satisfiedBindingEnumerator.MoveNext() &&
+                    bindingPrecedenceComparer.Compare(selectedBinding, satisfiedBindingEnumerator.Current) == 0)
                 {
                     if (request.IsOptional && !request.ForceUnique)
                     {
@@ -378,20 +379,26 @@ namespace Ninject
                     }
 
                     var formattedBindings =
-                        from binding in resolveBindings
+                        from binding in satisfiedBindings
                         let context = this.CreateContext(request, binding)
                         select binding.Format(context);
-                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request, formattedBindings.ToArray()));
+
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request,
+                        formattedBindings.ToArray()));
                 }
-            }
 
-            if(resolveBindings.Any(binding => !binding.IsImplicit))
+                return new [] { this.CreateContext(request, selectedBinding).Resolve() };
+            }
+            else
             {
-                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
-            }
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
+                {
+                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
+                }
 
-            return resolveBindings
-                .Select(binding => this.CreateContext(request, binding).Resolve());
+                return satisfiedBindings
+                    .Select(binding => this.CreateContext(request, binding).Resolve());
+            }
         }
 
         /// <summary>
