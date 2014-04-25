@@ -40,7 +40,7 @@ namespace Ninject
         
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
-        private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
+        private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
@@ -435,10 +435,12 @@ namespace Ninject
                 {
                     var resolvers = this.Components.GetAll<IBindingResolver>();
 
-                    resolvers
+                    var compiledBindings = resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .OrderByDescending(b => b, bindingPrecedenceComparer)
-                        .Map(binding => this.bindingCache.Add(service, binding));
+                        .OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                    this.bindingCache.Add(service, compiledBindings);
+
+                    return compiledBindings;
                 }
 
                 return this.bindingCache[service];
