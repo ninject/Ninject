@@ -1,28 +1,34 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Linq;
-
-using Ninject.Infrastructure.Introspection;
-using Ninject.Parameters;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-
-#endregion
+//-------------------------------------------------------------------------------
+// <copyright file="StandardProvider.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2009-2014 Ninject Project Contributors
+//   
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   You may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//   
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//   
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Providers
 {
+    using System;
+    using System.Linq;
     using System.Reflection;
-
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Infrastructure.Language;
+    using Ninject.Parameters;
     using Ninject.Planning.Bindings;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
     using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
@@ -32,25 +38,25 @@ namespace Ninject.Activation.Providers
     public class StandardProvider : IProvider
     {
         /// <summary>
-        /// Gets the type (or prototype) of instances the provider creates.
-        /// </summary>
-        public Type Type { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the selector component.
-        /// </summary>
-        public IConstructorScorer ConstructorScorer { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="StandardProvider"/> class.
         /// </summary>
         /// <param name="type">The type (or prototype) of instances the provider creates.</param>
         /// <param name="constructorScorer">The constructor scorer component.</param>
         public StandardProvider(Type type, IConstructorScorer constructorScorer)
         {
-            Type = type;
-            ConstructorScorer = constructorScorer;
+            this.Type = type;
+            this.ConstructorScorer = constructorScorer;
         }
+
+        /// <summary>
+        /// Gets the type (or prototype) of instances the provider creates.
+        /// </summary>
+        public Type Type { get; private set; }
+
+        /// <summary>
+        /// Gets the selector component.
+        /// </summary>
+        public IConstructorScorer ConstructorScorer { get; private set; }
 
         /// <summary>
         /// Creates an instance within the specified context.
@@ -60,23 +66,11 @@ namespace Ninject.Activation.Providers
         public virtual object Create(IContext context)
         {
             context.BuildPlan(this.GetImplementationType(context.Request.Service));
-            if (!context.Plan.Has<ConstructorInjectionDirective>())
-            {
-                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
-            }
 
-            var directives = context.Plan.GetAll<ConstructorInjectionDirective>();
-            var bestDirectives = directives
-                .GroupBy(option => this.ConstructorScorer.Score(context, option))
-                .OrderByDescending(g => g.Key)
-                .First();
-            if (bestDirectives.Skip(1).Any())
-            {
-                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
-            }
+            var directive = this.DetermineConstructorInjectionDirective(context);
 
-            var directive = bestDirectives.Single();
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
+
             return directive.Injector(arguments);
         }
 
@@ -109,9 +103,15 @@ namespace Ninject.Activation.Providers
         /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
         /// for the specified type.
         /// </summary>
-        /// <param name="prototype">The prototype the provider instance will create.</param>
-        /// <param name="selector">The selector</param>
-        /// <returns>The created callback.</returns>
+        /// <param name="prototype">
+        /// The prototype the provider instance will create.
+        /// </param>
+        /// <param name="selector">
+        /// The selector.
+        /// </param>
+        /// <returns>
+        /// The created callback.
+        /// </returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
         {
             var provider = new StandardProvider(prototype, selector.ConstructorScorer);
@@ -134,14 +134,39 @@ namespace Ninject.Activation.Providers
         /// <summary>
         /// Assigns the provider callback to the building configuration.
         /// </summary>
-        /// <param name="bindingConfiguration">The building configuration</param>
-        /// <param name="prototype">The prototype</param>
+        /// <param name="bindingConfiguration">
+        /// The building configuration.
+        /// </param>
+        /// <param name="prototype">
+        /// The prototype.
+        /// </param>
         public static void AssignProviderCallback(IBindingConfiguration bindingConfiguration, Type prototype)
         {
             var provider = new StandardProvider(prototype, null);
             bindingConfiguration.ProviderCallback = ctx => provider;
             bindingConfiguration.InitializeProviderCallback =
                 selector => provider.ConstructorScorer = selector.ConstructorScorer;
+        }
+
+        private ConstructorInjectionDirective DetermineConstructorInjectionDirective(IContext context)
+        {
+            var directives = context.Plan.ConstructorInjectionDirectives;
+            if (directives.Count == 1)
+            {
+                return directives[0];
+            }
+            IGrouping<int, ConstructorInjectionDirective> bestDirectives =
+                directives
+                    .GroupBy(option => this.ConstructorScorer.Score(context, option))
+                    .OrderByDescending(g => g.Key)
+                    .FirstOrDefault();
+            if (bestDirectives == null)
+            {
+                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+            }
+
+            return bestDirectives.SingleOrThrowException(
+                () => new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives)));
         }
     }
 }

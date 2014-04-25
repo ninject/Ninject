@@ -26,6 +26,11 @@ namespace Ninject.Planning
         Type Type { get; }
 
         /// <summary>
+        /// Gets the directives defined in the plan.
+        /// </summary>
+        IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; }
+
+        /// <summary>
         /// Adds the specified directive to the plan.
         /// </summary>
         /// <param name="directive">The directive.</param>

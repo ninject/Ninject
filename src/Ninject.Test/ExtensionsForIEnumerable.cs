@@ -15,8 +15,8 @@
         }
 
         public static T ShouldContainSingle<T>(this IEnumerable<T> source)
-		{
+        {
             return Assert.Single(source);
-		}
+        }
     }
 }
