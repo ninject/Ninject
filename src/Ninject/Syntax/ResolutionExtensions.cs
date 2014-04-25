@@ -72,7 +72,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static T TryGet<T>(this IResolutionRoot root, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, typeof(T), null, parameters, true, true).Cast<T>());
+            return TryGet(() => GetResolutionIterator(root, typeof(T), null, parameters, true, true).Cast<T>());
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static T TryGet<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, typeof(T), b => b.Name == name, parameters, true, true).Cast<T>());
+            return TryGet(()=> GetResolutionIterator(root, typeof(T), b => b.Name == name, parameters, true, true).Cast<T>());
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static T TryGet<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, typeof(T), constraint, parameters, true, true).Cast<T>());
+            return TryGet(() => GetResolutionIterator(root, typeof(T), constraint, parameters, true, true).Cast<T>());
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static object TryGet(this IResolutionRoot root, Type service, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, service, null, parameters, true, true));
+            return TryGet(() => GetResolutionIterator(root, service, null, parameters, true, true));
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static object TryGet(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, service, b => b.Name == name, parameters, true, false));
+            return TryGet(() => GetResolutionIterator(root, service, b => b.Name == name, parameters, true, false));
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static object TryGet(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
         {
-            return TryGet(GetResolutionIterator(root, service, constraint, parameters, true, false));
+            return TryGet(() => GetResolutionIterator(root, service, constraint, parameters, true, false));
         }
 
         /// <summary>
@@ -398,11 +398,11 @@ namespace Ninject
             return root.Resolve(request);
         }
 
-        private static T TryGet<T>(IEnumerable<T> iterator)
+        private static T TryGet<T>(Func<IEnumerable<T>> getResolutionCallback)
         {
             try
             {
-                return iterator.SingleOrDefault();
+                return getResolutionCallback().SingleOrDefault();
             }
             catch (ActivationException)
             {

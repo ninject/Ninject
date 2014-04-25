@@ -93,7 +93,7 @@
         public bool CanResolve(IRequest request)
         {
             Ensure.ArgumentNotNull(request, "request");
-            return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
+            return this.GetBindings(request.Service).Any(b => this.SatifiesRequest(request, b));
         }
 
         /// <inheritdoc />
@@ -101,7 +101,7 @@
         {
             Ensure.ArgumentNotNull(request, "request");
             return this.GetBindings(request.Service)
-                .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
+                .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request, binding));
         }
 
         /// <inheritdoc />
@@ -109,32 +109,24 @@
         {
             Ensure.ArgumentNotNull(request, "request");
 
-            var resolveBindings = Enumerable.Empty<IBinding>();
+            return Resolve(request, true);
+        }
 
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
+        private IEnumerable<object> Resolve(IRequest request, bool requestMissingBindings)
+        {
+            var resolveBindings = this.GetBindings(request.Service).Where(b => this.SatifiesRequest(request, b));
+            var resolveBindingsIterator = resolveBindings.GetEnumerator();
+
+            if (!resolveBindingsIterator.MoveNext())
             {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request));
-            }
-
-            if (!resolveBindings.Any())
-            {
-                if (request.IsOptional)
-                {
-                    return Enumerable.Empty<object>();
-                }
-
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+                return this.ResolveWithMissingBindings(request, requestMissingBindings);
             }
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.OrderByDescending(b => b, this.bindingPrecedenceComparer).ToList();
-                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
-                resolveBindings =
-                    resolveBindings.TakeWhile(binding => this.bindingPrecedenceComparer.Compare(binding, model) == 0);
-
-                if (resolveBindings.Count() > 1)
+                var first = resolveBindingsIterator.Current;
+                if (resolveBindingsIterator.MoveNext() &&
+                    this.bindingPrecedenceComparer.Compare(first, resolveBindingsIterator.Current) == 0)
                 {
                     if (request.IsOptional && !request.ForceUnique)
                     {
@@ -147,15 +139,43 @@
                         select binding.Format(context);
                     throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request, formattedBindings.ToArray()));
                 }
-            }
 
-            if (resolveBindings.Any(binding => !binding.IsImplicit))
+                return new object[] { this.CreateContext(request, first).Resolve() };
+            }
+            else
             {
-                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
+                return this.ResolveMultiple(request);
+            }
+        }
+
+        private IEnumerable<object> ResolveMultiple(IRequest request)
+        {
+            var selectedBindings = this.GetBindings(request.Service).Where(b => this.SatifiesRequest(request, b));
+            var skipImplicit = false;
+
+            foreach (var binding in selectedBindings.TakeWhile(binding => !binding.IsImplicit || !skipImplicit))
+            {
+                skipImplicit = !binding.IsImplicit;
+                yield return this.CreateContext(request, binding).Resolve();
+            }
+        }
+
+        private IEnumerable<object> ResolveWithMissingBindings(IRequest request, bool handleMissingBindings)
+        {
+            if (handleMissingBindings)
+            {
+                if (this.HandleMissingBinding(request))
+                {
+                    return this.Resolve(request, false);
+                }
             }
 
-            return resolveBindings
-                .Select(binding => this.CreateContext(request, binding).Resolve());
+            if (request.IsOptional)
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
         }
 
         /// <inheritdoc />
@@ -211,7 +231,9 @@
                 return result;
             }
 
-            result = bindingResolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service)).ToList();
+            result = bindingResolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service))
+                .OrderByDescending(b => b, bindingPrecedenceComparer)
+                .ToList();
             if (result.Count > 0)
             {
                 newBindingCache[service] = result;
@@ -228,10 +250,11 @@
         /// Returns a predicate that can determine if a given IBinding matches the request.
         /// </summary>
         /// <param name="request">The request/</param>
+        /// <param name="binding">The binding</param>
         /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
-        protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
+        protected virtual bool SatifiesRequest(IRequest request, IBinding binding)
         {
-            return binding => binding.Matches(request) && request.Matches(binding);
+            return binding.Matches(request) && request.Matches(binding);
         }
 
         /// <summary>
