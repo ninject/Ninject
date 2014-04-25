@@ -343,13 +343,6 @@
 		<property name="nuget.add" value="false"/>
 		<property name="build.platform" value="netcf-3.5" overwrite="true"/>
 	</target>
-
-	<target name="config-platform-mono-2.0">
-		<property name="nant.settings.currentframework" value="mono-2.0"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,MONO_20,NO_GENERIC_MOQ" />
-		<property name="nuget.add" value="false"/>
-		<property name="build.platform" value="mono-2.0" overwrite="true"/>
-	</target>
 	
 	<target name="config-platform-mono-3.5">
 		<property name="nant.settings.currentframework" value="mono-3.5"/>

@@ -5,8 +5,8 @@
 	<property name="product.company" value="Ninject Project Contributors" overwrite="false"/>
 	<property name="product.duration" value="2007-2012" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
-	<property name="product.platforms" value="net-4.5,net-3.5-client,net-4.0-client,net-4.5,net-3.5_medium_trust,net-4.0_medium_trust,net-4.5_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp71,silverlight-4.0-wp7,mono-2.0,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
-	<property name="product.buildserverPlatforms" value="net-3.5-client,net-4.0-client,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-2.0,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.platforms" value="net-4.5,net-3.5-client,net-4.0-client,net-4.5,net-3.5_medium_trust,net-4.0_medium_trust,net-4.5_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp71,silverlight-4.0-wp7,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.buildserverPlatforms" value="net-3.5-client,net-4.0-client,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
 	<property name="dependencies" value=""	overwrite="false"/>
 	
 	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
@@ -19,7 +19,9 @@
 
 	<target name="core" depends="init">
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}" keyfile="${path.src}/${product.keyfile}">
-			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
+			<arg line="/filealign:512"/>
+      <arg value="-sdk:2" if="${string::contains(build.platform, 'mono-3.5')}"/>
+      <arg value="-sdk:4" if="${string::contains(build.platform, 'mono-4.0')}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="${product.name}/**/*.cs"/>
@@ -41,7 +43,9 @@
 		<mkdir dir="${current.path.build.extensions}" if="${not(directory::exists(current.path.build.extensions))}"/>
 		
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
-			<arg line="/filealign:512" unless="${nant.settings.currentframework == 'mono-2.0'}"/>
+			<arg line="/filealign:512"/>
+      <arg value="-sdk:2" if="${string::contains(build.platform, 'mono-3.5')}"/>
+      <arg value="-sdk:4" if="${string::contains(build.platform, 'mono-4.0')}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
