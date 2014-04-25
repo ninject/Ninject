@@ -6,6 +6,8 @@
 // See the file LICENSE.txt for details.
 // 
 
+using System.Collections;
+
 namespace Ninject
 {
     using System;
@@ -41,6 +43,8 @@ namespace Ninject
         private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
+
+        private readonly IComparer<IBinding> bindingPrecedenceComparer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -88,6 +92,7 @@ namespace Ninject
 
             this.AddComponents();
 
+            this.bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             this.Bind<IKernel>().ToConstant(this).InTransientScope();
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
@@ -361,7 +366,6 @@ namespace Ninject
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
                 var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
                 resolveBindings =
                     resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
@@ -433,6 +437,7 @@ namespace Ninject
 
                     resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
+                        .OrderByDescending(b => b, bindingPrecedenceComparer)
                         .Map(binding => this.bindingCache.Add(service, binding));
                 }
 
