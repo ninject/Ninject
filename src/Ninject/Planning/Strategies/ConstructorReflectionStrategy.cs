@@ -20,6 +20,8 @@ using Ninject.Selection;
 
 namespace Ninject.Planning.Strategies
 {
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Adds a directive to plans indicating which constructor should be injected during activation.
     /// </summary>
@@ -59,7 +61,13 @@ namespace Ninject.Planning.Strategies
 
             foreach(ConstructorInfo constructor in constructors)
             {
-                plan.Add(new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)));
+                bool hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
+                var directive = new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)) 
+                {
+                     HasInjectAttribute = hasInjectAttribute
+                };
+
+                plan.Add(directive);
             }
         }
     }
