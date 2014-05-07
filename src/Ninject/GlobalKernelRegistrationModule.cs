@@ -37,7 +37,8 @@ namespace Ninject
         /// </summary>
         public override void Load()
         {
-            GlobalKernelRegistration.RegisterKernelForType(this.Kernel, typeof(TGlobalKernelRegistry));
+             GlobalKernelRegistration.RegisterKernelForType(this.Kernel, typeof(TGlobalKernelRegistry));
+             OnLoad();
         }
 
         /// <summary>
@@ -47,6 +48,9 @@ namespace Ninject
         {
             GlobalKernelRegistration.UnregisterKernelForType(this.Kernel, typeof(TGlobalKernelRegistry));
         }
+        
+        protected virtual void OnLoad() { }
+        protected virtual void OnUnload(){}
     }
 }
 #endif
