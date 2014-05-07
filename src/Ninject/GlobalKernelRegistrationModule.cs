@@ -35,7 +35,7 @@ namespace Ninject
         /// <summary>
         /// Loads the module into the kernel.
         /// </summary>
-        public override void Load()
+        public sealed override void Load()
         {
              GlobalKernelRegistration.RegisterKernelForType(this.Kernel, typeof(TGlobalKernelRegistry));
              OnLoad();
@@ -44,7 +44,7 @@ namespace Ninject
         /// <summary>
         /// Unloads the module from the kernel.
         /// </summary>
-        public override void Unload()
+        public sealed override void Unload()
         {
             GlobalKernelRegistration.UnregisterKernelForType(this.Kernel, typeof(TGlobalKernelRegistry));
         }
