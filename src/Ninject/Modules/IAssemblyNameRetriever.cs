@@ -39,7 +39,12 @@ namespace Ninject.Modules
         /// <param name="filenames">The filenames.</param>
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-        IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter);
+#if !WINRT
+        IEnumerable<AssemblyName> 
+#else
+        System.Threading.Tasks.Task<IEnumerable<AssemblyName>>
+#endif
+        GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter);
     }
 }
 #endif

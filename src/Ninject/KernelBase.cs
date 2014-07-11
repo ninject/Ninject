@@ -6,8 +6,6 @@
 // See the file LICENSE.txt for details.
 // 
 
-using System.Collections;
-
 namespace Ninject
 {
     using System;
@@ -40,11 +38,9 @@ namespace Ninject
         
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
-        private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
+        private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
-
-        private readonly IComparer<IBinding> bindingPrecedenceComparer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -92,7 +88,6 @@ namespace Ninject
 
             this.AddComponents();
 
-            this.bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             this.Bind<IKernel>().ToConstant(this).InTransientScope();
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
@@ -241,6 +236,18 @@ namespace Ninject
             moduleLoader.LoadModules(filePatterns);
         }
 
+#if WINRT
+        /// <summary>
+        /// Loads modules from the files that match the specified pattern(s).
+        /// </summary>
+        /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        public async System.Threading.Tasks.Task LoadAsync(IEnumerable<string> filePatterns)
+        {
+            var moduleLoader = this.Components.Get<IModuleLoader>();
+            await moduleLoader.LoadModules(filePatterns);
+        }
+#endif
+
         /// <summary>
         /// Loads modules defined in the specified assemblies.
         /// </summary>
@@ -248,6 +255,24 @@ namespace Ninject
         public void Load(IEnumerable<Assembly> assemblies)
         {
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
+        }
+#else
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="filePatterns"></param>
+        public void Load(IEnumerable<string> filePatterns)
+        {
+            
+        }
+
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="assembly"></param>
+        public void Load(IEnumerable<Assembly> assembly)
+        {
+            
         }
 #endif //!NO_ASSEMBLY_SCANNING
 
@@ -342,22 +367,20 @@ namespace Ninject
         /// <returns>An enumerator of instances that match the request.</returns>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
-            return this.Resolve(request, true);
-        }
+            Ensure.ArgumentNotNull(request, "request");
 
-        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
-        {
-            var satisfiedBindings = this.GetBindings(request.Service)
-                                        .Where(this.SatifiesRequest(request));
-            var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
+            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
+            var resolveBindings = Enumerable.Empty<IBinding>();
 
-            if (!satisfiedBindingEnumerator.MoveNext())
+            if (this.CanResolve(request) || this.HandleMissingBinding(request))
             {
-                if (handleMissingBindings && this.HandleMissingBinding(request))
-                {
-                    return this.Resolve(request, false);
-                }
+                resolveBindings = this.GetBindings(request.Service)
+                                      .Where(this.SatifiesRequest(request));
 
+            }
+
+            if (!resolveBindings.Any())
+            {
                 if (request.IsOptional)
                 {
                     return Enumerable.Empty<object>();
@@ -368,10 +391,12 @@ namespace Ninject
 
             if (request.IsUnique)
             {
-                var selectedBinding = satisfiedBindingEnumerator.Current;
+                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
+                resolveBindings =
+                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
 
-                if (satisfiedBindingEnumerator.MoveNext() &&
-                    bindingPrecedenceComparer.Compare(selectedBinding, satisfiedBindingEnumerator.Current) == 0)
+                if (resolveBindings.Count() > 1)
                 {
                     if (request.IsOptional && !request.ForceUnique)
                     {
@@ -379,26 +404,20 @@ namespace Ninject
                     }
 
                     var formattedBindings =
-                        from binding in satisfiedBindings
+                        from binding in resolveBindings
                         let context = this.CreateContext(request, binding)
                         select binding.Format(context);
-
-                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request,
-                        formattedBindings.ToArray()));
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request, formattedBindings.ToArray()));
                 }
-
-                return new [] { this.CreateContext(request, selectedBinding).Resolve() };
             }
-            else
+
+            if(resolveBindings.Any(binding => !binding.IsImplicit))
             {
-                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
-                {
-                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
-                }
-
-                return satisfiedBindings
-                    .Select(binding => this.CreateContext(request, binding).Resolve());
+                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
             }
+
+            return resolveBindings
+                .Select(binding => this.CreateContext(request, binding).Resolve());
         }
 
         /// <summary>
@@ -442,12 +461,9 @@ namespace Ninject
                 {
                     var resolvers = this.Components.GetAll<IBindingResolver>();
 
-                    var compiledBindings = resolvers
+                    resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
-                    this.bindingCache.Add(service, compiledBindings);
-
-                    return compiledBindings;
+                        .Map(binding => this.bindingCache.Add(service, binding));
                 }
 
                 return this.bindingCache[service];
@@ -537,11 +553,20 @@ namespace Ninject
         [Obsolete]
         protected virtual bool TypeIsSelfBindable(Type service)
         {
+#if !WINRT
             return !service.IsInterface
                 && !service.IsAbstract
                 && !service.IsValueType
                 && service != typeof(string)
                 && !service.ContainsGenericParameters;
+#else
+            var sInfo = service.GetTypeInfo();
+            return !sInfo.IsInterface
+                && !sInfo.IsAbstract
+                && !sInfo.IsValueType
+                && service != typeof(string)
+                && !sInfo.ContainsGenericParameters;
+#endif
         }
 
         /// <summary>
@@ -585,7 +610,11 @@ namespace Ninject
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
+#if !WINRT
                                 b => !b.Service.ContainsGenericParameters, // closed generics > open generics
+#else
+                                b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
+#endif
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 

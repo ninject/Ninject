@@ -76,9 +76,21 @@ namespace Ninject.Modules
         /// Loads modules from the specified files.
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
-        public void LoadModules(IEnumerable<string> filenames)
+        public
+#if !WINRT
+        void 
+#else
+ async System.Threading.Tasks.Task
+#endif
+            LoadModules(IEnumerable<string> filenames)
         {
-            var assembliesWithModules = this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
+            var assembliesWithModules = 
+#if WINRT
+                await 
+#endif
+            this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
+      
+            
             this.Kernel.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
         }
     }

@@ -43,13 +43,23 @@ namespace Ninject.Modules
         /// Loads any modules found in the files that match the specified patterns.
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
-        public void LoadModules(IEnumerable<string> patterns)
+        public
+#if !WINRT
+ void
+#else
+ async System.Threading.Tasks.Task
+#endif
+            LoadModules(IEnumerable<string> patterns)
         {
             var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
+#if !WINRT
                 .SelectMany(pattern => GetFilesMatchingPattern(pattern))
                 .GroupBy(filename => Path.GetExtension(filename).ToLowerInvariant());
+#else
+                .GroupBy(filename => GetExtension(filename).ToLowerInvariant());
+#endif          
 
             foreach (var fileGroup in fileGroups)
             {
@@ -57,10 +67,21 @@ namespace Ninject.Modules
                 IModuleLoaderPlugin plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
                 if (plugin != null)
-                    plugin.LoadModules(fileGroup);
+#if WINRT
+                    await 
+#endif               
+                        plugin.LoadModules(fileGroup);
             }
         }
 
+#if WINRT
+        private static string GetExtension(string filename)
+        {
+            var i = filename.LastIndexOf('.');
+            return filename.Substring(i);
+        }
+#endif
+#if !WINRT
         private static IEnumerable<string> GetFilesMatchingPattern(string pattern)
         {
             return NormalizePaths(Path.GetDirectoryName(pattern))
@@ -84,6 +105,7 @@ namespace Ninject.Modules
                 : searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path));
         }
+#endif
     }
 }
 #endif //!NO_ASSEMBLY_SCANNING

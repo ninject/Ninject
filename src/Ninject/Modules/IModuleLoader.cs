@@ -25,7 +25,13 @@ namespace Ninject.Modules
         /// Loads any modules found in the files that match the specified patterns.
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
-        void LoadModules(IEnumerable<string> patterns);
+
+#if !WINRT
+        void 
+#else
+        System.Threading.Tasks.Task
+#endif
+        LoadModules(IEnumerable<string> patterns);
     }
 }
 #endif

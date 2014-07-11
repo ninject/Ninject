@@ -90,7 +90,7 @@ namespace Ninject.Activation.Caching
         {
             lock (this.activatedObjects)
             {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
 #else
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance));
@@ -106,7 +106,7 @@ namespace Ninject.Activation.Caching
         {
             lock (this.deactivatedObjects)
             {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
 #else
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance));
@@ -123,7 +123,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsActivated(object instance)
         {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
             return this.activatedObjects.ContainsKey(instance);
 #else
             return this.activatedObjects.Contains(instance);
@@ -139,7 +139,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsDeactivated(object instance)
         {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
             return this.deactivatedObjects.ContainsKey(instance);
 #else
             return this.deactivatedObjects.Contains(instance);
@@ -162,7 +162,7 @@ namespace Ninject.Activation.Caching
             }
         }
 
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
         /// <summary>
         /// Removes all dead objects.
         /// </summary>
@@ -182,7 +182,15 @@ namespace Ninject.Activation.Caching
         /// <param name="objects">The objects collection to be freed of dead objects.</param>
         private static void RemoveDeadObjects(HashSet<object> objects)
         {
+#if WINRT
+            var deadObjects = objects.Where(reference => !((ReferenceEqualWeakReference)reference).IsAlive).ToList();
+            foreach (var deadObject in deadObjects)
+            {
+                objects.Remove(deadObject);
+            }
+#else
             objects.RemoveWhere(reference => !((ReferenceEqualWeakReference)reference).IsAlive);
+#endif
         }
 #endif
     }

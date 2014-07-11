@@ -41,6 +41,7 @@ namespace Ninject.Infrastructure.Language
              {
                  yield return type;
                  type = type.BaseType;
+
              }
          }
     }

@@ -28,6 +28,7 @@ namespace Ninject.Activation.Strategies
     /// </summary>
     public class PropertyInjectionStrategy : ActivationStrategy
     {
+#if !WINRT
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
         private BindingFlags Flags
@@ -41,6 +42,7 @@ namespace Ninject.Activation.Strategies
                 #endif
             }
         }
+#endif
 
         /// <summary>
         /// Gets the injector factory component.
@@ -78,6 +80,8 @@ namespace Ninject.Activation.Strategies
             this.AssignProperyOverrides(context, reference, propertyValues);
         }
 
+
+
         /// <summary>
         /// Applies user supplied override values to instance properties.
         /// </summary>
@@ -86,7 +90,12 @@ namespace Ninject.Activation.Strategies
         /// <param name="propertyValues">The parameter override value accessors.</param>
         private void AssignProperyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
         {
-            var properties = reference.Instance.GetType().GetProperties(this.Flags);
+#if !WINRT
+            var properties = reference.Instance.GetType().GetProperties(Flags);
+
+#else
+            var properties = reference.Instance.GetType().GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic);
+#endif
             foreach (var propertyValue in propertyValues)
             {
                 string propertyName = propertyValue.Name;

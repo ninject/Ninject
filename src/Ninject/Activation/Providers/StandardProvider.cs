@@ -77,32 +77,22 @@ namespace Ninject.Activation.Providers
                 context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
             }
 
-            ConstructorInjectionDirective directive = null;
-            var directives = context.Plan.ConstructorInjectionDirectives;
-
-            if (directives.Count == 1)
+            if (!context.Plan.Has<IConstructorInjectionDirective>())
             {
-                directive = directives[0];
-            }
-            else
-            {
-                var bestDirectives = directives
-                      .GroupBy(option => this.ConstructorScorer.Score(context, option))
-                      .OrderByDescending(g => g.Key)
-                      .FirstOrDefault();
-                if (bestDirectives == null)
-                {
-                    throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
-                }
-
-                if (bestDirectives.Skip(1).Any())
-                {
-                    throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
-                }
-
-                directive = bestDirectives.First();
+                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
             }
 
+            var directives = context.Plan.GetAll<IConstructorInjectionDirective>();
+            var bestDirectives = directives
+                .GroupBy(option => this.ConstructorScorer.Score(context, option))
+                .OrderByDescending(g => g.Key)
+                .First();
+            if (bestDirectives.Skip(1).Any())
+            {
+                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
+            }
+
+            var directive = bestDirectives.Single();
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
             return directive.Injector(arguments);
         }
@@ -133,7 +123,17 @@ namespace Ninject.Activation.Providers
         public Type GetImplementationType(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");
-            return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
+            return Type
+#if WINRT
+                .GetTypeInfo()
+#endif
+                .ContainsGenericParameters ? Type.MakeGenericType(
+#if !WINRT
+                service.GetGenericArguments()
+#else
+                service.GetTypeInfo().GenericTypeArguments
+#endif
+                ) : Type;
         }
 
         /// <summary>

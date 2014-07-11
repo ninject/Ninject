@@ -49,9 +49,19 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
-        public static void Load(this IKernel kernel, params string[] filePatterns)
+        public static
+#if !WINRT
+        void 
+#else
+ async System.Threading.Tasks.Task
+#endif
+            Load(this IKernel kernel, params string[] filePatterns)
         {
+#if !WINRT
             kernel.Load(filePatterns);
+#else
+            await ((KernelBase)kernel).LoadAsync(filePatterns);
+#endif
         }
 
         /// <summary>

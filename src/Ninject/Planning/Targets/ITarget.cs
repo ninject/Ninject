@@ -19,7 +19,7 @@ namespace Ninject.Planning.Targets
     /// <summary>
     /// Represents a site on a type where a value will be injected.
     /// </summary>
-    public interface ITarget : ICustomAttributeProvider
+    public interface ITarget 
     {
         /// <summary>
         /// Gets the type of the target.
@@ -63,5 +63,21 @@ namespace Ninject.Planning.Targets
         /// <param name="parent">The parent context.</param>
         /// <returns>The resolved value.</returns>
         object ResolveWithin(IContext parent);
+
+        /// <summary>
+        /// Determines if an attribute is defined on the target
+        /// </summary>
+        /// <param name="attributeType">Type of attribute</param>
+        /// <param name="inherit">Check base types</param>
+        /// <returns></returns>
+        bool IsDefined(Type attributeType, bool inherit);
+
+        /// <summary>
+        /// Determines if an attribute is defined on the target's parent
+        /// </summary>
+        /// <param name="attributeType">Type of attribute</param>
+        /// <param name="parent">Parent type to check</param>
+        /// <returns></returns>
+        bool IsDefinedOnParent(Type attributeType, Type parent);
     }
 }

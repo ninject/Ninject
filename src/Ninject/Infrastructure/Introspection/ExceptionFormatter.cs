@@ -325,7 +325,7 @@ namespace Ninject.Infrastructure.Introspection
         /// <param name="context">The context.</param>
         /// <param name="bestDirectives">The best constructor directives.</param>
         /// <returns>The exception message.</returns>
-        public static string ConstructorsAmbiguous(IContext context, IGrouping<int, ConstructorInjectionDirective> bestDirectives)
+        public static string ConstructorsAmbiguous(IContext context, IGrouping<int, IConstructorInjectionDirective> bestDirectives)
         {
             using (var sw = new StringWriter())
             {
@@ -364,7 +364,11 @@ namespace Ninject.Infrastructure.Introspection
                 FormatAttribute(sw, attribute);
             }
 
+#if !WINRT
             sw.Write(constructor.DeclaringType.Name);
+#else
+            sw.Write(constructor.DeclaringType.GetTypeInfo().Name);
+#endif
             sw.Write("(");
             foreach (var parameterInfo in constructor.GetParameters())
             {

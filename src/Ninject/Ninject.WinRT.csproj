@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0EA44209-1324-4BEE-A8D2-46163D26B504}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject</RootNamespace>
+    <AssemblyName>Ninject.Platform</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <BaseIntermediateOutputPath>obj\WinRT\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\WinRT\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\WinRT\Release\</OutputPath>
+    <DefineConstants>TRACE;WINRT;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\WinRT\Release\Ninject.Platform.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
+      <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
+      <Name>Ninject.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Activation\Blocks\ActivationBlock.cs" />
+    <Compile Include="Activation\Caching\ActivationCache.cs" />
+    <Compile Include="Activation\Caching\Cache.cs" />
+    <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs" />
+    <Compile Include="Activation\Caching\WeakReferenceEqualityComparer.cs" />
+    <Compile Include="Activation\Context.cs" />
+    <Compile Include="Activation\Pipeline.cs" />
+    <Compile Include="Activation\Request.cs" />
+    <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
+    <Compile Include="Activation\Strategies\ActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\BindingActionStrategy.cs" />
+    <Compile Include="Activation\Strategies\DisposableStrategy.cs" />
+    <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
+    <Compile Include="Activation\Strategies\MethodInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\StartableStrategy.cs" />
+    <Compile Include="Components\ComponentContainer.cs" />
+    <Compile Include="GlobalKernelRegistration.cs" />
+    <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="Infrastructure\BaseWeakReference.cs" />
+    <Compile Include="Infrastructure\Ensure.cs" />
+    <Compile Include="Infrastructure\Future.cs" />
+    <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
+    <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
+    <Compile Include="Injection\DynamicMethodInjectorFactory.cs" />
+    <Compile Include="Injection\ReflectionInjectorFactory.cs" />
+    <Compile Include="KernelBase.cs" />
+    <Compile Include="Modules\AssemblyNameRetriever.cs" />
+    <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\IAssemblyNameRetriever.cs" />
+    <Compile Include="Modules\IModuleLoader.cs" />
+    <Compile Include="Modules\IModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\ModuleLoader.cs" />
+    <Compile Include="NinjectSettings.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
+    <Compile Include="Planning\Directives\ConstructorInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirectiveBase.cs" />
+    <Compile Include="Planning\Directives\PropertyInjectionDirective.cs" />
+    <Compile Include="Planning\Plan.cs" />
+    <Compile Include="Planning\Planner.cs" />
+    <Compile Include="Planning\Strategies\ConstructorReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
+    <Compile Include="Planning\Targets\ITargetEx.cs" />
+    <Compile Include="Planning\Targets\ParameterTarget.cs" />
+    <Compile Include="Planning\Targets\PropertyTarget.cs" />
+    <Compile Include="Planning\Targets\Target.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Selection\Heuristics\StandardConstructorScorer.cs" />
+    <Compile Include="Selection\Heuristics\StandardInjectionHeuristic.cs" />
+    <Compile Include="Selection\Selector.cs" />
+    <Compile Include="StandardKernel.cs" />
+    <Compile Include="Syntax\ModuleLoadExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Ninject.snk">
+      <Link>Ninject.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

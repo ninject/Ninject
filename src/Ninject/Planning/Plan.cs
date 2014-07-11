@@ -33,12 +33,6 @@ namespace Ninject.Planning
         public ICollection<IDirective> Directives { get; private set; }
 
         /// <summary>
-        /// Gets the constructor injection directives.
-        /// </summary>
-        /// <value>The constructor injection directives.</value>
-        public IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Plan"/> class.
         /// </summary>
         /// <param name="type">The type the plan describes.</param>
@@ -48,7 +42,6 @@ namespace Ninject.Planning
 
             Type = type;
             Directives = new List<IDirective>();
-            ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
         }
 
         /// <summary>
@@ -58,13 +51,6 @@ namespace Ninject.Planning
         public void Add(IDirective directive)
         {
             Ensure.ArgumentNotNull(directive, "directive");
-
-            var constructorInjectionDirective = directive as ConstructorInjectionDirective;
-            if (constructorInjectionDirective != null)
-            {
-                ConstructorInjectionDirectives.Add(constructorInjectionDirective);
-            }
-
             Directives.Add(directive);
         }
 
@@ -76,7 +62,7 @@ namespace Ninject.Planning
         public bool Has<TDirective>()
             where TDirective : IDirective
         {
-            return GetAll<TDirective>().Any();
+            return GetAll<TDirective>().Count() > 0;
         }
 
         /// <summary>

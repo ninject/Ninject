@@ -37,7 +37,11 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
+#if !WINRT
         private readonly ReaderWriterLock plannerLock = new ReaderWriterLock();
+#else
+        private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
+#endif
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
 
         /// <summary>
@@ -64,7 +68,11 @@ namespace Ninject.Planning
         {
             Ensure.ArgumentNotNull(type, "type");
 
+#if !WINRT
             this.plannerLock.AcquireReaderLock(Timeout.Infinite);
+#else
+            this.plannerLock.EnterUpgradeableReadLock();
+#endif
             try
             {
                 IPlan plan;
@@ -72,7 +80,11 @@ namespace Ninject.Planning
             }
             finally
             {
+#if !WINRT
                 this.plannerLock.ReleaseReaderLock();
+#else
+                this.plannerLock.ExitUpgradeableReadLock();
+#endif
             }
         }
 
@@ -95,7 +107,11 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
+#if !WINRT
             var lockCooki = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
+#else
+            this.plannerLock.EnterWriteLock();
+#endif
             try
             {
                 IPlan plan;
@@ -112,7 +128,11 @@ namespace Ninject.Planning
             }
             finally
             {
+#if !WINRT
                 this.plannerLock.DowngradeFromWriterLock(ref lockCooki);
+#else
+                this.plannerLock.ExitWriteLock();
+#endif
             }
         }
     }

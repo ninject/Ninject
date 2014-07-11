@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
 using Ninject.Injection;
 using Ninject.Planning.Directives;
 using Ninject.Selection;
@@ -65,12 +64,7 @@ namespace Ninject.Planning.Strategies
 
             foreach(ConstructorInfo constructor in constructors)
             {
-                var hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
-                plan.Add(
-                    new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor))
-                    {
-                        HasInjectAttribute = hasInjectAttribute
-                    });
+                plan.Add(new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)));
             }
         }
     }
