@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0BE8F374-CDF9-4861-89BD-497358E32CA6}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject.WindowsPhone8Tests</RootNamespace>
+    <AssemblyName>Ninject.WindowsPhone8Tests</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Ninject.WindowsPhone8Tests_$(Configuration)_$(Platform).xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>Ninject.WindowsPhone8Tests.App</SilverlightAppEntry>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYM</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;WINDOWS_PHONE,SILVERLIGHT,SILVERLIGHT_40,WP7,NO_LCG,NO_ASSEMBLY_SCANNING,NO_WEB,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYM</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\x86\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;WINDOWS_PHONE;NO_ASSEMBLY_SCANNING;NO_MOQ;NO_LCG</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;NO_ASSEMBLY_SCANNING;NO_MOQ;NO_LCG</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Ninject.Test\Fakes\AbstractWeapon.cs">
+      <Link>Fakes\AbstractWeapon.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Barracks.cs">
+      <Link>Fakes\Barracks.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Dagger.cs">
+      <Link>Fakes\Dagger.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\FootSoldier.cs">
+      <Link>Fakes\FootSoldier.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\IWarrior.cs">
+      <Link>Fakes\IWarrior.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\IWeapon.cs">
+      <Link>Fakes\IWeapon.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Ninja.cs">
+      <Link>Fakes\Ninja.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\NinjaBarracks.cs">
+      <Link>Fakes\NinjaBarracks.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\NotifiesWhenDisposed.cs">
+      <Link>Fakes\NotifiesWhenDisposed.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Samurai.cs">
+      <Link>Fakes\Samurai.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\ShortSword.cs">
+      <Link>Fakes\ShortSword.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Shuriken.cs">
+      <Link>Fakes\Shuriken.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Sword.cs">
+      <Link>Fakes\Sword.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ActivationScopeTests.cs">
+      <Link>Integration\ActivationScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ActivationStrategyTests.cs">
+      <Link>Integration\ActivationStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\CircularDependenciesTests.cs">
+      <Link>Integration\CircularDependenciesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalAttributeBindingTests.cs">
+      <Link>Integration\ConditionalAttributeBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalBindingTests.cs">
+      <Link>Integration\ConditionalBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalBindingWhenParentTests.cs">
+      <Link>Integration\ConditionalBindingWhenParentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConstructorSelectionTests.cs">
+      <Link>Integration\ConstructorSelectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildA.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildA.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildB.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildB.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IChild.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IParent.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IParent.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ExternalInjectionTests.cs">
+      <Link>Integration\ExternalInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs">
+      <Link>Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ManualReleaseTests.cs">
+      <Link>Integration\ManualReleaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule2.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule2.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\ModuleLoadingContext.cs">
+      <Link>Integration\ModuleLoadingTests\ModuleLoadingContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\OtherFakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\OtherFakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\NamedPropertyInjectionTests.cs">
+      <Link>Integration\NamedPropertyInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\OptionalTest.cs">
+      <Link>Integration\OptionalTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\PropertyInjectionTests.cs">
+      <Link>Integration\PropertyInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\SingletonScopeTests.cs">
+      <Link>Integration\SingletonScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\SpecialResolutionTests.cs">
+      <Link>Integration\SpecialResolutionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\StandardKernelTests.cs">
+      <Link>Integration\StandardKernelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ThreadScopeTests.cs">
+      <Link>Integration\ThreadScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\TransientScopeTests.cs">
+      <Link>Integration\TransientScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationBlockTests.cs">
+      <Link>Unit\ActivationBlockTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheStrategyTest.cs">
+      <Link>Unit\ActivationCacheStrategyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheTests.cs">
+      <Link>Unit\ActivationCacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\BindingActionStrategyTests.cs">
+      <Link>Unit\BindingActionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CachePruningTests.cs">
+      <Link>Unit\CachePruningTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CacheTests.cs">
+      <Link>Unit\CacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CallbackProviderTests.cs">
+      <Link>Unit\CallbackProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CompiledModuleLoaderPluginTests.cs">
+      <Link>Unit\CompiledModuleLoaderPluginTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ComponentContainerTests.cs">
+      <Link>Unit\ComponentContainerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ConstantProviderTests.cs">
+      <Link>Unit\ConstantProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DisposableStrategyTests.cs">
+      <Link>Unit\DisposableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DynamicMethodInjectorFactoryTests.cs">
+      <Link>Unit\DynamicMethodInjectorFactoryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ExtensionsForMemberInfoTest.cs">
+      <Link>Unit\ExtensionsForMemberInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\InitializableStrategyTests.cs">
+      <Link>Unit\InitializableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionDirectiveBaseTests.cs">
+      <Link>Unit\MethodInjectionDirectiveBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionStrategyTests.cs">
+      <Link>Unit\MethodInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ModuleLoaderTests.cs">
+      <Link>Unit\ModuleLoaderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\NamedAttributeTests.cs">
+      <Link>Unit\NamedAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PipelineTests.cs">
+      <Link>Unit\PipelineTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionDirectiveTests.cs">
+      <Link>Unit\PropertyInjectionDirectiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionSelectorTests.cs">
+      <Link>Unit\PropertyInjectionSelectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionStrategyTests.cs">
+      <Link>Unit\PropertyInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
+      <Link>Unit\StartableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\TestObject.cs">
+      <Link>Unit\TestObject.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\AppResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\WMAppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\ApplicationIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileMedium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\FlipCycleTileSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\IconicTileMediumLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Tiles\IconicTileSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.0.0-alpha4\lib\windowsphone8\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.WindowsPhone, Version=3.0.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FluentAssertions.3.0.0-alpha4\lib\windowsphone8\FluentAssertions.WindowsPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq.Silverlight">
+      <HintPath>..\..\tools\moq\Silverlight4\Moq.Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit-silverlight">
+      <HintPath>..\..\tools\xunit.sl\Silverlight-4.0-wp71\xunit-silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.silverlight">
+      <HintPath>..\..\tools\xunit.sl\Silverlight-4.0-wp71\xunit.runner.silverlight.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
+      <Project>{A07B8562-3304-4EF3-8A48-76AF89690545}</Project>
+      <Name>Ninject.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ninject\Ninject.WP.csproj">
+      <Project>{E940833E-228E-4AFD-90F4-95D386C5342F}</Project>
+      <Name>Ninject.WP</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions />
+</Project>
