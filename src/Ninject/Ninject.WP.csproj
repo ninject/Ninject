@@ -113,12 +113,6 @@
     <Compile Include="StandardKernel.cs" />
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
-      <Project>{A07B8562-3304-4EF3-8A48-76AF89690545}</Project>
-      <Name>Ninject.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!--
