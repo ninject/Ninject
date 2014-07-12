@@ -51,6 +51,9 @@ namespace Ninject.Modules
 #endif
             LoadModules(IEnumerable<string> patterns)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
@@ -72,8 +75,10 @@ namespace Ninject.Modules
 #endif               
                         plugin.LoadModules(fileGroup);
             }
+#endif
         }
 
+#if !PCL
 #if WINRT
         private static string GetExtension(string filename)
         {
@@ -105,6 +110,7 @@ namespace Ninject.Modules
                 : searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path));
         }
+#endif
 #endif
     }
 }

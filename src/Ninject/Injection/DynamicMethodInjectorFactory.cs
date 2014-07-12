@@ -11,7 +11,9 @@
 #region Using Directives
 using System;
 using System.Reflection;
+#if !PCL
 using System.Reflection.Emit;
+#endif
 using Ninject.Components;
 #endregion
 
@@ -29,6 +31,9 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             #if SILVERLIGHT
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) });
             #else
@@ -50,6 +55,7 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ret);
 
             return (ConstructorInjector) dynamicMethod.CreateDelegate(typeof(ConstructorInjector));
+#endif
         }
 
         /// <summary>
@@ -59,6 +65,9 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public PropertyInjector Create(PropertyInfo property)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             #if NO_SKIP_VISIBILITY
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
             #else
@@ -89,6 +98,7 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ret);
 
             return (PropertyInjector) dynamicMethod.CreateDelegate(typeof(PropertyInjector));
+#endif
         }
 
         /// <summary>
@@ -98,6 +108,9 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public MethodInjector Create(MethodInfo method)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             #if NO_SKIP_VISIBILITY
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
             #else
@@ -118,8 +131,10 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ret);
 
             return (MethodInjector) dynamicMethod.CreateDelegate(typeof(MethodInjector));
+#endif
         }
 
+#if !PCL
         private static void EmitLoadMethodArguments(ILGenerator il, MethodBase targetMethod)
         {
             ParameterInfo[] parameters = targetMethod.GetParameters();
@@ -155,6 +170,7 @@ namespace Ninject.Injection
         {
             return "DynamicInjector" + Guid.NewGuid().ToString("N");
         }
+#endif
     }
 }
 #endif //!NO_LCG

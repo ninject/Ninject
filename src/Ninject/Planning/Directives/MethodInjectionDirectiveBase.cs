@@ -20,7 +20,8 @@ namespace Ninject.Planning.Directives
     /// <summary>
     /// Describes the injection of a method or constructor.
     /// </summary>
-    public abstract class MethodInjectionDirectiveBase<TMethod, TInjector> : IDirective, IMethodInjectionDirectiveBase<TInjector> where TMethod : MethodBase
+    public abstract class MethodInjectionDirectiveBase<TMethod, TInjector> : IDirective
+        where TMethod : MethodBase
     {
         /// <summary>
         /// Gets or sets the injector that will be triggered.

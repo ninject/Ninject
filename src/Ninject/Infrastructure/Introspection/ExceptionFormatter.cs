@@ -64,6 +64,7 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The exception message.</returns>
         public static string ModuleWithSameNameIsAlreadyLoaded(INinjectModule newModule, INinjectModule existingModule)
         {
+
             using (var sw = new StringWriter())
             {
                 sw.WriteLine("Error loading module '{0}' of type {1}", newModule.Name, newModule.GetType().Format());

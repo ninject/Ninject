@@ -53,6 +53,9 @@ namespace Ninject.Modules
 #endif
             GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
@@ -75,8 +78,10 @@ namespace Ninject.Modules
                 AppDomain.Unload(temporaryDomain);
             }
 #endif
+#endif
         }
 
+#if !PCL
 #if !WINRT
         /// <summary>
         /// Creates a temporary app domain.
@@ -196,6 +201,7 @@ namespace Ninject.Modules
                 return result;
             }
         }
+#endif
 #endif
     }
 }

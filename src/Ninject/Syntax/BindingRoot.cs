@@ -49,12 +49,16 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Type service = typeof(T);
 
             var binding = new Binding(service);
             this.AddBinding(binding);
 
             return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
+#endif
         }
 
         /// <summary>
@@ -65,12 +69,16 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
             return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+#endif
         }
 
         /// <summary>
@@ -82,6 +90,9 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
@@ -89,6 +100,7 @@ namespace Ninject.Syntax
             var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
             return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+#endif
         }
 
         /// <summary>
@@ -101,6 +113,9 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
@@ -109,6 +124,7 @@ namespace Ninject.Syntax
             var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
             return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+#endif
         }
 
         /// <summary>
@@ -118,6 +134,9 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Ensure.ArgumentNotNull(services, "service");
             if (services.Length == 0)
             {
@@ -133,6 +152,7 @@ namespace Ninject.Syntax
             }
 
             return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+#endif
         }
 
         /// <summary>

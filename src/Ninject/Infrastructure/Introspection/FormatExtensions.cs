@@ -29,8 +29,76 @@ namespace Ninject.Infrastructure.Introspection
     /// </summary>
     public static class FormatExtensionsEx
     {
-    
+        /// <summary>
+        /// Formats the activation path into a meaningful string representation.
+        /// </summary>
+        /// <param name="request">The request to be formatted.</param>
+        /// <returns>The activation path formatted as string.</returns>
+        public static string FormatActivationPath(this IRequest request)
+        {
+            using (var sw = new StringWriter())
+            {
+                IRequest current = request;
 
+                while (current != null)
+                {
+                    sw.WriteLine("{0,3}) {1}", current.Depth + 1, current.Format());
+                    current = current.ParentRequest;
+                }
+
+                return sw.ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// Formats the given binding into a meaningful string representation. 
+        /// </summary>
+        /// <param name="binding">The binding to be formatted.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The binding formatted as string</returns>
+        public static string Format(this IBinding binding, IContext context)
+        {
+            using (var sw = new StringWriter())
+            {
+                if (binding.Condition != null)
+                    sw.Write("conditional ");
+
+                if (binding.IsImplicit)
+                    sw.Write("implicit ");
+
+                IProvider provider = binding.GetProvider(context);
+
+                switch (binding.Target)
+                {
+                    case BindingTarget.Self:
+                        sw.Write("self-binding of {0}", binding.Service.Format());
+                        break;
+
+                    case BindingTarget.Type:
+                        sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
+                        break;
+
+                    case BindingTarget.Provider:
+                        sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
+                            provider.Type.Format(), provider.GetType().Format());
+                        break;
+
+                    case BindingTarget.Method:
+                        sw.Write("binding from {0} to method", binding.Service.Format());
+                        break;
+
+                    case BindingTarget.Constant:
+                        sw.Write("binding from {0} to constant value", binding.Service.Format());
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                return sw.ToString();
+            }
+        }
         /// <summary>
         /// Formats the specified request into a meaningful string representation.
         /// </summary>
@@ -38,6 +106,9 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The request formatted as string.</returns>
         public static string Format(this IRequest request)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             using (var sw = new StringWriter())
             {
                 if (request.Target == null)
@@ -47,6 +118,7 @@ namespace Ninject.Infrastructure.Introspection
 
                 return sw.ToString();
             }
+#endif
         }
 
 #if WINRT
@@ -93,6 +165,9 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The target formatted as string.</returns>
         public static string Format(this ITarget target)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             using (var sw = new StringWriter())
             {
 #if !WINRT
@@ -124,10 +199,11 @@ namespace Ninject.Infrastructure.Introspection
 
                 return sw.ToString();
             }
+#endif
 
         }
 
-        /*
+
         /// <summary>
         /// Formats the specified type into a meaningful string representation..
         /// </summary>
@@ -135,8 +211,10 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-
-        var friendlyName = GetFriendlyName(type);
+#if PCL
+            throw new NotImplementedException();
+#else
+            var friendlyName = GetFriendlyName(type);
 
 #if !MONO
             if (friendlyName.Contains("AnonymousType"))
@@ -166,13 +244,15 @@ namespace Ninject.Infrastructure.Introspection
                 case "double": return "double";
                 case "decimal": return "decimal";
             }
+
             var genericArguments = type.GetGenericArguments();
-            if(genericArguments.Length > 0)
+            if (genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);
-            
+
             return friendlyName;
+#endif
         }
-        */
+    
 
         private static string GetFriendlyName(Type type)
         {
@@ -229,6 +309,9 @@ namespace Ninject.Infrastructure.Introspection
 
         private static void AppendGenericArguments(StringBuilder sb, Type[] genericArguments, int start, int count)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             sb.Append("{");
 
             for(int i = 0; i < count; i++)
@@ -240,6 +323,7 @@ namespace Ninject.Infrastructure.Introspection
             }
 
             sb.Append("}");
+#endif
         }
     }
 }

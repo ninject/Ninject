@@ -106,6 +106,10 @@ namespace Ninject.Infrastructure.Language
             
             )
         {
+#if PCL
+            throw new NotImplementedException();
+#else
+
 #if WINRT
             return memberInfo.DeclaringType.GetRuntimeProperties().FirstOrDefault(
                 p => p.Name == propertyDefinition.Name &&
@@ -121,6 +125,7 @@ namespace Ninject.Infrastructure.Language
                 propertyDefinition.PropertyType,
                 propertyDefinition.GetIndexParameters().Select(parameter => parameter.ParameterType).ToArray(),
                 null);
+#endif
 #endif
         }
 
@@ -224,6 +229,9 @@ namespace Ninject.Infrastructure.Language
 #endif
             )
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if MEDIUM_TRUST || MONO
             
 #if !WINRT
@@ -257,6 +265,7 @@ namespace Ninject.Infrastructure.Language
             }
 
             return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
+#endif
 #endif
         }
 

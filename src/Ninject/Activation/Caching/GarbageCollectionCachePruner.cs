@@ -89,6 +89,9 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Stop()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             lock (this)
             {
                 this.stop = true;
@@ -108,6 +111,7 @@ namespace Ninject.Activation.Caching
                 this.timer = null;
                 this.caches.Clear();
             }
+#endif
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)

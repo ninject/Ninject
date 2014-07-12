@@ -45,6 +45,9 @@ namespace Ninject.Infrastructure.Language
 
         private static bool IsLoadableModule(Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             return typeof(INinjectModule).IsAssignableFrom(type)
                 && !type.IsAbstract
@@ -56,6 +59,7 @@ namespace Ninject.Infrastructure.Language
                 && !typeInfo.IsAbstract
                 && !typeInfo.IsInterface
                 && typeInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic && c.GetParameters().Length == 0).Any();
+#endif
 #endif
         }
     }

@@ -57,6 +57,9 @@ namespace Ninject.Planning.Targets
         {
             get 
             { 
+#if PCL
+            throw new NotImplementedException();
+#else
 #if WINRT
                 var val = defaultValue.Value;
 
@@ -71,6 +74,7 @@ namespace Ninject.Planning.Targets
 #else
                 return defaultValue.Value != DBNull.Value; 
 #endif      
+#endif
             }
         }
 

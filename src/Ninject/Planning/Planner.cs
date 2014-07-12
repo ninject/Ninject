@@ -37,9 +37,9 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-#if !WINRT
+#if !WINRT && !PCL
         private readonly ReaderWriterLock plannerLock = new ReaderWriterLock();
-#else
+#elif !PCL
         private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
 #endif
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
@@ -66,6 +66,9 @@ namespace Ninject.Planning
         /// <returns>The type's activation plan.</returns>
         public IPlan GetPlan(Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Ensure.ArgumentNotNull(type, "type");
 
 #if !WINRT
@@ -86,6 +89,7 @@ namespace Ninject.Planning
                 this.plannerLock.ExitUpgradeableReadLock();
 #endif
             }
+#endif
         }
 
         /// <summary>
@@ -107,6 +111,9 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             var lockCooki = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
 #else
@@ -134,6 +141,7 @@ namespace Ninject.Planning
                 this.plannerLock.ExitWriteLock();
 #endif
             }
+#endif
         }
     }
 }

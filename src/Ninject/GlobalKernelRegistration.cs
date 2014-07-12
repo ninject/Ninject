@@ -32,15 +32,18 @@ namespace Ninject
     /// </summary>
     public abstract class GlobalKernelRegistration
     {
-#if !WINRT
+#if !WINRT && !PCL
         private static readonly ReaderWriterLock kernelRegistrationsLock = new ReaderWriterLock();
-#else
+#elif !PCL
         private static readonly ReaderWriterLockSlim kernelRegistrationsLock = new ReaderWriterLockSlim();
 #endif
         private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>(); 
 
         internal static void RegisterKernelForType(IKernel kernel, Type type)
         {
+ #if PCL
+            throw new NotImplementedException();
+#else
             var registration = GetRegistrationForType(type);
 #if !WINRT
             registration.KernelLock.AcquireReaderLock(Timeout.Infinite);
@@ -59,12 +62,17 @@ namespace Ninject
                 registration.KernelLock.ExitReadLock();
 #endif
             }
+#endif
         }
 
         internal static void UnregisterKernelForType(IKernel kernel, Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var registration = GetRegistrationForType(type);
             RemoveKernels(registration, registration.Kernels.Where(reference => reference.Target == kernel || !reference.IsAlive));
+#endif
         }
 
         /// <summary>
@@ -73,6 +81,9 @@ namespace Ninject
         /// <param name="action">The action.</param>
         protected void MapKernels(Action<IKernel> action)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             bool requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
 #if !WINRT
@@ -110,10 +121,14 @@ namespace Ninject
             {
                 RemoveKernels(registration, registration.Kernels.Where(reference => !reference.IsAlive));
             }
+#endif
         }
         
         private static void RemoveKernels(Registration registration, IEnumerable<WeakReference> references)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             registration.KernelLock.ReleaseReaderLock();
 #else
@@ -134,10 +149,14 @@ namespace Ninject
                 registration.KernelLock.ExitReadLock();
 #endif
             }
+#endif
         }
 
         private static Registration GetRegistrationForType(Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             kernelRegistrationsLock.AcquireReaderLock(Timeout.Infinite);
 #else
@@ -161,10 +180,14 @@ namespace Ninject
                 kernelRegistrationsLock.ExitUpgradeableReadLock();
 #endif
             }
+#endif
         }
 
         private static Registration CreateNewRegistration(Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if !WINRT
             var lockCookie = kernelRegistrationsLock.UpgradeToWriterLock(Timeout.Infinite);
 #else
@@ -190,10 +213,12 @@ namespace Ninject
                 kernelRegistrationsLock.ExitWriteLock();
 #endif
             }
+#endif
         }
 
         private class Registration
         {
+#if !PCL
             public Registration()
             {
 #if !WINRT
@@ -211,6 +236,7 @@ namespace Ninject
 #endif
 
             public IList<WeakReference> Kernels { get; private set; }
+#endif
         }
     }
 }

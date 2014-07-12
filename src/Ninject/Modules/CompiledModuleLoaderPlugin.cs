@@ -21,6 +21,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
@@ -84,6 +86,9 @@ namespace Ninject.Modules
 #endif
             LoadModules(IEnumerable<string> filenames)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var assembliesWithModules = 
 #if WINRT
                 await 
@@ -92,6 +97,7 @@ namespace Ninject.Modules
       
             
             this.Kernel.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
+#endif
         }
     }
 }

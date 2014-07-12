@@ -25,9 +25,11 @@ namespace Ninject.Planning.Targets
     /// Represents a site on a type where a value can be injected.
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
-#if !WINRT && !PCL
-    public abstract class Target<T> : ITargetEx
+#if !WINRT 
+    public abstract class Target<T> : ITarget
+#if !PCL
         where T : ICustomAttributeProvider
+#endif
 #else
     public abstract class Target : ITargetEx
 #endif
@@ -141,8 +143,12 @@ namespace Ninject.Planning.Targets
             ;
 #else
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.GetCustomAttributesExtended(attributeType, inherit);
+#endif
         }
 #endif
 
@@ -162,7 +168,11 @@ namespace Ninject.Planning.Targets
             ;
 #else
         {
+            #if PCL
+            throw new NotImplementedException();
+#else
             return Site.GetCustomAttributes(inherit);
+#endif
         }
 #endif
 
@@ -181,8 +191,12 @@ namespace Ninject.Planning.Targets
             ;
 #else
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.IsDefined(attributeType, inherit);
+#endif
         }
 #endif
 
@@ -288,7 +302,11 @@ namespace Ninject.Planning.Targets
             ;
 #else
         {
+            #if PCL
+            throw new NotImplementedException();
+#else
             return Site.HasAttribute(typeof(OptionalAttribute));
+#endif
         }
 #endif
 

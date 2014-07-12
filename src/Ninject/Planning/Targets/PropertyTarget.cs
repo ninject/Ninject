@@ -24,7 +24,7 @@ namespace Ninject.Planning.Targets
     /// Represents an injection target for a <see cref="PropertyInfo"/>.
     /// </summary>
     public class PropertyTarget : 
-#if !WINRT && !PCL
+#if !WINRT 
         Target<PropertyInfo>
 #else
         Target

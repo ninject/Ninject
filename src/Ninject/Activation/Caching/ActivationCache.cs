@@ -88,6 +88,9 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddActivatedInstance(object instance)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             lock (this.activatedObjects)
             {
 #if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
@@ -96,6 +99,7 @@ namespace Ninject.Activation.Caching
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance));
 #endif
             }
+#endif
         }
 
         /// <summary>
@@ -104,6 +108,9 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddDeactivatedInstance(object instance)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             lock (this.deactivatedObjects)
             {
 #if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
@@ -112,6 +119,7 @@ namespace Ninject.Activation.Caching
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance));
 #endif
             }
+#endif
         }
 
         /// <summary>
@@ -123,10 +131,14 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsActivated(object instance)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
             return this.activatedObjects.ContainsKey(instance);
 #else
             return this.activatedObjects.Contains(instance);
+#endif
 #endif
         }
 
@@ -139,11 +151,15 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsDeactivated(object instance)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
 #if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
             return this.deactivatedObjects.ContainsKey(instance);
 #else
             return this.deactivatedObjects.Contains(instance);
 #endif        
+#endif
         }
 
         /// <summary>
@@ -151,6 +167,9 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Prune()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             lock (this.activatedObjects)
             {
                 RemoveDeadObjects(this.activatedObjects);
@@ -160,6 +179,7 @@ namespace Ninject.Activation.Caching
             {
                 RemoveDeadObjects(this.deactivatedObjects);
             }
+#endif
         }
 
 #if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
