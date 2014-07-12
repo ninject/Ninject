@@ -35,13 +35,15 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <BaseIntermediateOutputPath>obj\Net40\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\debug\</OutputPath>
+    <OutputPath>bin\Net40\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -52,7 +54,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\release\</OutputPath>
+    <OutputPath>bin\Net40\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -162,12 +164,12 @@
     <Compile Include="Integration\ActivationScopeTests.cs" />
     <Compile Include="Unit\TestObject.cs" />
     <None Include="packages.config" />
-    <None Include="TestModules\test.bar">
+    <Content Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestModules\test.foo">
+    </Content>
+    <Content Include="TestModules\test.foo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <Compile Include="Unit\ActivationCacheStrategyTest.cs" />
     <Compile Include="Unit\ActivationCacheTests.cs" />
     <Compile Include="Unit\AssemblyNameRetrieverTests.cs" />
@@ -205,9 +207,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ninject\Ninject.csproj">
-      <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
-      <Name>Ninject</Name>
+    <ProjectReference Include="..\Ninject\Ninject.Net40.csproj">
+      <Project>{37aad36a-2252-43d6-8bc4-f63bfefdfecb}</Project>
+      <Name>Ninject.Net40</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestAssembly\TestAssembly.csproj">
       <Project>{C9F6CFE7-44B2-4D55-9307-33C34C045468}</Project>
@@ -237,6 +239,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

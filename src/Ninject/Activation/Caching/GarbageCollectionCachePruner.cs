@@ -48,7 +48,9 @@ namespace Ninject.Activation.Caching
 #else
         private ThreadPoolTimer timer;
 #endif
+#if !PCL
         private bool stop;
+#endif
 
         /// <summary>
         /// Releases resources held by the object.
@@ -116,6 +118,9 @@ namespace Ninject.Activation.Caching
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             lock (this)
             {
                 if (this.stop)
@@ -140,6 +145,7 @@ namespace Ninject.Activation.Caching
 #endif
                 }
             }
+#endif
         }
 
         private int GetTimeoutInMilliseconds()

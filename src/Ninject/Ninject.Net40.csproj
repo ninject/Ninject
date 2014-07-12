@@ -269,12 +269,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
-      <Project>{a07b8562-3304-4ef3-8a48-76af89690545}</Project>
-      <Name>Ninject.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

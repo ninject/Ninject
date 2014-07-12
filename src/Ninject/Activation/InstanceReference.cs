@@ -10,6 +10,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Security;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -32,9 +33,11 @@ namespace Ninject.Activation
         /// </summary>
         /// <typeparam name="T">The type in question.</typeparam>
         /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
+      
+        [SecuritySafeCritical]
         public bool Is<T>()
         {
-#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !MONO && !PCL && !WINRT
+#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !MONO && !PCL && !WINRT && FALSE
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)
                 && System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance).GetType().Name == "RemotingProxy")
             {

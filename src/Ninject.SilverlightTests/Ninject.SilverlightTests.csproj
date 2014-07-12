@@ -80,9 +80,6 @@
     <Reference Include="Moq.Silverlight">
       <HintPath>..\..\tools\moq\silverlight4\Moq.Silverlight.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\..\build\silverlight-4.0\release\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
     <Reference Include="system" />
@@ -347,6 +344,9 @@
     <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
       <Link>Unit\StartableStrategyTests.cs</Link>
     </Compile>
+    <Compile Include="..\Ninject.Test\Unit\TestObject.cs">
+      <Link>Unit\TestObject.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -363,6 +363,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\OutOfBrowserSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ninject\Ninject.SL.csproj">
+      <Project>{58d24eb0-14b2-4942-97de-3b2ac31f8dea}</Project>
+      <Name>Ninject.SL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <Import Condition="$(SilverlightVersion)=='v3.0'" Project="$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SilverlightToolkit\Tools\v3.0)Microsoft.Silverlight.Toolkit.Build.targets" />

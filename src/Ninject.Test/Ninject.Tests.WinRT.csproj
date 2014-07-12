@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -15,6 +15,10 @@
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <BaseIntermediateOutputPath>obj\WinRT\</BaseIntermediateOutputPath>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -132,7 +136,6 @@
     <Compile Include="Unit\ConstantProviderTests.cs" />
     <Compile Include="Unit\DisposableStrategyTests.cs" />
     <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
-    <Compile Include="Unit\ExtensionsForMemberInfoTest.cs" />
     <Compile Include="Unit\InitializableStrategyTests.cs" />
     <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
     <Compile Include="Unit\MethodInjectionStrategyTests.cs" />
@@ -175,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ninject.Tests_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="TestModules\test.bar" />
     <None Include="TestModules\test.foo" />
   </ItemGroup>
@@ -193,15 +197,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FluentAssertions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentAssertions.2.2.0.0\lib\winrt45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\packages\FluentAssertions.3.0.107\lib\windows8\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.0.107\lib\windows8\FluentAssertions.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v11.0\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
     <SDKReferenceDirectoryRoot>$(SolutionDir)\tools;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
   </PropertyGroup>

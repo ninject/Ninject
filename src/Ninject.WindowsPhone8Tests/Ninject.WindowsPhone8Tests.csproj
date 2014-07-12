@@ -415,10 +415,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ninject.Common\Ninject.Common.csproj">
-      <Project>{A07B8562-3304-4EF3-8A48-76AF89690545}</Project>
-      <Name>Ninject.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ninject\Ninject.WP.csproj">
       <Project>{E940833E-228E-4AFD-90F4-95D386C5342F}</Project>
       <Name>Ninject.WP</Name>

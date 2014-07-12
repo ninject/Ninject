@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Ninject.Planning.Directives;
 using Ninject.Planning.Targets;
@@ -20,7 +21,11 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
         [Fact]
         public void CreatesTargetsForMethodParameters()
         {
+#if !WINRT
             var method = typeof(Dummy).GetMethod("MethodA");
+#else
+            var method = typeof(Dummy).GetRuntimeMethods().First(m => m.Name == "MethodA");
+#endif
             MethodInjector injector = delegate { };
 
             directive = new FakeMethodInjectionDirective(method, injector);
