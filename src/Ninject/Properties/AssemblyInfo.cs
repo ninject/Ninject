@@ -10,4 +10,4 @@ using System.Security;
 
 
 [assembly: AssemblyDescriptionAttribute("IoC container")]
-[assembly: SecurityTransparent]
+//[assembly: SecurityTransparent]
