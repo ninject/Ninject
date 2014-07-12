@@ -225,7 +225,11 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
+#if !WINRT
             switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
+#else
+            switch (friendlyName.ToLower())
+#endif
             {
                 case "int16": return "short";
                 case "int32": return "int";
@@ -245,7 +249,12 @@ namespace Ninject.Infrastructure.Introspection
                 case "decimal": return "decimal";
             }
 
+#if !WINRT
             var genericArguments = type.GetGenericArguments();
+#else
+            var genericArguments = type.GetTypeInfo()
+                                       .GenericTypeArguments;
+#endif
             if (genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);
 

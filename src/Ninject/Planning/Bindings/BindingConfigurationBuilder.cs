@@ -103,28 +103,56 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-            if (parent.IsGenericTypeDefinition)
+#if WINRT
+            if (parent.GetTypeInfo().IsGenericTypeDefinition)
+#else
+                    if (parent.IsGenericTypeDefinition)
+#endif
             {
+#if WINRT
+                if(parent.GetTypeInfo().IsInterface)
+#else
                 if (parent.IsInterface)
+#endif
                 {
+#if !WINRT
                     this.BindingConfiguration.Condition = r =>
                         r.Target != null &&
                         r.Target.Member.ReflectedType.GetInterfaces().Any(i => 
                             i.IsGenericType &&
                             i.GetGenericTypeDefinition() == parent);
+#else
+                    this.BindingConfiguration.Condition = r =>
+                        r.Target != null &&
+                        r.Target.Member.DeclaringType.GetTypeInfo().ImplementedInterfaces.Any(i =>
+                            i.GetTypeInfo().IsGenericType &&
+                            i.GetGenericTypeDefinition() == parent);
+#endif
                 }
                 else
                 {
+#if !WINRT
                     this.BindingConfiguration.Condition = r => 
                         r.Target != null &&
                         r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
                             i.IsGenericType &&
                             i.GetGenericTypeDefinition() == parent);
+#else
+                    this.BindingConfiguration.Condition = r =>
+                        r.Target != null &&
+                        r.Target.Member.DeclaringType.GetAllBaseTypes().Any(i =>
+                            i.GetTypeInfo().IsGenericType &&
+                            i.GetGenericTypeDefinition() == parent);
+#endif
                 }
             }
             else
             {
+#if !WINRT
                 this.BindingConfiguration.Condition = r => r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+#else
+                this.BindingConfiguration.Condition = r => r.Target != null && parent.GetTypeInfo().IsAssignableFrom(r.Target.Member.DeclaringType.GetTypeInfo());
+#endif
             }
 
             return this;
@@ -143,28 +171,56 @@ namespace Ninject.Planning.Bindings
                 foreach (var parent in parents)
                 {
                     bool matches = false;
+#if WINRT
+                    if (parent.GetTypeInfo().IsGenericTypeDefinition)
+#else
                     if (parent.IsGenericTypeDefinition)
+#endif
                     {
+#if WINRT
+                        if (parent.GetTypeInfo().IsInterface)
+#else
                         if (parent.IsInterface)
+#endif
                         {
+#if !WINRT
                             matches =
                                 r.Target != null &&
                                 r.Target.Member.ReflectedType.GetInterfaces().Any(i =>
                                     i.IsGenericType &&
                                     i.GetGenericTypeDefinition() == parent);
+#else
+                            matches =
+                                r.Target != null &&
+                                r.Target.Member.DeclaringType.GetTypeInfo().ImplementedInterfaces.Any(i =>
+                                    i.GetTypeInfo().IsGenericType &&
+                                    i.GetGenericTypeDefinition() == parent);
+#endif
                         }
                         else
                         {
+#if !WINRT
                             matches =
                                 r.Target != null &&
                                 r.Target.Member.ReflectedType.GetAllBaseTypes().Any(i =>
                                     i.IsGenericType &&
                                     i.GetGenericTypeDefinition() == parent);
+#else
+                            matches =
+                                r.Target != null &&
+                                r.Target.Member.DeclaringType.GetAllBaseTypes().Any(i =>
+                                    i.GetTypeInfo().IsGenericType &&
+                                    i.GetGenericTypeDefinition() == parent);
+#endif
                         }
                     }
                     else
                     {
+#if !WINRT
                         matches = r.Target != null && parent.IsAssignableFrom(r.Target.Member.ReflectedType);
+#else
+                        matches = r.Target != null && parent.GetTypeInfo().IsAssignableFrom(r.Target.Member.DeclaringType.GetTypeInfo());
+#endif
                     }
 
                     if (matches) return true;
@@ -239,16 +295,31 @@ namespace Ninject.Planning.Bindings
                 foreach (var parent in parents)
                 {
                     bool matches = false;
+#if WINRT
+                    if(parent.GetTypeInfo().IsGenericTypeDefinition)
+#else
                     if (parent.IsGenericTypeDefinition)
+#endif
                     {
+#if !WINRT
                         matches =
                             r.Target != null &&
                             r.Target.Member.ReflectedType.IsGenericType &&
                             parent == r.Target.Member.ReflectedType.GetGenericTypeDefinition();
+#else
+                        matches =
+                            r.Target != null &&
+                            r.Target.Member.DeclaringType.GetTypeInfo().IsGenericType &&
+                            parent == r.Target.Member.DeclaringType.GetTypeInfo().GetGenericTypeDefinition();
+#endif
                     }
                     else
                     {
+#if !WINRT
                         matches = r.Target != null && r.Target.Member.ReflectedType == parent;
+#else
+                        matches = r.Target != null && r.Target.Member.DeclaringType == parent;
+#endif
                     }
 
                     if(matches) return true;
@@ -465,6 +536,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
+#if !PCL && !WINRT
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
@@ -474,6 +546,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Thread;
             return this;
         }
+#endif
 
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object

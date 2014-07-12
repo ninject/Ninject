@@ -19,6 +19,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System.Reflection;
+
 namespace Ninject.Infrastructure.Language
 {
     using System;
@@ -40,7 +42,12 @@ namespace Ninject.Infrastructure.Language
              while (type != null)
              {
                  yield return type;
+#if !WINRT
                  type = type.BaseType;
+#else
+                 type = type.GetTypeInfo()
+                            .BaseType;
+#endif
 
              }
          }

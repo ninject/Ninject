@@ -31,7 +31,7 @@ namespace Ninject.Planning.Targets
         where T : ICustomAttributeProvider
 #endif
 #else
-    public abstract class Target : ITargetEx
+    public abstract class Target : ITarget
 #endif
     {
         private readonly Future<Func<IBindingMetadata, bool>> _constraint;
