@@ -25,7 +25,7 @@ namespace Ninject.Planning.Targets
     /// Represents a site on a type where a value can be injected.
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
-#if !WINRT
+#if !WINRT && !PCL
     public abstract class Target<T> : ITargetEx
         where T : ICustomAttributeProvider
 #else

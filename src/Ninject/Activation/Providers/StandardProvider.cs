@@ -77,22 +77,32 @@ namespace Ninject.Activation.Providers
                 context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
             }
 
-            if (!context.Plan.Has<IConstructorInjectionDirective>())
-            {
-                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
-            }
+            ConstructorInjectionDirective directive = null;
+            var directives = context.Plan.ConstructorInjectionDirectives;
 
-            var directives = context.Plan.GetAll<IConstructorInjectionDirective>();
+            if (directives.Count == 1)
+            {
+                directive = directives[0];
+            }
+            else
+            {
             var bestDirectives = directives
                 .GroupBy(option => this.ConstructorScorer.Score(context, option))
                 .OrderByDescending(g => g.Key)
-                .First();
+                      .FirstOrDefault();
+                if (bestDirectives == null)
+                {
+                    throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+                }
+
             if (bestDirectives.Skip(1).Any())
             {
                 throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
             }
 
-            var directive = bestDirectives.Single();
+                directive = bestDirectives.First();
+            }
+
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
             return directive.Injector(arguments);
         }

@@ -6,6 +6,8 @@
 // See the file LICENSE.txt for details.
 // 
 
+using System.Collections;
+
 namespace Ninject
 {
     using System;
@@ -38,9 +40,11 @@ namespace Ninject
         
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
-        private readonly Multimap<Type, IBinding> bindingCache = new Multimap<Type, IBinding>();
+        private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
+
+        private readonly IComparer<IBinding> bindingPrecedenceComparer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
@@ -88,6 +92,7 @@ namespace Ninject
 
             this.AddComponents();
 
+            this.bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
             this.Bind<IKernel>().ToConstant(this).InTransientScope();
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
@@ -367,20 +372,22 @@ namespace Ninject
         /// <returns>An enumerator of instances that match the request.</returns>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            return this.Resolve(request, true);
+        }
 
-            var bindingPrecedenceComparer = this.GetBindingPrecedenceComparer();
-            var resolveBindings = Enumerable.Empty<IBinding>();
+        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
+        {
+            var satisfiedBindings = this.GetBindings(request.Service)
+                                        .Where(this.SatifiesRequest(request));
+            var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
-            if (this.CanResolve(request) || this.HandleMissingBinding(request))
+            if (!satisfiedBindingEnumerator.MoveNext())
             {
-                resolveBindings = this.GetBindings(request.Service)
-                                      .Where(this.SatifiesRequest(request));
+                if (handleMissingBindings && this.HandleMissingBinding(request))
+                {
+                    return this.Resolve(request, false);
+                }
 
-            }
-
-            if (!resolveBindings.Any())
-            {
                 if (request.IsOptional)
                 {
                     return Enumerable.Empty<object>();
@@ -391,12 +398,10 @@ namespace Ninject
 
             if (request.IsUnique)
             {
-                resolveBindings = resolveBindings.OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
-                var model = resolveBindings.First(); // the type (conditonal, implicit, etc) of binding we'll return
-                resolveBindings =
-                    resolveBindings.TakeWhile(binding => bindingPrecedenceComparer.Compare(binding, model) == 0);
+                var selectedBinding = satisfiedBindingEnumerator.Current;
 
-                if (resolveBindings.Count() > 1)
+                if (satisfiedBindingEnumerator.MoveNext() &&
+                    bindingPrecedenceComparer.Compare(selectedBinding, satisfiedBindingEnumerator.Current) == 0)
                 {
                     if (request.IsOptional && !request.ForceUnique)
                     {
@@ -404,20 +409,26 @@ namespace Ninject
                     }
 
                     var formattedBindings =
-                        from binding in resolveBindings
+                        from binding in satisfiedBindings
                         let context = this.CreateContext(request, binding)
                         select binding.Format(context);
-                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request, formattedBindings.ToArray()));
+
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request,
+                        formattedBindings.ToArray()));
                 }
-            }
 
-            if(resolveBindings.Any(binding => !binding.IsImplicit))
+                return new [] { this.CreateContext(request, selectedBinding).Resolve() };
+            }
+            else
             {
-                resolveBindings = resolveBindings.Where(binding => !binding.IsImplicit);
-            }
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
+                {
+                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
+                }
 
-            return resolveBindings
-                .Select(binding => this.CreateContext(request, binding).Resolve());
+                return satisfiedBindings
+                    .Select(binding => this.CreateContext(request, binding).Resolve());
+            }
         }
 
         /// <summary>
@@ -461,9 +472,12 @@ namespace Ninject
                 {
                     var resolvers = this.Components.GetAll<IBindingResolver>();
 
-                    resolvers
+                    var compiledBindings = resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .Map(binding => this.bindingCache.Add(service, binding));
+                        .OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                    this.bindingCache.Add(service, compiledBindings);
+
+                    return compiledBindings;
                 }
 
                 return this.bindingCache[service];

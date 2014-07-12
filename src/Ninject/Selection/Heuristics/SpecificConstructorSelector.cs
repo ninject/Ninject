@@ -46,7 +46,7 @@ namespace Ninject.Selection.Heuristics
         /// <param name="context">The injection context.</param>
         /// <param name="directive">The constructor.</param>
         /// <returns>The constructor's score.</returns>
-        public virtual int Score(IContext context, IConstructorInjectionDirective directive)
+        public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
             return directive.Constructor.Equals(constructorInfo) ? 1 : 0;
         }

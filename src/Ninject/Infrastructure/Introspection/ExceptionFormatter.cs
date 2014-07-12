@@ -71,10 +71,10 @@ namespace Ninject.Infrastructure.Introspection
 
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that you have not accidentally loaded the same module twice.");
-                #if !SILVERLIGHT
+#if !SILVERLIGHT
                 sw.WriteLine("  2) If you are using automatic module loading, ensure you have not manually loaded a module");
                 sw.WriteLine("     that may be found by the module loader.");
-                #endif
+#endif
 
                 return sw.ToString();
             }
@@ -147,9 +147,9 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
                 sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
                 sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
-                #if !SILVERLIGHT
+#if !SILVERLIGHT
                 sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
-                #endif
+#endif
 
                 return sw.ToString();
             }
@@ -229,7 +229,7 @@ namespace Ninject.Infrastructure.Introspection
                 return sw.ToString();
             }
         }
-        
+
         /// <summary>
         /// Generates a message saying that no constructors are available for the given component.
         /// </summary>
@@ -308,13 +308,13 @@ namespace Ninject.Infrastructure.Introspection
             {
                 sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
                 sw.WriteLine("Provider returned null.");
-                
+
                 sw.WriteLine("Activation path:");
                 sw.WriteLine(context.Request.FormatActivationPath());
 
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that the provider handles creation requests properly.");
-                
+
                 return sw.ToString();
             }
         }
@@ -325,14 +325,14 @@ namespace Ninject.Infrastructure.Introspection
         /// <param name="context">The context.</param>
         /// <param name="bestDirectives">The best constructor directives.</param>
         /// <returns>The exception message.</returns>
-        public static string ConstructorsAmbiguous(IContext context, IGrouping<int, IConstructorInjectionDirective> bestDirectives)
+        public static string ConstructorsAmbiguous(IContext context, IGrouping<int, ConstructorInjectionDirective> bestDirectives)
         {
             using (var sw = new StringWriter())
             {
                 sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
                 sw.WriteLine("Several constructors have the same priority. Please specify the constructor using ToConstructor syntax or add an Inject attribute.");
                 sw.WriteLine();
-                
+
                 sw.WriteLine("Constructors:");
                 foreach (var constructorInjectionDirective in bestDirectives)
                 {
@@ -340,7 +340,7 @@ namespace Ninject.Infrastructure.Introspection
                 }
 
                 sw.WriteLine();
-                
+
                 sw.WriteLine("Activation path:");
                 sw.WriteLine(context.Request.FormatActivationPath());
 
@@ -364,11 +364,7 @@ namespace Ninject.Infrastructure.Introspection
                 FormatAttribute(sw, attribute);
             }
 
-#if !WINRT
             sw.Write(constructor.DeclaringType.Name);
-#else
-            sw.Write(constructor.DeclaringType.GetTypeInfo().Name);
-#endif
             sw.Write("(");
             foreach (var parameterInfo in constructor.GetParameters())
             {

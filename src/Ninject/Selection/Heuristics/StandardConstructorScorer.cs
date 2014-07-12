@@ -54,7 +54,7 @@ namespace Ninject.Selection.Heuristics
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(directive, "constructor");
 
-            if (directive.Constructor.HasAttribute(Settings.InjectAttribute))
+            if (directive.HasInjectAttribute)
             {
                 return int.MaxValue;
             }

@@ -9,90 +9,125 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
+#if WINRT
+using System.Diagnostics;  
+#endif
 using Ninject.Activation;
 using Ninject.Planning.Bindings;
+using Ninject.Planning.Targets;
 #endregion
 
 namespace Ninject.Infrastructure.Introspection
 {
+    using System.Globalization;
+
     /// <summary>
     /// Provides extension methods for string formatting
     /// </summary>
-    public static class FormatExtensions
+    public static class FormatExtensionsEx
     {
+    
+
         /// <summary>
-        /// Formats the activation path into a meaningful string representation.
+        /// Formats the specified request into a meaningful string representation.
         /// </summary>
         /// <param name="request">The request to be formatted.</param>
-        /// <returns>The activation path formatted as string.</returns>
-        public static string FormatActivationPath(this IRequest request)
+        /// <returns>The request formatted as string.</returns>
+        public static string Format(this IRequest request)
         {
             using (var sw = new StringWriter())
             {
-                IRequest current = request;
-
-                while (current != null)
-                {
-                    sw.WriteLine("{0,3}) {1}", current.Depth + 1, current);
-                    current = current.ParentRequest;
-                }
+                if (request.Target == null)
+                    sw.Write("Request for {0}", request.Service.Format());
+                else
+                    sw.Write("Injection of dependency {0} into {1}", request.Service.Format(), request.Target.Format());
 
                 return sw.ToString();
             }
         }
 
+#if WINRT
+        private static MemberTypes GetMemberType(this MemberInfo member)
+        {
+            if (member is FieldInfo)
+                return MemberTypes.Field;
+            if (member is ConstructorInfo)
+                return MemberTypes.Constructor;
+            if (member is PropertyInfo)
+                return MemberTypes.Property;
+            if (member is EventInfo)
+                return MemberTypes.Event;
+            if (member is MethodInfo)
+                return MemberTypes.Method;
+
+            /*
+            var typeInfo = member as Type;
+            Debug.Assert(typeInfo != null);
+            if (!typeInfo.IsPublic && !typeInfo.IsNotPublic)
+                return MemberTypes.NestedType;
+            */
+            return MemberTypes.TypeInfo;
+        } 
+
+        private enum MemberTypes
+        {
+            Field,
+            Event,
+            Constructor,
+            Property,
+            Method,
+            NestedType,
+            TypeInfo
+
+        }
+
+#endif
+
         /// <summary>
-        /// Formats the given binding into a meaningful string representation. 
+        /// Formats the specified target into a meaningful string representation..
         /// </summary>
-        /// <param name="binding">The binding to be formatted.</param>
-        /// <param name="context">The context.</param>
-        /// <returns>The binding formatted as string</returns>
-        public static string Format(this IBinding binding, IContext context)
+        /// <param name="target">The target to be formatted.</param>
+        /// <returns>The target formatted as string.</returns>
+        public static string Format(this ITarget target)
         {
             using (var sw = new StringWriter())
             {
-                if (binding.Condition != null)
-                    sw.Write("conditional ");
-
-                if (binding.IsImplicit)
-                    sw.Write("implicit ");
-
-                IProvider provider = binding.GetProvider(context);
-
-                switch (binding.Target)
+#if !WINRT
+                switch (target.Member.MemberType)
+#else
+                switch(target.Member.GetMemberType())
+#endif
                 {
-                    case BindingTarget.Self:
-                        sw.Write("self-binding of {0}", binding.Service.Format());
+                    case MemberTypes.Constructor:
+                        sw.Write("parameter {0} of constructor", target.Name);
                         break;
 
-                    case BindingTarget.Type:
-                        sw.Write("binding from {0} to {1}", binding.Service.Format(), provider.Type.Format());
+                    case MemberTypes.Method:
+                        sw.Write("parameter {0} of method {1}", target.Name, target.Member.Name);
                         break;
 
-                    case BindingTarget.Provider:
-                        sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
-                            provider.Type.Format(), provider.GetType().Format());
-                        break;
-
-                    case BindingTarget.Method:
-                        sw.Write("binding from {0} to method", binding.Service.Format());
-                        break;
-
-                    case BindingTarget.Constant:
-                        sw.Write("binding from {0} to constant value", binding.Service.Format());
+                    case MemberTypes.Property:
+                        sw.Write("property {0}", target.Name);
                         break;
 
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
+#if !WINRT
+                sw.Write(" of type {0}", target.Member.ReflectedType.Format());
+                #else
+#endif
+
                 return sw.ToString();
             }
+
         }
 
+        /*
         /// <summary>
         /// Formats the specified type into a meaningful string representation..
         /// </summary>
@@ -100,7 +135,8 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-            var friendlyName = GetFriendlyName(type);
+
+        var friendlyName = GetFriendlyName(type);
 
 #if !MONO
             if (friendlyName.Contains("AnonymousType"))
@@ -111,7 +147,7 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
-            switch (friendlyName.ToLower())
+            switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
             {
                 case "int16": return "short";
                 case "int32": return "int";
@@ -131,11 +167,12 @@ namespace Ninject.Infrastructure.Introspection
                 case "decimal": return "decimal";
             }
             var genericArguments = type.GetGenericArguments();
-            if (genericArguments.Length > 0)
+            if(genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);
-
+            
             return friendlyName;
         }
+        */
 
         private static string GetFriendlyName(Type type)
         {
@@ -176,8 +213,8 @@ namespace Ninject.Infrastructure.Introspection
             {
                 if (friendlyName[index] == '`')
                 {
-                    var numArguments = friendlyName[index + 1] - 48;
-
+                    var numArguments = friendlyName[index+1] - 48;
+                    
                     sb.Append(friendlyName.Substring(startIndex, index - startIndex));
                     AppendGenericArguments(sb, genericArguments, genericArgumentIndex, numArguments);
                     genericArgumentIndex += numArguments;
@@ -194,7 +231,7 @@ namespace Ninject.Infrastructure.Introspection
         {
             sb.Append("{");
 
-            for (int i = 0; i < count; i++)
+            for(int i = 0; i < count; i++)
             {
                 if (i != 0)
                     sb.Append(", ");

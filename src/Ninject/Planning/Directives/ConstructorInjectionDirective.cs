@@ -19,12 +19,18 @@ namespace Ninject.Planning.Directives
     /// <summary>
     /// Describes the injection of a constructor.
     /// </summary>
-    public class ConstructorInjectionDirective : MethodInjectionDirectiveBase<ConstructorInfo, ConstructorInjector>, IConstructorInjectionDirective
+    public class ConstructorInjectionDirective : MethodInjectionDirectiveBase<ConstructorInfo, ConstructorInjector>
     {
         /// <summary>
         /// The base .ctor definition.
         /// </summary>
         public ConstructorInfo Constructor { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this constructor has an inject attribute.
+        /// </summary>
+        /// <value><c>true</c> if this constructor has an inject attribute; otherwise, <c>false</c>.</value>
+        public bool HasInjectAttribute { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorInjectionDirective"/> class.
