@@ -28,7 +28,11 @@ namespace Ninject.Infrastructure.Disposal
         /// </summary>
         public void Dispose()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Dispose(true);
+#endif
         }
 
         /// <summary>

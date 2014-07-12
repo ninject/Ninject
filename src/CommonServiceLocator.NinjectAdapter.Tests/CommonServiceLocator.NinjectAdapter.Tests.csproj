@@ -57,9 +57,9 @@
       <Project>{9BD94717-484B-4EB1-AF32-8D4244F02E8E}</Project>
       <Name>CommonServiceLocator.NinjectAdapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ninject\Ninject.csproj">
-      <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
-      <Name>Ninject</Name>
+    <ProjectReference Include="..\Ninject\Ninject.Net40.csproj">
+      <Project>{37aad36a-2252-43d6-8bc4-f63bfefdfecb}</Project>
+      <Name>Ninject.Net40</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
