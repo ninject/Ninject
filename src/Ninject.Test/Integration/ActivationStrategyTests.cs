@@ -57,6 +57,23 @@
         }
 
         [Fact]
+        public void InstanceIsActivatedOnCreationWhenBindToMethodAndResolveServiceFromKernel()
+        {
+            kernel.Bind<IWarrior>().ToMethod(
+                ctx => ctx.Kernel.Get<FootSoldier>()).OnActivation(
+                instance =>
+                {
+                    instance.Weapon = new Shuriken();
+                });
+
+            var warrior = kernel.Get<IWarrior>();
+            warrior.Should().NotBeNull();
+            warrior.Should().BeOfType<FootSoldier>();
+            warrior.Weapon.Should().NotBeNull();
+            warrior.Weapon.Should().BeOfType<Shuriken>();
+        }
+
+        [Fact]
         public void InstanceIsDeactivatedWhenItLeavesScope()
         {
             Barracks barracks;
