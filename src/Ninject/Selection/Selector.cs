@@ -144,7 +144,8 @@ namespace Ninject.Selection
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
                 .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p)));
 #else
-            return type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic).Where(p => p.DeclaringType == type && p.IsPrivate());
+            return type.GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic).Where(p => p.DeclaringType == type && p.IsPrivate())
+                .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p)));
 #endif
         }
 #endif
@@ -174,14 +175,14 @@ namespace Ninject
         public static IEnumerable<T> FilterPublic<T>(this IEnumerable<T> input, bool nonPublic)
             where T : MethodBase
         {
-            return input.Where(m => !m.IsStatic && nonPublic ? true : m.IsPublic);
+            return input.Where(m => !m.IsStatic && (nonPublic || m.IsPublic));
         }
 
         public static IEnumerable<PropertyInfo> FilterPublic(this IEnumerable<PropertyInfo> input, bool nonPublic)
        {
            var toReturn = from pi in input
                           let method = pi.SetMethod ?? pi.GetMethod
-                          where !method.IsStatic && nonPublic ? true : method.IsPublic
+                          where !method.IsStatic && (nonPublic || method.IsPublic)
                           select pi;
 
            return toReturn;
