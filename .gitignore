@@ -10,3 +10,4 @@ dist
 *.dotCover
 /src/Ninject.SilverlightTests/Bin
 packages
+AppPackages

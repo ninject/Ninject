@@ -20,7 +20,7 @@ using Ninject.Components;
 namespace Ninject.Injection
 {
     /// <summary>
-    /// Creates injectors for members via <see cref="DynamicMethod"/>s.
+    /// Creates injectors for members via DynamicMethods.
     /// </summary>
     public class DynamicMethodInjectorFactory : NinjectComponent, IInjectorFactory
     {

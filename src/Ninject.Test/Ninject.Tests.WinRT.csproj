@@ -22,6 +22,8 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <AppxBundle>Never</AppxBundle>
     <NuGetPackageImportStamp>9fe7ee81</NuGetPackageImportStamp>
+    <PackageCertificateThumbprint>317B339C1FEFCC4F4D20EF5F5771106C5F455D7B</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>Ninject.Tests.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -177,7 +179,10 @@
     <Content Include="Images\UnitTestStoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Ninject.Tests_TemporaryKey.pfx" />
+    <None Include="..\Ninject.snk">
+      <Link>Ninject.snk</Link>
+    </None>
+    <None Include="Ninject.Tests.WinRT_TemporaryKey.pfx" />
     <None Include="packages.Ninject.Tests.WinRT.config" />
     <None Include="TestModules\test.bar" />
     <None Include="TestModules\test.foo" />
@@ -220,6 +225,12 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
