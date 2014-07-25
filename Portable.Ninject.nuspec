@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Portable.Ninject</id>
-    <version>3.2.1</version>
+    <version>3.2.1.1</version>
     <title>Ninject for Portable Class Libraries</title>
     <authors>Oren Novotny</authors>
     <owners />
@@ -18,7 +18,7 @@
     </description>
     <summary>IoC container for .NET</summary>
     <releaseNotes>Refactored to use single lib with bait-and-switch</releaseNotes>
-    <tags>Ninject ioc di portable pcl ios xamarin android </tags>
+    <tags>Ninject ioc di portable pcl</tags>
   </metadata>
   <files>
 
@@ -44,6 +44,13 @@
     <file src="src\Ninject\bin\wp8\Release\Ninject.pdb" target="lib\wp8\Ninject.pdb" />
     <file src="src\Ninject\bin\wp8\Release\Ninject.xml" target="lib\wp8\Ninject.xml" />
 
+    <!-- Wpa81 -->
+    <file src="src\Ninject\bin\Wpa81\Release\Ninject.dll" target="lib\Wpa81\Ninject.dll" />
+    <file src="src\Ninject\bin\Wpa81\Release\Ninject.pdb" target="lib\Wpa81\Ninject.pdb" />
+    <file src="src\Ninject\bin\Wpa81\Release\Ninject.xml" target="lib\Wpa81\Ninject.xml" />
+    <file src="src\Ninject\bin\Wpa81\Release\Ninject.pri" target="lib\Wpa81\Ninject.pri" />
+
+    
     <!-- SL5 -->
     <file src="src\Ninject\bin\sl\Release\Ninject.dll" target="lib\sl5\Ninject.dll" />
     <file src="src\Ninject\bin\sl\Release\Ninject.pdb" target="lib\sl5\Ninject.pdb" />
