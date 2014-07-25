@@ -10,6 +10,7 @@
 #region Using Directives
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 #if WINRT
@@ -252,8 +253,9 @@ namespace Ninject.Infrastructure.Introspection
 #if !WINRT
             var genericArguments = type.GetGenericArguments();
 #else
-            var genericArguments = type.GetTypeInfo()
-                                       .GenericTypeArguments;
+            var ti = type.GetTypeInfo();
+
+            var genericArguments =  ti.GenericTypeParameters.Union(ti.GenericTypeArguments).ToArray();
 #endif
             if (genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);

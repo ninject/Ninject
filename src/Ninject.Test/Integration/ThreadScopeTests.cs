@@ -1,4 +1,5 @@
-﻿namespace Ninject.Tests.Integration.ThreadScopeTests
+﻿#if !WINRT
+namespace Ninject.Tests.Integration.ThreadScopeTests
 {
     using System;
     using System.Threading;
@@ -98,3 +99,4 @@
 #endif
     }
 }
+#endif

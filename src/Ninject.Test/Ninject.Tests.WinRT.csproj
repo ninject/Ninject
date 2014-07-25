@@ -79,9 +79,11 @@
     <Compile Include="Integration\ConditionalBindingTests.cs" />
     <Compile Include="Integration\ConditionalBindingWhenParentTests.cs" />
     <Compile Include="Integration\ConstantTests.cs" />
+    <Compile Include="Integration\ConstructorArgumentInBindingConfigurationBuilderTest.cs" />
     <Compile Include="Integration\ConstructorArgumentTests.cs" />
     <Compile Include="Integration\ConstructorSelectionTests.cs" />
     <Compile Include="Integration\DefaultParameterTests.cs" />
+    <Compile Include="Integration\DefaultScopeCallbackTests.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\Fakes\ChildA.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs" />
     <Compile Include="Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs" />
     <Compile Include="Integration\ExternalInjectionTests.cs" />
+    <Compile Include="Integration\GenericBindings.cs" />
     <Compile Include="Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs" />
     <Compile Include="Integration\InterfaceSegregationWithFourServicesTests.cs" />
     <Compile Include="Integration\InterfaceSegregationWithThreeServicesTests.cs" />
@@ -123,7 +126,9 @@
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\StandardKernelTests.cs" />
+    <Compile Include="Integration\ThreadScopeTests.cs" />
     <Compile Include="Integration\TransientScopeTests.cs" />
+    <Compile Include="Integration\WhenReleasingAnObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\ActivationBlockTests.cs" />
     <Compile Include="Unit\ActivationCacheStrategyTest.cs" />
@@ -138,6 +143,8 @@
     <Compile Include="Unit\ConstantProviderTests.cs" />
     <Compile Include="Unit\DisposableStrategyTests.cs" />
     <Compile Include="Unit\DynamicMethodInjectorFactoryTests.cs" />
+    <Compile Include="Unit\ExtensionsForMemberInfoTest.cs" />
+    <Compile Include="Unit\FormatTests.cs" />
     <Compile Include="Unit\InitializableStrategyTests.cs" />
     <Compile Include="Unit\MethodInjectionDirectiveBaseTests.cs" />
     <Compile Include="Unit\MethodInjectionStrategyTests.cs" />
