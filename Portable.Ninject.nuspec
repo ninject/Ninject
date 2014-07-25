@@ -28,9 +28,9 @@
     <file src="src\Ninject\bin\PCL\Release\Ninject.xml" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid\Ninject.xml" />
 
     <!-- .NET 4 -->
-    <file src="src\Ninject\bin\Net40\Release\Ninject.dll" target="lib\net40-client\Ninject.dll" />
-    <file src="src\Ninject\bin\Net40\Release\Ninject.pdb" target="lib\net40-client\Ninject.pdb" />
-    <file src="src\Ninject\bin\Net40\Release\Ninject.xml" target="lib\net40-client\Ninject.xml" />
+    <file src="src\Ninject\bin\Net4\Release\Ninject.dll" target="lib\net40-client\Ninject.dll" />
+    <file src="src\Ninject\bin\Net4\Release\Ninject.pdb" target="lib\net40-client\Ninject.pdb" />
+    <file src="src\Ninject\bin\Net4\Release\Ninject.xml" target="lib\net40-client\Ninject.xml" />
 
     <!-- Win8 -->
     <file src="src\Ninject\bin\WinRT\Release\Ninject.dll" target="lib\win8\Ninject.dll" />
