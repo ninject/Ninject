@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -34,13 +34,14 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>DEBUG;__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ</DefineConstants>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -68,7 +69,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ</DefineConstants>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -79,7 +80,7 @@
     <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <BuildIpa>True</BuildIpa>
-    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ</DefineConstants>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>none</DebugType>
@@ -89,7 +90,13 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
-    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ</DefineConstants>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhoneSimulator'">
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AppStore|iPhoneSimulator'">
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Ninject.Test\Fakes\AbstractWeapon.cs">
@@ -417,11 +424,13 @@
     <Content Include="AppDelegate.cs.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions.Core">
-      <HintPath>..\..\tools\iOS\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\packages\FluentAssertions.Xamarin.3.1.229\lib\monotouch\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions.iOS">
-      <HintPath>..\..\tools\iOS\FluentAssertions.iOS.dll</HintPath>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.1.229\lib\portable-monotouch+monoandroid\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />

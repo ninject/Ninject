@@ -74,8 +74,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions.Silverlight">
-      <HintPath>..\..\tools\FluentAssertions\Silverlight-4.0\FluentAssertions.Silverlight.dll</HintPath>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\packages\FluentAssertions.3.1.229\lib\sl5\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\..\packages\FluentAssertions.3.1.229\lib\sl5\FluentAssertions.Core.dll</HintPath>
     </Reference>
     <Reference Include="Moq.Silverlight">
       <HintPath>..\..\tools\moq\silverlight4\Moq.Silverlight.dll</HintPath>
@@ -87,6 +90,7 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=5.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="xunit-silverlight">
       <HintPath>..\..\tools\xunit.sl\Silverlight-4.0\xunit-silverlight.dll</HintPath>
     </Reference>
@@ -359,6 +363,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
