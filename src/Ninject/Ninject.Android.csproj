@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Android\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ANDROID;MONO;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Android\Release\</OutputPath>
-    <DefineConstants>TRACE;MONO</DefineConstants>
+    <DefineConstants>TRACE;ANDROID;MONO;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Android\Release\Ninject.xml</DocumentationFile>

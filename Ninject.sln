@@ -1163,6 +1163,8 @@ Global
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug .NET 4.0|Mixed Platforms.Deploy.0 = Debug|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug .NET 4.0|x86.ActiveCfg = Debug|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|Any CPU.ActiveCfg = Debug|iPhone
+		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|Any CPU.Build.0 = Debug|iPhone
+		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|Any CPU.Deploy.0 = Debug|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|ARM.ActiveCfg = Debug|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Debug|iPhone.Build.0 = Debug|iPhone

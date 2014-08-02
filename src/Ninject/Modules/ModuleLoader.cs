@@ -7,8 +7,10 @@
 // See the file LICENSE.txt for details.
 // 
 #endregion
+
 #if !NO_ASSEMBLY_SCANNING
 #region Using Directives
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -103,6 +105,9 @@ namespace Ninject.Modules
 
         private static IEnumerable<string> GetBaseDirectories()
         {
+#if ANDROID
+            return new[] { Android.App.Application.Context.FilesDir.AbsolutePath };
+#else
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
@@ -110,6 +115,7 @@ namespace Ninject.Modules
                 ? new[] {baseDirectory} 
                 : searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path));
+#endif
         }
 #endif
 #endif
