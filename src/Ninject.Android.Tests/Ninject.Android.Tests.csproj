@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_MOQ;MONO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
