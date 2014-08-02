@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.core.2.0.0-beta-build2700\build\MonoTouch\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta-build2700\build\MonoTouch\xunit.core.props')" />
+  <Import Project="..\..\packages\xunit.core.2.0.0-beta-build2723\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta-build2723\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
@@ -12,7 +12,7 @@
     <RootNamespace>Ninject.iOS.Tests</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>NinjectiOSTests</AssemblyName>
-    <NuGetPackageImportStamp>55e5099a</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>ac71d050</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -421,9 +421,6 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppDelegate.cs.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\packages\FluentAssertions.Xamarin.3.1.229\lib\monotouch\FluentAssertions.dll</HintPath>
       <Private>True</Private>
@@ -438,27 +435,22 @@
     <Reference Include="monotouch" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="xunit.abstractions">
-      <HintPath>..\..\packages\xunit.abstractions.2.0.0-beta-build2700\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.abstractions.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0-beta-build2723\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.abstractions.dll</HintPath>
     </Reference>
     <Reference Include="xunit.assert">
-      <HintPath>..\..\packages\xunit.assert.2.0.0-beta-build2700\lib\portable-net45+win+wpa81+wp80+monoandroid+monotouch10\xunit.assert.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\xunit.assert.2.0.0-beta-build2723\lib\portable-net45+win+wpa81+wp80+monoandroid+monotouch10\xunit.assert.dll</HintPath>
     </Reference>
     <Reference Include="xunit.core">
-      <HintPath>..\..\packages\xunit.core.2.0.0-beta-build2700\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.dll</HintPath>
+      <HintPath>..\..\packages\xunit.core.2.0.0-beta-build2723\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.dll</HintPath>
     </Reference>
     <Reference Include="xunit.execution">
-      <HintPath>..\..\packages\xunit.execution.2.0.0-beta-build2700\lib\monotouch\xunit.execution.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\xunit.execution.2.0.0-beta-build2723\lib\monotouch\xunit.execution.dll</HintPath>
     </Reference>
     <Reference Include="xunit.runner.ios">
       <HintPath>..\..\packages\xunit.runner.xamarin.0.99.1-beta-build1011\lib\MonoTouch\xunit.runner.ios.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="xunit.runner.utility">
-      <HintPath>..\..\packages\xunit.runner.utility.2.0.0-beta-build2700\lib\monotouch\xunit.runner.utility.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\xunit.runner.utility.2.0.0-beta-build2723\lib\monotouch\xunit.runner.utility.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -467,11 +459,14 @@
       <Name>Ninject.iOS</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="AppDelegate.cs.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta-build2700\build\MonoTouch\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta-build2700\build\MonoTouch\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta-build2723\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta-build2723\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.props'))" />
   </Target>
 </Project>
