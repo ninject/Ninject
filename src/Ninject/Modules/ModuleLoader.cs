@@ -38,7 +38,7 @@ namespace Ninject.Modules
             Ensure.ArgumentNotNull(kernel, "kernel");
             Kernel = kernel;
         }
-
+#if !PCL
         /// <summary>
         /// Loads any modules found in the files that match the specified patterns.
         /// </summary>
@@ -77,6 +77,7 @@ namespace Ninject.Modules
             }
 #endif
         }
+#endif
 
 #if !PCL
 #if WINRT

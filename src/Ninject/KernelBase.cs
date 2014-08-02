@@ -237,8 +237,12 @@ namespace Ninject
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
+#endif
         }
 
 #if WINRT
