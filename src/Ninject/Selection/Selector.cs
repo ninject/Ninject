@@ -36,7 +36,7 @@ namespace Ninject.Selection
         {
             get
             {
-                #if !NO_LCG && !SILVERLIGHT
+                #if !NO_LCG && !SILVERLIGHT || __IOS__
                 return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
                 #else
                 return DefaultFlags;

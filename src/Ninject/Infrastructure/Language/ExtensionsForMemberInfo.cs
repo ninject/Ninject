@@ -24,7 +24,7 @@ namespace Ninject.Infrastructure.Language
     {
 #if !WINRT
         const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
-#if !NO_LCG && !SILVERLIGHT
+#if !NO_LCG && !SILVERLIGHT || __IOS__
         const BindingFlags Flags = DefaultFlags | BindingFlags.NonPublic;
 #else
         const BindingFlags Flags = DefaultFlags;

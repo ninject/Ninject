@@ -35,7 +35,7 @@ namespace Ninject.Activation.Strategies
         {
             get
             {
-                #if !NO_LCG && !SILVERLIGHT
+                #if !NO_LCG && !SILVERLIGHT || __IOS__
                 return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
                 #else
                 return DefaultFlags;
