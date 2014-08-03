@@ -166,7 +166,7 @@ namespace Ninject.Infrastructure.Language
 
         /// <summary>
         /// Gets the custom attributes.
-        /// This version is able to get custom attributes for properties from base types even if the property is none public.
+        /// This version is able to get custom attributes for properties from base types even if the property is non-public.
         /// </summary>
         /// <param name="member">The member.</param>
         /// <param name="attributeType">Type of the attribute.</param>
@@ -180,7 +180,7 @@ namespace Ninject.Infrastructure.Language
 #endif
             GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35 && !MONO_40 && !WINRT
+#if !NET_35 && !MONO_40 && !WINRT && !__IOS__ && !ANDROID
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;

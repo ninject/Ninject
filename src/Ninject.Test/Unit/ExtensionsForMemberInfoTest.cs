@@ -113,10 +113,10 @@ namespace Ninject.Tests.Unit
             var attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
 #endif
 
-            attributes.Count().Should().Be(expectedAttributes.Length);
+            attributes.Count().Should().Be(expectedAttributes.Length, "attrib: {0}, attribType: {1}", attributeName, attributeType.Name);
             foreach (Attribute expectedAttribute in expectedAttributes)
             {
-                attributes.Should().Contain(expectedAttribute);
+                attributes.Should().Contain(expectedAttribute, "attrib: {0}, attribType: {1}", attributeName, attributeType.Name);
             }
         }
 
