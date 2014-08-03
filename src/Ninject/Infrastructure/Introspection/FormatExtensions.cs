@@ -217,7 +217,7 @@ namespace Ninject.Infrastructure.Introspection
 #else
             var friendlyName = GetFriendlyName(type);
 
-#if !MONO
+#if !MONO || __IOS__ || ANDROID
             if (friendlyName.Contains("AnonymousType"))
                 return "AnonymousType";
 #else
