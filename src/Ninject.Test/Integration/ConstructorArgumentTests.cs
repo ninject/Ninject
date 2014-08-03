@@ -19,6 +19,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System.Diagnostics;
+
 namespace Ninject.Tests.Integration
 {
     using System;
@@ -46,7 +48,9 @@ namespace Ninject.Tests.Integration
             {
                 // ReSharper disable CoVariantArrayConversion
                 yield return new Func<bool, IConstructorArgument>[] { inherited => new ConstructorArgument("weapon", new Sword(), inherited) };
+#if !MONO
                 yield return new Func<bool, IConstructorArgument>[] { inherited => new WeakConstructorArgument("weapon", new Sword(), inherited),  };
+#endif
                 yield return new Func<bool, IConstructorArgument>[]
                              {
                                  inherited => new TypeMatchingConstructorArgument(typeof(IWeapon), (context, target) => new Sword(), inherited)
@@ -61,7 +65,9 @@ namespace Ninject.Tests.Integration
             {
                 // ReSharper disable CoVariantArrayConversion
                 yield return new Func<IConstructorArgument>[] { () => new ConstructorArgument("weapon", new Sword()) };
+#if !MONO
                 yield return new Func<IConstructorArgument>[] { () => new WeakConstructorArgument("weapon", new Sword()),  };
+#endif
                 yield return new Func<IConstructorArgument>[] { () => new TypeMatchingConstructorArgument(typeof(IWeapon), (context, target) => new Sword()) };
                 // ReSharper restore CoVariantArrayConversion
             }
@@ -130,7 +136,7 @@ namespace Ninject.Tests.Integration
 
             weakReference.IsAlive.Should().BeFalse();
         }
-#endif
+
 
         private WeakReference Process()
         {
@@ -138,5 +144,7 @@ namespace Ninject.Tests.Integration
             this.kernel.Get<Barracks>(new WeakConstructorArgument("weapon", sword));
             return new WeakReference(sword);
         }
+
+#endif
     }
 }
