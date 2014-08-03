@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Portable.Ninject</id>
-    <version>3.2.1.1</version>
+    <version>3.3</version>
     <title>Ninject for Portable Class Libraries</title>
     <authors>Oren Novotny</authors>
     <owners />
@@ -14,11 +14,11 @@
     <description>
       Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
 
-      Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8
+      Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8, iOS and Android
     </description>
     <summary>IoC container for .NET</summary>
     <releaseNotes>Refactored to use single lib with bait-and-switch</releaseNotes>
-    <tags>Ninject ioc di portable pcl</tags>
+    <tags>Ninject ioc di portable pcl xamarin ios android monotouch monoandroid</tags>
   </metadata>
   <files>
 
@@ -56,15 +56,15 @@
     <file src="src\Ninject\bin\sl\Release\Ninject.pdb" target="lib\sl5\Ninject.pdb" />
     <file src="src\Ninject\bin\sl\Release\Ninject.xml" target="lib\sl5\Ninject.xml" />
 
-    <!-- iOS --><!--
+     <!-- iOS --> 
     <file src="src\Ninject\bin\iPhone\Release\Ninject.dll" target="lib\monotouch\Ninject.dll" />
     <file src="src\Ninject\bin\iPhone\Release\Ninject.pdb" target="lib\monotouch\Ninject.pdb" />
     <file src="src\Ninject\bin\iPhone\Release\Ninject.xml" target="lib\monotouch\Ninject.xml" />
 
-    --><!-- Android --><!--
+     <!-- Android --> 
     <file src="src\Ninject\bin\Android\Release\Ninject.dll" target="lib\monoandroid\Ninject.dll" />
     <file src="src\Ninject\bin\Android\Release\Ninject.pdb" target="lib\monoandroid\Ninject.pdb" />
-    <file src="src\Ninject\bin\Android\Release\Ninject.xml" target="lib\monoandroid\Ninject.xml" />-->
+    <file src="src\Ninject\bin\Android\Release\Ninject.xml" target="lib\monoandroid\Ninject.xml" />
 
 
     <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />
