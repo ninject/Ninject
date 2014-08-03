@@ -17,7 +17,7 @@
       Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8, iOS and Android
     </description>
     <summary>IoC container for .NET</summary>
-    <releaseNotes>Refactored to use single lib with bait-and-switch</releaseNotes>
+    <releaseNotes>Xamarin support for iOS and Android</releaseNotes>
     <tags>Ninject ioc di portable pcl xamarin ios android monotouch monoandroid</tags>
   </metadata>
   <files>
