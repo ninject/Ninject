@@ -1,4 +1,5 @@
 Version 3.2
+---------------
 - Add: bool IRequest.ForceUnique: In case there is an uncoditional and a conditional binding, return the conditional one. In case there are multiple unconditional or conditional bindings, throw an exception.
 - Add: IResolutionRoot.TryGetAndThrowOnInvalidBinding<T> (extension method): Returns null if there is no binding, but throws ActivationException in case there is a binding which could not be activated.
 - Add: TypeMatchingConstructorArgument introduced.
@@ -12,11 +13,13 @@ Version 3.2
 - Bugfix: When an object that is the scope of another object is released an Exception was thrown. 
 
 Version 3.0.1
+---------------
 - Add: The default scope can be changed in the NinjectSettings using 
 - Change: Open generics can now be passed to WhenInjectedInto
 - Bugfix: Fixed race condition in the GarbageCollectionCachePruner
 
 Version 3.0.0 (final)
+---------------
 - Change: The constructor scorer ignores implicit bindings
 - Change: The constructor scorer ignores self bindings
 
