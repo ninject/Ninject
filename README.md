@@ -1,10 +1,31 @@
-# Meet Ninject [![NuGet Version](http://img.shields.io/nuget/v/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/)
+# Ninject [![NuGet Version](http://img.shields.io/nuget/v/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/) [![NuGet Downloads](http://img.shields.io/nuget/dt/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/)
 Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications. It helps you split your
 application into a collection of loosely-coupled, highly-cohesive pieces, and then glue them back together in a
 flexible manner. By using Ninject to support your software's architecture, your code will become easier to write,
 reuse, test, and modify.
 
-## Ninject is:
+*Write your code so it's flexible...*
+```C#
+public class Samurai {
+    public IWeapon Weapon { get; private set; }
+    public Samurai(IWeapon weapon) 
+    {
+        this.Weapon = weapon;
+    }
+}
+```
+*...and let Ninject glue it together for you.*
+```C#
+public class WarriorModule : NinjectModule
+{
+    public override void Load() 
+    {
+        this.Bind<IWeapon>().To<Sword>();
+    }
+}
+```
+
+## Features:
 
 1. **Focused.** Too many existing dependency injection projects sacrifice usability for features that aren't often necessary.
    Each time a feature is added to Ninject, its benefit is weighed against the complexity it adds to everyday use. Our goal
