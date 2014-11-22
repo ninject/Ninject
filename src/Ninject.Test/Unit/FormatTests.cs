@@ -23,7 +23,7 @@ namespace Ninject.Tests.Unit
         public class InnerType {}
 
         [Fact]
-        public void BuiltInTypesFormatttedAsCSharpName()
+        public void BuiltInTypesFormattedAsCSharpName()
         {
             typeof(bool).Format().Should().Be("bool");
             typeof(char).Format().Should().Be("char");

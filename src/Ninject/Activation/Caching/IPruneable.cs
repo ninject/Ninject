@@ -1,7 +1,7 @@
 namespace Ninject.Activation.Caching
 {
     /// <summary>
-    /// An object that is prunealble.
+    /// An object that is pruneable.
     /// </summary>
     public interface IPruneable
     {

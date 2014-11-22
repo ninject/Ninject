@@ -400,7 +400,7 @@
         }
 
         [Fact]
-        public void OpenGenericBindingsCanBeOverridenByClosedGenericBindings()
+        public void OpenGenericBindingsCanBeOverriddenByClosedGenericBindings()
         {
             kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericService<>));
             kernel.Bind<IGeneric<int>>().To<ClosedGenericService>();

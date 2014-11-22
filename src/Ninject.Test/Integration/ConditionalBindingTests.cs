@@ -20,7 +20,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void GivenADefaultAndSingleUnatisfiedConditional_ThenTheDefaultIsUsed()
+        public void GivenADefaultAndSingleUnsatisfiedConditional_ThenTheDefaultIsUsed()
         {
             kernel.Bind<IWeapon>().To<Sword>();
             kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
@@ -57,7 +57,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void GivenBindingIsMadeAfterImplictBinding_ThenExplicitBindingWillResolve()
+        public void GivenBindingIsMadeAfterImplicitBinding_ThenExplicitBindingWillResolve()
         {
             IWeapon weapon = kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();

@@ -75,7 +75,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void CreationWillFailIfAllDepenciesAreMissingAndInjectAttributeIsApplied()
+        public void CreationWillFailIfAllDependenciesAreMissingAndInjectAttributeIsApplied()
         {
             kernel.Bind<NinjaBarracks>().ToSelf();
 
@@ -118,7 +118,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void WhenDefaultValuesArePassedToConstrctorSelectionTheyAreUsed()
+        public void WhenDefaultValuesArePassedToConstructorSelectionTheyAreUsed()
         {
             kernel.Bind<Barracks>().ToConstructor(ctorArg => new Barracks(new Ninja(new Sword()), ctorArg.Inject<IWeapon>()));
             kernel.Bind<IWeapon>().To<Sword>();
@@ -177,7 +177,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void WhenLazyValuesArePassedToConstrctorSelectionTheyAreEvaluatedAtResolve()
+        public void WhenLazyValuesArePassedToConstructorSelectionTheyAreEvaluatedAtResolve()
         {
             int activationCount = 0;
             kernel.Bind<Ninja>().ToSelf().Named("1").OnActivation(inst => activationCount++);

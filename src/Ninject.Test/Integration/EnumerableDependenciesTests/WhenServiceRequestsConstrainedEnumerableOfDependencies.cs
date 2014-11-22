@@ -19,7 +19,7 @@
         }
 
         [Fact]
-        public void WhenNoMatchingBindingExistsEmptyEmumerableIsInjected()
+        public void WhenNoMatchingBindingExistsEmptyEnumerableIsInjected()
         {
             this.Kernel.Bind<IParent>().To<RequestsConstrainedEnumerable>();
             this.Kernel.Bind<IChild>().To<ChildA>().Named("joe");

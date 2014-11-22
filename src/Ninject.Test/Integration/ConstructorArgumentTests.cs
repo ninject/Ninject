@@ -79,10 +79,10 @@ namespace Ninject.Tests.Integration
             this.kernel.Bind<IWarrior>().To<Samurai>();
             this.kernel.Bind<IWeapon>().To<Dagger>();
 
-            var baracks = this.kernel.Get<Barracks>(constructorArgument(false));
+            var barracks = this.kernel.Get<Barracks>(constructorArgument(false));
 
-            baracks.Weapon.Should().BeOfType<Sword>();
-            baracks.Warrior.Weapon.Should().BeOfType<Dagger>();
+            barracks.Weapon.Should().BeOfType<Sword>();
+            barracks.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
 
         [Theory]
@@ -102,10 +102,10 @@ namespace Ninject.Tests.Integration
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
 
-            var baracks = this.kernel.Get<Barracks>(constructorArgument(true));
+            var barracks = this.kernel.Get<Barracks>(constructorArgument(true));
 
-            baracks.Weapon.Should().BeOfType<Sword>();
-            baracks.Warrior.Weapon.Should().BeOfType<Sword>();
+            barracks.Weapon.Should().BeOfType<Sword>();
+            barracks.Warrior.Weapon.Should().BeOfType<Sword>();
         }
 
 #if !MONO
@@ -118,12 +118,12 @@ namespace Ninject.Tests.Integration
 
             var weakReference = this.Process();
 
-            var baracks = this.kernel.Get<Barracks>();
+            var barracks = this.kernel.Get<Barracks>();
 
-            baracks.Weapon.Should().BeOfType<Sword>();
-            baracks.Warrior.Weapon.Should().BeOfType<Dagger>();
-            baracks.Weapon.Should().BeSameAs(weakReference.Target);
-            baracks.Weapon = null;
+            barracks.Weapon.Should().BeOfType<Sword>();
+            barracks.Warrior.Weapon.Should().BeOfType<Dagger>();
+            barracks.Weapon.Should().BeSameAs(weakReference.Target);
+            barracks.Weapon = null;
 
             GC.Collect();
 

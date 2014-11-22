@@ -68,9 +68,9 @@ namespace Ninject.Syntax
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
-            var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
+            var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -86,9 +86,9 @@ namespace Ninject.Syntax
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
-            var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
+            var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -106,9 +106,9 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
-            var servceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
+            var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", servceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>

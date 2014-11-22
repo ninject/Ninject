@@ -54,7 +54,7 @@ namespace Ninject.Tests.Unit.PipelineTests
         }
 
         [Fact]
-        public void WhenAlreadyActiavatedNothingHappens()
+        public void WhenAlreadyActivatedNothingHappens()
         {
             var contextMock = new Mock<IContext>();
             var reference = new InstanceReference();
@@ -80,7 +80,7 @@ namespace Ninject.Tests.Unit.PipelineTests
         }
 
         [Fact]
-        public void WhenAlreadyDeactiavatedNothingHappens()
+        public void WhenAlreadyDeactivatedNothingHappens()
         {
             var contextMock = new Mock<IContext>();
             var reference = new InstanceReference();
