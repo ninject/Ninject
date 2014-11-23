@@ -95,7 +95,7 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
-            var lockCooki = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
+            var lockCookie = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
             try
             {
                 IPlan plan;
@@ -112,7 +112,7 @@ namespace Ninject.Planning
             }
             finally
             {
-                this.plannerLock.DowngradeFromWriterLock(ref lockCooki);
+                this.plannerLock.DowngradeFromWriterLock(ref lockCookie);
             }
         }
     }

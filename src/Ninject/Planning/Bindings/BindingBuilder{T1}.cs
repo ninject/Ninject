@@ -94,7 +94,7 @@ namespace Ninject.Planning.Bindings
 
 #if !NETCF
         /// <summary>
-        /// Indicates that the service should be bound to the speecified constructor.
+        /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="newExpression">The expression that specifies the constructor.</param>

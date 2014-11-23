@@ -75,7 +75,7 @@ namespace Ninject.Activation.Strategies
                 directive.Injector(reference.Instance, value);
             }
 
-            this.AssignProperyOverrides(context, reference, propertyValues);
+            this.AssignPropertyOverrides(context, reference, propertyValues);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
         /// <param name="propertyValues">The parameter override value accessors.</param>
-        private void AssignProperyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
+        private void AssignPropertyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
         {
             var properties = reference.Instance.GetType().GetProperties(this.Flags);
             foreach (var propertyValue in propertyValues)

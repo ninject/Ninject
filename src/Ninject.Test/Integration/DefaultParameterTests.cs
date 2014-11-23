@@ -51,7 +51,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
-        public void DefaultValuesShouldNotInflunceInjectionsToOtherTypes()
+        public void DefaultValuesShouldNotInfluenceInjectionsToOtherTypes()
         {
             kernel.Bind<Shield>().ToSelf();
             kernel.Bind<KiteShield>().ToSelf();

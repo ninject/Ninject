@@ -18,7 +18,7 @@ namespace Ninject.Tests.Unit
         }
 
         [Fact]
-        public void ReferencesIsEqualToTheInstanceItIsReferingTo()
+        public void ReferencesIsEqualToTheInstanceItIsReferringTo()
         {
             var instance = new object();
             var reference = new ReferenceEqualWeakReference(instance);
