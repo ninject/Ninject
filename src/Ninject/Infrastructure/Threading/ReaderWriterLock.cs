@@ -8,7 +8,7 @@
 //   operation (we use spin locks to achieve this).  The spin lock is never held
 //   for more than a few instructions (in particular, we never call event APIs
 //   or in fact any non-trivial API while holding the spin lock).
-//   Currently this ReaderWriterLock does not support recurision, however it is
+//   Currently this ReaderWriterLock does not support recursion, however it is
 //   not hard to add
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace System.Threading
     /// for more than a few instructions (in particular, we never call event APIs
     /// or in fact any non-trivial API while holding the spin lock).   
     /// 
-    /// Currently this ReaderWriterLock does not support recurision, however it is 
+    /// Currently this ReaderWriterLock does not support recursion, however it is 
     /// not hard to add 
     /// </summary>
     /// <remarks>
@@ -35,8 +35,8 @@ namespace System.Threading
     /// </remarks>
     public class ReaderWriterLock
     {
-        // Lock specifiation for myLock:  This lock protects exactly the local fields associted
-        // instance of MyReaderWriterLock.  It does NOT protect the memory associted with the
+        // Lock specification for myLock:  This lock protects exactly the local fields associated
+        // instance of MyReaderWriterLock.  It does NOT protect the memory associated with the
         // the events that hang off this lock (eg writeEvent, readEvent upgradeEvent).
 #region Constants and Fields
 
@@ -73,7 +73,7 @@ namespace System.Threading
         /// <summary>
         /// The read event.
         /// </summary>
-        private EventWaitHandle readEvent; // threads waiting to aquire a read lock go here (will be released in bulk)
+        private EventWaitHandle readEvent; // threads waiting to acquire a read lock go here (will be released in bulk)
 
         /// <summary>
         /// The upgrade event.
@@ -83,9 +83,9 @@ namespace System.Threading
         /// <summary>
         /// The write event.
         /// </summary>
-        private EventWaitHandle writeEvent; // threads waiting to aquire a write lock go here.
+        private EventWaitHandle writeEvent; // threads waiting to acquire a write lock go here.
 
-        #endregion
+#endregion
 
 #region Properties
 
@@ -100,7 +100,7 @@ namespace System.Threading
             }
         }
 
-        #endregion
+#endregion
 
 #region Public Methods
 
@@ -222,7 +222,7 @@ namespace System.Threading
                 if (this.owners == 1)
                 {
                     // Good case, there is no contention, we are basically done
-                    this.owners = -1; // inidicate we have a writer. 
+                    this.owners = -1; // indicate we have a writer. 
                     break;
                 }
 
@@ -247,7 +247,7 @@ namespace System.Threading
             return 0;
         }
 
-        #endregion
+#endregion
 
 #region Methods
 
@@ -306,7 +306,7 @@ namespace System.Threading
                 this.ExitMyLock(); // Exit before signaling to improve efficiency (wakee will need the lock)
                 this.upgradeEvent.Set(); // release all upgraders (however there can be at most one). 
 
-                // two threads upgrading is a guarenteed deadlock, so we throw in that case. 
+                // two threads upgrading is a guaranteed deadlock, so we throw in that case. 
             }
             else if (this.owners >= 0 && this.numReadWaiters != 0)
             {
@@ -361,7 +361,7 @@ namespace System.Threading
         }
 
         /// <summary>
-        /// Waits on 'waitEvent' with a timeout of 'millisceondsTimeout.  
+        /// Waits on 'waitEvent' with a timeout of 'millisecondsTimeout.  
         /// Before the wait 'numWaiters' is incremented and is restored before leaving this routine.
         /// </summary>
         /// <param name="waitEvent">

@@ -115,7 +115,7 @@ namespace Ninject.Parameters
         public bool Equals(IParameter other)
         {
             var argument = other as TypeMatchingConstructorArgument;
-            return argument != null && other.GetType() == this.type;
+            return argument != null && argument.type == this.type;
         }
 
         /// <summary>

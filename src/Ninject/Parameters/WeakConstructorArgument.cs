@@ -65,7 +65,7 @@ namespace Ninject.Parameters
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>
-        /// Tre if the parameter applies in the specified context to the specified target.
+        /// True if the parameter applies in the specified context to the specified target.
         /// </returns>
         /// <remarks>
         /// Only one parameter may return true.

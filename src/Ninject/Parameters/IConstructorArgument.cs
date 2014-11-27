@@ -16,7 +16,7 @@
         /// </remarks>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>Tre if the parameter applies in the specified context to the specified target.</returns>
+        /// <returns>True if the parameter applies in the specified context to the specified target.</returns>
         bool AppliesToTarget(IContext context, ITarget target);
     }
 }

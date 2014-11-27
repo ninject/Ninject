@@ -154,6 +154,7 @@
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
     <Compile Include="Unit\TestObject.cs" />
+	<Compile Include="Unit\TypeMatchingConstructorArgumentTest.cs" />
     <None Include="packages.Ninject.Tests.config" />
     <Content Include="TestModules\test.bar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

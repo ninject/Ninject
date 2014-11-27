@@ -115,7 +115,7 @@ namespace Ninject.Planning
             throw new NotImplementedException();
 #else
 #if !WINRT
-            var lockCooki = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
+            var lockCookie = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
 #else
             this.plannerLock.EnterWriteLock();
 #endif
@@ -136,7 +136,7 @@ namespace Ninject.Planning
             finally
             {
 #if !WINRT
-                this.plannerLock.DowngradeFromWriterLock(ref lockCooki);
+                this.plannerLock.DowngradeFromWriterLock(ref lockCookie);
 #else
                 this.plannerLock.ExitWriteLock();
 #endif

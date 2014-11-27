@@ -157,7 +157,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the service should be bound to an instance of the specified provider type.
         /// The instance will be activated via the kernel when an instance of the service is activated.
         /// </summary>
-        /// <typeparam name="T">The type of the returned fleunt syntax</typeparam>
+        /// <typeparam name="T">The type of the returned fluent syntax</typeparam>
         /// <param name="providerType">The type of provider to activate.</param>
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> ToProviderInternal<T>(Type providerType)
@@ -170,7 +170,7 @@ namespace Ninject.Planning.Bindings
 
 #if !NETCF
         /// <summary>
-        /// Indicates that the service should be bound to the speecified constructor.
+        /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="newExpression">The expression that specifies the constructor.</param>

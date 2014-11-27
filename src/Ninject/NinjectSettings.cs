@@ -109,7 +109,7 @@ namespace Ninject
         /// Gets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
         /// <remarks>
-        /// Activating this setting has an impact on the performance. It is recomended not
+        /// Activating this setting has an impact on the performance. It is recommended not
         /// to use this feature and use constructor injection instead.
         /// </remarks>
         public bool InjectParentPrivateProperties

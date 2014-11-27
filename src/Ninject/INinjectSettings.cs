@@ -65,7 +65,7 @@ namespace Ninject
         /// Gets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
         /// <remarks>
-        /// Activating this setting has an impact on the performance. It is recomended not
+        /// Activating this setting has an impact on the performance. It is recommended not
         /// to use this feature and use constructor injection instead.
         /// </remarks>
         bool InjectParentPrivateProperties { get; set; }
@@ -85,7 +85,7 @@ namespace Ninject
 
         /// <summary>
         /// Gets or sets a value indicating whether Null is a valid value for injection.
-        /// By defuault this is disabled and whenever a provider returns null an exception is thrown.
+        /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
         bool AllowNullInjection { get; set; }

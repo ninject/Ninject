@@ -140,7 +140,7 @@ namespace Ninject.Selection.Heuristics
         }
 
         /// <summary>
-        /// Checks whether any parameters exist for the geiven target..
+        /// Checks whether any parameters exist for the given target..
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>

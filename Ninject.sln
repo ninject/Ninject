@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE.txt = LICENSE.txt
 		Portable.CommonServiceLocator.NinjectAdapter.nuspec = Portable.CommonServiceLocator.NinjectAdapter.nuspec
 		Portable.Ninject.nuspec = Portable.Ninject.nuspec
-		README.markdown = README.markdown
+		README.markdown = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F70D1D4-2ED2-45A8-89D8-6444B24DC2A8}"
