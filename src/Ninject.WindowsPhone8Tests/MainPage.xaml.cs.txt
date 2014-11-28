@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,12 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Ninject.WindowsPhone8Tests.Resources;
+
 using Xunit.Runner.Wp8;
 
 namespace Ninject.WindowsPhone8Tests
 {
-    public partial class MainPage : PhoneApplicationPage
+     public partial class MainPage : PhoneApplicationPage
     {
         // Constructor
         public MainPage()
@@ -36,3 +36,4 @@ namespace Ninject.WindowsPhone8Tests
         }
     }
 }
+
