@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.props')" />
-  <Import Project="..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.props')" />
+  <Import Project="..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -21,7 +21,7 @@
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <AppxBundle>Never</AppxBundle>
-    <NuGetPackageImportStamp>d1bfaf29</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>fcb253df</NuGetPackageImportStamp>
     <PackageCertificateThumbprint>317B339C1FEFCC4F4D20EF5F5771106C5F455D7B</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>Ninject.Tests.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
@@ -209,23 +209,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\..\packages\FluentAssertions.3.1.229\lib\win8\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=3.2.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FluentAssertions.3.2.1\lib\win8\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="FluentAssertions.Core">
-      <HintPath>..\..\packages\FluentAssertions.3.1.229\lib\win8\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="FluentAssertions.Core, Version=3.2.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FluentAssertions.3.2.1\lib\win8\FluentAssertions.Core.dll</HintPath>
     </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\xunit.abstractions.2.0.0-beta4-build2738\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.abstractions.dll</HintPath>
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0-beta5-build2785\lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid\xunit.abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.assert, Version=2.0.0.2738, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+    <Reference Include="xunit.assert, Version=2.0.0.2785, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\xunit.assert.2.0.0-beta4-build2738\lib\portable-net45+win+wpa81+wp80+monoandroid+monotouch10\xunit.assert.dll</HintPath>
+      <HintPath>..\..\packages\xunit.assert.2.0.0-beta5-build2785\lib\portable-net45+aspnetcore50+win+wpa81+wp80+monoandroid+monotouch10\xunit.assert.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.core, Version=2.0.0.2738, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+    <Reference Include="xunit.core, Version=2.0.0.2785, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\xunit.core.2.0.0-beta4-build2738\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid\xunit.core.dll</HintPath>
+      <HintPath>..\..\packages\xunit.core.2.0.0-beta5-build2785\lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid\xunit.core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
@@ -245,13 +246,13 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.props'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.targets'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.props'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.targets'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.targets'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.targets'))" />
   </Target>
-  <Import Project="..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.targets" Condition="Exists('..\..\packages\xunit.runner.visualstudio.0.99.8\build\win8\xunit.runner.visualstudio.targets')" />
-  <Import Project="..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.targets" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta4-build2738\build\win8\xunit.core.targets')" />
+  <Import Project="..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.targets" Condition="Exists('..\..\packages\xunit.runner.visualstudio.win8.0.99.9-build1021\build\win8\xunit.runner.visualstudio.win8.targets')" />
+  <Import Project="..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.targets" Condition="Exists('..\..\packages\xunit.core.2.0.0-beta5-build2785\build\win8\xunit.core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

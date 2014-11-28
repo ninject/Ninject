@@ -34,7 +34,7 @@
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
-            Assert.DoesNotThrow(() => kernel.Resolve(request));
+            kernel.Resolve(request);
         }
 
         [Fact]
@@ -56,7 +56,7 @@
         [Fact]
         public void DoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => kernel.Get<TwoWayPropertyFoo>());
+            kernel.Get<TwoWayPropertyFoo>();
         }
 
         [Fact]
@@ -83,7 +83,8 @@
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
-            Assert.DoesNotThrow(() => kernel.Resolve(request));
+            
+            kernel.Resolve(request);
         }
 
         [Fact]
@@ -105,7 +106,7 @@
         [Fact]
         public void DoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => kernel.Get<ThreeWayPropertyFoo>());
+            kernel.Get<ThreeWayPropertyFoo>();
         }
 
         [Fact]
