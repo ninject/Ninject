@@ -1,17 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30626.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E299B94-5F07-49DE-8226-55EDC56F13E3}"
-	ProjectSection(SolutionItems) = preProject
-		build-release.cmd = build-release.cmd
-		build.cmd = build.cmd
-		LICENSE.txt = LICENSE.txt
-		Portable.CommonServiceLocator.NinjectAdapter.nuspec = Portable.CommonServiceLocator.NinjectAdapter.nuspec
-		Portable.Ninject.nuspec = Portable.Ninject.nuspec
-		README.markdown = README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F70D1D4-2ED2-45A8-89D8-6444B24DC2A8}"
 	ProjectSection(SolutionItems) = preProject
@@ -65,6 +57,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Wpa81.Tests", "src\Ninject.Wpa81.Tests\Ninject.Wpa81.Tests.csproj", "{09A7BE45-2A38-4087-87E5-FCC842D0742A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Android.Tests", "src\Ninject.Android.Tests\Ninject.Android.Tests.csproj", "{87B049E5-878F-4694-9E83-D5A74C653039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.iOS-Unified", "src\Ninject\Ninject.iOS-Unified.csproj", "{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -500,6 +494,22 @@ Global
 		{87B049E5-878F-4694-9E83-D5A74C653039}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{87B049E5-878F-4694-9E83-D5A74C653039}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{87B049E5-878F-4694-9E83-D5A74C653039}.Release|x86.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

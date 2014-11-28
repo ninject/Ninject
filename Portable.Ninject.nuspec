@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Portable.Ninject</id>
-    <version>3.3</version>
+    <version>3.3.1</version>
     <title>Ninject for Portable Class Libraries</title>
     <authors>Oren Novotny</authors>
     <owners />
@@ -14,7 +14,7 @@
     <description>
       Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
 
-      Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8, iOS and Android
+      Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8, iOS (Classic and Unified) and Android
     </description>
     <summary>IoC container for .NET</summary>
     <releaseNotes>Xamarin support for iOS and Android</releaseNotes>
@@ -23,9 +23,9 @@
   <files>
 
     <!-- PCL -->
-    <file src="src\Ninject\bin\PCL\Release\Ninject.dll" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid\Ninject.dll" />
-    <file src="src\Ninject\bin\PCL\Release\Ninject.pdb" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid\Ninject.pdb" />
-    <file src="src\Ninject\bin\PCL\Release\Ninject.xml" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid\Ninject.xml" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.dll" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.dll" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.pdb" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.pdb" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.xml" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.xml" />
 
     <!-- .NET 4 -->
     <file src="src\Ninject\bin\Net4\Release\Ninject.dll" target="lib\net40-client\Ninject.dll" />
@@ -56,10 +56,15 @@
     <file src="src\Ninject\bin\sl\Release\Ninject.pdb" target="lib\sl5\Ninject.pdb" />
     <file src="src\Ninject\bin\sl\Release\Ninject.xml" target="lib\sl5\Ninject.xml" />
 
-     <!-- iOS --> 
+     <!-- iOS Classic --> 
     <file src="src\Ninject\bin\iPhone\Release\Ninject.dll" target="lib\monotouch\Ninject.dll" />
     <file src="src\Ninject\bin\iPhone\Release\Ninject.pdb" target="lib\monotouch\Ninject.pdb" />
     <file src="src\Ninject\bin\iPhone\Release\Ninject.xml" target="lib\monotouch\Ninject.xml" />
+
+    <!-- iOS Unified -->
+    <file src="src\Ninject\bin\iOS-Unified\Release\Ninject.dll" target="lib\Xamarin.iOS\Ninject.dll" />
+    <file src="src\Ninject\bin\iOS-Unified\Release\Ninject.pdb" target="lib\Xamarin.iOS\Ninject.pdb" />
+    <file src="src\Ninject\bin\iOS-Unified\Release\Ninject.xml" target="lib\Xamarin.iOS\Ninject.xml" />
 
      <!-- Android --> 
     <file src="src\Ninject\bin\Android\Release\Ninject.dll" target="lib\monoandroid\Ninject.dll" />
