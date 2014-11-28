@@ -26,7 +26,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iOS-Unified\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -35,7 +35,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <DocumentationFile>bin\iOS-Unified\Release\Ninject.XML</DocumentationFile>
     <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;MONO;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
-  </PropertyGroup> 
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -222,7 +223,7 @@
     <Compile Include="Syntax\ModuleLoadExtensions.cs" />
     <Compile Include="Syntax\ResolutionExtensions.cs" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Folder Include="Syntax\Activation\Blocks\" />
     <Folder Include="Syntax\Activation\Caching\" />
     <Folder Include="Syntax\Activation\Providers\" />
