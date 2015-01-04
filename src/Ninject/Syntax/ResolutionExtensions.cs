@@ -297,7 +297,7 @@ namespace Ninject
         /// <typeparam name="T">The service to resolve.</typeparam>
         /// <param name="root">The resolution root.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public static bool CanResolve<T>(this IResolutionRoot root, params IParameter[] parameters)
         {
             return CanResolve(root, typeof(T), null, parameters, false, true);
@@ -310,7 +310,7 @@ namespace Ninject
         /// <param name="root">The resolution root.</param>
         /// <param name="name">The name of the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public static bool CanResolve<T>(this IResolutionRoot root, string name, params IParameter[] parameters)
         {
             return CanResolve(root, typeof(T), b => b.Name == name, parameters, false, true);
@@ -323,7 +323,7 @@ namespace Ninject
         /// <param name="root">The resolution root.</param>
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public static bool CanResolve<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
         {
             return CanResolve(root, typeof(T), constraint, parameters, false, true);
@@ -335,8 +335,8 @@ namespace Ninject
         /// <param name="root">The resolution root.</param>
         /// <param name="service">The service to resolve.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
-        public static object CanResolve(this IResolutionRoot root, Type service, params IParameter[] parameters)
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        public static bool CanResolve(this IResolutionRoot root, Type service, params IParameter[] parameters)
         {
             return CanResolve(root, service, null, parameters, false, true);
         }
@@ -348,8 +348,8 @@ namespace Ninject
         /// <param name="service">The service to resolve.</param>
         /// <param name="name">The name of the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
-        public static object CanResolve(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        public static bool CanResolve(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
         {
             return CanResolve(root, service, b => b.Name == name, parameters, false, true);
         }
@@ -361,8 +361,8 @@ namespace Ninject
         /// <param name="service">The service to resolve.</param>
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
-        /// <returns>An instance of the service.</returns>
-        public static object CanResolve(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        public static bool CanResolve(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
         {
             return CanResolve(root, service, constraint, parameters, false, true);
         }
