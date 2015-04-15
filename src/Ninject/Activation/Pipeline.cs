@@ -36,6 +36,7 @@ namespace Ninject.Activation
         public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
             Ensure.ArgumentNotNull(strategies, "strategies");
+            Ensure.ArgumentNotNull(activationCache, "activationCache");
             this.Strategies = strategies.ToList();
             this.activationCache = activationCache;
         }
@@ -53,6 +54,7 @@ namespace Ninject.Activation
         public void Activate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(reference, "reference");
             if (!this.activationCache.IsActivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Activate(context, reference));
@@ -67,6 +69,7 @@ namespace Ninject.Activation
         public void Deactivate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(reference, "reference");
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Deactivate(context, reference));
