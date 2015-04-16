@@ -1,6 +1,7 @@
 namespace Ninject.Activation.Strategies
 {
     using Ninject.Activation.Caching;
+    using Ninject.Infrastructure;
 
     /// <summary>
     /// Adds all activated instances to the activation cache.
@@ -18,6 +19,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="activationCache">The activation cache.</param>
         public ActivationCacheStrategy(IActivationCache activationCache)
         {
+            Ensure.ArgumentNotNull(activationCache, "activationCache");
             this.activationCache = activationCache;
         }
 
