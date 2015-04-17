@@ -2,10 +2,10 @@
 //
 // Author: Remo Gloor (remo.gloor@bbv.ch)
 // Copyright (c) 2010, bbv Software Engineering AG.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -28,23 +28,37 @@ namespace Ninject.Infrastructure.Language
         const BindingFlags Flags = DefaultFlags;
 #endif
 
-#if !MONO
-        private static MethodInfo parentDefinitionMethodInfo;
+        private static readonly IParentDefinitionStrategy parentDefinitionStrategy;
+        private static readonly ICustomAttributesForMemberInfoStrategy customAttributesStrategy;
 
-        private static MethodInfo ParentDefinitionMethodInfo
+        static ExtensionsForMemberInfo()
         {
-            get
+#if MEDIUM_TRUST
+            parentDefinitionStrategy = new TraversingParentDefinitionStrategy();
+#else
+            if (RuntimeMethodInfoBasedParentDefinitionStrategy.IsAvailable)
             {
-                if (parentDefinitionMethodInfo == null)
-                {
-                    var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
-                    parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
-                }
-
-                return parentDefinitionMethodInfo;
+                parentDefinitionStrategy = new RuntimeMethodInfoBasedParentDefinitionStrategy();
             }
-        }
+            else
+            {
+                parentDefinitionStrategy = new TraversingParentDefinitionStrategy();
+            }
 #endif
+
+#if !NET_35
+            if (RuntimeEnvironment.IsMonoOnFramework40OrGreater())
+            {
+                customAttributesStrategy = new TraversingCustomAttributesStrategy();
+            }
+            else
+            {
+                customAttributesStrategy = new StandardDotNetCustomAttributesStrategy();
+            }
+#else
+            customAttributesStrategy = new TraversingCustomAttributesStrategy();
+#endif
+        }
 
         /// <summary>
         /// Determines whether the specified member has attribute.
@@ -133,17 +147,7 @@ namespace Ninject.Infrastructure.Language
         /// <returns></returns>
         public static object[] GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35 && !MONO_40
-            return Attribute.GetCustomAttributes(member, attributeType, inherited);
-#else
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                return GetCustomAttributes(propertyInfo, attributeType, inherited);
-            }
-
-            return member.GetCustomAttributes(attributeType, inherited);
-#endif
+            return customAttributesStrategy.GetCustomAttributesExtended(member, attributeType, inherited);
         }
 
         private static PropertyInfo GetParentDefinition(PropertyInfo property)
@@ -163,25 +167,7 @@ namespace Ninject.Infrastructure.Language
 
         private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
         {
-#if MEDIUM_TRUST || MONO
-            var baseDefinition = method.GetBaseDefinition(); 
-            var type = method.DeclaringType.BaseType;
-            MethodInfo result = null;
-            while (result == null && type != null)
-            {
-                result = type.GetMethods(flags).Where(m => m.GetBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
-                type = type.BaseType;
-            }
-
-            return result;
-#else
-            if (ParentDefinitionMethodInfo == null)
-            {
-                return null;
-            }
-
-            return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
-#endif
+            return parentDefinitionStrategy.GetParentDefinition(method, flags);
         }
 
         private static bool IsDefined(PropertyInfo element, Type attributeType, bool inherit)
@@ -212,32 +198,6 @@ namespace Ninject.Infrastructure.Language
             return false;
         }
 
-        private static object[] GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
-        {
-            if (inherit)
-            {
-                if (InternalGetAttributeUsage(attributeType).Inherited)
-                {
-                    var attributeUsages = new Dictionary<Type, bool>();
-                    var attributes = new List<object>();
-                    attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false));
-                    for (var info = GetParentDefinition(propertyInfo);
-                         info != null;
-                         info = GetParentDefinition(info))
-                    {
-                        object[] customAttributes = info.GetCustomAttributes(attributeType, false);
-                        AddAttributes(attributes, customAttributes, attributeUsages);
-                    }
-
-                    var result = Array.CreateInstance(attributeType, attributes.Count) as object[];
-                    Array.Copy(attributes.ToArray(), result, result.Length);
-                    return result;
-                }
-            }
-
-            return propertyInfo.GetCustomAttributes(attributeType, inherit);
-        }
-
         private static void AddAttributes(List<object> attributes, object[] customAttributes, Dictionary<Type, bool> attributeUsages)
         {
             foreach (object attribute in customAttributes)
@@ -259,6 +219,123 @@ namespace Ninject.Infrastructure.Language
         {
             object[] customAttributes = type.GetCustomAttributes(typeof(AttributeUsageAttribute), true);
             return (AttributeUsageAttribute)customAttributes[0];
-        } 
+        }
+
+        private interface IParentDefinitionStrategy
+        {
+            MethodInfo GetParentDefinition(MethodInfo method, BindingFlags flags);
+        }
+
+        private class RuntimeMethodInfoBasedParentDefinitionStrategy : IParentDefinitionStrategy
+        {
+            private static MethodInfo parentDefinitionMethodInfo;
+
+            private MethodInfo ParentDefinitionMethodInfo
+            {
+                get
+                {
+                    if (parentDefinitionMethodInfo == null)
+                    {
+                        var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
+                        parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
+                    }
+
+                    return parentDefinitionMethodInfo;
+                }
+            }
+
+            public MethodInfo GetParentDefinition(MethodInfo method, BindingFlags flags)
+            {
+                if (ParentDefinitionMethodInfo == null)
+                {
+                    return null;
+                }
+
+                return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
+            }
+
+            internal static bool IsAvailable
+            {
+                get {
+                    var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
+                    if (runtimeAssemblyInfoType == null)
+                    {
+                        return false;
+                    }
+                    parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
+                    return parentDefinitionMethodInfo != null;
+                }
+            }
+        }
+
+        private class TraversingParentDefinitionStrategy : IParentDefinitionStrategy
+        {
+            public MethodInfo GetParentDefinition(MethodInfo method, BindingFlags flags)
+            {
+                var baseDefinition = method.GetBaseDefinition();
+                var type = method.DeclaringType.BaseType;
+                MethodInfo result = null;
+                while (result == null && type != null)
+                {
+                    result = type.GetMethods(flags).SingleOrDefault(m => m.GetBaseDefinition().Equals(baseDefinition));
+                    type = type.BaseType;
+                }
+
+                return result;
+            }
+        }
+
+        private interface ICustomAttributesForMemberInfoStrategy
+        {
+            object[] GetCustomAttributesExtended(MemberInfo member, Type attributeType, bool inherited);
+        }
+
+        private class TraversingCustomAttributesStrategy : ICustomAttributesForMemberInfoStrategy
+        {
+            public object[] GetCustomAttributesExtended(MemberInfo member, Type attributeType, bool inherited)
+            {
+                var propertyInfo = member as PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    return GetCustomAttributes(propertyInfo, attributeType, inherited);
+                }
+
+                return member.GetCustomAttributes(attributeType, inherited);
+            }
+
+            private static object[] GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
+            {
+                if (inherit)
+                {
+                    if (InternalGetAttributeUsage(attributeType).Inherited)
+                    {
+                        var attributeUsages = new Dictionary<Type, bool>();
+                        var attributes = new List<object>();
+                        attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false));
+                        for (var info = GetParentDefinition(propertyInfo);
+                             info != null;
+                             info = GetParentDefinition(info))
+                        {
+                            object[] customAttributes = info.GetCustomAttributes(attributeType, false);
+                            AddAttributes(attributes, customAttributes, attributeUsages);
+                        }
+
+                        var result = Array.CreateInstance(attributeType, attributes.Count) as object[];
+                        Array.Copy(attributes.ToArray(), result, result.Length);
+                        return result;
+                    }
+                }
+
+                return propertyInfo.GetCustomAttributes(attributeType, inherit);
+            }
+        }
+
+        private class StandardDotNetCustomAttributesStrategy : ICustomAttributesForMemberInfoStrategy
+        {
+            public object[] GetCustomAttributesExtended(MemberInfo member, Type attributeType, bool inherited)
+            {
+                return Attribute.GetCustomAttributes(member, attributeType, inherited);
+            }
+        }
     }
 }
