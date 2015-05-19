@@ -38,6 +38,13 @@ namespace Ninject.Infrastructure.Language
                 if (parentDefinitionMethodInfo == null)
                 {
                     var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
+                    if(runtimeAssemblyInfoType == null)
+                    {
+                        //RuntimeMethodInfo is an unpublished internal API, its not part of the API contract
+                        //therefore it doesn't exist on mono and is not garentied to exist in any future microsoft.net
+                        //if this returns null we need to fall back to the public reflection APIs
+                        return null;
+                    }
                     parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
                 }
 
@@ -160,10 +167,8 @@ namespace Ninject.Infrastructure.Language
 
             return null;
         }
-
-        private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
+        private static MethodInfo GetParentDefinitionUsingPublicReflectionApi(this MethodInfo method, BindingFlags flags)
         {
-#if MEDIUM_TRUST || MONO
             var baseDefinition = method.GetBaseDefinition(); 
             var type = method.DeclaringType.BaseType;
             MethodInfo result = null;
@@ -174,10 +179,16 @@ namespace Ninject.Infrastructure.Language
             }
 
             return result;
+        }
+
+        private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
+        {
+#if MEDIUM_TRUST
+            return GetParentDefinitionUsingPublicReflectionApi(method, flags);
 #else
             if (ParentDefinitionMethodInfo == null)
             {
-                return null;
+                return GetParentDefinitionUsingPublicReflectionApi(method, flags);
             }
 
             return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
