@@ -39,6 +39,7 @@ namespace Ninject.Activation.Caching
         /// <param name="cachePruner">The cache pruner.</param>
         public ActivationCache(ICachePruner cachePruner)
         {
+            Ensure.ArgumentNotNull(cachePruner, "cachePruner");
             cachePruner.Start(this);
         }
         

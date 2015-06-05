@@ -57,6 +57,7 @@ namespace Ninject.Modules
         public CompiledModuleLoaderPlugin(IKernel kernel, IAssemblyNameRetriever assemblyNameRetriever)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(assemblyNameRetriever, "assemblyNameRetriever");
             this.Kernel = kernel;
             this.assemblyNameRetriever = assemblyNameRetriever;
         }
