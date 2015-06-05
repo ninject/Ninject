@@ -446,7 +446,6 @@ Global
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|iPhoneSimulator.Deploy.0 = Release|iPhoneSimulator
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|Mixed Platforms.ActiveCfg = Release|iPhone
-		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|Mixed Platforms.Build.0 = Release|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|Mixed Platforms.Deploy.0 = Release|iPhone
 		{EE8989C3-2C73-4941-9F7E-5470344E9661}.Release|x86.ActiveCfg = Release|iPhone
 		{09A7BE45-2A38-4087-87E5-FCC842D0742A}.Debug|Any CPU.ActiveCfg = Debug|x86

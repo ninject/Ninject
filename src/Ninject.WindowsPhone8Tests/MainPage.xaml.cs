@@ -8,31 +8,28 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Ninject.WindowsPhone8Tests.Resources;
-using Xunit.Runner.Wp8;
+
+using Xunit.Runners.UI;
 
 namespace Ninject.WindowsPhone8Tests
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class MainPage : RunnerApplicationPage
     {
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+        }
 
-
-            var mainPage = new MainPageControl();
-
+        protected override void OnInitializeRunner()
+        {
             // tests can be inside the main assembly
-            mainPage.AddTestAssembly(Assembly.GetExecutingAssembly());
+            AddTestAssembly(Assembly.GetExecutingAssembly());
 
             // otherwise you need to ensure that the test assemblies will 
-            // become part of the app xap
-          //  mainPage.AddTestAssembly(typeof(PortableTests).Assembly);
-
-
-            mainPage.FinishInit(this);
-            Content = mainPage;
+            // become part of the app bundle
+            //AddTestAssembly(typeof(PortableTests).Assembly);
         }
     }
 }
+

@@ -45,6 +45,7 @@ namespace Ninject.iOS.Tests
 			// crash the application (to ensure it's ended) and return to springboard
 			TerminateAfterExecution = true;
 #endif
-            return base.FinishedLaunching(application, launchOptions);        }
+            return base.FinishedLaunching(app, options);
+		}
     }
 }
