@@ -18,9 +18,9 @@ namespace CommonServiceLocator.NinjectAdapter
 {
     public class NinjectServiceLocator : ServiceLocatorImplBase
     {
-        public IKernel Kernel { get; private set; }
+        public IReadonlyKernel Kernel { get; private set; }
 
-        public NinjectServiceLocator(IKernel kernel)
+        public NinjectServiceLocator(IReadonlyKernel kernel)
         {
             Kernel = kernel;
         }

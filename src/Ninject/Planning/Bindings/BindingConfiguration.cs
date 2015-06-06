@@ -26,6 +26,7 @@ namespace Ninject.Planning.Bindings
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
+    using Ninject.Selection;
 
     /// <summary>
     /// The configuration of a binding.
@@ -42,6 +43,7 @@ namespace Ninject.Planning.Bindings
             this.ActivationActions = new List<Action<IContext, object>>();
             this.DeactivationActions = new List<Action<IContext, object>>();
             this.ScopeCallback = StandardScopeCallbacks.Transient;
+            this.InitializeProviderCallback = s => { };
         }
 
         /// <summary>
@@ -104,7 +106,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The provider to use.</returns>
         public IProvider GetProvider(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return this.ProviderCallback(context);
         }
 
@@ -115,7 +116,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
         public object GetScope(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return this.ScopeCallback(context);
         }
 
@@ -126,8 +126,12 @@ namespace Ninject.Planning.Bindings
         /// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
         public bool Matches(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
             return this.Condition == null || this.Condition(request);
-        }    
+        }
+
+        /// <summary>
+        /// Gets or sets the InitizalizeProviderCallback action
+        /// </summary>
+        public Action<ISelector> InitializeProviderCallback { get; set; }
     }
 }

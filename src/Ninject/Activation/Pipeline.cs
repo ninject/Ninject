@@ -15,7 +15,6 @@ namespace Ninject.Activation
     using Ninject.Activation.Caching;
     using Ninject.Activation.Strategies;
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
 
     /// <summary>
@@ -35,8 +34,11 @@ namespace Ninject.Activation
         /// <param name="activationCache">The activation cache.</param>
         public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
+<<<<<<< HEAD
             Ensure.ArgumentNotNull(strategies, "strategies");
             Ensure.ArgumentNotNull(activationCache, "activationCache");
+=======
+>>>>>>> readonlykernel
             this.Strategies = strategies.ToList();
             this.activationCache = activationCache;
         }
@@ -53,8 +55,11 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Activate(IContext context, InstanceReference reference)
         {
+<<<<<<< HEAD
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(reference, "reference");
+=======
+>>>>>>> readonlykernel
             if (!this.activationCache.IsActivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Activate(context, reference));
@@ -68,8 +73,11 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Deactivate(IContext context, InstanceReference reference)
         {
+<<<<<<< HEAD
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(reference, "reference");
+=======
+>>>>>>> readonlykernel
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Deactivate(context, reference));

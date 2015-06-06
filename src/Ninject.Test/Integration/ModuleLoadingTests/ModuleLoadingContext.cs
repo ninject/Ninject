@@ -10,7 +10,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     {
         public ModuleLoadingContext()
         {
-            this.Kernel = new StandardKernel();
+            this.Kernel = new KernelConfiguration();
         }
 
         public void Dispose()
@@ -18,7 +18,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Dispose();
         }
 
-        protected StandardKernel Kernel { get; private set; }
+        protected KernelConfiguration Kernel { get; private set; }
 
         protected string GetRegularMockModuleName()
         {

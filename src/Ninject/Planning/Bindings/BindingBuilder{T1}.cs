@@ -24,9 +24,7 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif    
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -43,13 +41,11 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder{T1}"/> class.
         /// </summary>
         /// <param name="binding">The binding to build.</param>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="settings">The ninject configuration settings.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBinding binding, IKernel kernel, string serviceNames)
-            : base(binding.BindingConfiguration, kernel, serviceNames)
+        public BindingBuilder(IBinding binding, INinjectSettings settings, string serviceNames)
+            : base(binding.BindingConfiguration, settings, serviceNames)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
             this.Binding = binding;
         }
 #pragma warning restore 1584
@@ -65,10 +61,10 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToSelf()
         {
-            this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service);
+            StandardProvider.AssignProviderCallback(this.BindingConfiguration, this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>
@@ -92,7 +88,6 @@ namespace Ninject.Planning.Bindings
             return this.InternalTo<T1>(implementation);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
@@ -105,7 +100,6 @@ namespace Ninject.Planning.Bindings
         {
             return this.InternalToConstructor(newExpression);
         }
-#endif
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.

@@ -1,3 +1,10 @@
+Version 4.0
+- Removed support for .NET 3.5
+- Removed support for Windows Phone 7.x
+- Removed support for .NET compact framework
+- Removed support for Mono < 3.x
+- Removed support for Silverlight < 5
+
 Version 3.2
 ---------------
 - Add: bool IRequest.ForceUnique: In case there is an uncoditional and a conditional binding, return the conditional one. In case there are multiple unconditional or conditional bindings, throw an exception.

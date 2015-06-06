@@ -42,8 +42,8 @@
 	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
 	<property name="build.assemblyversion" value="${version.major}.${version.minor}.0.0" dynamic="true"/>
 	<property name="build.config" value="debug" overwrite="false"/>
-	<property name="build.platform" value="net-3.5" overwrite="true"/>
-	<property name="build.target" value="net-3.5" overwrite="false"/>
+	<property name="build.platform" value="net-4.0" overwrite="true"/>
+	<property name="build.target" value="net-4.0" overwrite="false"/>
 	<property name="build.asminfo" value="SharedAssemblyInfo.cs"/>
 	
 	<property name="OsMajorVersion" value="${version::get-major(operating-system::get-version(environment::get-operating-system()))}" dynamic="true" />
@@ -147,7 +147,7 @@
 				<attribute type="AssemblyCompanyAttribute" value="${product.company}"/>
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright © ${product.duration} ${product.company} and contributors"/>
 				<attribute type="AssemblyVersionAttribute" value="${build.assemblyversion}"/>
-				<attribute type="AssemblyFileVersionAttribute" value="${build.version}" unless="${build.platform == 'netcf-3.5'}"/>
+				<attribute type="AssemblyFileVersionAttribute" value="${build.version}" />
 				<attribute type="ComVisibleAttribute" value="false"/>
 				<attribute type="CLSCompliantAttribute" value="true" if="${product.clsCompliant}"/>
 			</attributes>
@@ -211,32 +211,6 @@
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
 
-	<target name="config-platform-net-3.5-client">
-		<property name="nant.settings.currentframework" value="net-3.5-client"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
-		<property name="nuget.platform" value="net35"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="net-3.5" overwrite="true"/>
-    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
-	</target>
-
-	<target name="config-platform-net-3.5">
-		<property name="nant.settings.currentframework" value="net-3.5"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
-		<property name="nuget.platform" value="net35-full"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="net-3.5" overwrite="true"/>
-    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
-	</target>
-
-	<target name="config-platform-net-3.5_medium_trust">
-		<property name="nant.settings.currentframework" value="net-3.5-client"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MEDIUM_TRUST"/>
-		<property name="nuget.add" value="false"/>
-		<property name="build.platform" value="net-3.5_medium_trust" overwrite="true"/>
-    	<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.exe" dynamic="true"/>
-	</target>
-
 	<target name="config-platform-net-4.0-client">
 		<property name="nant.settings.currentframework" value="net-4.0-client"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,NO_PARTIAL_TRUST"/>
@@ -289,30 +263,6 @@
 		<property name="build.platform" value="net-4.5" overwrite="true"/>
 	</target>
 
-	<target name="config-platform-silverlight-2.0">
-		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.platform" value="sl2"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="silverlight-2.0" overwrite="true"/>
-	</target>
-
-	<target name="config-platform-silverlight-3.0">
-		<property name="nant.settings.currentframework" value="silverlight-3.0"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.platform" value="sl3"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="silverlight-3.0" overwrite="true"/>
-	</target>
-
-	<target name="config-platform-silverlight-4.0">
-		<property name="nant.settings.currentframework" value="silverlight-4.0"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_PARTIAL_TRUST"/>
-		<property name="nuget.platform" value="sl4"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="silverlight-4.0" overwrite="true"/>
-	</target>
-
 	<target name="config-platform-silverlight-5.0">
 		<property name="nant.settings.currentframework" value="silverlight-5.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_50,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_PARTIAL_TRUST"/>
@@ -321,36 +271,6 @@
 		<property name="build.platform" value="silverlight-5.0" overwrite="true"/>
 	</target>
 	
-	<target name="config-platform-silverlight-4.0-wp7">
-		<property name="nant.settings.currentframework" value="silverlight-wp7"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
-		<property name="nuget.platform" value="sl3-wp"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="silverlight-4.0-wp7" overwrite="true"/>
-	</target>
-
-	<target name="config-platform-silverlight-4.0-wp71">
-		<property name="nant.settings.currentframework" value="silverlight-wp71"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WINDOWS_PHONE,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_SKIP_VISIBILITY,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS,NO_MOQ"/>
-		<property name="nuget.platform" value="sl4-windowsphone71"/>
-		<property name="nuget.add" value="true"/>
-		<property name="build.platform" value="silverlight-4.0-wp71" overwrite="true"/>
-	</target>
-
-	<target name="config-platform-netcf-3.5">
-		<property name="nant.settings.currentframework" value="netcf-3.5"/>
-		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_35,NO_LCG,NO_ASSEMBLY_SCANNING,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_DEBUG_SYMBOLS"/>
-		<property name="nuget.add" value="false"/>
-		<property name="build.platform" value="netcf-3.5" overwrite="true"/>
-	</target>
-	
-	<target name="config-platform-mono-3.5">
-		<property name="nant.settings.currentframework" value="mono-3.5"/>
-		<property name="build.defines" value="${global.build.defines},NET,NET_35,MONO,MONO_35,NO_GENERIC_MOQ" />
-		<property name="nuget.add" value="false"/>
-		<property name="build.platform" value="mono-3.5" overwrite="true"/>
-	</target>
-
 	<target name="config-platform-mono-4.0">
 		<property name="nant.settings.currentframework" value="mono-4.0"/>
 		<property name="build.defines" value="${global.build.defines},NET,NET_40,MONO,MONO_40,NO_GENERIC_MOQ" />
@@ -359,7 +279,7 @@
 		<property name="path.tools.xunit.console" value="${path.tools.xunit}/xunit.console.clr4.exe"/>
 	</target>
 
-	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5')}">
+	<target name="test" depends="compile-tests" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight'))}">
 		<exec 
 			program="${path.tools.xunit.console}" 
 			workingdir="${current.path.test}" 
@@ -691,8 +611,8 @@
 				<include name="FluentAssertions.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${target}" unless="${string::contains(build.platform, 'net-4.0')}">
-			<fileset basedir="${path.tools.fluentassertions}/Net-3.5">
+    <copy todir="${target}" if="${string::contains(build.platform, 'mono-4.')}">
+			<fileset basedir="${path.tools.fluentassertions}/mono-2.0">
 				<include name="FluentAssertions.dll"/>
 			</fileset>
 		</copy>
@@ -704,11 +624,6 @@
 	</target>
 	
 	<target name="CopyMoq-Target">
-		<copy todir="${target}" if="${not(string::contains(build.platform, 'net-4.')) and not(string::contains(build.platform, 'mono-4.'))}">
-			<fileset basedir="${path.tools.moq}/net35">
-				<include name="Moq.dll"/>
-			</fileset>
-		</copy>
 		<copy todir="${target}" if="${string::contains(build.platform, 'net-4.') or string::contains(build.platform, 'mono-4.')}">
 			<fileset basedir="${path.tools.moq}/net40">
 				<include name="Moq.dll"/>
@@ -749,13 +664,13 @@
 	</target>
 	
 	<target name="CopyMoq-SL-Target">
-		<copy todir="${target}" if="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
+		<copy todir="${target}" if="${string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight4">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core.dll"/>
 			</fileset>
 		</copy>
-		<copy todir="${target}" unless="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}">
+		<copy todir="${target}" unless="${string::contains(build.platform, 'silverlight-5.0')}">
 			<fileset basedir="${path.tools.moq}/silverlight3">
 				<include name="Moq.Silverlight.dll"/>
 				<include name="Castle.Core-Silverlight.dll"/>

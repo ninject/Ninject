@@ -21,6 +21,8 @@ using Ninject.Selection;
 
 namespace Ninject.Planning.Strategies
 {
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Adds a directive to plans indicating which constructor should be injected during activation.
     /// </summary>
@@ -43,11 +45,8 @@ namespace Ninject.Planning.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
-
-            Selector = selector;
-            InjectorFactory = injectorFactory;
+            this.Selector = selector;
+            this.InjectorFactory = injectorFactory;
         }
 
         /// <summary>
@@ -57,12 +56,11 @@ namespace Ninject.Planning.Strategies
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
-
             IEnumerable<ConstructorInfo> constructors = Selector.SelectConstructorsForInjection(plan.Type);
             if(constructors == null)
                 return;
 
+<<<<<<< HEAD
             foreach(ConstructorInfo constructor in constructors)
             {
                 var hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
@@ -71,6 +69,17 @@ namespace Ninject.Planning.Strategies
                     {
                         HasInjectAttribute = hasInjectAttribute
                     });
+=======
+            foreach(ConstructorInfo constructor in constructors)
+            {
+                bool hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
+                var directive = new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)) 
+                {
+                     HasInjectAttribute = hasInjectAttribute
+                };
+
+                plan.Add(directive);
+>>>>>>> readonlykernel
             }
         }
     }

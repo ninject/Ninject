@@ -19,7 +19,9 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !SILVERLIGHT && !NETCF
+
+/* Temporary disabled feature
+#if !SILVERLIGHT
 namespace Ninject
 {
     using Ninject.Modules;
@@ -50,3 +52,4 @@ namespace Ninject
     }
 }
 #endif
+*/

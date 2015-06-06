@@ -21,7 +21,7 @@ namespace Ninject.Planning.Bindings
     /// </summary>
     public class BindingMetadata : IBindingMetadata
     {
-        private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> values = new Dictionary<string, object>();
 
         /// <summary>
         /// Gets or sets the binding's name.
@@ -35,8 +35,7 @@ namespace Ninject.Planning.Bindings
         /// <returns><c>True</c> if such a piece of metadata exists; otherwise, <c>false</c>.</returns>
         public bool Has(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
-            return _values.ContainsKey(key);
+            return this.values.ContainsKey(key);
         }
 
         /// <summary>
@@ -47,7 +46,6 @@ namespace Ninject.Planning.Bindings
         /// <returns>The metadata value.</returns>
         public T Get<T>(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
             return Get(key, default(T));
         }
 
@@ -59,8 +57,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The metadata value, or the default value if none was set.</returns>
         public T Get<T>(string key, T defaultValue)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
-            return _values.ContainsKey(key) ? (T)_values[key] : defaultValue;
+            return this.values.ContainsKey(key) ? (T)this.values[key] : defaultValue;
         }
 
         /// <summary>
@@ -70,8 +67,7 @@ namespace Ninject.Planning.Bindings
         /// <param name="value">The metadata value.</param>
         public void Set(string key, object value)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
-            _values[key] = value;
+            this.values[key] = value;
         }
     }
 }

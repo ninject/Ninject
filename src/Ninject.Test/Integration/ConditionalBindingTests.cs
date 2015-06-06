@@ -69,26 +69,20 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void GivenBothImplicitAndExplicitConditionalBindings_ThenExplicitBindingWillResolve()
         {
-            IWeapon weapon = kernel.Get<Sword>();
-            // make the binding conditional
-            kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            weapon.Should().BeOfType<Sword>();
+            kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
+            kernel.Bind<Sword>().To<ShortSword>().When(ctx => true);
 
-            kernel.Bind<Sword>().To<ShortSword>().When(_ => true);
-            weapon = kernel.Get<Sword>();
+            var weapon = kernel.Get<Sword>();
             weapon.Should().BeOfType<ShortSword>();
         }
 
         [Fact]
         public void GivenADefaultAndAConditionalImplicitBinding_ThenConditionalBindingWillResolve()
         {
-            IWeapon weapon = kernel.Get<Sword>();
-            // make the binding conditional
-            kernel.GetBindings(typeof (Sword)).First().Condition = b => true;
-            weapon.Should().BeOfType<Sword>();
-
+            kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
             kernel.Bind<Sword>().To<ShortSword>();
-            weapon = kernel.Get<Sword>();
+
+            var weapon = kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();
         }
 

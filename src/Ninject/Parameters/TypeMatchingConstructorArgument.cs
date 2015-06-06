@@ -50,9 +50,6 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public TypeMatchingConstructorArgument(Type type, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
-
             this.ValueCallback = valueCallback;
             this.ShouldInherit = shouldInherit;
             this.type = type;
@@ -103,7 +100,6 @@ namespace Ninject.Parameters
         /// <returns>The value for the parameter.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
             return this.ValueCallback(context, target);
         }
 

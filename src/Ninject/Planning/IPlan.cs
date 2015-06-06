@@ -26,9 +26,14 @@ namespace Ninject.Planning
         Type Type { get; }
 
         /// <summary>
+<<<<<<< HEAD
         /// Gets the constructor injection directives.
         /// </summary>
         /// <value>The constructor injection directives.</value>
+=======
+        /// Gets the directives defined in the plan.
+        /// </summary>
+>>>>>>> readonlykernel
         IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; }
 
         /// <summary>

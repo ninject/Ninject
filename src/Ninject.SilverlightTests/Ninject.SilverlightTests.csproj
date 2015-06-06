@@ -75,7 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions.Silverlight">
-      <HintPath>..\..\tools\FluentAssertions\Silverlight-4.0\FluentAssertions.Silverlight.dll</HintPath>
+      <HintPath>..\..\tools\FluentAssertions\Silverlight-5.0\FluentAssertions.Silverlight.dll</HintPath>
     </Reference>
     <Reference Include="Moq.Silverlight">
       <HintPath>..\..\tools\moq\silverlight4\Moq.Silverlight.dll</HintPath>
@@ -346,6 +346,9 @@
     </Compile>
     <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
       <Link>Unit\StartableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\TestObject.cs">
+      <Link>Unit\TestObject.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

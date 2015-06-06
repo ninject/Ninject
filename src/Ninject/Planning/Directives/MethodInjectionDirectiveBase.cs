@@ -40,11 +40,8 @@ namespace Ninject.Planning.Directives
         /// <param name="injector">The injector that will be triggered.</param>
         protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
         {
-            Ensure.ArgumentNotNull(method, "method");
-            Ensure.ArgumentNotNull(injector, "injector");
-
-            Injector = injector;
-            Targets = CreateTargetsFromParameters(method);
+            this.Injector = injector;
+            this.Targets = CreateTargetsFromParameters(method);
         }
 
         /// <summary>

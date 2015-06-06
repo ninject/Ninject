@@ -59,8 +59,6 @@ namespace Ninject.Activation.Caching
         /// <param name="pruneable">The pruneable that will be pruned.</param>
         public void Start(IPruneable pruneable)
         {
-            Ensure.ArgumentNotNull(pruneable, "pruneable");
-
             this.caches.Add(pruneable);
             if (this.timer == null)
             {
@@ -80,12 +78,8 @@ namespace Ninject.Activation.Caching
 
             using (var signal = new ManualResetEvent(false))
             {
-#if !NETCF
                 this.timer.Dispose(signal);
                 signal.WaitOne();
-#else
-                this.timer.Dispose();
-#endif
 
                 this.timer = null;
                 this.caches.Clear();

@@ -30,12 +30,12 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
+        public IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, Type service)
         {
             if (!service.IsGenericType || service.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
                 return Enumerable.Empty<IBinding>();
 
-            return bindings[service.GetGenericTypeDefinition()].ToEnumerable();
+            return bindings[service.GetGenericTypeDefinition()];
         }
     }
 }

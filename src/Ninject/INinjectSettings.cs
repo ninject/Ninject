@@ -105,5 +105,11 @@ namespace Ninject
         /// <param name="key">The setting's key.</param>
         /// <param name="value">The setting's value.</param>
         void Set(string key, object value);
+
+        /// <summary>
+        /// Clones the ninject settings into a new instance
+        /// </summary>
+        /// <returns>A new instance of the ninject settings</returns>
+        INinjectSettings Clone();
     }
 }

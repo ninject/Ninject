@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
+using Ninject.Syntax;
+
 #endregion
 
 namespace Ninject.Activation
@@ -25,7 +27,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the kernel that is driving the activation.
         /// </summary>
-        IKernel Kernel { get; }
+        IReadonlyKernel Kernel { get; }
 
         /// <summary>
         /// Gets the request.
@@ -74,5 +76,11 @@ namespace Ninject.Activation
         /// </summary>
         /// <returns>The resolved instance.</returns>
         object Resolve();
+
+        /// <summary>
+        /// Builds the plan for the specified type.
+        /// </summary>
+        /// <param name="type">The type used by the context.</param>
+        void BuildPlan(Type type);
     }
 }
