@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -25,11 +25,6 @@ namespace Ninject.Planning.Directives
         /// The base .ctor definition.
         /// </summary>
         public ConstructorInfo Constructor { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the <see cref="Constructor"/> has inject attribute.
-        /// </summary>
-        public bool HasInjectAttribute { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this constructor has an inject attribute.

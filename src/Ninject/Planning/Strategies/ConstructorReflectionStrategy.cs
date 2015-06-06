@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -60,26 +60,15 @@ namespace Ninject.Planning.Strategies
             if(constructors == null)
                 return;
 
-<<<<<<< HEAD
             foreach(ConstructorInfo constructor in constructors)
             {
                 var hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
-                plan.Add(
-                    new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor))
-                    {
-                        HasInjectAttribute = hasInjectAttribute
-                    });
-=======
-            foreach(ConstructorInfo constructor in constructors)
-            {
-                bool hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
-                var directive = new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor)) 
+                var directive = new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor))
                 {
                      HasInjectAttribute = hasInjectAttribute
                 };
 
                 plan.Add(directive);
->>>>>>> readonlykernel
             }
         }
     }
