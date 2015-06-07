@@ -131,7 +131,12 @@ namespace Ninject.Tests.Unit.CacheTests
             throw new NotImplementedException();
         }
 
-        public IKernel Kernel { get; set; }
+        public void BuildPlan(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadonlyKernel Kernel { get; set; }
 
         public IRequest Request { get; set; }
 

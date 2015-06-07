@@ -37,6 +37,7 @@ namespace Ninject.Activation
         {
             Ensure.ArgumentNotNull(strategies, "strategies");
             Ensure.ArgumentNotNull(activationCache, "activationCache");
+
             this.Strategies = strategies.ToList();
             this.activationCache = activationCache;
         }
@@ -55,6 +56,7 @@ namespace Ninject.Activation
         {
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(reference, "reference");
+
             if (!this.activationCache.IsActivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Activate(context, reference));
@@ -70,6 +72,7 @@ namespace Ninject.Activation
         {
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(reference, "reference");
+
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Deactivate(context, reference));

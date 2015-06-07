@@ -11,7 +11,7 @@ namespace Ninject.Activation.Caching
     /// </summary>
     public class ActivationCache : NinjectComponent, IActivationCache, IPruneable
     {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO
+#if WINDOWS_PHONE || MONO
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
@@ -94,7 +94,7 @@ namespace Ninject.Activation.Caching
 #else
             lock (this.activatedObjects)
             {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
+#if WINDOWS_PHONE || MONO || PCL
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
 #else
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance));
@@ -114,7 +114,7 @@ namespace Ninject.Activation.Caching
 #else
             lock (this.deactivatedObjects)
             {
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
+#if WINDOWS_PHONE || MONO || PCL
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
 #else
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance));
@@ -135,7 +135,7 @@ namespace Ninject.Activation.Caching
 #if PCL
             throw new NotImplementedException();
 #else
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
+#if WINDOWS_PHONE || MONO || PCL
             return this.activatedObjects.ContainsKey(instance);
 #else
             return this.activatedObjects.Contains(instance);
@@ -155,7 +155,7 @@ namespace Ninject.Activation.Caching
 #if PCL
             throw new NotImplementedException();
 #else
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
+#if WINDOWS_PHONE || MONO || PCL
             return this.deactivatedObjects.ContainsKey(instance);
 #else
             return this.deactivatedObjects.Contains(instance);
@@ -183,7 +183,7 @@ namespace Ninject.Activation.Caching
 #endif
         }
 
-#if SILVERLIGHT_20 || SILVERLIGHT_30 || WINDOWS_PHONE || NETCF || MONO || PCL
+#if WINDOWS_PHONE || MONO || PCL
         /// <summary>
         /// Removes all dead objects.
         /// </summary>

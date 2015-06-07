@@ -64,6 +64,16 @@ namespace Ninject.Activation.Blocks
         }
 
         /// <summary>
+        /// Injects the specified existing instance, without managing its lifecycle.
+        /// </summary>
+        /// <param name="instance">The instance to inject.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        public void Inject(object instance, params IParameter[] parameters)
+        {
+            Parent.Inject(instance, parameters);
+        }
+
+        /// <summary>
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>

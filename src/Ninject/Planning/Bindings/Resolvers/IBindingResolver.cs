@@ -29,6 +29,6 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service);
+        IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, Type service);
     }
 }

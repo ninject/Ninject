@@ -15,7 +15,7 @@ namespace Ninject.Infrastructure.Language
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    
+
 
     /// <summary>
     /// Extensions for MemberInfo
@@ -78,15 +78,7 @@ namespace Ninject.Infrastructure.Language
             {
                 return IsDefined(propertyInfo, type, true);
             }
-#if NETCF
-            // Workaround for the CF bug that derived generic methods throw an exception for IsDefined
-            // This means that the Inject attribute can not be defined on base methods for CF framework
-            var methodInfo = member as MethodInfo;
-            if (methodInfo != null)
-            {
-                return methodInfo.IsDefined(type, false);
-            }
-#endif
+            
             return member.IsDefined(type, true);
         }
 
@@ -180,7 +172,7 @@ namespace Ninject.Infrastructure.Language
 #endif
             GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35 && !MONO_40 && !WINRT && !__IOS__ && !ANDROID
+#if !MONO_40 && !WINRT && !__IOS__ && !ANDROID
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;

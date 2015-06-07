@@ -37,10 +37,10 @@ namespace Ninject.Syntax
     public abstract class BindingRoot : DisposableObject, IBindingRoot
     {
         /// <summary>
-        /// Gets the kernel.
+        /// Gets the ninject settings.
         /// </summary>
-        /// <value>The kernel.</value>
-        protected abstract IKernel KernelInstance { get; }
+        /// <value>The ninject settings.</value>
+        public abstract INinjectSettings Settings { get; }
 
         /// <summary>
         /// Declares a binding for the specified service.
@@ -57,7 +57,7 @@ namespace Ninject.Syntax
             var binding = new Binding(service);
             this.AddBinding(binding);
 
-            return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
+            return new BindingBuilder<T>(binding, this.Settings, service.Format());
 #endif
         }
 
@@ -77,7 +77,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
 #endif
         }
 
@@ -99,7 +99,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
 #endif
         }
 
@@ -123,7 +123,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
 #endif
         }
 
@@ -151,7 +151,7 @@ namespace Ninject.Syntax
                 this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));                
             }
 
-            return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+            return new BindingBuilder<object>(firstBinding, this.Settings, string.Join(", ", services.Select(service => service.Format()).ToArray()));
 #endif
         }
 

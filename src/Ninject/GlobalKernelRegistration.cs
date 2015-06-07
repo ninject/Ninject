@@ -39,7 +39,7 @@ namespace Ninject
 #endif
         private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>(); 
 
-        internal static void RegisterKernelForType(IKernel kernel, Type type)
+        internal static void RegisterKernelForType(IReadonlyKernel kernel, Type type)
         {
  #if PCL
             throw new NotImplementedException();
@@ -65,7 +65,7 @@ namespace Ninject
 #endif
         }
 
-        internal static void UnregisterKernelForType(IKernel kernel, Type type)
+        internal static void UnregisterKernelForType(IReadonlyKernel kernel, Type type)
         {
 #if PCL
             throw new NotImplementedException();
@@ -79,7 +79,7 @@ namespace Ninject
         /// Performs an action on all registered kernels.
         /// </summary>
         /// <param name="action">The action.</param>
-        protected void MapKernels(Action<IKernel> action)
+        protected void MapKernels(Action<IReadonlyKernel> action)
         {
 #if PCL
             throw new NotImplementedException();
@@ -97,7 +97,7 @@ namespace Ninject
             {
                 foreach (var weakReference in registration.Kernels)
                 {
-                    var kernel = weakReference.Target as IKernel;
+                    var kernel = weakReference.Target as IReadonlyKernel;
                     if (kernel != null)
                     {
                         action(kernel);

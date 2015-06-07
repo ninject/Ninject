@@ -3,15 +3,15 @@
 	<property name="version" value="0.0.0.0" overwrite="true"/>
 	<property name="product.name" value="Ninject" overwrite="false"/>
 	<property name="product.company" value="Ninject Project Contributors" overwrite="false"/>
-	<property name="product.duration" value="2007-2012" overwrite="false"/>
+	<property name="product.duration" value="2007-2014" overwrite="false"/>
 	<property name="product.description" value="Lightweight dependency injection for .NET" overwrite="false"/>
-	<property name="product.platforms" value="net-4.5,net-3.5-client,net-4.0-client,net-4.5,net-3.5_medium_trust,net-4.0_medium_trust,net-4.5_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,silverlight-4.0-wp71,silverlight-4.0-wp7,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
-	<property name="product.buildserverPlatforms" value="net-3.5-client,net-4.0-client,net-3.5_medium_trust,net-4.0_medium_trust,silverlight-5.0,silverlight-4.0,silverlight-3.0,silverlight-2.0,mono-3.5,mono-4.0,netcf-3.5"  overwrite="false"/>
+	<property name="product.platforms" value="net-4.5,net-4.0-client,net-4.5,net-4.0_medium_trust,net-4.5_medium_trust,silverlight-5.0,mono-4.0"  overwrite="false"/>
+	<property name="product.buildserverPlatforms" value="net-4.0-client,net-4.0_medium_trust,silverlight-5.0,mono-4.0"  overwrite="false"/>
 	<property name="dependencies" value=""	overwrite="false"/>
 	
 	<property name="product.assembly.testmodule" value="${product.name}.Tests.TestModule.dll" overwrite="false"/>
 	<property name="product.assembly.testassembly" value="${product.name}.Tests.TestAssembly.dll" overwrite="false"/>
-    <property name="current.path.testmodules" value="${path.build}/${build.platform}/tests/TestModules" dynamic="true"/>
+        <property name="current.path.testmodules" value="${path.build}/${build.platform}/tests/TestModules" dynamic="true"/>
 
 	<include buildfile="Ninject.include" />
 	<target name="all" depends="core csl test silverlight-test"/>
@@ -20,8 +20,7 @@
 	<target name="core" depends="init">
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build}/${product.assembly}" doc="${current.path.build}/${product.docfile}" keyfile="${path.src}/${product.keyfile}">
 			<arg line="/filealign:512"/>
-      <arg value="-sdk:2" if="${string::contains(build.platform, 'mono-3.5')}"/>
-      <arg value="-sdk:4" if="${string::contains(build.platform, 'mono-4.0')}"/>
+      <arg line="/sdk:4.0" if="${string::contains(build.platform, 'mono-4.0')}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="${product.name}/**/*.cs"/>
@@ -30,7 +29,6 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
-				<include name="${path.lib}/System.Linq.dll" if="${string::contains(build.platform, 'wp7') and not(string::contains(build.platform, 'wp71'))}"/>
 			</references>
 			<nowarn>
 				<warning number="1711"/>
@@ -43,9 +41,8 @@
 		<mkdir dir="${current.path.build.extensions}" if="${not(directory::exists(current.path.build.extensions))}"/>
 		
 		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}" output="${current.path.build.extensions}/CommonServiceLocator.NinjectAdapter.dll">
-			<arg line="/filealign:512"/>
-      <arg value="-sdk:2" if="${string::contains(build.platform, 'mono-3.5')}"/>
-      <arg value="-sdk:4" if="${string::contains(build.platform, 'mono-4.0')}"/>
+      <arg line="/filealign:512"/>
+      <arg line="/sdk:4.0" if="${string::contains(build.platform, 'mono-4.0')}"/>
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="CommonServiceLocator.NinjectAdapter/**/*.cs"/>
@@ -98,7 +95,7 @@
 		</csc>
 	</target>
 
-	<target name="compile-tests" depends="compile-test-modules" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight') or build.platform == 'netcf-3.5')}">
+	<target name="compile-tests" depends="compile-test-modules" unless="${skip.tests}" if="${not(string::contains(build.platform, 'silverlight'))}">
 		<mkdir dir="${current.path.test}"/>
 		<call target="CopyDefaultTestInfrastructureAssemblies"/>
 
@@ -108,7 +105,7 @@
 				<include name="test.bar"/>
 			</fileset>
 		</copy>
-		<csc noconfig="true" nostdlib="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+		<csc noconfig="true" nostdlib="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
 		 output="${current.path.test}/${product.assembly.test}">
 			<sources basedir="${path.src}">
 				<include name="${product.name}.Test/**/*.cs"/>
@@ -135,7 +132,7 @@
 		<mkdir dir="${current.path.test}"/>
 		<call target="CopyDefaultTestInfrastructureAssemblies-SL"/>
 
-		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+		<csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
 		 output="${current.path.test}/${product.assembly.silverlighttestdll}">
 			<sources basedir="${path.src}">
 				<include name="${product.name}.Test/*.cs"/>
@@ -152,12 +149,8 @@
 				<include name="System.Windows.dll"/>
 				<include name="System.Windows.Browser.dll"/>
 				<include name="System.Net.dll"/>
-				<include name="Microsoft.Phone.dll" if="${string::contains(build.platform, 'wp7')}"/>
-				<include name="Microsoft.Phone.Interop.dll" if="${string::contains(build.platform, 'wp7')}"/>
-				<include name="Moq.Silverlight.dll" unless="${string::contains(build.platform, 'wp7')}"/>
-				<include name="Castle.Core.dll" if="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}"/>
-				<include name="Castle.Core-Silverlight.dll" unless="${string::contains(build.platform, 'silverlight-4.0') or string::contains(build.platform, 'silverlight-5.0')}"/>
-				<include name="Castle.DynamicProxy-Silverlight.dll" unless="${build.platform == 'silverlight-4.0' or build.platform == 'silverlight-5.0'}"/>
+				<include name="Moq.Silverlight.dll" />
+				<include name="Castle.Core.dll" />
 				<include name="FluentAssertions.Silverlight.dll"/>
 				<include name="xunit.runner.silverlight.dll"/>
 				<include name="xunit-silverlight.dll"/>
@@ -173,14 +166,8 @@
 				<include name="*.dll" />
 				<exclude name="CommonServiceLocator.NinjectAdapter.dll" />
 			</fileset>
-			<fileset basedir="${path.src}/${product.name}.SilverlightTests">
-				<include name="AppManifest.xaml" if="${string::contains(build.platform, 'silverlight-4.0')}"/>
-			</fileset>
 			<fileset basedir="${path.src}/${product.name}.SilverlightTests/Silverlight3">
-				<include name="AppManifest.xaml" unless="${string::contains(build.platform, 'silverlight-4.0')}"/>
-			</fileset>
-		    <fileset basedir="${path.lib}">
-				<include name="System.Linq.dll" if="${string::contains(build.platform, 'wp7') and not(string::contains(build.platform, 'wp71'))}"/>
+				<include name="AppManifest.xaml"/>
 			</fileset>
 		</zip>
 	</target>

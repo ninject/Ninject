@@ -62,9 +62,6 @@ namespace Ninject.Selection
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
-
             ConstructorScorer = constructorScorer;
             InjectionHeuristics = injectionHeuristics.ToList();
         }
@@ -76,8 +73,6 @@ namespace Ninject.Selection
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
         public  virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
-
 #if !WINRT
             var constructors = type.GetConstructors( Flags );
             return constructors.Length == 0 ? null : constructors;
@@ -96,7 +91,6 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
             List<PropertyInfo> properties = new List<PropertyInfo>();
             
 #if !WINRT
@@ -110,7 +104,7 @@ namespace Ninject.Selection
                     .Select(p => p.GetPropertyFromDeclaredType(p))
                     .Where(p => this.InjectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
 #endif
-#if !SILVERLIGHT 
+#if !SILVERLIGHT
             if (this.Settings.InjectParentPrivateProperties)
             {
                 for (Type parentType = type
@@ -157,7 +151,6 @@ namespace Ninject.Selection
         /// <returns>A series of the selected methods.</returns>
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
 #if WINRT
             return type.GetRuntimeMethods().FilterPublic(Settings.InjectNonPublic).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
 #else

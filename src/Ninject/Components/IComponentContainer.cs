@@ -20,9 +20,9 @@ namespace Ninject.Components
     public interface IComponentContainer : IDisposable
     {
         /// <summary>
-        /// Gets or sets the kernel that owns the component container.
+        /// Get or sets the kernel configuration
         /// </summary>
-        IKernel Kernel { get; set; }
+        IKernelConfiguration KernelConfiguration { get; set; }
 
         /// <summary>
         /// Registers a component in the container.

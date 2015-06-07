@@ -50,7 +50,6 @@ namespace Ninject.Planning
         /// <param name="strategies">The strategies to execute during planning.</param>
         public Planner(IEnumerable<IPlanningStrategy> strategies)
         {
-            Ensure.ArgumentNotNull(strategies, "strategies");
             this.Strategies = strategies.ToList();
         }
 
@@ -69,8 +68,7 @@ namespace Ninject.Planning
 #if PCL
             throw new NotImplementedException();
 #else
-            Ensure.ArgumentNotNull(type, "type");
-
+            
 #if !WINRT
             this.plannerLock.AcquireReaderLock(Timeout.Infinite);
 #else
@@ -99,7 +97,6 @@ namespace Ninject.Planning
         /// <returns>The created plan.</returns>
         protected virtual IPlan CreateEmptyPlan(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
             return new Plan(type);
         }
 

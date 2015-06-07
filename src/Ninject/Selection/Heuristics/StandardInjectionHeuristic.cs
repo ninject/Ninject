@@ -30,8 +30,6 @@ namespace Ninject.Selection.Heuristics
         /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
         public virtual bool ShouldInject(MemberInfo member)
         {
-            Ensure.ArgumentNotNull(member, "member");
-
             var propertyInfo = member as PropertyInfo;
 
             if (propertyInfo != null)

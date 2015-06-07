@@ -29,16 +29,15 @@ namespace Ninject.Modules
         /// <summary>
         /// Gets or sets the kernel into which modules will be loaded.
         /// </summary>
-        public IKernel Kernel { get; private set; }
+        public IKernelConfiguration KernelConfiguration { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
-        /// <param name="kernel">The kernel into which modules will be loaded.</param>
-        public ModuleLoader(IKernel kernel)
+        /// <param name="kernelConfiguration">The kernel configuration into which modules will be loaded.</param>
+        public ModuleLoader(IKernelConfiguration kernelConfiguration)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Kernel = kernel;
+            KernelConfiguration = kernelConfiguration;
         }
 #if !PCL
         /// <summary>
@@ -56,7 +55,7 @@ namespace Ninject.Modules
 #if PCL
             throw new NotImplementedException();
 #else
-            var plugins = Kernel.Components.GetAll<IModuleLoaderPlugin>();
+            var plugins = KernelConfiguration.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
 #if !WINRT
@@ -75,7 +74,7 @@ namespace Ninject.Modules
 #if WINRT
                     await 
 #endif               
-                        plugin.LoadModules(fileGroup);
+                    plugin.LoadModules(fileGroup);
             }
 #endif
         }

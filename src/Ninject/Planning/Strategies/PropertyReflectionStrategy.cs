@@ -41,9 +41,6 @@ namespace Ninject.Planning.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public PropertyReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
-
             Selector = selector;
             InjectorFactory = injectorFactory;
         }
@@ -55,8 +52,6 @@ namespace Ninject.Planning.Strategies
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
-
             foreach (PropertyInfo property in Selector.SelectPropertiesForInjection(plan.Type))
                 plan.Add(new PropertyInjectionDirective(property, InjectorFactory.Create(property)));
         }

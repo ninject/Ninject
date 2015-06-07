@@ -23,6 +23,13 @@ namespace Ninject.Syntax
     public interface IResolutionRoot : IFluentSyntax
     {
         /// <summary>
+        /// Injects the specified existing instance, without managing its lifecycle.
+        /// </summary>
+        /// <param name="instance">The instance to inject.</param>
+        /// <param name="parameters">The parameters to pass to the request.</param>
+        void Inject(object instance, params IParameter[] parameters);
+        
+        /// <summary>
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>

@@ -34,8 +34,8 @@ namespace Ninject.Planning.Targets
     public abstract class Target : ITarget
 #endif
     {
-        private readonly Future<Func<IBindingMetadata, bool>> _constraint;
-        private readonly Future<bool> _isOptional;
+        private readonly Future<Func<IBindingMetadata, bool>> constraint;
+        private readonly Future<bool> isOptional;
 
         /// <summary>
         /// Gets the member that contains the target.
@@ -63,7 +63,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public Func<IBindingMetadata, bool> Constraint
         {
-            get { return _constraint; }
+            get { return this.constraint; }
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public bool IsOptional
         {
-            get { return _isOptional; }
+            get { return this.isOptional; }
         }
 
         /// <summary>
@@ -99,14 +99,11 @@ namespace Ninject.Planning.Targets
         /// <param name="site">The site represented by the target.</param>
         protected Target(MemberInfo member, T site)
         {
-            Ensure.ArgumentNotNull(member, "member");
-            Ensure.ArgumentNotNull(site, "site");
+            this.Member = member;
+            this.Site = site;
 
-            Member = member;
-            Site = site;
-
-            _constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
-            _isOptional = new Future<bool>(ReadOptionalFromTarget);
+            this.constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
+            this.isOptional = new Future<bool>(ReadOptionalFromTarget);
         }
 
 #else
@@ -121,8 +118,8 @@ namespace Ninject.Planning.Targets
 
             Member = member;
 
-            _constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
-            _isOptional = new Future<bool>(ReadOptionalFromTarget);
+            constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
+            isOptional = new Future<bool>(ReadOptionalFromTarget);
         }
 #endif
 
@@ -146,7 +143,6 @@ namespace Ninject.Planning.Targets
 #if PCL
             throw new NotImplementedException();
 #else
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.GetCustomAttributesExtended(attributeType, inherit);
 #endif
         }
@@ -194,7 +190,6 @@ namespace Ninject.Planning.Targets
 #if PCL
             throw new NotImplementedException();
 #else
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
             return Site.IsDefined(attributeType, inherit);
 #endif
         }
@@ -224,8 +219,6 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         public object ResolveWithin(IContext parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
-
             if (Type.IsArray)
             {
                 Type service = Type.GetElementType();
@@ -263,9 +256,6 @@ namespace Ninject.Planning.Targets
         /// <returns>A series of values that are available for injection.</returns>
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsOptional = true;
             return parent.Kernel.Resolve(request);
@@ -279,9 +269,6 @@ namespace Ninject.Planning.Targets
         /// <returns>The value that is to be injected.</returns>
         protected virtual object GetValue(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
-
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
             return parent.Kernel.Resolve(request).SingleOrDefault();

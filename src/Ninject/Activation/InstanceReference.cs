@@ -37,7 +37,7 @@ namespace Ninject.Activation
         [SecuritySafeCritical]
         public bool Is<T>()
         {
-#if !SILVERLIGHT && !WINDOWS_PHONE && !NETCF && !MONO && !PCL && !WINRT && FALSE
+#if !SILVERLIGHT && !WINDOWS_PHONE && !MONO && !PCL && !WINRT
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(Instance)
                 && System.Runtime.Remoting.RemotingServices.GetRealProxy(Instance).GetType().Name == "RemotingProxy")
             {

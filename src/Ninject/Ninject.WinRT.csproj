@@ -80,14 +80,19 @@
     <Compile Include="Attributes\InjectAttribute.cs" />
     <Compile Include="Attributes\NamedAttribute.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="BindingPrecedenceComparer.cs" />
     <Compile Include="Components\ComponentContainer.cs" />
     <Compile Include="Components\IComponentContainer.cs" />
     <Compile Include="Components\INinjectComponent.cs" />
     <Compile Include="Components\NinjectComponent.cs" />
     <Compile Include="GlobalKernelRegistration.cs" />
     <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="IBindingPrecedenceComparer.cs" />
+    <Compile Include="IHaveNinjectComponents.cs" />
+    <Compile Include="IHaveNinjectSettings.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="IKernel.cs" />
+    <Compile Include="IKernelConfiguration.cs" />
     <Compile Include="Infrastructure\BaseWeakReference.cs" />
     <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
     <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
@@ -95,7 +100,6 @@
     <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\Future.cs" />
     <Compile Include="Infrastructure\IHaveBindingConfiguration.cs" />
-    <Compile Include="Infrastructure\IHaveKernel.cs" />
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
@@ -116,8 +120,10 @@
     <Compile Include="Injection\MethodInjector.cs" />
     <Compile Include="Injection\PropertyInjector.cs" />
     <Compile Include="Injection\ReflectionInjectorFactory.cs" />
+    <Compile Include="IReadonlyKernel.cs" />
     <Compile Include="IStartable.cs" />
     <Compile Include="KernelBase.cs" />
+    <Compile Include="KernelConfiguration.cs" />
     <Compile Include="Modules\AssemblyNameRetriever.cs" />
     <Compile Include="Modules\CompiledModuleLoaderPlugin.cs" />
     <Compile Include="Modules\IAssemblyNameRetriever.cs" />
@@ -174,6 +180,7 @@
     <Compile Include="Planning\Targets\PropertyTarget.cs" />
     <Compile Include="Planning\Targets\Target.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadonlyKernel.cs" />
     <Compile Include="Selection\Heuristics\IConstructorScorer.cs" />
     <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
     <Compile Include="Selection\Heuristics\SpecificConstructorSelector.cs" />

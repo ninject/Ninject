@@ -32,7 +32,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+        public IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
             return HasDefaultValue(request.Target)

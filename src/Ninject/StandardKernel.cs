@@ -21,6 +21,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+
 namespace Ninject
 {
     using Ninject.Activation;
@@ -37,6 +39,7 @@ namespace Ninject
     /// <summary>
     /// The standard implementation of a kernel.
     /// </summary>
+    [Obsolete("Use StandardKernelConfiguration and StandardReadonlyKernel")]
     public class StandardKernel : KernelBase
     {
         /// <summary>
@@ -54,73 +57,6 @@ namespace Ninject
         /// <param name="modules">The modules to load into the kernel.</param>
         public StandardKernel(INinjectSettings settings, params INinjectModule[] modules) : base(settings, modules)
         {
-        }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        /// <value>The kernel.</value>
-        protected override IKernel KernelInstance
-        {
-            get
-            {
-                return this;
-            }
-        }
-        
-        /// <summary>
-        /// Adds components to the kernel during startup.
-        /// </summary>
-        protected override void AddComponents()
-        {
-            Components.Add<IPlanner, Planner>();
-            Components.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
-            Components.Add<IPlanningStrategy, PropertyReflectionStrategy>();
-            Components.Add<IPlanningStrategy, MethodReflectionStrategy>();
-
-            Components.Add<ISelector, Selector>();
-            Components.Add<IConstructorScorer, StandardConstructorScorer>();
-            Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
-
-            Components.Add<IPipeline, Pipeline>();
-            if (!Settings.ActivationCacheDisabled)
-            {
-                Components.Add<IActivationStrategy, ActivationCacheStrategy>();
-            }
-
-            Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
-            Components.Add<IActivationStrategy, MethodInjectionStrategy>();
-            Components.Add<IActivationStrategy, InitializableStrategy>();
-            Components.Add<IActivationStrategy, StartableStrategy>();
-            Components.Add<IActivationStrategy, BindingActionStrategy>();
-            Components.Add<IActivationStrategy, DisposableStrategy>();
-
-            Components.Add<IBindingResolver, StandardBindingResolver>();
-            Components.Add<IBindingResolver, OpenGenericBindingResolver>();
-
-            Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
-            Components.Add<IMissingBindingResolver, SelfBindingResolver>();
-
-#if !NO_LCG
-            if (!Settings.UseReflectionBasedInjection)
-            {
-                Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
-            }
-            else
-#endif
-            {
-                Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
-            }
-
-            Components.Add<ICache, Cache>();
-            Components.Add<IActivationCache, ActivationCache>();
-            Components.Add<ICachePruner, GarbageCollectionCachePruner>();
-
-            #if !NO_ASSEMBLY_SCANNING
-            Components.Add<IModuleLoader, ModuleLoader>();
-            Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
-            Components.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
-            #endif
         }
     }
 }

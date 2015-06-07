@@ -398,11 +398,11 @@ namespace Ninject
             return root.Resolve(request);
         }
 
-        private static T TryGet<T>(Func<IEnumerable<T>> iterator)
+        private static T TryGet<T>(Func<IEnumerable<T>> getResolutionCallback)
         {
             try
             {
-                return iterator().SingleOrDefault();
+                return getResolutionCallback().SingleOrDefault();
             }
             catch (ActivationException)
             {

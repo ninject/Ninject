@@ -22,13 +22,23 @@ namespace Ninject
     /// </summary>
     public class NinjectSettings : INinjectSettings
     {
-        private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> values;
 
         /// <summary>
-        /// Creates a settings object
+        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
         /// </summary>
-        public NinjectSettings()
+        public NinjectSettings() : this(new Dictionary<string, object>())
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
+        /// </summary>
+        /// <param name="values">Dependency injection for the settings values</param>
+        private NinjectSettings(IDictionary<string, object> values)
+        {
+            this.values = values;
+
 #if SILVERLIGHT
             InjectNonPublic = false;
             InjectParentPrivateProperties = false;
@@ -39,6 +49,7 @@ namespace Ninject
             UseReflectionBasedInjection = false;
 #endif
         }
+
 
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
@@ -157,7 +168,7 @@ namespace Ninject
         public T Get<T>(string key, T defaultValue)
         {
             object value;
-            return _values.TryGetValue(key, out value) ? (T)value : defaultValue;
+            return this.values.TryGetValue(key, out value) ? (T)value : defaultValue;
         }
 
         /// <summary>
@@ -167,7 +178,17 @@ namespace Ninject
         /// <param name="value">The setting's value.</param>
         public void Set(string key, object value)
         {
-            _values[key] = value;
+            this.values[key] = value;
+        }
+
+        /// <summary>
+        /// Clones the ninject settings into a new instance
+        /// </summary>
+        /// <returns>A new instance of the ninject settings</returns>
+        public INinjectSettings Clone()
+        {
+            var clonedValues = new Dictionary<string, object>(this.values);
+            return new NinjectSettings(clonedValues);
         }
     }
 }

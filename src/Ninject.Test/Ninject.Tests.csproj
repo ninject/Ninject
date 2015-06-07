@@ -154,6 +154,7 @@
     <Compile Include="Integration\SpecialResolutionTests.cs" />
     <Compile Include="Integration\SingletonScopeTests.cs" />
     <Compile Include="Integration\ActivationScopeTests.cs" />
+    <Compile Include="Unit\MultimapTests.cs" />
     <Compile Include="Unit\TestObject.cs" />
     <Compile Include="Unit\TypeMatchingConstructorArgumentTest.cs" />
     <None Include="packages.Ninject.Tests.config" />

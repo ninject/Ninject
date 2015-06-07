@@ -24,9 +24,7 @@
 namespace Ninject.Syntax
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif
     using Ninject.Activation;
 
     /// <summary>
@@ -108,7 +106,6 @@ namespace Ninject.Syntax
         IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstant<TImplementation>(TImplementation value)
             where TImplementation : T1;
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
@@ -118,6 +115,5 @@ namespace Ninject.Syntax
         IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstructor<TImplementation>(
             Expression<Func<IConstructorArgumentSyntax, TImplementation>> newExpression)
             where TImplementation : T1;
-#endif
     }
 }
