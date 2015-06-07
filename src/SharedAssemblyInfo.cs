@@ -17,6 +17,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyrightAttribute("Copyright © 2007-2014 Ninject Project Contributors and contributors")]
 [assembly: AssemblyVersionAttribute("4.0.0.0")]
 [assembly: AssemblyFileVersionAttribute("4.0.0.6")]
+#if !PCL
 [assembly: ComVisibleAttribute(false)]
+#endif
 [assembly: CLSCompliantAttribute(true)]
 

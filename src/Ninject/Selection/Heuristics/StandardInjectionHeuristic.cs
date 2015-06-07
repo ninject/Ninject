@@ -34,13 +34,14 @@ namespace Ninject.Selection.Heuristics
 
             if (propertyInfo != null)
             {
-#if !SILVERLIGHT
                 bool injectNonPublic = Settings.InjectNonPublic;
-#else
-                const bool injectNonPublic = false;
-#endif // !SILVERLIGHT
 
-                var setMethod = propertyInfo.GetSetMethod(injectNonPublic);
+                var setMethod = propertyInfo.SetMethod;
+                if (setMethod != null && !injectNonPublic)
+                {
+                    if (!setMethod.IsPublic)
+                        setMethod = null;
+                }
 
                 return member.HasAttribute(Settings.InjectAttribute) && setMethod != null;
             }

@@ -1,15 +1,15 @@
 //-------------------------------------------------------------------------------
 // <copyright file="Context.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2014 Ninject Project Contributors
-//   
+// 
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   You may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
-//   
+// 
 //       http://www.apache.org/licenses/LICENSE-2.0
 //   or
 //       http://www.microsoft.com/opensource/licenses.mspx
-//   
+// 
 //   Unless required by applicable law or agreed to in writing, software
 //   distributed under the License is distributed on an "AS IS" BASIS,
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,16 @@
 
 namespace Ninject.Activation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Ninject.Activation.Caching;
-    using Ninject.Infrastructure.Introspection;
-    using Ninject.Parameters;
-    using Ninject.Planning;
-    using Ninject.Planning.Bindings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Introspection;
+using Ninject.Parameters;
+using Ninject.Planning;
+using Ninject.Planning.Bindings;
 
     /// <summary>
     /// Contains information about the activation of a single instance.
@@ -55,10 +57,10 @@ namespace Ninject.Activation
             this.Planner = planner;
             this.Pipeline = pipeline;
 
-            if (binding.Service.IsGenericTypeDefinition)
+            if (binding.Service.GetTypeInfo().IsGenericTypeDefinition)
             {
-                this.HasInferredGenericArguments = true;
-                this.GenericArguments = request.Service.GetGenericArguments();
+                HasInferredGenericArguments = true;
+                GenericArguments = request.Service.GetTypeInfo().GenericTypeArguments;
             }
         }
 
@@ -117,17 +119,17 @@ namespace Ninject.Activation
                 this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
 
                 if (this.cachedScope != null)
-                {
+            {
                     lock (this.cachedScope)
-                    {
-                        return this.ResolveInternal(this.cachedScope);
-                    }
-                }
-                else
                 {
-                    return this.ResolveInternal(null);
+                        return this.ResolveInternal(this.cachedScope);
                 }
             }
+            else
+            {
+                return this.ResolveInternal(null);
+            }
+        }
             finally 
             {
                 this.cachedScope = null;

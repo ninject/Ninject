@@ -11,6 +11,11 @@
 using System;
 using System.Reflection;
 using Ninject.Infrastructure;
+#if WINRT
+using Ninject.Infrastructure.Language;
+using System.Collections.Generic;
+#endif
+
 #endregion
 
 namespace Ninject.Planning.Targets
@@ -18,7 +23,12 @@ namespace Ninject.Planning.Targets
     /// <summary>
     /// Represents an injection target for a <see cref="ParameterInfo"/>.
     /// </summary>
-    public class ParameterTarget : Target<ParameterInfo>
+    public class ParameterTarget :
+#if !WINRT
+        Target<ParameterInfo>
+#else
+        Target
+#endif
     {
         private readonly Future<object> defaultValue;
 
@@ -39,13 +49,33 @@ namespace Ninject.Planning.Targets
         }
 
 // Windows Phone doesn't support default values and returns null instead of DBNull.
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE 
         /// <summary>
         /// Gets a value indicating whether the target has a default value.
         /// </summary>
         public override bool HasDefaultValue
         {
-            get { return defaultValue.Value != DBNull.Value; }
+            get 
+            { 
+#if PCL
+            throw new NotImplementedException();
+#else
+#if WINRT
+                var val = defaultValue.Value;
+
+                if (val != null)
+                {
+                    var name = val.GetType().FullName;
+                    if (name == "System.DBNull") // WINRT doesn't expose DBNull as a type, but it's still returned as the default
+                        return false;
+
+                }
+                return true;
+#else
+                return defaultValue.Value != DBNull.Value; 
+#endif      
+#endif
+            }
         }
 
         /// <summary>
@@ -63,9 +93,43 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="method">The method that defines the parameter.</param>
         /// <param name="site">The parameter that this target represents.</param>
-        public ParameterTarget(MethodBase method, ParameterInfo site) : base(method, site)
+        public ParameterTarget(MethodBase method, ParameterInfo site) : base(method
+#if !WINRT
+            , site
+#endif
+            )
         {
             defaultValue = new Future<object>(() => site.DefaultValue);
+
+#if WINRT
+            Site = site;
+#endif
         }
+
+#if WINRT
+
+        public ParameterInfo Site { get; private set; }
+
+        public override IEnumerable<Attribute> GetCustomAttributes(bool inherit)
+        {
+            return Site.GetCustomAttributes(inherit);
+        }
+        public override IEnumerable<Attribute> GetCustomAttributes(Type attributeType, bool inherit)
+        {
+            Ensure.ArgumentNotNull(attributeType, "attributeType");
+            return Site.GetCustomAttributes(attributeType, inherit);
+        }
+
+        public override bool IsDefined(Type attributeType, bool inherit)
+        {
+            Ensure.ArgumentNotNull(attributeType, "attributeType");
+            return Site.IsDefined(attributeType, inherit);
+        }
+
+        protected override bool ReadOptionalFromTarget()
+        {
+            return Site.HasAttribute(typeof(OptionalAttribute));
+        }
+#endif
     }
 }

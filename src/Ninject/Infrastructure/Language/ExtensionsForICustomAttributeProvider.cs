@@ -8,13 +8,22 @@
 // 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Ninject.Infrastructure.Language
 {
     using System;
     using System.Reflection;
+    
+#if WINRT
+    using Ninject.Planning.Targets;
+#endif
 
     internal static class ExtensionsForICustomAttributeProvider
     {
+#if !WINRT
+
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {
             var memberInfo = member as MemberInfo;
@@ -26,7 +35,7 @@ namespace Ninject.Infrastructure.Language
             return member.IsDefined(type, true);
         }
 
-        public static object[] GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
+        public static IEnumerable<Attribute> GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             var memberInfo = member as MemberInfo;
             if (memberInfo != null)
@@ -34,7 +43,38 @@ namespace Ninject.Infrastructure.Language
                 return memberInfo.GetCustomAttributesExtended(attributeType, inherit);
             }
 
-            return member.GetCustomAttributes(attributeType, inherit);
+            return member.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
         }
+        
+#else
+
+        public static bool HasAttribute(this PropertyInfo member, Type type)
+        {
+            var memberInfo = member as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.HasAttribute(type);
+            }
+
+            return member.IsDefined(type, true);
+        }
+
+        public static bool HasAttribute(this ParameterInfo member, Type type)
+        {
+            return member.IsDefined(type, true);
+        }
+
+        public static bool HasAttribute(this ITarget member, Type type)
+        {
+            var memberInfo = member as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.HasAttribute(type);
+            }
+
+            return member.IsDefined(type, true);
+        }
+
+#endif
     }
 }

@@ -59,9 +59,18 @@ namespace Ninject.Tests.Unit
 
         public void TestIndexerHasAttribute(Type testObjectType, Type indexerType, Type attributeType, bool expectedResult)
         {
+#if !WINRT
             var propertyInfo =
                 testObjectType.GetProperties()
                     .First(pi => pi.Name == "Item" && pi.GetIndexParameters().Single().ParameterType == indexerType);
+#else
+            var propertyInfo =
+                testObjectType.GetRuntimeProperties()
+                              .First(pi => pi.Name == "Item" && pi.GetIndexParameters()
+                                                                  .Single()
+                                                                  .ParameterType == indexerType);
+#endif
+
             var hasInjectAttribute = propertyInfo.HasAttribute(attributeType);
 
             hasInjectAttribute.Should().Be(expectedResult);
@@ -92,14 +101,17 @@ namespace Ninject.Tests.Unit
 
         private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, object[] expectedAttributes)
         {
-            var propertyInfo = testObject.GetType()
-                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
 
-            attributes.Length.Should().Be(expectedAttributes.Length);
-            foreach (var expectedAttribute in expectedAttributes)
+            var propertyInfo = testObject.GetType()
+                                         .GetRuntimeProperties()
+                                         .Single(pi => pi.Name == attributeName);
+
+            var attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
+
+            attributes.Count().Should().Be(expectedAttributes.Length, "attrib: {0}, attribType: {1}", attributeName, attributeType.Name);
+            foreach (Attribute expectedAttribute in expectedAttributes)
             {
-                attributes.Should().Contain(expectedAttribute);
+                attributes.Should().Contain(expectedAttribute, "attrib: {0}, attribType: {1}", attributeName, attributeType.Name);
             }
         }
 
@@ -121,8 +133,15 @@ namespace Ninject.Tests.Unit
         
         private void TestHasAttribute(object testObject, string attributeName, Type attributeType, bool expectedValue)
         {
+#if !WINRT
             var propertyInfo = testObject.GetType()
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#else
+            var propertyInfo = testObject.GetType()
+                                         .GetRuntimeProperties()
+                                         .Single(pi => pi.Name == attributeName);
+#endif
+            
             bool hasAttribute = propertyInfo.HasAttribute(attributeType);
 
             hasAttribute.Should().Be(expectedValue);

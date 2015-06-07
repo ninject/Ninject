@@ -1,4 +1,6 @@
-﻿#if !NO_MOQ
+﻿
+
+#if !NO_MOQ
 namespace Ninject.Tests.Unit.PipelineTests
 {
     using System.Collections.Generic;
@@ -8,6 +10,7 @@ namespace Ninject.Tests.Unit.PipelineTests
     using Ninject.Activation;
     using Ninject.Activation.Caching;    
     using Ninject.Activation.Strategies;
+    using Ninject.Infrastructure.Language;
     using Xunit;
 
     public class PipelineContext

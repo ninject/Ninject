@@ -1,9 +1,10 @@
-﻿namespace Ninject
+﻿
+namespace Ninject
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Reflection;
     using Ninject.Components;
     using Ninject.Planning.Bindings;
 
@@ -25,7 +26,7 @@
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
-                                b => !b.Service.ContainsGenericParameters, // closed generics > open generics
+                                b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 

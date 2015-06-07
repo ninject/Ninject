@@ -10,8 +10,12 @@
 #region Using Directives
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+#if WINRT
+using System.Diagnostics;  
+#endif
 using Ninject.Activation;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Targets;
@@ -24,7 +28,7 @@ namespace Ninject.Infrastructure.Introspection
     /// <summary>
     /// Provides extension methods for string formatting
     /// </summary>
-    public static class FormatExtensions
+    public static class FormatExtensionsEx
     {
         /// <summary>
         /// Formats the activation path into a meaningful string representation.
@@ -46,6 +50,7 @@ namespace Ninject.Infrastructure.Introspection
                 return sw.ToString();
             }
         }
+
 
         /// <summary>
         /// Formats the given binding into a meaningful string representation. 
@@ -95,7 +100,6 @@ namespace Ninject.Infrastructure.Introspection
                 return sw.ToString();
             }
         }
-
         /// <summary>
         /// Formats the specified request into a meaningful string representation.
         /// </summary>
@@ -103,6 +107,9 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The request formatted as string.</returns>
         public static string Format(this IRequest request)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             using (var sw = new StringWriter())
             {
                 if (request.Target == null)
@@ -112,7 +119,45 @@ namespace Ninject.Infrastructure.Introspection
 
                 return sw.ToString();
             }
+#endif
         }
+
+#if WINRT
+        private static MemberTypes GetMemberType(this MemberInfo member)
+        {
+            if (member is FieldInfo)
+                return MemberTypes.Field;
+            if (member is ConstructorInfo)
+                return MemberTypes.Constructor;
+            if (member is PropertyInfo)
+                return MemberTypes.Property;
+            if (member is EventInfo)
+                return MemberTypes.Event;
+            if (member is MethodInfo)
+                return MemberTypes.Method;
+
+            /*
+            var typeInfo = member as Type;
+            Debug.Assert(typeInfo != null);
+            if (!typeInfo.IsPublic && !typeInfo.IsNotPublic)
+                return MemberTypes.NestedType;
+            */
+            return MemberTypes.TypeInfo;
+        } 
+
+        private enum MemberTypes
+        {
+            Field,
+            Event,
+            Constructor,
+            Property,
+            Method,
+            NestedType,
+            TypeInfo
+
+        }
+
+#endif
 
         /// <summary>
         /// Formats the specified target into a meaningful string representation..
@@ -121,9 +166,16 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The target formatted as string.</returns>
         public static string Format(this ITarget target)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             using (var sw = new StringWriter())
             {
+#if !WINRT
                 switch (target.Member.MemberType)
+#else
+                switch(target.Member.GetMemberType())
+#endif
                 {
                     case MemberTypes.Constructor:
                         sw.Write("parameter {0} of constructor", target.Name);
@@ -141,11 +193,17 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
+#if !WINRT
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
+                #else
+#endif
 
                 return sw.ToString();
             }
+#endif
+
         }
+
 
         /// <summary>
         /// Formats the specified type into a meaningful string representation..
@@ -154,9 +212,12 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             var friendlyName = GetFriendlyName(type);
 
-#if !MONO
+#if !MONO || __IOS__ || ANDROID
             if (friendlyName.Contains("AnonymousType"))
                 return "AnonymousType";
 #else
@@ -165,7 +226,11 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
+#if !WINRT
             switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
+#else
+            switch (friendlyName.ToLower())
+#endif
             {
                 case "int16": return "short";
                 case "int32": return "int";
@@ -185,12 +250,20 @@ namespace Ninject.Infrastructure.Introspection
                 case "decimal": return "decimal";
             }
 
+#if !WINRT
             var genericArguments = type.GetGenericArguments();
-            if(genericArguments.Length > 0)
+#else
+            var ti = type.GetTypeInfo();
+
+            var genericArguments =  ti.GenericTypeParameters.Union(ti.GenericTypeArguments).ToArray();
+#endif
+            if (genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);
-            
+
             return friendlyName;
+#endif
         }
+    
 
         private static string GetFriendlyName(Type type)
         {
@@ -242,12 +315,14 @@ namespace Ninject.Infrastructure.Introspection
             }
             if (startIndex < friendlyName.Length)
                 sb.Append(friendlyName.Substring(startIndex));
-
             return sb.ToString();
         }
 
         private static void AppendGenericArguments(StringBuilder sb, Type[] genericArguments, int start, int count)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             sb.Append("{");
 
             for(int i = 0; i < count; i++)
@@ -257,8 +332,9 @@ namespace Ninject.Infrastructure.Introspection
 
                 sb.Append(genericArguments[start + i].Format());
             }
-            
+
             sb.Append("}");
+#endif
         }
     }
 }

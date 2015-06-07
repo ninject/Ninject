@@ -152,20 +152,14 @@ namespace Ninject.Components
             if (component == typeof(IKernelConfiguration))
                 return KernelConfiguration;
 
-            if (component.IsGenericType)
+            if (component.GetTypeInfo().IsGenericType)
             {
                 Type gtd = component.GetGenericTypeDefinition();
-                Type argument = component.GetGenericArguments()[0];
+                Type argument = component.GetTypeInfo().GenericTypeArguments[0];
 
-#if WINDOWS_PHONE
-                Type discreteGenericType =
-                    typeof (IEnumerable<>).MakeGenericType(argument);
-                if (gtd.IsInterface && discreteGenericType.IsAssignableFrom(component))
+                var info = gtd.GetTypeInfo();
+                if(info.IsInterface && typeof(IEnumerable<>).GetTypeInfo().IsAssignableFrom(info))
                     return GetAll(argument).CastSlow(argument);
-#else
-                if (gtd.IsInterface && typeof (IEnumerable<>).IsAssignableFrom(gtd))
-                    return GetAll(argument).CastSlow(argument);
-#endif
             }
             Type implementation = _mappings[component].FirstOrDefault();
 
@@ -220,7 +214,9 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
+            var constructor =
+                implementation.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic && !c.IsStatic).OrderByDescending(c => c.GetParameters().Length).
+                    FirstOrDefault();
 
             if (constructor == null)
                 throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
@@ -228,7 +224,7 @@ namespace Ninject.Components
             return constructor;
         }
 
-#if WINDOWS_PHONE || MONO
+#if MONO
         private class HashSet<T>
         {
             private IDictionary<T, bool> data = new Dictionary<T,bool>();

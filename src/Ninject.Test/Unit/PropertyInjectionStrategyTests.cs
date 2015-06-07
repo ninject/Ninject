@@ -3,6 +3,7 @@ using System.Reflection;
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Strategies;
+using Ninject.Infrastructure.Language;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;

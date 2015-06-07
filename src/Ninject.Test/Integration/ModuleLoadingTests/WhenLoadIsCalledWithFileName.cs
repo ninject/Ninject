@@ -1,4 +1,4 @@
-#if !NO_ASSEMBLY_SCANNING
+#if !NO_ASSEMBLY_SCANNING && !NO_MOQ
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;

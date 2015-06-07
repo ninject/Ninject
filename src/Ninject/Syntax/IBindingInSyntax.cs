@@ -47,11 +47,13 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         IBindingNamedWithOrOnSyntax<T> InTransientScope();
 
+#if !WINRT && !PCL
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
         /// <returns>The fluent syntax.</returns>
         IBindingNamedWithOrOnSyntax<T> InThreadScope();
+#endif
 
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object

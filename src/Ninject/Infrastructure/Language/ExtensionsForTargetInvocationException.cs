@@ -10,6 +10,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -19,9 +20,7 @@ namespace Ninject.Infrastructure.Language
         public static void RethrowInnerException(this TargetInvocationException exception)
         {
             Exception innerException = exception.InnerException;
-
-            FieldInfo stackTraceField = typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
-            stackTraceField.SetValue(innerException, innerException.StackTrace);
+            ExceptionDispatchInfo.Capture(innerException).Throw();
 
             throw innerException;
         }

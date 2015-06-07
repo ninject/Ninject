@@ -21,6 +21,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
@@ -74,10 +76,26 @@ namespace Ninject.Modules
         /// Loads modules from the specified files.
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
-        public void LoadModules(IEnumerable<string> filenames)
+        public
+#if !WINRT
+        void 
+#else
+ async System.Threading.Tasks.Task
+#endif
+            LoadModules(IEnumerable<string> filenames)
         {
-            var assembliesWithModules = this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
-            this.KernelConfiguration.Load(assembliesWithModules.Select(Assembly.Load));
+#if PCL
+            throw new NotImplementedException();
+#else
+            var assembliesWithModules = 
+#if WINRT
+                await 
+#endif
+            this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
+
+
+            this.KernelConfiguration.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
+#endif
         }
     }
 }

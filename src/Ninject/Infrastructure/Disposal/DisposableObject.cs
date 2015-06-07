@@ -9,7 +9,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Infrastructure.Language;
 #endregion
 
 namespace Ninject.Infrastructure.Disposal
@@ -29,7 +28,11 @@ namespace Ninject.Infrastructure.Disposal
         /// </summary>
         public void Dispose()
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             Dispose(true);
+#endif
         }
 
         /// <summary>

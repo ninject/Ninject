@@ -9,3 +9,7 @@ dist
 *.cache
 *.dotCover
 /src/Ninject.SilverlightTests/Bin
+packages/
+AppPackages
+.vs/
+TestResults/

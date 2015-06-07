@@ -27,7 +27,7 @@ namespace Ninject
     public abstract class KernelBase : BindingRoot, IKernel
     {
         private readonly object kernelLockObject = new object();
-
+        
         private readonly IKernelConfiguration kernelConfiguration;
 
         private IReadonlyKernel kernel;
@@ -72,7 +72,7 @@ namespace Ninject
             this.kernelConfiguration = new KernelConfiguration(components, settings, modules);
             this.kernelConfiguration.Bind<IKernel>().ToMethod(ctx => this);
             this.kernelConfiguration.Bind<IResolutionRoot>().ToMethod(ctx => this).When(ctx => true);
-        }
+            }
 
         /// <summary>
         /// Gets the kernel settings.
@@ -165,8 +165,8 @@ namespace Ninject
         {
             this.kernelConfiguration.Load(m);
             this.isDirty = true;
-        }
-
+                }
+                
 #if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
@@ -174,9 +174,25 @@ namespace Ninject
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
             this.kernelConfiguration.Load(filePatterns);
             this.isDirty = true;
+#endif
         }
+
+#if WINRT
+        /// <summary>
+        /// Loads modules from the files that match the specified pattern(s).
+        /// </summary>
+        /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        public async System.Threading.Tasks.Task LoadAsync(IEnumerable<string> filePatterns)
+        {
+            var moduleLoader = this.Components.Get<IModuleLoader>();
+            await moduleLoader.LoadModules(filePatterns);
+        }
+#endif
 
         /// <summary>
         /// Loads modules defined in the specified assemblies.
@@ -186,6 +202,24 @@ namespace Ninject
         {
             this.kernelConfiguration.Load(assemblies);
             this.isDirty = true;
+        }
+#else
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="filePatterns"></param>
+        public void Load(IEnumerable<string> filePatterns)
+        {
+            
+        }
+
+        /// <summary>
+        /// Does nothing on this framework
+        /// </summary>
+        /// <param name="assembly"></param>
+        public void Load(IEnumerable<Assembly> assembly)
+        {
+            
         }
 #endif //!NO_ASSEMBLY_SCANNING
 
@@ -209,15 +243,15 @@ namespace Ninject
                 }
 
                 lock (this.kernelLockObject)
-                {
+            {
                     if (this.isDirty)
                     {
                         this.kernel = this.kernelConfiguration.BuildReadonlyKernel();
                         this.isDirty = false;
-                    }
+            }
 
                     return this.kernel;
-                }
+        }
             }
         }
 
@@ -273,7 +307,7 @@ namespace Ninject
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
             return this.ReadonlyKernel.Resolve(request);
-        }
+                    }
 
         /// <summary>
         /// Creates a request for the specified service.
@@ -306,7 +340,7 @@ namespace Ninject
         public virtual IEnumerable<IBinding> GetBindings(Type service)
         {
             return this.kernelConfiguration.GetBindings(service);
-        }
+                }
 
         /// <inheritdoc />
         public IReadonlyKernel BuildReadonlyKernel()
@@ -340,7 +374,7 @@ namespace Ninject
 
         /// <inheritdoc />
         public object GetService(Type serviceType)
-        {
+                            {
             return this.ReadonlyKernel.GetService(serviceType);
         }
     }

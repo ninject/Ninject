@@ -165,8 +165,12 @@
         /// <inheritdoc />
         public void Load(IEnumerable<string> filePatterns)
         {
+#if PCL
+            throw new NotImplementedException("Platform assembly must be referenced by app");
+#else
             var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
+#endif
         }
 
         /// <inheritdoc />

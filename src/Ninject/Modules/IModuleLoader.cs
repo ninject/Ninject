@@ -21,11 +21,20 @@ namespace Ninject.Modules
     /// </summary>
     public interface IModuleLoader : INinjectComponent
     {
+#if !PCL // PCL can't contain this method as the signature differs
         /// <summary>
         /// Loads any modules found in the files that match the specified patterns.
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
-        void LoadModules(IEnumerable<string> patterns);
+
+#if !WINRT
+        void 
+#else
+        System.Threading.Tasks.Task
+#endif
+        LoadModules(IEnumerable<string> patterns);
+#endif
     }
+
 }
 #endif

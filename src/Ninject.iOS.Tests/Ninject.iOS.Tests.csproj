@@ -1,0 +1,500 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\xunit.core.2.0.0\build\monotouch\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0\build\monotouch\xunit.core.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE8989C3-2C73-4941-9F7E-5470344E9661}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Ninject.iOS.Tests</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>NinjectiOSTests</AssemblyName>
+    <NuGetPackageImportStamp>34e5def9</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchDebug>True</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchSdkVersion>8.1</MtouchSdkVersion>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchExtraArgs />
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchEnableGenericValueTypeSharing>True</MtouchEnableGenericValueTypeSharing>
+    <MtouchArch>Default, ARMv7</MtouchArch>
+    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>False</MtouchUseSGen>
+    <MtouchUseRefCounting>False</MtouchUseRefCounting>
+    <MtouchOptimizePNGs>True</MtouchOptimizePNGs>
+    <MtouchI18n />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <BuildIpa>True</BuildIpa>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhoneSimulator'">
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AppStore|iPhoneSimulator'">
+    <DefineConstants>__IOS__;__MOBILE__;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;NET_40;NO_LCG;NO_MOQ;MONO;</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Ninject.Test\Fakes\AbstractWeapon.cs">
+      <Link>Fakes\AbstractWeapon.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Barracks.cs">
+      <Link>Fakes\Barracks.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Dagger.cs">
+      <Link>Fakes\Dagger.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\FootSoldier.cs">
+      <Link>Fakes\FootSoldier.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\ICleric.cs">
+      <Link>Fakes\ICleric.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\IWarrior.cs">
+      <Link>Fakes\IWarrior.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\IWeapon.cs">
+      <Link>Fakes\IWeapon.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\KiteShield.cs">
+      <Link>Fakes\KiteShield.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Monk.cs">
+      <Link>Fakes\Monk.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Ninja.cs">
+      <Link>Fakes\Ninja.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\NinjaBarracks.cs">
+      <Link>Fakes\NinjaBarracks.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\NotifiesWhenDisposed.cs">
+      <Link>Fakes\NotifiesWhenDisposed.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\ResolveCountingProvider.cs">
+      <Link>Fakes\ResolveCountingProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Samurai.cs">
+      <Link>Fakes\Samurai.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Shield.cs">
+      <Link>Fakes\Shield.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\ShortSword.cs">
+      <Link>Fakes\ShortSword.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Shuriken.cs">
+      <Link>Fakes\Shuriken.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Fakes\Sword.cs">
+      <Link>Fakes\Sword.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ActivationScopeTests.cs">
+      <Link>Integration\ActivationScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ActivationStrategyTests.cs">
+      <Link>Integration\ActivationStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\CircularDependenciesTests.cs">
+      <Link>Integration\CircularDependenciesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalAttributeBindingTests.cs">
+      <Link>Integration\ConditionalAttributeBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalBindingTests.cs">
+      <Link>Integration\ConditionalBindingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConditionalBindingWhenParentTests.cs">
+      <Link>Integration\ConditionalBindingWhenParentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConstantTests.cs">
+      <Link>Integration\ConstantTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConstructorArgumentInBindingConfigurationBuilderTest.cs">
+      <Link>Integration\ConstructorArgumentInBindingConfigurationBuilderTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConstructorArgumentTests.cs">
+      <Link>Integration\ConstructorArgumentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ConstructorSelectionTests.cs">
+      <Link>Integration\ConstructorSelectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\DefaultParameterTests.cs">
+      <Link>Integration\DefaultParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\DefaultScopeCallbackTests.cs">
+      <Link>Integration\DefaultScopeCallbackTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\ConstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\EnumerableDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildA.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildA.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\ChildB.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\ChildB.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IChild.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\IParent.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\IParent.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsArrayWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsConstrainedList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsList.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs">
+      <Link>Integration\EnumerableDependenciesTests\Fakes\RequestsListWithDefaultCtor.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs">
+      <Link>Integration\EnumerableDependenciesTests\UnconstrainedDependenciesContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsConstrainedListOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedArrayOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedEnumerableOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs">
+      <Link>Integration\EnumerableDependenciesTests\WhenServiceRequestsUnconstrainedListOfDependencies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ExternalInjectionTests.cs">
+      <Link>Integration\ExternalInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\GenericBindings.cs">
+      <Link>Integration\GenericBindings.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs">
+      <Link>Integration\InjectOnPropertyWithMoreRestrictiveSetter.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\InterfaceSegregationWithFourServicesTests.cs">
+      <Link>Integration\InterfaceSegregationWithFourServicesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\InterfaceSegregationWithThreeServicesTests.cs">
+      <Link>Integration\InterfaceSegregationWithThreeServicesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\InterfaceSegregationWithTwoServicesTests.cs">
+      <Link>Integration\InterfaceSegregationWithTwoServicesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ManualReleaseTests.cs">
+      <Link>Integration\ManualReleaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\Fakes\TestModule2.cs">
+      <Link>Integration\ModuleLoadingTests\Fakes\TestModule2.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\ModuleLoadingContext.cs">
+      <Link>Integration\ModuleLoadingTests\ModuleLoadingContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\OtherFakes\TestModule.cs">
+      <Link>Integration\ModuleLoadingTests\OtherFakes\TestModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithFileName.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithFileName.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs">
+      <Link>Integration\ModuleLoadingTests\WhenLoadIsCalledWithModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\NamedPropertyInjectionTests.cs">
+      <Link>Integration\NamedPropertyInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\OptionalTest.cs">
+      <Link>Integration\OptionalTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\PropertyInjectionTests.cs">
+      <Link>Integration\PropertyInjectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ProviderTests.cs">
+      <Link>Integration\ProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\SingletonScopeTests.cs">
+      <Link>Integration\SingletonScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\SpecialResolutionTests.cs">
+      <Link>Integration\SpecialResolutionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\StandardKernelTests.cs">
+      <Link>Integration\StandardKernelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\ThreadScopeTests.cs">
+      <Link>Integration\ThreadScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\TransientScopeTests.cs">
+      <Link>Integration\TransientScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Integration\WhenReleasingAnObject.cs">
+      <Link>Integration\WhenReleasingAnObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationBlockTests.cs">
+      <Link>Unit\ActivationBlockTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheStrategyTest.cs">
+      <Link>Unit\ActivationCacheStrategyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ActivationCacheTests.cs">
+      <Link>Unit\ActivationCacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\AssemblyNameRetrieverTests.cs">
+      <Link>Unit\AssemblyNameRetrieverTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\BindingActionStrategyTests.cs">
+      <Link>Unit\BindingActionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CachePruningTests.cs">
+      <Link>Unit\CachePruningTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CacheTests.cs">
+      <Link>Unit\CacheTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CallbackProviderTests.cs">
+      <Link>Unit\CallbackProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\CompiledModuleLoaderPluginTests.cs">
+      <Link>Unit\CompiledModuleLoaderPluginTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ComponentContainerTests.cs">
+      <Link>Unit\ComponentContainerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ConstantProviderTests.cs">
+      <Link>Unit\ConstantProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DisposableStrategyTests.cs">
+      <Link>Unit\DisposableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\DynamicMethodInjectorFactoryTests.cs">
+      <Link>Unit\DynamicMethodInjectorFactoryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ExtensionsForMemberInfoTest.cs">
+      <Link>Unit\ExtensionsForMemberInfoTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\FormatTests.cs">
+      <Link>Unit\FormatTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\InitializableStrategyTests.cs">
+      <Link>Unit\InitializableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionDirectiveBaseTests.cs">
+      <Link>Unit\MethodInjectionDirectiveBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\MethodInjectionStrategyTests.cs">
+      <Link>Unit\MethodInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ModuleLoaderTests.cs">
+      <Link>Unit\ModuleLoaderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\NamedAttributeTests.cs">
+      <Link>Unit\NamedAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PipelineTests.cs">
+      <Link>Unit\PipelineTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionDirectiveTests.cs">
+      <Link>Unit\PropertyInjectionDirectiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionSelectorTests.cs">
+      <Link>Unit\PropertyInjectionSelectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\PropertyInjectionStrategyTests.cs">
+      <Link>Unit\PropertyInjectionStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\ReferenceEqualWeakReferenceTests.cs">
+      <Link>Unit\ReferenceEqualWeakReferenceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\StartableStrategyTests.cs">
+      <Link>Unit\StartableStrategyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Ninject.Test\Unit\TestObject.cs">
+      <Link>Unit\TestObject.cs</Link>
+    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <None Include="..\Ninject.Test\TestModules\test.bar">
+      <Link>TestModules\test.bar</Link>
+    </None>
+    <None Include="..\Ninject.Test\TestModules\test.foo">
+      <Link>TestModules\test.foo</Link>
+    </None>
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Default-568h%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FluentAssertions, Version=1.2.3.4, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentAssertions.Xamarin.3.3.1\lib\monotouch\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentAssertions.3.3.0\lib\portable-monotouch+monoandroid+xamarin.ios\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Xamarin.Forms.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoTouch10\Xamarin.Forms.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoTouch10\Xamarin.Forms.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform.iOS.Classic, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoTouch10\Xamarin.Forms.Platform.iOS.Classic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Xaml, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\MonoTouch10\Xamarin.Forms.Xaml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.0.0.2929, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.assert.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.0.0.2929, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.core.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.MonoTouch, Version=2.0.0.2929, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.extensibility.execution.2.0.0\lib\monotouch\xunit.execution.MonoTouch.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.runner.devices, Version=2.0.0.1062, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.runner.devices.1.0.0\lib\MonoTouch\xunit.runner.devices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.runner.utility.MonoTouch, Version=2.0.0.2929, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\xunit.runner.utility.2.0.0\lib\monotouch\xunit.runner.utility.MonoTouch.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ninject\Ninject.iOS.csproj">
+      <Project>{dee2901a-0889-4a2f-87b8-9f6167ebb299}</Project>
+      <Name>Ninject.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AppDelegate.cs.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0\build\monotouch\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0\build\monotouch\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.runner.devices.1.0.0\build\MonoTouch\xunit.runner.devices.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.devices.1.0.0\build\MonoTouch\xunit.runner.devices.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\xunit.runner.devices.1.0.0\build\MonoTouch\xunit.runner.devices.targets" Condition="Exists('..\..\packages\xunit.runner.devices.1.0.0\build\MonoTouch\xunit.runner.devices.targets')" />
+</Project>

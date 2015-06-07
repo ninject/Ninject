@@ -1,15 +1,15 @@
 //-------------------------------------------------------------------------------
 // <copyright file="StandardProvider.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2014 Ninject Project Contributors
-//   
+// 
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   You may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
-//   
+// 
 //       http://www.apache.org/licenses/LICENSE-2.0
 //   or
 //       http://www.microsoft.com/opensource/licenses.mspx
-//   
+// 
 //   Unless required by applicable law or agreed to in writing, software
 //   distributed under the License is distributed on an "AS IS" BASIS,
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,16 +20,16 @@
 
 namespace Ninject.Activation.Providers
 {
-    using System;
-    using System.Linq;
+using System;
+using System.Linq;
     using System.Reflection;
-    using Ninject.Infrastructure.Introspection;
+using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
-    using Ninject.Parameters;
+using Ninject.Parameters;
     using Ninject.Planning.Bindings;
-    using Ninject.Planning.Directives;
-    using Ninject.Planning.Targets;
-    using Ninject.Selection;
+using Ninject.Planning.Directives;
+using Ninject.Planning.Targets;
+using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
     /// <summary>
@@ -96,7 +96,9 @@ namespace Ninject.Activation.Providers
         /// <returns>The implementation type that will be activated.</returns>
         public Type GetImplementationType(Type service)
         {
-            return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
+            return Type.GetTypeInfo().ContainsGenericParameters ? 
+                Type.MakeGenericType(service.GetTypeInfo().GenericTypeArguments) : 
+                Type;
         }
 
         /// <summary>

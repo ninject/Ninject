@@ -11,6 +11,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -19,19 +20,20 @@ namespace Ninject.Infrastructure.Language
     {
         public static IEnumerable CastSlow(this IEnumerable series, Type elementType)
         {
-            var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(elementType);
+            var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("Cast").MakeGenericMethod(elementType);
             return method.Invoke(null, new[] { series }) as IEnumerable;
         }
 
         public static Array ToArraySlow(this IEnumerable series, Type elementType)
         {
-            var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(elementType);
+            var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("ToArray").MakeGenericMethod(elementType);
+
             return method.Invoke(null, new[] { series }) as Array;
         }
 
         public static IList ToListSlow(this IEnumerable series, Type elementType)
         {
-            var method = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(elementType);
+            var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("ToList").MakeGenericMethod(elementType);
             return method.Invoke(null, new[] { series }) as IList;
         }
     }

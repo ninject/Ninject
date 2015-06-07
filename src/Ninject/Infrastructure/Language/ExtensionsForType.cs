@@ -19,6 +19,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System.Reflection;
+
 namespace Ninject.Infrastructure.Language
 {
     using System;
@@ -40,7 +42,8 @@ namespace Ninject.Infrastructure.Language
              while (type != null)
              {
                  yield return type;
-                 type = type.BaseType;
+
+                 type = type.GetTypeInfo().BaseType;
              }
          }
     }

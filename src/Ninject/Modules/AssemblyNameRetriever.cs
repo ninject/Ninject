@@ -30,6 +30,10 @@ namespace Ninject.Modules
 
     using Ninject.Components;
 
+#if WINRT
+    using System.Threading.Tasks;
+#endif
+
     /// <summary>
     /// Retrieves assembly names from file names using a temporary app domain.
     /// </summary>
@@ -41,8 +45,18 @@ namespace Ninject.Modules
         /// <param name="filenames">The filenames.</param>
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-        public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+        public
+#if !WINRT
+        IEnumerable<AssemblyName> 
+#else
+ System.Threading.Tasks.Task<IEnumerable<AssemblyName>>
+#endif
+            GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
+#if PCL
+            throw new NotImplementedException();
+#else
+#if !WINRT
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -52,13 +66,23 @@ namespace Ninject.Modules
                     assemblyCheckerType.FullName ?? string.Empty);
 
                 return checker.GetAssemblyNames(filenames.ToArray(), filter);
+#else
+                var checker = new AssemblyCheckerWinRT();
+                return checker.GetAssemblyListAsync(filenames.ToArray(), filter);
+#endif
+
+#if !WINRT
             }
             finally
             {
                 AppDomain.Unload(temporaryDomain);
             }
+#endif
+#endif
         }
 
+#if !PCL
+#if !WINRT
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -120,6 +144,65 @@ namespace Ninject.Modules
                 return result;
             }
         }
+#else
+        private sealed class AssemblyCheckerWinRT
+        {
+            //public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            //{
+            //    return GetAssemblyListAsync(filenames, filter).Result;
+            //}
+
+            public async Task<IEnumerable<AssemblyName>> GetAssemblyListAsync(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            {
+                var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+
+                var result = new List<AssemblyName>();
+                var files = (await folder.GetFilesAsync()).ToDictionary(k => k.Name.ToLowerInvariant(), e => (Windows.Storage.StorageFile)e);
+                
+                foreach (var filename in filenames)
+                {
+                    Assembly assembly;
+                    
+                    if (files.ContainsKey(filename.ToLowerInvariant()))
+                    {
+                        try
+                        {
+                            AssemblyName name = new AssemblyName() { Name = files[filename.ToLowerInvariant()].DisplayName };
+                            assembly = Assembly.Load(name);
+                        }
+                        catch (BadImageFormatException)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            AssemblyName name = new AssemblyName() { Name = filename };
+                            assembly = Assembly.Load(name);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (filter(assembly))
+                    {
+#if !WINRT
+                        result.Add(assembly.GetName());
+#else
+                        result.Add(new AssemblyName() {Name = assembly.GetName().Name});
+#endif
+                    }
+                }
+
+                return result;
+            }
+        }
+#endif
+#endif
     }
 }
 #endif

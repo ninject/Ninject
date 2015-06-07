@@ -28,20 +28,6 @@ namespace Ninject.Activation.Strategies
     /// </summary>
     public class PropertyInjectionStrategy : ActivationStrategy
     {
-        private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
-
-        private BindingFlags Flags
-        {
-            get
-            {
-                #if !NO_LCG && !SILVERLIGHT
-                return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
-                #else
-                return DefaultFlags;
-                #endif
-            }
-        }
-
         /// <summary>
         /// Gets the injector factory component.
         /// </summary>
@@ -75,6 +61,8 @@ namespace Ninject.Activation.Strategies
             this.AssignPropertyOverrides(context, reference, propertyValues);
         }
 
+
+
         /// <summary>
         /// Applies user supplied override values to instance properties.
         /// </summary>
@@ -83,7 +71,8 @@ namespace Ninject.Activation.Strategies
         /// <param name="propertyValues">The parameter override value accessors.</param>
         private void AssignPropertyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
         {
-            var properties = reference.Instance.GetType().GetProperties(this.Flags);
+            var properties = reference.Instance.GetType().GetRuntimeProperties().FilterPublic(Settings.InjectNonPublic);
+
             foreach (var propertyValue in propertyValues)
             {
                 string propertyName = propertyValue.Name;

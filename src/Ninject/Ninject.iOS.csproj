@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DEE2901A-0889-4A2F-87B8-9F6167EBB299}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Ninject</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>Ninject</AssemblyName>
+    <BaseIntermediateOutputPath>obj\iOS\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;MONO;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DefineConstants>__IOS__;__MOBILE__;MONO;NO_PARTIAL_TRUST;NO_EXCEPTION_SERIALIZATION;MEDIUM_TRUST;NO_LCG</DefineConstants>
+    <DocumentationFile>bin\iPhone\Release\Ninject.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\Ninject.snk">
+      <Link>Ninject.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ActivationException.cs" />
+    <Compile Include="Activation\Blocks\ActivationBlock.cs" />
+    <Compile Include="Activation\Blocks\IActivationBlock.cs" />
+    <Compile Include="Activation\Caching\ActivationCache.cs" />
+    <Compile Include="Activation\Caching\Cache.cs" />
+    <Compile Include="Activation\Caching\GarbageCollectionCachePruner.cs" />
+    <Compile Include="Activation\Caching\IActivationCache.cs" />
+    <Compile Include="Activation\Caching\ICache.cs" />
+    <Compile Include="Activation\Caching\ICachePruner.cs" />
+    <Compile Include="Activation\Caching\IPruneable.cs" />
+    <Compile Include="Activation\Caching\WeakReferenceEqualityComparer.cs" />
+    <Compile Include="Activation\Context.cs" />
+    <Compile Include="Activation\IContext.cs" />
+    <Compile Include="Activation\InstanceReference.cs" />
+    <Compile Include="Activation\IPipeline.cs" />
+    <Compile Include="Activation\IProvider.cs" />
+    <Compile Include="Activation\IProvider{T}.cs" />
+    <Compile Include="Activation\IRequest.cs" />
+    <Compile Include="Activation\Pipeline.cs" />
+    <Compile Include="Activation\Provider.cs" />
+    <Compile Include="Activation\Providers\CallbackProvider.cs" />
+    <Compile Include="Activation\Providers\ConstantProvider.cs" />
+    <Compile Include="Activation\Providers\StandardProvider.cs" />
+    <Compile Include="Activation\Request.cs" />
+    <Compile Include="Activation\Strategies\ActivationCacheStrategy.cs" />
+    <Compile Include="Activation\Strategies\ActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\BindingActionStrategy.cs" />
+    <Compile Include="Activation\Strategies\DisposableStrategy.cs" />
+    <Compile Include="Activation\Strategies\IActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
+    <Compile Include="Activation\Strategies\MethodInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\StartableStrategy.cs" />
+    <Compile Include="Attributes\ConstraintAttribute.cs" />
+    <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="Attributes\NamedAttribute.cs" />
+    <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="BindingPrecedenceComparer.cs" />
+    <Compile Include="Components\ComponentContainer.cs" />
+    <Compile Include="Components\IComponentContainer.cs" />
+    <Compile Include="Components\INinjectComponent.cs" />
+    <Compile Include="Components\NinjectComponent.cs" />
+    <Compile Include="GlobalKernelRegistration.cs" />
+    <Compile Include="GlobalKernelRegistrationModule.cs" />
+    <Compile Include="IBindingPrecedenceComparer.cs" />
+    <Compile Include="IHaveNinjectComponents.cs" />
+    <Compile Include="IHaveNinjectSettings.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="IKernel.cs" />
+    <Compile Include="IKernelConfiguration.cs" />
+    <Compile Include="Infrastructure\BaseWeakReference.cs" />
+    <Compile Include="Infrastructure\Disposal\DisposableObject.cs" />
+    <Compile Include="Infrastructure\Disposal\IDisposableObject.cs" />
+    <Compile Include="Infrastructure\Disposal\INotifyWhenDisposed.cs" />
+    <Compile Include="Infrastructure\Ensure.cs" />
+    <Compile Include="Infrastructure\Future.cs" />
+    <Compile Include="Infrastructure\IHaveBindingConfiguration.cs" />
+    <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
+    <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForTargetInvocationException.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForType.cs" />
+    <Compile Include="Infrastructure\Multimap.cs" />
+    <Compile Include="Infrastructure\ReferenceEqualWeakReference.cs" />
+    <Compile Include="Infrastructure\StandardScopeCallbacks.cs" />
+    <Compile Include="Infrastructure\Threading\ReaderWriterLock.cs" />
+    <Compile Include="INinjectSettings.cs" />
+    <Compile Include="Injection\ConstructorInjector.cs" />
+    <Compile Include="Injection\DynamicMethodInjectorFactory.cs" />
+    <Compile Include="Injection\IInjectorFactory.cs" />
+    <Compile Include="Injection\MethodInjector.cs" />
+    <Compile Include="Injection\PropertyInjector.cs" />
+    <Compile Include="Injection\ReflectionInjectorFactory.cs" />
+    <Compile Include="IReadonlyKernel.cs" />
+    <Compile Include="IStartable.cs" />
+    <Compile Include="KernelBase.cs" />
+    <Compile Include="KernelConfiguration.cs" />
+    <Compile Include="Modules\AssemblyNameRetriever.cs" />
+    <Compile Include="Modules\CompiledModuleLoaderPlugin.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\IAssemblyNameRetriever.cs" />
+    <Compile Include="Modules\IModuleLoader.cs" />
+    <Compile Include="Modules\IModuleLoaderPlugin.cs" />
+    <Compile Include="Modules\INinjectModule.cs" />
+    <Compile Include="Modules\ModuleLoader.cs" />
+    <Compile Include="Modules\NinjectModule.cs" />
+    <Compile Include="NinjectSettings.cs" />
+    <Compile Include="Parameters\ConstructorArgument.cs" />
+    <Compile Include="Parameters\IConstructorArgument.cs" />
+    <Compile Include="Parameters\IParameter.cs" />
+    <Compile Include="Parameters\IPropertyValue.cs" />
+    <Compile Include="Parameters\Parameter.cs" />
+    <Compile Include="Parameters\PropertyValue.cs" />
+    <Compile Include="Parameters\TypeMatchingConstructorArgument.cs" />
+    <Compile Include="Parameters\WeakConstructorArgument.cs" />
+    <Compile Include="Parameters\WeakPropertyValue.cs" />
+    <Compile Include="Planning\Bindings\Binding.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2,T3,T4}.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2,T3}.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1,T2}.cs" />
+    <Compile Include="Planning\Bindings\BindingBuilder{T1}.cs" />
+    <Compile Include="Planning\Bindings\BindingConfiguration.cs" />
+    <Compile Include="Planning\Bindings\BindingConfigurationBuilder.cs" />
+    <Compile Include="Planning\Bindings\BindingMetadata.cs" />
+    <Compile Include="Planning\Bindings\BindingTarget.cs" />
+    <Compile Include="Planning\Bindings\IBinding.cs" />
+    <Compile Include="Planning\Bindings\IBindingConfiguration.cs" />
+    <Compile Include="Planning\Bindings\IBindingMetadata.cs" />
+    <Compile Include="Planning\Bindings\IBindingSyntax.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\DefaultValueBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\IMissingBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\OpenGenericBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\SelfBindingResolver.cs" />
+    <Compile Include="Planning\Bindings\Resolvers\StandardBindingResolver.cs" />
+    <Compile Include="Planning\Directives\ConstructorInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\IDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirectiveBase.cs" />
+    <Compile Include="Planning\Directives\PropertyInjectionDirective.cs" />
+    <Compile Include="Planning\IPlan.cs" />
+    <Compile Include="Planning\IPlanner.cs" />
+    <Compile Include="Planning\Plan.cs" />
+    <Compile Include="Planning\Planner.cs" />
+    <Compile Include="Planning\Strategies\ConstructorReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\IPlanningStrategy.cs" />
+    <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
+    <Compile Include="Planning\Targets\ITarget.cs" />
+    <Compile Include="Planning\Targets\ParameterTarget.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Planning\Targets\PropertyTarget.cs" />
+    <Compile Include="Planning\Targets\Target.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadonlyKernel.cs" />
+    <Compile Include="Selection\Heuristics\IConstructorScorer.cs" />
+    <Compile Include="Selection\Heuristics\IInjectionHeuristic.cs" />
+    <Compile Include="Selection\Heuristics\SpecificConstructorSelector.cs" />
+    <Compile Include="Selection\Heuristics\StandardConstructorScorer.cs" />
+    <Compile Include="Selection\Heuristics\StandardInjectionHeuristic.cs" />
+    <Compile Include="Selection\ISelector.cs" />
+    <Compile Include="Selection\Selector.cs" />
+    <Compile Include="StandardKernel.cs" />
+    <Compile Include="Syntax\BindingRoot.cs" />
+    <Compile Include="Syntax\IBindingInNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingInSyntax.cs" />
+    <Compile Include="Syntax\IBindingNamedSyntax.cs" />
+    <Compile Include="Syntax\IBindingNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingRoot.cs" />
+    <Compile Include="Syntax\IBindingSyntax.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2,T3,T4}.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2,T3}.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1,T2}.cs" />
+    <Compile Include="Syntax\IBindingToSyntax{T1}.cs" />
+    <Compile Include="Syntax\IBindingWhenInNamedWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingWhenSyntax.cs" />
+    <Compile Include="Syntax\IBindingWithOrOnSyntax.cs" />
+    <Compile Include="Syntax\IBindingWithSyntax.cs" />
+    <Compile Include="Syntax\IConstructorArgumentSyntax.cs" />
+    <Compile Include="Syntax\IFluentSyntax.cs" />
+    <Compile Include="Syntax\IResolutionRoot.cs" />
+    <Compile Include="Syntax\ModuleLoadExtensions.cs" />
+    <Compile Include="Syntax\ResolutionExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Syntax\Activation\Blocks\" />
+    <Folder Include="Syntax\Activation\Caching\" />
+    <Folder Include="Syntax\Activation\Providers\" />
+    <Folder Include="Syntax\Activation\Strategies\" />
+    <Folder Include="Syntax\Attributes\" />
+    <Folder Include="Syntax\Components\" />
+    <Folder Include="Syntax\Infrastructure\Disposal\" />
+    <Folder Include="Syntax\Infrastructure\Introspection\" />
+    <Folder Include="Syntax\Infrastructure\Language\" />
+    <Folder Include="Syntax\Infrastructure\Threading\" />
+    <Folder Include="Syntax\Injection\" />
+    <Folder Include="Syntax\Modules\" />
+    <Folder Include="Syntax\Parameters\" />
+    <Folder Include="Syntax\Planning\Bindings\Resolvers\" />
+    <Folder Include="Syntax\Planning\Directives\" />
+    <Folder Include="Syntax\Planning\Strategies\" />
+    <Folder Include="Syntax\Planning\Targets\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+</Project>
