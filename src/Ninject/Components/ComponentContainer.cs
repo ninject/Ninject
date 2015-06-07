@@ -152,32 +152,14 @@ namespace Ninject.Components
             if (component == typeof(IKernelConfiguration))
                 return KernelConfiguration;
 
-            if (component
-#if WINRT
-                .GetTypeInfo()
-#endif
-                .IsGenericType)
+            if (component.GetTypeInfo().IsGenericType)
             {
                 Type gtd = component.GetGenericTypeDefinition();
-#if !WINRT
-                Type argument = component.GetGenericArguments()[0];
-#else
                 Type argument = component.GetTypeInfo().GenericTypeArguments[0];
-#endif
 
-#if WINDOWS_PHONE
-                Type discreteGenericType =
-                    typeof (IEnumerable<>).MakeGenericType(argument);
-                if (gtd.IsInterface && discreteGenericType.IsAssignableFrom(component))
-                    return GetAll(argument).CastSlow(argument);
-#elif !WINRT
-                if (gtd.IsInterface && typeof (IEnumerable<>).IsAssignableFrom(gtd))
-                    return GetAll(argument).CastSlow(argument);
-#else
                 var info = gtd.GetTypeInfo();
                 if(info.IsInterface && typeof(IEnumerable<>).GetTypeInfo().IsAssignableFrom(info))
                     return GetAll(argument).CastSlow(argument);
-#endif
             }
             Type implementation = _mappings[component].FirstOrDefault();
 
@@ -232,20 +214,17 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-#if !WINRT
-            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
-#else
             var constructor =
                 implementation.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic && !c.IsStatic).OrderByDescending(c => c.GetParameters().Length).
                     FirstOrDefault();
-#endif
+
             if (constructor == null)
                 throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
 
             return constructor;
         }
 
-#if WINDOWS_PHONE || MONO
+#if MONO
         private class HashSet<T>
         {
             private IDictionary<T, bool> data = new Dictionary<T,bool>();

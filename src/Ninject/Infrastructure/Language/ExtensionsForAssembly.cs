@@ -22,45 +22,22 @@ namespace Ninject.Infrastructure.Language
     {
         public static bool HasNinjectModules(this Assembly assembly)
         {
-            return
-#if !WINRT
-                assembly.GetExportedTypes()
-#else
-                assembly.ExportedTypes
-#endif
-                .Any(IsLoadableModule);
+            return assembly.ExportedTypes.Any(IsLoadableModule);
         }
 
         public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
         {
-            return 
-#if !WINRT
-                assembly.GetExportedTypes()
-#else
-                assembly.ExportedTypes
-#endif
-                    .Where(IsLoadableModule)
-                    .Select(type => Activator.CreateInstance(type) as INinjectModule);
+            return assembly.ExportedTypes.Where(IsLoadableModule)
+                                         .Select(type => Activator.CreateInstance(type) as INinjectModule);
         }
 
         private static bool IsLoadableModule(Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-#if !WINRT
-            return typeof(INinjectModule).IsAssignableFrom(type)
-                && !type.IsAbstract
-                && !type.IsInterface
-                && type.GetConstructor(Type.EmptyTypes) != null;
-#else
             var typeInfo = type.GetTypeInfo();
             return typeof(INinjectModule).GetTypeInfo().IsAssignableFrom(typeInfo)
                 && !typeInfo.IsAbstract
                 && !typeInfo.IsInterface
-                && typeInfo.DeclaredConstructors.Where(c => !c.IsStatic && c.IsPublic && c.GetParameters().Length == 0).Any();
-#endif
-#endif
+                && typeInfo.DeclaredConstructors.Any(c => !c.IsStatic && c.IsPublic && c.GetParameters().Length == 0);
         }
     }
 }

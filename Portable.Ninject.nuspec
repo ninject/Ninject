@@ -3,7 +3,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Portable.Ninject</id>
-    <version>3.3.1</version>
+    <version>4.0-alpha1</version>
     <title>Ninject for Portable Class Libraries</title>
     <authors>Oren Novotny</authors>
     <owners />
@@ -14,7 +14,7 @@
     <description>
       Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
 
-      Portable version of Ninject for .NET4, SL4, WP8, Wpa 8.1, Win8, iOS (Classic and Unified) and Android
+      Portable version of Ninject for .NET4.5.1, Wpa 8.1, Win8.1, UWP, iOS (Classic and Unified) and Android
     </description>
     <summary>IoC container for .NET</summary>
     <releaseNotes>Xamarin support for iOS and Android</releaseNotes>
@@ -23,38 +23,26 @@
   <files>
 
     <!-- PCL -->
-    <file src="src\Ninject\bin\PCL\Release\Ninject.dll" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.dll" />
-    <file src="src\Ninject\bin\PCL\Release\Ninject.pdb" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.pdb" />
-    <file src="src\Ninject\bin\PCL\Release\Ninject.xml" target="lib\portable-net4+sl5+wp8+win8+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.xml" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.dll" target="lib\portable-net451+win81+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.dll" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.pdb" target="lib\portable-net451+win81+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.pdb" />
+    <file src="src\Ninject\bin\PCL\Release\Ninject.xml" target="lib\portable-net451+win81+wpa81+monotouch+monoandroid+Xamarin.iOS\Ninject.xml" />
 
-    <!-- .NET 4 -->
-    <file src="src\Ninject\bin\Net4\Release\Ninject.dll" target="lib\net40-client\Ninject.dll" />
-    <file src="src\Ninject\bin\Net4\Release\Ninject.pdb" target="lib\net40-client\Ninject.pdb" />
-    <file src="src\Ninject\bin\Net4\Release\Ninject.xml" target="lib\net40-client\Ninject.xml" />
+    <!-- .NET 4.5.1 -->
+    <file src="src\Ninject\bin\Net4\Release\Ninject.dll" target="lib\net451\Ninject.dll" />
+    <file src="src\Ninject\bin\Net4\Release\Ninject.pdb" target="lib\net451\Ninject.pdb" />
+    <file src="src\Ninject\bin\Net4\Release\Ninject.xml" target="lib\net451\Ninject.xml" />
 
-    <!-- Win8 -->
-    <file src="src\Ninject\bin\WinRT\Release\Ninject.dll" target="lib\win8\Ninject.dll" />
-    <file src="src\Ninject\bin\WinRT\Release\Ninject.pdb" target="lib\win8\Ninject.pdb" />
-    <file src="src\Ninject\bin\WinRT\Release\Ninject.xml" target="lib\win8\Ninject.xml" />
-    <file src="src\Ninject\bin\WinRT\Release\Ninject.pri" target="lib\win8\Ninject.pri" />
-
-
-    <!-- WP8 -->
-    <file src="src\Ninject\bin\wp8\Release\Ninject.dll" target="lib\wp8\Ninject.dll" />
-    <file src="src\Ninject\bin\wp8\Release\Ninject.pdb" target="lib\wp8\Ninject.pdb" />
-    <file src="src\Ninject\bin\wp8\Release\Ninject.xml" target="lib\wp8\Ninject.xml" />
+    <!-- Win8.1 -->
+    <file src="src\Ninject\bin\WinRT\Release\Ninject.dll" target="lib\win81\Ninject.dll" />
+    <file src="src\Ninject\bin\WinRT\Release\Ninject.pdb" target="lib\win81\Ninject.pdb" />
+    <file src="src\Ninject\bin\WinRT\Release\Ninject.xml" target="lib\win81\Ninject.xml" />
+    <file src="src\Ninject\bin\WinRT\Release\Ninject.pri" target="lib\win81\Ninject.pri" />
 
     <!-- Wpa81 -->
     <file src="src\Ninject\bin\Wpa81\Release\Ninject.dll" target="lib\Wpa81\Ninject.dll" />
     <file src="src\Ninject\bin\Wpa81\Release\Ninject.pdb" target="lib\Wpa81\Ninject.pdb" />
     <file src="src\Ninject\bin\Wpa81\Release\Ninject.xml" target="lib\Wpa81\Ninject.xml" />
     <file src="src\Ninject\bin\Wpa81\Release\Ninject.pri" target="lib\Wpa81\Ninject.pri" />
-
-    
-    <!-- SL5 -->
-    <file src="src\Ninject\bin\sl\Release\Ninject.dll" target="lib\sl5\Ninject.dll" />
-    <file src="src\Ninject\bin\sl\Release\Ninject.pdb" target="lib\sl5\Ninject.pdb" />
-    <file src="src\Ninject\bin\sl\Release\Ninject.xml" target="lib\sl5\Ninject.xml" />
 
      <!-- iOS Classic --> 
     <file src="src\Ninject\bin\iPhone\Release\Ninject.dll" target="lib\monotouch\Ninject.dll" />

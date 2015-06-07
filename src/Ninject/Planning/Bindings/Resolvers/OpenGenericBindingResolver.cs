@@ -14,10 +14,7 @@ using System.Linq;
 using Ninject.Components;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
-
-#if WINRT
 using System.Reflection;
-#endif
 #endregion
 
 namespace Ninject.Planning.Bindings.Resolvers
@@ -35,15 +32,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <returns>The series of matching bindings.</returns>
         public IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, Type service)
         {
-            if (!service
-#if WINRT
-                .GetTypeInfo()
-#endif
-.IsGenericType || service
-#if WINRT
-                .GetTypeInfo()
-#endif
-.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
+            if (!service.GetTypeInfo().IsGenericType || service.GetTypeInfo().IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
                 return Enumerable.Empty<IBinding>();
 
             return bindings[service.GetGenericTypeDefinition()];

@@ -12,9 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if WINRT
 using System.Reflection;
-#endif
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Components;
@@ -70,20 +68,12 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
         protected virtual bool TypeIsSelfBindable(Type service)
         {
-#if !WINRT
-            return !service.IsInterface
-                && !service.IsAbstract
-                && !service.IsValueType
-                && service != typeof(string)
-                && !service.ContainsGenericParameters;
-#else
             var sInfo = service.GetTypeInfo();
             return !sInfo.IsInterface
                 && !sInfo.IsAbstract
                 && !sInfo.IsValueType
                 && service != typeof(string)
                 && !sInfo.ContainsGenericParameters;
-#endif
         }
     }
 }

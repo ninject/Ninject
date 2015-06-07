@@ -4,11 +4,7 @@ namespace Ninject
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-#if WINRT
     using System.Reflection;
-#endif
-
     using Ninject.Components;
     using Ninject.Planning.Bindings;
 
@@ -30,11 +26,7 @@ namespace Ninject
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
-#if !WINRT
-                                b => !b.Service.ContainsGenericParameters, // closed generics > open generics
-#else
                                 b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
-#endif
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 

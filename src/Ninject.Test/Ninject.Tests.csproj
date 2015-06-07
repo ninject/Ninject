@@ -201,9 +201,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ninject\Ninject.Net40.csproj">
+    <ProjectReference Include="..\Ninject\Ninject.Net45.csproj">
       <Project>{37aad36a-2252-43d6-8bc4-f63bfefdfecb}</Project>
-      <Name>Ninject.Net40</Name>
+      <Name>Ninject.Net45</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestAssembly\TestAssembly.csproj">
       <Project>{C9F6CFE7-44B2-4D55-9307-33C34C045468}</Project>

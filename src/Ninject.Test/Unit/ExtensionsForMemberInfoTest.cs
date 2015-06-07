@@ -101,17 +101,12 @@ namespace Ninject.Tests.Unit
 
         private void TestGetCustomAttributesExtended(object testObject, string attributeName, Type attributeType, bool inherit, object[] expectedAttributes)
         {
-#if !WINRT
-            var propertyInfo = testObject.GetType()
-                .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
-#else
+
             var propertyInfo = testObject.GetType()
                                          .GetRuntimeProperties()
                                          .Single(pi => pi.Name == attributeName);
 
             var attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
-#endif
 
             attributes.Count().Should().Be(expectedAttributes.Length, "attrib: {0}, attribType: {1}", attributeName, attributeType.Name);
             foreach (Attribute expectedAttribute in expectedAttributes)

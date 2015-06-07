@@ -96,17 +96,9 @@ using Ninject.Selection;
         /// <returns>The implementation type that will be activated.</returns>
         public Type GetImplementationType(Type service)
         {
-            return Type
-#if WINRT
-                .GetTypeInfo()
-#endif
-                .ContainsGenericParameters ? Type.MakeGenericType(
-#if !WINRT
-                service.GetGenericArguments()
-#else
-                service.GetTypeInfo().GenericTypeArguments
-#endif
-                ) : Type;
+            return Type.GetTypeInfo().ContainsGenericParameters ? 
+                Type.MakeGenericType(service.GetTypeInfo().GenericTypeArguments) : 
+                Type;
         }
 
         /// <summary>

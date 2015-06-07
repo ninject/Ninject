@@ -11,10 +11,7 @@
 using System;
 using System.Collections;
 using System.Linq;
-
-#if WINRT
 using System.Reflection;
-#endif
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -23,32 +20,20 @@ namespace Ninject.Infrastructure.Language
     {
         public static IEnumerable CastSlow(this IEnumerable series, Type elementType)
         {
-#if WINRT
             var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("Cast").MakeGenericMethod(elementType);
-#else
-            var method = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(elementType);
-#endif
             return method.Invoke(null, new[] { series }) as IEnumerable;
         }
 
         public static Array ToArraySlow(this IEnumerable series, Type elementType)
         {
-#if WINRT
             var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("ToArray").MakeGenericMethod(elementType);
-#else
-            var method = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(elementType);
-#endif
 
             return method.Invoke(null, new[] { series }) as Array;
         }
 
         public static IList ToListSlow(this IEnumerable series, Type elementType)
         {
-#if WINRT
             var method = typeof(Enumerable).GetTypeInfo().GetDeclaredMethod("ToList").MakeGenericMethod(elementType);
-#else
-            var method = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(elementType);
-#endif
             return method.Invoke(null, new[] { series }) as IList;
         }
     }

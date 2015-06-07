@@ -24,6 +24,7 @@
     <NuGetPackageImportStamp>b49b0ce1</NuGetPackageImportStamp>
     <PackageCertificateThumbprint>317B339C1FEFCC4F4D20EF5F5771106C5F455D7B</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>Ninject.Tests.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <TargetFrameworkVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

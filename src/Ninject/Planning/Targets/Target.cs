@@ -131,10 +131,10 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes of the specified type.</returns>
         public
 #if WINRT
-            abstract IEnumerable<Attribute>
-#else
-            object[] 
-#endif            
+            abstract
+#endif
+            IEnumerable<Attribute>
+
             GetCustomAttributes(Type attributeType, bool inherit)
 #if WINRT
             ;
@@ -155,10 +155,10 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes.</returns>
         public
 #if WINRT
- abstract IEnumerable<Attribute>
-#else
-            object[] 
-#endif   
+ abstract 
+#endif
+            IEnumerable<Attribute>
+
             GetCustomAttributes(bool inherit)
 #if WINRT
             ;
@@ -167,7 +167,7 @@ namespace Ninject.Planning.Targets
             #if PCL
             throw new NotImplementedException();
 #else
-            return Site.GetCustomAttributes(inherit);
+            return Site.GetCustomAttributes(inherit).Cast<Attribute>();
 #endif
         }
 #endif
@@ -205,11 +205,7 @@ namespace Ninject.Planning.Targets
         /// </returns>
         public bool IsDefinedOnParent(Type attributeType, Type parent)
         {
-#if !WINRT
-            return parent.HasAttribute(attributeType);
-#else
             return parent.GetTypeInfo().HasAttribute(attributeType);
-#endif
         }
 
         /// <summary>
@@ -225,18 +221,11 @@ namespace Ninject.Planning.Targets
                 return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
             }
 
-            if (Type
-#if WINRT
-                .GetTypeInfo()
-#endif
-                .IsGenericType)
+            if (Type.GetTypeInfo().IsGenericType)
             {
                 Type gtd = Type.GetGenericTypeDefinition();
-#if !WINRT
-                Type service = Type.GetGenericArguments()[0];
-#else
+
                 Type service = Type.GenericTypeArguments[0];
-#endif
 
                 if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
                     return GetValues(service, parent).CastSlow(service).ToListSlow(service);
@@ -303,12 +292,12 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolution constraint.</returns>
         protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
         {
-            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
+            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true).Cast<ConstraintAttribute>().ToList();
 
-            if (attributes == null || attributes.Length == 0)
+            if (attributes == null || attributes.Count == 0)
                 return null;
 
-            if (attributes.Length == 1)
+            if (attributes.Count == 1)
                 return attributes[0].Matches;
 
             return metadata => attributes.All(attribute => attribute.Matches(metadata));

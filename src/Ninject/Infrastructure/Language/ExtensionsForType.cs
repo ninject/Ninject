@@ -42,13 +42,8 @@ namespace Ninject.Infrastructure.Language
              while (type != null)
              {
                  yield return type;
-#if !WINRT
-                 type = type.BaseType;
-#else
-                 type = type.GetTypeInfo()
-                            .BaseType;
-#endif
 
+                 type = type.GetTypeInfo().BaseType;
              }
          }
     }
