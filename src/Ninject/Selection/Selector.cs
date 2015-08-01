@@ -54,7 +54,7 @@ namespace Ninject.Selection
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
         public  virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
-            if (type.IsSubclassOf(typeof(MulticastDelegate)))
+            if (type.GetTypeInfo().IsSubclassOf(typeof(MulticastDelegate)))
                 return null;
             var tInfo = type.GetTypeInfo();
             var constructors = tInfo.DeclaredConstructors.FilterPublic(Settings.InjectNonPublic);
