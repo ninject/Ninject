@@ -41,7 +41,7 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void OptionalProperty()
         {
-            var testClass = this.kernel.Get<OptionalMethodArgumentTestClass>();
+            var testClass = this.kernel.Get<OptionalPropertyTestClass>();
 
             testClass.Should().NotBeNull();
             testClass.Warrior.Should().BeNull();
