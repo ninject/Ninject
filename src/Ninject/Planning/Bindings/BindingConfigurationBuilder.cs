@@ -310,7 +310,7 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenMemberHas", attributeType));
             }
             
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.IsDefined(attributeType, true);
+            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.IsDefined(attributeType, true);
 
             return this;
         }
