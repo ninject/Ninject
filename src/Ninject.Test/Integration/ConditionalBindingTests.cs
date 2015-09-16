@@ -352,6 +352,39 @@ namespace Ninject.Tests.Integration
             barack.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
 
+        [Fact]
+        public void WhenMemberHasDoesNotConsiderAttributeOnTarget()
+        {
+            kernel.Bind<Knight>().ToSelf();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<ShortSword>().WhenMemberHas<WeakAttribute>();
+
+            var knight = kernel.Get<Knight>();
+            knight.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenMemberHasDoesConsiderAttributeOnMember()
+        {
+            kernel.Bind<Knight>().ToSelf();
+            kernel.Bind<IWeapon>().To<Sword>().WhenMemberHas<StrongAttribute>();
+            kernel.Bind<IWeapon>().To<ShortSword>();
+
+            var knight = kernel.Get<Knight>();
+            knight.Weapon.Should().BeOfType<Sword>();
+        }
+
+        [Fact]
+        public void WhenTargetHasDoesConsiderAttributeOnTarget()
+        {
+            kernel.Bind<Knight>().ToSelf();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<ShortSword>().WhenTargetHas<WeakAttribute>();
+
+            var knight = kernel.Get<Knight>();
+            knight.Weapon.Should().BeOfType<ShortSword>();
+        }
+
         public interface IGenericService<T>
         {
         }
@@ -390,6 +423,17 @@ namespace Ninject.Tests.Integration
             }
 
             public IWarrior Warrior { get; protected set; }
+        }
+
+        public class Knight
+        {
+            public IWeapon Weapon { get; private set; }
+
+            [Strong]
+            public Knight([Weak] IWeapon weapon)
+            {
+                this.Weapon = weapon;
+            }
         }
     }
 }
