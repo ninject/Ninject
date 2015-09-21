@@ -42,8 +42,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="bindingConfigurationConfiguration">The binding to build.</param>
         /// <param name="settings">The ninject configuration settings.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, INinjectSettings settings, string serviceNames)
-            : base(bindingConfigurationConfiguration, settings, serviceNames)
+        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, IBindingRoot bindingRoot, INinjectSettings settings, string serviceNames)
+            : base(bindingConfigurationConfiguration, bindingRoot, settings, serviceNames)
         {
         }
 #pragma warning restore 1584
