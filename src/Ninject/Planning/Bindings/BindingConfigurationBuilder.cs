@@ -525,6 +525,11 @@ namespace Ninject.Planning.Bindings
             return this.WithConstructorArgument(type, (context, target) => callback(context));
         }
 
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(Func<IContext, TValue> callback)
+        {
+            return this.WithConstructorArgument(typeof(TValue), (context, target) => callback(context));
+        }
+
         /// <summary>
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
@@ -534,6 +539,12 @@ namespace Ninject.Planning.Bindings
         public IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback)
         {
             this.BindingConfiguration.Parameters.Add(new TypeMatchingConstructorArgument(type, callback));
+            return this;
+        }
+
+        public IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(Func<IContext, ITarget, TValue> callback)
+        {
+            this.WithConstructorArgument(typeof (TValue), callback);
             return this;
         }
 
