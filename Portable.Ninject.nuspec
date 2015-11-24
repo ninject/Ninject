@@ -19,6 +19,22 @@
     <summary>IoC container for .NET</summary>
     <releaseNotes>Xamarin support for iOS and Android</releaseNotes>
     <tags>Ninject ioc di portable pcl xamarin ios android monotouch monoandroid</tags>
+    <dependencies>
+      <group targetFramework="dotnet">
+        <dependency id="System.Collections" version="4.0.10" />
+        <dependency id="System.ComponentModel" version="4.0.0" />
+        <dependency id="System.Diagnostics.Debug" version="4.0.10" />
+        <dependency id="System.IO" version="4.0.10" />
+        <dependency id="System.Linq" version="4.0.0" />
+        <dependency id="System.Linq.Expressions" version="4.0.10" />
+        <dependency id="System.Reflection" version="4.0.10" />
+        <dependency id="System.Reflection.Extensions" version="4.0.0" />
+        <dependency id="System.Runtime" version="4.0.20" />
+        <dependency id="System.Runtime.Extensions" version="4.0.10" />
+        <dependency id="System.Threading" version="4.0.10" />
+        <dependency id="System.Threading.Timer" version="4.0.0" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
 
@@ -59,6 +75,10 @@
     <file src="src\Ninject\bin\Android\Release\Ninject.pdb" target="lib\monoandroid\Ninject.pdb" />
     <file src="src\Ninject\bin\Android\Release\Ninject.xml" target="lib\monoandroid\Ninject.xml" />
 
+    <!-- dotnet -->
+    <file src="src\Ninject\bin\dotnet\Release\Ninject.dll" target="lib\dotnet\Ninject.dll" />
+    <file src="src\Ninject\bin\dotnet\Release\Ninject.pdb" target="lib\dotnet\Ninject.pdb" />
+    <file src="src\Ninject\bin\dotnet\Release\Ninject.xml" target="lib\dotnet\Ninject.xml" />
 
     <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />
   </files>
