@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="628b930d-6618-42b0-a40a-d69a130285b6" Publisher="CN=Oren" Version="1.2.0.0" />
+  <Identity Name="628b930d-6618-42b0-a40a-d69a130285b6" Publisher="CN=oren" Version="1.2.0.0" />
   <Properties>
     <DisplayName>Ninject.Tests</DisplayName>
     <PublisherDisplayName>Oren</PublisherDisplayName>

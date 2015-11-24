@@ -22,7 +22,7 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <AppxBundle>Never</AppxBundle>
     <NuGetPackageImportStamp>b49b0ce1</NuGetPackageImportStamp>
-    <PackageCertificateThumbprint>317B339C1FEFCC4F4D20EF5F5771106C5F455D7B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>29B9E22B4197896BE860447CD9E26CF4887AE1B1</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>Ninject.Tests.WinRT_TemporaryKey.pfx</PackageCertificateKeyFile>
     <TargetFrameworkVersion />
   </PropertyGroup>
