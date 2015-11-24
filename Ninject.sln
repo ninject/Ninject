@@ -55,7 +55,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Android.Tests", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.iOS-Unified", "src\Ninject\Ninject.iOS-Unified.csproj", "{420ACA2A-7853-4C5D-A3B1-E7AE938A801F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject-dotnet", "src\Ninject\Ninject-dotnet.csproj", "{00A3D52F-BA8F-49A3-BDF8-FA457E866F3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject-dotnet", "src\Ninject.dotnet\Ninject-dotnet.csproj", "{00A3D52F-BA8F-49A3-BDF8-FA457E866F3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
