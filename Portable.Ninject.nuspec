@@ -7,9 +7,9 @@
     <title>Ninject for Portable Class Libraries</title>
     <authors>Oren Novotny</authors>
     <owners />
-    <licenseUrl>https://github.com/onovotny/ninject/raw/master/LICENSE.txt</licenseUrl>
-    <projectUrl>https://github.com/onovotny/ninject/</projectUrl>
-    <iconUrl>https://github.com/onovotny/ninject/raw/master/logos/Ninject-Logo32.png</iconUrl>
+    <licenseUrl>https://github.com/ninject/ninject/raw/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/ninject/ninject/</projectUrl>
+    <iconUrl>https://github.com/ninject/ninject/raw/master/logos/Ninject-Logo32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Stop writing monolithic applications that make you feel like you have to move mountains to make the simplest of changes. Ninject helps you use the technique of dependency injection to break your applications into loosely-coupled, highly-cohesive components, and then glue them back together in a flexible manner.
@@ -58,8 +58,5 @@
     <file src="src\Ninject\bin\Android\Release\Ninject.dll" target="lib\monoandroid\Ninject.dll" />
     <file src="src\Ninject\bin\Android\Release\Ninject.pdb" target="lib\monoandroid\Ninject.pdb" />
     <file src="src\Ninject\bin\Android\Release\Ninject.xml" target="lib\monoandroid\Ninject.xml" />
-
-
-    <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" />
   </files>
 </package>

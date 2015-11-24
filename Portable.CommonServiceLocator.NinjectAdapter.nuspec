@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Portable.CommonServiceLocator.NinjectAdapter</id>
-        <version>1.3.1</version>
+        <version>$version$</version>
         <title>CommonServiceLocator.NinjectAdapter (Portable)</title>
         <authors>Oren Novotny</authors>
         <owners />
@@ -12,13 +12,12 @@
 Targets .NET 4, SL5, WP8, WinRT, Xamarin.iOS, Xamarin.Android</description>
         <summary>An adapter to implement CommonServiceLocator on top of Ninject 3.0</summary>
         <dependencies>
-            <dependency id="Portable.Ninject" version="3.2.1" />
+            <dependency id="Portable.Ninject" version="$version$" />
             <dependency id="CommonServiceLocator" version="1.3" />
         </dependencies>
     </metadata>
     <files>
         <file src="src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.dll" target="lib\portable-net4+sl5+wp8+win8\CommonServiceLocator.NinjectAdapter.dll" />
         <file src="src\CommonServiceLocator.NinjectAdapter\bin\Release\CommonServiceLocator.NinjectAdapter.pdb" target="lib\portable-net4+sl5+wp8+win8\CommonServiceLocator.NinjectAdapter.pdb" />
-        <file src="src\**\*.cs" target="src" exclude="src\_ReSharper.*\**\*.*;packages\**\*.*;src\**\Debug\**\*.*;" /> 
     </files>
 </package>
