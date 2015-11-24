@@ -1,0 +1,5 @@
+assembly-versioning-scheme: MajorMinorPatch
+next-version: 4.0.0-alpha
+mode: ContinuousDelivery
+legacy-semver-padding: 4
+build-metadata-padding: 4

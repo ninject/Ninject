@@ -19,10 +19,10 @@ build:
   
 after_build:
   - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
-  - cmd: nuget pack Portable.Ninject.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
-  - cmd: nuget pack Portable.CommonServiceLocator.NinjectAdapter.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
-  - cmd: appveyor PushArtifact "Portable.Ninject.%GitVersion_NuGetVersion%.nupkg"  
-  - cmd: appveyor PushArtifact "Portable.CommonServiceLocator.NinjectAdapter.%GitVersion_NuGetVersion%.nupkg"  
+  - cmd: nuget pack Portable.Ninject.nuspec -version "%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
+  - cmd: nuget pack Portable.CommonServiceLocator.NinjectAdapter.nuspec -version "%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
+  - cmd: appveyor PushArtifact "Portable.Ninject.%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%.nupkg"  
+  - cmd: appveyor PushArtifact "Portable.CommonServiceLocator.NinjectAdapter.%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%.nupkg"  
   
 test:
   assemblies:
