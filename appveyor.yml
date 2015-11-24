@@ -18,7 +18,7 @@ build:
   project: Ninject.sln
   
 after_build:
-  - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f src\Humanizer.sln -u https://github.com/MehdiK/Humanizer -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
+  - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
   - cmd: nuget pack src\Portable.Ninject.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
   - cmd: nuget pack src\Portable.CommonServiceLocator.NinjectAdapter.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
   - cmd: appveyor PushArtifact "Portable.Ninject.%GitVersion_NuGetVersion%.nupkg"  
@@ -27,6 +27,7 @@ after_build:
 test:
   assemblies:
     - '**\Ninject.Tests.dll'
+    --'**\CommonServiceLocator.NinjectAdapter.Tests.dll'
   
 deploy:
   provider: NuGet
