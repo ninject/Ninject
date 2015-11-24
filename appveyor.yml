@@ -27,7 +27,7 @@ after_build:
 test:
   assemblies:
     - '**\Ninject.Tests.dll'
-    --'**\CommonServiceLocator.NinjectAdapter.Tests.dll'
+    - '**\CommonServiceLocator.NinjectAdapter.Tests.dll'
   
 deploy:
   provider: NuGet
