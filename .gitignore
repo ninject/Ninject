@@ -13,3 +13,4 @@ packages/
 AppPackages
 .vs/
 TestResults/
+*.nuget.targets

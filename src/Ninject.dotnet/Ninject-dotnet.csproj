@@ -17,6 +17,12 @@
     </TargetFrameworkProfile>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- example NuSpec file that must be specified -->
+    <NuSpecFile Include="$(SolutionDir)Portable.Ninject.nuspec">
+      <Visible>False</Visible>
+    </NuSpecFile>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
