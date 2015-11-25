@@ -17,7 +17,7 @@
   "frameworks": {
     "dnxcore50": {
       "compilationOptions": {
-        "define": [ "DOTNET" ]
+        "define": [ "DOTNET", "NO_MOQ" ]
       },
       "dependencies": {
         "FluentAssertions": "4.0.1",
