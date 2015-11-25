@@ -27,7 +27,7 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
 
-#if !WINRT
+#if !WINRT && !DOTNET
         void 
 #else
         System.Threading.Tasks.Task

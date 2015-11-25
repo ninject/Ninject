@@ -45,7 +45,7 @@ namespace Ninject.Injection
             EmitLoadMethodArguments(il, constructor);
             il.Emit(OpCodes.Newobj, constructor);
 
-#if !WINRT
+#if !WINRT && !DOTNET
             if (constructor.ReflectedType.IsValueType)
                 il.Emit(OpCodes.Box, constructor.ReflectedType);
 #else
@@ -159,7 +159,7 @@ namespace Ninject.Injection
         private static void EmitUnboxOrCast(ILGenerator il, Type type)
         {
             OpCode opCode = type
-#if WINRT
+#if WINRT || DOTNET
                 .GetTypeInfo()
 #endif
                 .IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass;

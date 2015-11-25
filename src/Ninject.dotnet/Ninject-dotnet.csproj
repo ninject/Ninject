@@ -28,7 +28,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Ninject\bin\dotnet\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PCL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DOTNET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -41,7 +41,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Ninject\bin\dotnet\Release\</OutputPath>
-    <DefineConstants>TRACE;PCL</DefineConstants>
+    <DefineConstants>TRACE;DOTNET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Ninject\bin\dotnet\Release\Ninject.xml</DocumentationFile>
@@ -117,6 +117,7 @@
     <Compile Include="..\Ninject\Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="..\Ninject\Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="..\Ninject\Infrastructure\Language\ExtensionsForAssembly.cs" />
+    <Compile Include="..\Ninject\Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="..\Ninject\Infrastructure\Language\ExtensionsForIEnumerable.cs" />
     <Compile Include="..\Ninject\Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
     <Compile Include="..\Ninject\Infrastructure\Language\ExtensionsForMemberInfo.cs" />
@@ -233,9 +234,7 @@
     <None Include="project.json" />
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

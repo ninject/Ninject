@@ -1,0 +1,11 @@
+{
+  "version": "99.99.99-dev",
+  "frameworks": {
+    "dnxcore50": {
+      "bin": {
+        "assembly": "../../src/Ninject/bin/dotnet/Debug/Ninject.dll",
+        "pdb": "../../src/Ninject/bin/dotnet/Debug/Ninject.pdb"
+      }
+    }
+  }
+}

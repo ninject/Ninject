@@ -1,4 +1,4 @@
-﻿#if !WINRT
+﻿#if !WINRT && !DNXCORE50
 namespace Ninject.Tests.Integration.ThreadScopeTests
 {
     using System;

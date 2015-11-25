@@ -11,7 +11,7 @@
 using System;
 using System.Reflection;
 
-#if WINRT
+#if WINRT || DOTNET
 using System.Collections.Generic;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
@@ -24,7 +24,7 @@ namespace Ninject.Planning.Targets
     /// Represents an injection target for a <see cref="PropertyInfo"/>.
     /// </summary>
     public class PropertyTarget : 
-#if !WINRT 
+#if !WINRT && !DOTNET
         Target<PropertyInfo>
 #else
         Target
@@ -51,17 +51,17 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="site">The property that this target represents.</param>
         public PropertyTarget(PropertyInfo site) : base(site
-#if !WINRT
+#if !WINRT && !DOTNET
             , site
 #endif
 )
         {
-#if WINRT
+#if WINRT || DOTNET
             Site = site;
 #endif
         }
 
-#if WINRT
+#if WINRT || DOTNET
 
         public PropertyInfo Site { get; private set; }
 

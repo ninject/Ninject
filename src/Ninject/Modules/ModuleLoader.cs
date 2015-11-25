@@ -45,7 +45,7 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="patterns">The patterns to search.</param>
         public
-#if !WINRT
+#if !WINRT && !DOTNET
  void
 #else
  async System.Threading.Tasks.Task
@@ -58,7 +58,7 @@ namespace Ninject.Modules
             var plugins = KernelConfiguration.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
-#if !WINRT
+#if !WINRT && !DOTNET
                 .SelectMany(pattern => GetFilesMatchingPattern(pattern))
                 .GroupBy(filename => Path.GetExtension(filename).ToLowerInvariant());
 #else
@@ -71,7 +71,7 @@ namespace Ninject.Modules
                 IModuleLoaderPlugin plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
                 if (plugin != null)
-#if WINRT
+#if WINRT || DOTNET
                     await 
 #endif               
                     plugin.LoadModules(fileGroup);
@@ -81,14 +81,14 @@ namespace Ninject.Modules
 #endif
 
 #if !PCL
-#if WINRT
+#if WINRT || DOTNET
         private static string GetExtension(string filename)
         {
             var i = filename.LastIndexOf('.');
             return filename.Substring(i);
         }
 #endif
-#if !WINRT
+#if !WINRT && !DOTNET
         private static IEnumerable<string> GetFilesMatchingPattern(string pattern)
         {
             return NormalizePaths(Path.GetDirectoryName(pattern))

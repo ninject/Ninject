@@ -1,5 +1,6 @@
 #if !NO_MOQ
 #if !NO_ASSEMBLY_SCANNING
+#if !DOTNET
 namespace Ninject.Tests.Unit
 {
     using System;
@@ -68,5 +69,6 @@ namespace Ninject.Tests.Unit
         }
     }
 }
+#endif //!DOTNET
 #endif //!NO_ASSEMBLY_SCANNING
 #endif

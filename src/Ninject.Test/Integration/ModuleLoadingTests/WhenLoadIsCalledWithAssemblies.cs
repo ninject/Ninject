@@ -1,4 +1,4 @@
-﻿#if !NO_ASSEMBLY_SCANNING && !NO_MOQ
+﻿#if !NO_ASSEMBLY_SCANNING && !NO_MOQ && !DOTNET
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System.Linq;
@@ -13,6 +13,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         public void ModulesContainedInAssembliesAreLoaded()
         {
             var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule) };
+
             var assembly = Assembly.GetExecutingAssembly();
             
             this.Kernel.Load(assembly);

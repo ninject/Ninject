@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0-*",
+  "description": "Ninject dotnet Tests",
+  "compile": [
+    "../../Ninject.Test/**/*.cs"
+  ],
+
+  "dependencies": {
+    "xunit": "2.1.0",
+    "xunit.runner.dnx": "2.1.0-beta6-build191"
+  },
+
+  "commands": {
+    "test": "xunit.runner.dnx"
+  },
+
+  "frameworks": {
+    "dnxcore50": {
+      "compilationOptions": {
+        "define": [ "DOTNET" ]
+      },
+      "dependencies": {
+        "FluentAssertions": "4.0.1",
+        "moq.netcore": "4.4.0-beta8",
+        "Ninject": "99.99.99-dev"
+      }
+    }
+  }
+}

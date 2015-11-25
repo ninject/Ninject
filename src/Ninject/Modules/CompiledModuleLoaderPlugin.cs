@@ -77,7 +77,7 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
         public
-#if !WINRT
+#if !WINRT && !DOTNET
         void 
 #else
  async System.Threading.Tasks.Task
@@ -88,7 +88,7 @@ namespace Ninject.Modules
             throw new NotImplementedException();
 #else
             var assembliesWithModules = 
-#if WINRT
+#if WINRT || DOTNET
                 await 
 #endif
             this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());

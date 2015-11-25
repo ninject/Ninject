@@ -60,7 +60,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Singleton);
         }
 
-#if !WINRT
+#if !WINRT && !DOTNET
         [Fact]
         public void CanOverrideDefaultScopeWithThreadInBinding()
         {
@@ -144,7 +144,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             var binding = kernel.GetBindings(typeof(IService)).FirstOrDefault();
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Transient);
         }
-#if !WINRT
+#if !WINRT && !DNXCORE50
         [Fact]
         public void ScopeShouldBeThread()
         {
@@ -158,7 +158,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             TestSelfBindedTypesAreTransient();
         }
 
-#if !WINRT
+#if !WINRT && !DNXCORE50
         [Fact]
         public void ExplicitSelfBindedTypeShouldHaveThreadScope()
         {
@@ -172,7 +172,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
         {
             var settings = new NinjectSettings
                            {
-#if !WINRT
+#if !WINRT && !DNXCORE50
                                DefaultScopeCallback = StandardScopeCallbacks.Thread
 #endif
                            };

@@ -11,7 +11,7 @@
 using System;
 using System.Reflection;
 using Ninject.Infrastructure;
-#if WINRT
+#if WINRT || DOTNET
 using Ninject.Infrastructure.Language;
 using System.Collections.Generic;
 #endif
@@ -24,7 +24,7 @@ namespace Ninject.Planning.Targets
     /// Represents an injection target for a <see cref="ParameterInfo"/>.
     /// </summary>
     public class ParameterTarget :
-#if !WINRT
+#if !WINRT && !DOTNET
         Target<ParameterInfo>
 #else
         Target
@@ -60,7 +60,7 @@ namespace Ninject.Planning.Targets
 #if PCL
             throw new NotImplementedException();
 #else
-#if WINRT
+#if WINRT || DOTNET
                 var val = defaultValue.Value;
 
                 if (val != null)
@@ -94,19 +94,19 @@ namespace Ninject.Planning.Targets
         /// <param name="method">The method that defines the parameter.</param>
         /// <param name="site">The parameter that this target represents.</param>
         public ParameterTarget(MethodBase method, ParameterInfo site) : base(method
-#if !WINRT
+#if !WINRT && !DOTNET
             , site
 #endif
             )
         {
             defaultValue = new Future<object>(() => site.DefaultValue);
 
-#if WINRT
+#if WINRT || DOTNET
             Site = site;
 #endif
         }
 
-#if WINRT
+#if WINRT || DOTNET
 
         public ParameterInfo Site { get; private set; }
 

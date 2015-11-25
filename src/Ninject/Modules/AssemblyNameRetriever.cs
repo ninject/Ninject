@@ -30,7 +30,7 @@ namespace Ninject.Modules
 
     using Ninject.Components;
 
-#if WINRT
+#if WINRT || DOTNET
     using System.Threading.Tasks;
 #endif
 
@@ -46,17 +46,17 @@ namespace Ninject.Modules
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
         public
-#if !WINRT
+#if !WINRT && !DOTNET
         IEnumerable<AssemblyName> 
 #else
- System.Threading.Tasks.Task<IEnumerable<AssemblyName>>
+        System.Threading.Tasks.Task<IEnumerable<AssemblyName>>
 #endif
-            GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+        GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
 #if PCL
             throw new NotImplementedException();
 #else
-#if !WINRT
+#if !WINRT && !DOTNET
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -66,12 +66,15 @@ namespace Ninject.Modules
                     assemblyCheckerType.FullName ?? string.Empty);
 
                 return checker.GetAssemblyNames(filenames.ToArray(), filter);
+#elif DOTNET
+                var checker = new AssemblyCheckerDotNet();
+                return checker.GetAssemblyListAsync(filenames, filter);
 #else
                 var checker = new AssemblyCheckerWinRT();
                 return checker.GetAssemblyListAsync(filenames.ToArray(), filter);
 #endif
 
-#if !WINRT
+#if !WINRT && !DOTNET
             }
             finally
             {
@@ -82,7 +85,7 @@ namespace Ninject.Modules
         }
 
 #if !PCL
-#if !WINRT
+#if !WINRT && !DOTNET
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -138,6 +141,38 @@ namespace Ninject.Modules
                     if (filter(assembly))
                     {
                         result.Add(assembly.GetName(false));
+                    }
+                }
+
+                return result;
+            }
+        }
+#elif DOTNET
+        private sealed class AssemblyCheckerDotNet
+        {
+            public async Task<IEnumerable<AssemblyName>> GetAssemblyListAsync(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            {
+                await Task.Yield(); // to get rid of CS1998 warning: ...lacks 'await' operators...
+                var result = new List<AssemblyName>();
+                foreach (var filename in filenames)
+                {
+                    Assembly assembly = null;
+                    if (File.Exists(filename))
+                    {
+                        try
+                        {
+                            string simpleName = Path.GetFileNameWithoutExtension(filename);
+                            assembly = Assembly.Load(new AssemblyName(simpleName));
+                        }
+                        catch (BadImageFormatException)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (filter(assembly))
+                    {
+                        result.Add(new AssemblyName() { Name = assembly.GetName().Name });
                     }
                 }
 

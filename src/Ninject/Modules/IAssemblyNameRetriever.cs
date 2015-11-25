@@ -39,7 +39,7 @@ namespace Ninject.Modules
         /// <param name="filenames">The filenames.</param>
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-#if !WINRT
+#if !WINRT && !DOTNET
         IEnumerable<AssemblyName> 
 #else
         System.Threading.Tasks.Task<IEnumerable<AssemblyName>>

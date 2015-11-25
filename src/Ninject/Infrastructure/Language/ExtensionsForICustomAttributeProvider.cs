@@ -16,13 +16,13 @@ namespace Ninject.Infrastructure.Language
     using System;
     using System.Reflection;
     
-#if WINRT
+#if WINRT || DOTNET
     using Ninject.Planning.Targets;
 #endif
 
     internal static class ExtensionsForICustomAttributeProvider
     {
-#if !WINRT
+#if !WINRT && !DOTNET
 
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {

@@ -14,7 +14,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 #if WINRT
-using System.Diagnostics;  
+using System.Diagnostics;
 #endif
 using Ninject.Activation;
 using Ninject.Planning.Bindings;
@@ -122,7 +122,7 @@ namespace Ninject.Infrastructure.Introspection
 #endif
         }
 
-#if WINRT
+#if WINRT || DOTNET
         private static MemberTypes GetMemberType(this MemberInfo member)
         {
             if (member is FieldInfo)
@@ -166,12 +166,12 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The target formatted as string.</returns>
         public static string Format(this ITarget target)
         {
-#if PCL
+#if PCL && !DOTNET
             throw new NotImplementedException();
 #else
             using (var sw = new StringWriter())
             {
-#if !WINRT
+#if !WINRT && !DOTNET
                 switch (target.Member.MemberType)
 #else
                 switch(target.Member.GetMemberType())
@@ -193,9 +193,9 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
-#if !WINRT
+#if !WINRT && !DOTNET
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
-                #else
+#else
 #endif
 
                 return sw.ToString();
@@ -212,7 +212,7 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The type formatted as string.</returns>
         public static string Format(this Type type)
         {
-#if PCL
+#if PCL && !DOTNET
             throw new NotImplementedException();
 #else
             var friendlyName = GetFriendlyName(type);
@@ -226,7 +226,7 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
-#if !WINRT
+#if !WINRT && !DOTNET
             switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
 #else
             switch (friendlyName.ToLower())

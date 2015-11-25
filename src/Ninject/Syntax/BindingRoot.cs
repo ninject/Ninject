@@ -49,7 +49,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
-#if PCL
+#if PCL && !DOTNET
             throw new NotImplementedException();
 #else
             Type service = typeof(T);

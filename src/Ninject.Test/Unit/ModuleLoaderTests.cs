@@ -36,6 +36,7 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
         }
     }
 
+#if !DOTNET
     public class WhenLoadModulesIsCalled : ModuleLoaderContext
     {
         [Fact]
@@ -50,6 +51,7 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
             barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));
         }
     }
+#endif //!DOTNET
 }
 #endif //!NO_ASSEMBLY_SCANNING
 #endif

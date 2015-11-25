@@ -25,7 +25,7 @@ namespace Ninject.Planning.Targets
     /// Represents a site on a type where a value can be injected.
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
-#if !WINRT 
+#if !WINRT && !DOTNET
     public abstract class Target<T> : ITarget
 #if !PCL
         where T : ICustomAttributeProvider
@@ -42,7 +42,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public MemberInfo Member { get; private set; }
 
-#if !WINRT
+#if !WINRT && !DOTNET
         /// <summary>
         /// Gets or sets the site (property, parameter, etc.) represented by the target.
         /// </summary>
@@ -91,7 +91,7 @@ namespace Ninject.Planning.Targets
             get { throw new InvalidOperationException(ExceptionFormatter.TargetDoesNotHaveADefaultValue(this)); }
         }
 
-#if !WINRT
+#if !WINRT && !DOTNET
         /// <summary>
         /// Initializes a new instance of the Target&lt;T&gt; class.
         /// </summary>
@@ -130,13 +130,13 @@ namespace Ninject.Planning.Targets
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns>An array of custom attributes of the specified type.</returns>
         public
-#if WINRT
+#if WINRT || DOTNET
             abstract
 #endif
             IEnumerable<Attribute>
 
             GetCustomAttributes(Type attributeType, bool inherit)
-#if WINRT
+#if WINRT || DOTNET
             ;
 #else
         {
@@ -154,13 +154,13 @@ namespace Ninject.Planning.Targets
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns>An array of custom attributes.</returns>
         public
-#if WINRT
+#if WINRT || DOTNET
  abstract 
 #endif
             IEnumerable<Attribute>
 
             GetCustomAttributes(bool inherit)
-#if WINRT
+#if WINRT || DOTNET
             ;
 #else
         {
@@ -179,11 +179,11 @@ namespace Ninject.Planning.Targets
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
         /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
         public
-#if WINRT
+#if WINRT || DOTNET
             abstract
 #endif
             bool IsDefined(Type attributeType, bool inherit)
-#if WINRT
+#if WINRT || DOTNET
             ;
 #else
         {
@@ -268,13 +268,13 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
         protected
-#if !WINRT
+#if !WINRT && !DOTNET
             virtual
 #else
             abstract
 #endif
             bool ReadOptionalFromTarget()
-#if WINRT
+#if WINRT || DOTNET
             ;
 #else
         {
