@@ -109,6 +109,7 @@
     <Compile Include="Components\INinjectComponent.cs" />
     <Compile Include="Components\NinjectComponent.cs" />
     <Compile Include="IBindingPrecedenceComparer.cs" />
+    <Compile Include="IHaveBindingRoot.cs" />
     <Compile Include="IHaveNinjectComponents.cs" />
     <Compile Include="IHaveNinjectSettings.cs" />
     <Compile Include="IInitializable.cs" />

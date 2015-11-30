@@ -327,7 +327,7 @@
         private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
         {
             var binding = new Binding(typeof(T));
-            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            new BindingBuilder<T>(binding, null, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
             bindings.Add(typeof(T), binding);
         }
 

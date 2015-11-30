@@ -43,8 +43,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="binding">The binding to build.</param>
         /// <param name="settings">The ninject configuration settings.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBinding binding, INinjectSettings settings, string serviceNames)
-            : base(binding.BindingConfiguration, settings, serviceNames)
+        public BindingBuilder(IBinding binding, IBindingRoot bindingRoot, INinjectSettings settings, string serviceNames)
+            : base(binding.BindingConfiguration, bindingRoot, settings, serviceNames)
         {
             this.Binding = binding;
         }
@@ -64,7 +64,7 @@ namespace Ninject.Planning.Bindings
             StandardProvider.AssignProviderCallback(this.BindingConfiguration, this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.BindingRoot, this.ServiceNames);
         }
 
         /// <summary>

@@ -53,13 +53,19 @@ namespace Ninject.Planning.Bindings
         public IBindingConfiguration BindingConfiguration { get; private set; }
 
         /// <summary>
+        /// Gets the associated binding root.
+        /// </summary>
+        public IBindingRoot BindingRoot { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
-        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
+        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, IBindingRoot bindingRoot, string serviceNames)
         {
             this.BindingConfiguration = bindingConfiguration;
+            this.BindingRoot = bindingRoot;
             this.serviceNames = serviceNames;
         }
 
