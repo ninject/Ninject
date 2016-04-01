@@ -109,7 +109,7 @@ using Ninject.Planning.Bindings;
         /// <inheritdoc />
         public object Resolve()
         {
-            if (this.Request.ActiveBindings.Contains(this.Binding))
+            if (IsCyclical(Request.ParentContext, Request.Service))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -189,5 +189,21 @@ using Ninject.Planning.Bindings;
 
             return reference.Instance;
         }
+		
+        private static bool IsCyclical(IContext context, Type currentServiceType)
+        {
+            if (context == null)
+                return false;
+
+            if (context.Request.Target is Planning.Targets.PropertyTarget)
+                return false;
+
+            if (context.Request.ParentContext != null && IsCyclical(context.Request.ParentContext, currentServiceType))
+                return true;
+
+            return context.Request.Service == currentServiceType;
+        }
+	
+		
     }
 }

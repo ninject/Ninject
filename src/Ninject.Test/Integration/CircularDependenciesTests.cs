@@ -1,10 +1,12 @@
 ﻿namespace Ninject.Tests.Integration.CircularDependenciesTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Parameters;
+    using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
     public class CircularDependenciesContext : IDisposable
@@ -122,6 +124,55 @@
         }
     }
 
+    public class WhenDependenciesHaveOpenGenericCircularReferenceBetweenConstructors : CircularDependenciesContext
+    {
+        public WhenDependenciesHaveOpenGenericCircularReferenceBetweenConstructors()
+        {
+            kernel.Bind(typeof(IOptions<>)).To(typeof(OptionsManager<>));
+
+            kernel.Bind<IConfigureOptions<ClassA>>().To<ConfigureA1>();
+            kernel.Bind<IConfigureOptions<ClassA>>().To<ConfigureA2>();
+            kernel.Bind<IConfigureOptions<ClassB>>().To<ConfigureB1>();
+
+
+        }
+
+        [Fact]
+        public void DoesNotThrowException()
+        {
+            kernel.Get<IOptions<ClassA>>();
+
+        }
+
+        [Fact]
+        public void DoesNotThrowException2()
+        {
+            var o = kernel.Get<HasOptionsPropertyInjected>();
+
+        }
+
+        [Fact]
+        public void DetectsCyclicDependenciesInPropertySetter()
+        {
+            Action act = () => kernel.Get<IOptions<ClassB>>();
+
+            act.ShouldThrow<ActivationException>();
+        }
+
+        [Fact]
+        public void DetectsCyclicDependenciesForGenericServiceRegisteredViaOpenGenericType2()
+        {
+            kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericServiceWithGenericConstructor<>));
+
+            Action act = () => kernel.Get<IGeneric<int>>();
+
+            act.ShouldThrow<ActivationException>();
+        }
+
+    }
+
+
+
     public class TwoWayConstructorFoo
     {
         public TwoWayConstructorFoo(TwoWayConstructorBar bar) { }
@@ -170,6 +221,59 @@
     public class ThreeWayPropertyBaz
     {
         [Inject] public ThreeWayPropertyFoo Foo { get; set; }
+    }
+
+    public class GenericServiceWithGenericConstructor<T> : IGeneric<T>
+    {
+        public GenericServiceWithGenericConstructor(IGeneric<T> arg)
+        {
+        }
+    }
+
+    public interface IOptions<T>
+    {
+    }
+
+    public class OptionsManager<T> : IOptions<T>
+    {
+        public OptionsManager(IList<IConfigureOptions<T>> items)
+        {
+        }
+    }
+
+    public interface IConfigureOptions<T>
+    {
+    }
+
+    public class ConfigureA1 : IConfigureOptions<ClassA>
+    {
+    }
+    public class ConfigureA2 : IConfigureOptions<ClassA>
+    {
+        public ConfigureA2(IOptions<ClassB> bOptions)
+        {
+        }
+    }
+
+    public class ConfigureB1 : IConfigureOptions<ClassB>
+    {
+        [Inject]
+        public IOptions<ClassA> ClassAOptions { get; set; }
+    }
+
+
+    public class ClassA
+    {
+    }
+
+    public class ClassB
+    {
+    }
+
+    public class HasOptionsPropertyInjected
+    {
+        [Inject]
+        public IOptions<ClassA> ClassAOptions { get; set; }
     }
 
 }
