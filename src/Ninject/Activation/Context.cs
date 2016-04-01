@@ -20,17 +20,17 @@
 
 namespace Ninject.Activation
 {
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
-using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Bindings;
-
+    using Ninject.Activation.Caching;
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+    using Planning.Targets;
     /// <summary>
     /// Contains information about the activation of a single instance.
     /// </summary>
@@ -109,7 +109,7 @@ using Ninject.Planning.Bindings;
         /// <inheritdoc />
         public object Resolve()
         {
-            if (IsCyclical(Request.ParentContext, Request.Service))
+            if (IsCyclical(Request.ParentContext))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -119,18 +119,18 @@ using Ninject.Planning.Bindings;
                 this.cachedScope = this.Request.GetScope() ?? this.Binding.GetScope(this);
 
                 if (this.cachedScope != null)
-            {
-                    lock (this.cachedScope)
                 {
+                    lock (this.cachedScope)
+                    {
                         return this.ResolveInternal(this.cachedScope);
+                    }
+                }
+                else
+                {
+                    return this.ResolveInternal(null);
                 }
             }
-            else
-            {
-                return this.ResolveInternal(null);
-            }
-        }
-            finally 
+            finally
             {
                 this.cachedScope = null;
             }
@@ -189,21 +189,24 @@ using Ninject.Planning.Bindings;
 
             return reference.Instance;
         }
-		
-        private static bool IsCyclical(IContext context, Type currentServiceType)
+
+        private bool IsCyclical(IContext targetContext)
         {
-            if (context == null)
+            if (targetContext == null)
                 return false;
 
-            if (context.Request.Target is Planning.Targets.PropertyTarget)
-                return false;
+            if (targetContext.Request.Service == Request.Service)
+            {
+                if (!(Request.Target is PropertyTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
+                    return true;
+            }
 
-            if (context.Request.ParentContext != null && IsCyclical(context.Request.ParentContext, currentServiceType))
+            if (IsCyclical(targetContext.Request.ParentContext))
                 return true;
 
-            return context.Request.Service == currentServiceType;
+            return false;
         }
-	
-		
+
+
     }
 }
