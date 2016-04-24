@@ -76,6 +76,23 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             moduleLoadingAction.ShouldThrow<NotSupportedException>();
         }
 
+		[Fact]
+		public void TwoModulesWithSameNamesDoesNotLoadSecondModule()
+		{
+			const string ModuleName = "SomeModuleName";
+			var moduleMock1 = this.CreateModuleMock(ModuleName);
+			var module1 = moduleMock1.Object;
+			var moduleMock2= this.CreateModuleMock(ModuleName);
+			var module2 = moduleMock2.Object;
+
+            this.Kernel.LoadIfNotLoaded(module1);
+            this.Kernel.LoadIfNotLoaded(module2);
+
+			this.Kernel.GetModules().Should().BeEquivalentTo(module1);
+			moduleMock1.Verify(x => x.OnLoad(this.Kernel), Times.Once());
+			moduleMock2.Verify(x => x.OnLoad(this.Kernel), Times.Never());
+		}
+
         [Fact]
         public void ModuleWithSameNameCanBeLoadedAfterTheFirstIsUnloaded()
         {
@@ -113,6 +130,27 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             this.Kernel.Load(moduleMock1.Object, moduleMock2.Object);
 
             orderStringBuilder.ToString().Should().Be("LoadModule1 LoadModule2 VerifyModule VerifyModule ");
+        }
+
+        [Fact]
+        public void ModulesAreVerifiedAfterAllModulesAreLoadedExcludingPreviouslyLoadedModules()
+        {
+            var moduleMock1 = this.CreateModuleMock("SomeName1");
+            var moduleMock2 = this.CreateModuleMock("SomeName1");
+            var moduleMock3 = this.CreateModuleMock("SomeName2");
+            var orderStringBuilder = new StringBuilder();
+
+            moduleMock1.Setup(m => m.OnLoad(this.Kernel)).Callback(() => orderStringBuilder.Append("LoadModule1 "));
+            moduleMock3.Setup(m => m.OnLoad(this.Kernel)).Callback(() => orderStringBuilder.Append("LoadModule2 "));
+            moduleMock1.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
+            moduleMock3.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
+
+            this.Kernel.Settings.LoadModuleIfNotLoaded = true;
+            this.Kernel.Load(moduleMock1.Object, moduleMock2.Object, moduleMock3.Object);
+
+            orderStringBuilder.ToString().Should().Be("LoadModule1 LoadModule2 VerifyModule VerifyModule ");
+            moduleMock2.Verify(m => m.OnLoad(this.Kernel), Times.Never());
+            moduleMock2.Verify(m => m.OnVerifyRequiredModules(), Times.Never());
         }
     }
 }

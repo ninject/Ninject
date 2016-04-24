@@ -42,6 +42,33 @@ namespace Ninject
             kernelConfiguration.Load(modules);
         }
 
+		/// <summary>
+		/// Creates a new instance of the module and loads it into the kernel if it is not loaded.
+		/// </summary>
+		/// <typeparam name="TModule">The type of module.</typeparam>
+		/// <param name="kernelConfiguration">The kernel configuration into which the module is loaded.</param>
+		public static void LoadIfNotLoaded<TModule>(this IKernelConfiguration kernelConfiguration)
+			where TModule : INinjectModule, new()
+		{
+			kernelConfiguration.LoadIfNotLoaded(new TModule());
+		}
+
+		/// <summary>
+		/// Loads the module(s) into the kernel if the module is not loaded.
+		/// </summary>
+		/// <param name="kernelConfiguration">The kernel configuration.</param>
+		/// <param name="modules">The modules to load into which the modules are loaded.</param>
+		public static void LoadIfNotLoaded(this IKernelConfiguration kernelConfiguration, params INinjectModule[] modules)
+		{
+			foreach (var module in modules)
+			{
+				if (kernelConfiguration.HasModule(module.Name))
+				{
+					kernelConfiguration.Load(module);
+				}
+			}
+		}
+
         #if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).

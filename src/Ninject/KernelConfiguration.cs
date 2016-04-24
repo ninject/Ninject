@@ -147,7 +147,15 @@
 
                 if (this.modules.TryGetValue(module.Name, out existingModule))
                 {
-                    throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
+					if (this.Settings.LoadModuleIfNotLoaded)
+                    {
+                        // Go to next module because this one was loaded
+                        continue;
+                    }
+                    else
+					{
+						throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded (module, existingModule));
+					}
                 }
 
                 module.OnLoad(this);
