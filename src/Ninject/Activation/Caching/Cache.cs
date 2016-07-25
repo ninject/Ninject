@@ -1,16 +1,17 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Activation.Caching
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Ninject.Components;
@@ -37,8 +38,8 @@ namespace Ninject.Activation.Caching
         /// <param name="cachePruner">The cache pruner component.</param>
         public Cache(IPipeline pipeline, ICachePruner cachePruner)
         {
-            Ensure.ArgumentNotNull(pipeline, "pipeline");
-            Ensure.ArgumentNotNull(cachePruner, "cachePruner");
+            Contract.Requires(pipeline != null);
+            Contract.Requires(cachePruner != null);
 
             this.Pipeline = pipeline;
             cachePruner.Start(this);
@@ -60,7 +61,7 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">A Boolean indicating whether release managed resource or not.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !IsDisposed)
@@ -78,7 +79,7 @@ namespace Ninject.Activation.Caching
         /// <param name="reference">The instance reference.</param>
         public void Remember(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
 
             var scope = context.GetScope();
             var entry = new CacheEntry(context, reference);
@@ -107,7 +108,8 @@ namespace Ninject.Activation.Caching
         /// <returns>The instance for re-use, or <see langword="null"/> if none has been stored.</returns>
         public object TryGet(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
+
             var scope = context.GetScope();
             if (scope == null)
             {
@@ -149,7 +151,7 @@ namespace Ninject.Activation.Caching
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         public bool Release(object instance)
         {
-            lock(this.entries)
+            lock (this.entries)
             {
                 var instanceFound = false;
                 foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values).ToList())
@@ -214,7 +216,7 @@ namespace Ninject.Activation.Caching
         }
 
         /// <summary>
-        /// Gets all entries for a binding withing the selected scope.
+        /// Gets all entries for a binding within the selected scope.
         /// </summary>
         /// <param name="bindings">The bindings.</param>
         /// <returns>All bindings of a binding.</returns>
@@ -268,7 +270,7 @@ namespace Ninject.Activation.Caching
             {
                 this.Context = context;
                 this.Reference = reference;
-           }
+            }
 
             /// <summary>
             /// Gets the context of the instance.

@@ -1,0 +1,29 @@
+{
+  "version": "3.2.5-beta-*",
+  "authors": [ "Nate Kohari (nate@enkari.com)", "Remo Gloor (remo.gloor@gmail.com)", "Ninject Contributors" ],
+  "description": "Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.",
+  "copyright": "2007-2009, Enkari, Ltd. 2009-2016, Ninject Contributors.",
+  "dependencies": {
+    "StyleCop.Analyzers": "1.0.0"
+  },
+  "frameworks": {
+    "netstandard1.5": {
+      "buildOptions": {
+        "define": [ "CORE", "NO_PARTIAL_TRUST", "NO_SERVICE_PROVIDER", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION", "NO_THREADING" ]
+      },
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Reflection.Emit.ILGeneration": "4.0.1",
+        "System.Reflection.Emit.Lightweight": "4.0.1",
+        "System.Reflection.Extensions": "4.0.1",
+        "System.Diagnostics.Contracts": "4.0.1",
+        "System.Data.Common": "4.1.0"
+      }
+    },
+    "net452": {
+      "buildOptions": {
+        "define": [ "NO_PARTIAL_TRUST" ]
+      }
+    }
+  }
+}

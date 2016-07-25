@@ -2,7 +2,7 @@
 // <copyright file="BindingConfiguration.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -23,6 +23,7 @@ namespace Ninject.Planning.Bindings
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
@@ -104,7 +105,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The provider to use.</returns>
         public IProvider GetProvider(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
             return this.ProviderCallback(context);
         }
 
@@ -115,7 +116,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
         public object GetScope(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
             return this.ScopeCallback(context);
         }
 
@@ -126,8 +127,8 @@ namespace Ninject.Planning.Bindings
         /// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
         public bool Matches(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.Condition == null || this.Condition(request);
-        }    
+        }
     }
 }

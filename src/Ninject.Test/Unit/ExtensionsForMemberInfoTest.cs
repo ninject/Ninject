@@ -7,7 +7,6 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure.Language;
     using Xunit;
 
-#if !SILVERLIGHT
     public class ExtensionsForMemberInfoTest
     {
         [Fact]
@@ -35,7 +34,7 @@ namespace Ninject.Tests.Unit
             this.TestGetCustomAttributesExtended("ProtectedProperty");
             this.TestGetCustomAttributesExtended("PrivateProperty");
         }
-        
+
         [Fact]
         public void GetCustomAttributesExtendedForAttributesOnBaseClass()
         {
@@ -94,7 +93,7 @@ namespace Ninject.Tests.Unit
         {
             var propertyInfo = testObject.GetType()
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit);
+            object[] attributes = propertyInfo.GetCustomAttributesExtended(attributeType, inherit).ToArray();
 
             attributes.Length.Should().Be(expectedAttributes.Length);
             foreach (var expectedAttribute in expectedAttributes)
@@ -118,7 +117,7 @@ namespace Ninject.Tests.Unit
             this.TestHasAttribute(propertyAttributeClass, propertyName, typeof(NotInheritedInjectAttribute), false);
             this.TestHasAttribute(propertyAttributeClass, propertyName, typeof(NamedAttribute), false);
         }
-        
+
         private void TestHasAttribute(object testObject, string attributeName, Type attributeType, bool expectedValue)
         {
             var propertyInfo = testObject.GetType()
@@ -132,7 +131,7 @@ namespace Ninject.Tests.Unit
         public class NotInheritedInjectAttribute : InjectAttribute
         {
         }
-        
+
         public class PropertyAttributeTest
         {
             [Inject]
@@ -215,7 +214,6 @@ namespace Ninject.Tests.Unit
                 {
                 }
             }
-        }    
+        }
     }
-#endif
 }

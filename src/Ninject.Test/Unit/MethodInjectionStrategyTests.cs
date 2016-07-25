@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
+    using System;
     using FluentAssertions;
 
     public class MethodInjectionStrategyContext
@@ -50,8 +51,8 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 
             directives = new[]
             {
-                new FakeMethodInjectionDirective(method1, injector1),
-                new FakeMethodInjectionDirective(method2, injector2)
+                new FakeMethodInjectionDirective(typeof(Dummy), method1, injector1),
+                new FakeMethodInjectionDirective(typeof(Dummy), method2, injector2)
             };
 
             contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
@@ -94,10 +95,10 @@ namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
     {
         public Mock<ITarget>[] TargetMocks { get; private set; }
 
-        public FakeMethodInjectionDirective(MethodInfo method, MethodInjector injector)
-            : base(method, injector) { }
+        public FakeMethodInjectionDirective(Type service, MethodInfo method, MethodInjector injector)
+            : base(service, method, injector) { }
 
-        protected override ITarget[] CreateTargetsFromParameters(MethodInfo method)
+        protected override ITarget[] CreateTargetsFromParameters(Type service, MethodInfo method)
         {
             TargetMocks = method.GetParameters().Select(p => new Mock<ITarget>()).ToArray();
             return TargetMocks.Select(m => m.Object).ToArray();

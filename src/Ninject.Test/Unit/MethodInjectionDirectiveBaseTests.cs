@@ -23,8 +23,8 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
             var method = typeof(Dummy).GetMethod("MethodA");
             MethodInjector injector = delegate { };
 
-            directive = new FakeMethodInjectionDirective(method, injector);
-            ITarget[] targets = directive.Targets;
+            directive = new FakeMethodInjectionDirective(typeof(Dummy), method, injector);
+            var targets = directive.Targets;
 
             targets.Length.Should().Be(3);
             targets[0].Name.Should().Be("foo");
@@ -38,7 +38,7 @@ namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 
     public class FakeMethodInjectionDirective : MethodInjectionDirectiveBase<MethodInfo, MethodInjector>
     {
-        public FakeMethodInjectionDirective(MethodInfo method, MethodInjector injector) : base(method, injector) { }
+        public FakeMethodInjectionDirective(Type service, MethodInfo method, MethodInjector injector) : base(service, method, injector) { }
     }
 
     public class Dummy

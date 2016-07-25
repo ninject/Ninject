@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -22,6 +22,7 @@ using Ninject.Selection;
 
 namespace Ninject.Activation.Providers
 {
+    using System.Diagnostics.Contracts;
     using System.Reflection;
     using Ninject.Selection.Heuristics;
 
@@ -54,9 +55,9 @@ namespace Ninject.Activation.Providers
         public StandardProvider(Type type, IPlanner planner, IConstructorScorer constructorScorer
             )
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
+            Contract.Requires(type != null);
+            Contract.Requires(planner != null);
+            Contract.Requires(constructorScorer != null);
 
             Type = type;
             Planner = planner;
@@ -70,7 +71,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created instance.</returns>
         public virtual object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
 
             if (context.Plan == null)
             {
@@ -115,12 +116,12 @@ namespace Ninject.Activation.Providers
         /// <returns>The value to inject into the specified target.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
+            Contract.Requires(context != null);
+            Contract.Requires(target != null);
 
             var parameter = context
                 .Parameters.OfType<IConstructorArgument>()
-                .Where(p => p.AppliesToTarget(context, target)).SingleOrDefault();
+               .SingleOrDefault(p => p.AppliesToTarget(context, target));
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
         }
 
@@ -132,8 +133,8 @@ namespace Ninject.Activation.Providers
         /// <returns>The implementation type that will be activated.</returns>
         public Type GetImplementationType(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            return Type.ContainsGenericParameters ? Type.MakeGenericType(service.GetGenericArguments()) : Type;
+            Contract.Requires(service != null);
+            return Type.GetTypeInfo().ContainsGenericParameters ? Type.MakeGenericType(service.GetTypeInfo().GetGenericArguments()) : Type;
         }
 
         /// <summary>
@@ -144,7 +145,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created callback.</returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype)
         {
-            Ensure.ArgumentNotNull(prototype, "prototype");
+            Contract.Requires(prototype != null);
             return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<ISelector>().ConstructorScorer);
         }
 
@@ -157,7 +158,7 @@ namespace Ninject.Activation.Providers
         /// <returns>The created callback.</returns>
         public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
         {
-            Ensure.ArgumentNotNull(prototype, "prototype");
+            Contract.Requires(prototype != null);
             return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), new SpecificConstructorSelector(constructor));
         }
     }

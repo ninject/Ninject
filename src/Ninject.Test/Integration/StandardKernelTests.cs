@@ -370,8 +370,8 @@
             kernel.Bind<IInitializable>().To<InitializableA>();
             kernel.Bind<IInitializable>().To<InitializableB>();
 
-            IEnumerable<IInitializable> instances = kernel.GetAll<IInitializable>();
-            IEnumerator<IInitializable> enumerator = instances.GetEnumerator();
+            var instances = kernel.GetAll<IInitializable>();
+            var enumerator = instances.GetEnumerator();
 
             InitializableA.Count.Should().Be(0);
             enumerator.MoveNext();
@@ -552,7 +552,6 @@
         }
     }
 
-#if !SILVERLIGHT
     public class WhenDerivedClassWithPrivateGetterIsResolved
     {
         [Fact]
@@ -570,7 +569,6 @@
             }
         }
     }
-#endif
     
     public class InitializableA : IInitializable
     {

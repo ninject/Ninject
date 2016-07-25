@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -32,9 +32,9 @@ namespace Ninject.Syntax
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         int GetHashCode();
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Ninject.Syntax
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         string ToString();
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Ninject.Syntax
         /// <returns>
         ///     <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        [EditorBrowsable(EditorBrowsableState.Never)] 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         bool Equals(object other);
     }
 }

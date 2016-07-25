@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -25,13 +25,14 @@
 namespace Ninject.Modules
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
-    
+
     /// <summary>
     /// Loads modules from compiled assemblies.
     /// </summary>
@@ -54,8 +55,8 @@ namespace Ninject.Modules
         /// <param name="assemblyNameRetriever">The assembly name retriever.</param>
         public CompiledModuleLoaderPlugin(IKernel kernel, IAssemblyNameRetriever assemblyNameRetriever)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(assemblyNameRetriever, "assemblyNameRetriever");
+            Contract.Requires(kernel != null);
+            Contract.Requires(assemblyNameRetriever != null);
             this.Kernel = kernel;
             this.assemblyNameRetriever = assemblyNameRetriever;
         }

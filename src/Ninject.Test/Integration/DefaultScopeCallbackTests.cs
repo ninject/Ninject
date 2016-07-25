@@ -115,7 +115,7 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
 
         protected override void InitializeKernel()
         {
-            object obj = new object();
+            var obj = new object();
             scopeDelegate = ctx => obj;
             var settings = new NinjectSettings
                            {

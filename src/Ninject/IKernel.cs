@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -25,7 +25,11 @@ namespace Ninject
     /// <summary>
     /// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
     /// </summary>
-    public interface IKernel : IBindingRoot, IResolutionRoot, IServiceProvider, IDisposableObject
+    public interface IKernel : IBindingRoot, IResolutionRoot,
+#if !NO_SERVICE_PROVIDER
+        IServiceProvider,
+#endif
+        IDisposableObject
     {
         /// <summary>
         /// Gets the kernel settings.
@@ -56,7 +60,7 @@ namespace Ninject
         /// <param name="m">The modules to load.</param>
         void Load(IEnumerable<INinjectModule> m);
 
-        #if !NO_ASSEMBLY_SCANNING
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
@@ -68,7 +72,7 @@ namespace Ninject
         /// </summary>
         /// <param name="assemblies">The assemblies to search.</param>
         void Load(IEnumerable<Assembly> assemblies);
-        #endif
+#endif
 
         /// <summary>
         /// Unloads the plugin with the specified name.

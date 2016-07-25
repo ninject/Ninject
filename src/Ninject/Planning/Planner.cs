@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -25,6 +25,7 @@ namespace Ninject.Planning
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
     using Ninject.Components;
@@ -37,7 +38,7 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-        private readonly ReaderWriterLock plannerLock = new ReaderWriterLock();
+        private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Ninject.Planning
         /// <param name="strategies">The strategies to execute during planning.</param>
         public Planner(IEnumerable<IPlanningStrategy> strategies)
         {
-            Ensure.ArgumentNotNull(strategies, "strategies");
+            Contract.Requires(strategies != null);
             this.Strategies = strategies.ToList();
         }
 
@@ -54,7 +55,7 @@ namespace Ninject.Planning
         /// Gets the strategies that contribute to the planning process.
         /// </summary>
         public IList<IPlanningStrategy> Strategies { get; private set; }
-        
+
         /// <summary>
         /// Gets or creates an activation plan for the specified type.
         /// </summary>
@@ -62,9 +63,9 @@ namespace Ninject.Planning
         /// <returns>The type's activation plan.</returns>
         public IPlan GetPlan(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Contract.Requires(type != null);
 
-            this.plannerLock.AcquireReaderLock(Timeout.Infinite);
+            this.plannerLock.EnterUpgradeableReadLock();
             try
             {
                 IPlan plan;
@@ -72,7 +73,7 @@ namespace Ninject.Planning
             }
             finally
             {
-                this.plannerLock.ReleaseReaderLock();
+                this.plannerLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -83,7 +84,7 @@ namespace Ninject.Planning
         /// <returns>The created plan.</returns>
         protected virtual IPlan CreateEmptyPlan(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Contract.Requires(type != null);
             return new Plan(type);
         }
 
@@ -95,7 +96,7 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
-            var lockCookie = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
+            this.plannerLock.EnterWriteLock();
             try
             {
                 IPlan plan;
@@ -112,7 +113,7 @@ namespace Ninject.Planning
             }
             finally
             {
-                this.plannerLock.DowngradeFromWriterLock(ref lockCookie);
+                this.plannerLock.ExitWriteLock();
             }
         }
     }

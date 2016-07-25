@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
@@ -43,8 +44,8 @@ namespace Ninject.Planning.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+            Contract.Requires(selector != null);
+            Contract.Requires(injectorFactory != null);
 
             Selector = selector;
             InjectorFactory = injectorFactory;
@@ -57,17 +58,17 @@ namespace Ninject.Planning.Strategies
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
+            Contract.Requires(plan != null);
 
-            IEnumerable<ConstructorInfo> constructors = Selector.SelectConstructorsForInjection(plan.Type);
-            if(constructors == null)
+            var constructors = Selector.SelectConstructorsForInjection(plan.Type);
+            if (constructors == null)
                 return;
 
-            foreach(ConstructorInfo constructor in constructors)
+            foreach (ConstructorInfo constructor in constructors)
             {
                 var hasInjectAttribute = constructor.HasAttribute(Settings.InjectAttribute);
                 plan.Add(
-                    new ConstructorInjectionDirective(constructor, InjectorFactory.Create(constructor))
+                    new ConstructorInjectionDirective(plan.Type, constructor, InjectorFactory.Create(constructor))
                     {
                         HasInjectAttribute = hasInjectAttribute
                     });

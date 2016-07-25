@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -15,6 +15,7 @@ using Ninject.Infrastructure;
 
 namespace Ninject.Parameters
 {
+    using System.Diagnostics.Contracts;
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -53,8 +54,8 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public Parameter(string name, Func<IContext, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+            Contract.Requires(name != null);
+            Contract.Requires(valueCallback != null);
 
             Name = name;
             ValueCallback = (ctx, target) => valueCallback(ctx);
@@ -69,14 +70,14 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public Parameter(string name, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+            Contract.Requires(name != null);
+            Contract.Requires(valueCallback != null);
 
             Name = name;
             ValueCallback = valueCallback;
             ShouldInherit = shouldInherit;
         }
-        
+
         /// <summary>
         /// Gets the value for the parameter within the specified context.
         /// </summary>
@@ -85,7 +86,7 @@ namespace Ninject.Parameters
         /// <returns>The value for the parameter.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
             return ValueCallback(context, target);
         }
 

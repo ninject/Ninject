@@ -1,15 +1,16 @@
 ﻿#region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Ninject.Infrastructure;
 using Ninject.Parameters;
@@ -47,7 +48,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the constraint that will be applied to filter the bindings used for the request.
         /// </summary>
-        public Func<IBindingMetadata, bool> Constraint { get; private set; }
+        public Predicate<IBindingMetadata> Constraint { get; private set; }
 
         /// <summary>
         /// Gets the parameters that affect the resolution.
@@ -86,7 +87,7 @@ namespace Ninject.Activation
         {
             get; set;
         }
-        
+
         /// <summary>
         /// Gets the callback that resolves the scope for the request, if an external scope was provided.
         /// </summary>
@@ -101,10 +102,10 @@ namespace Ninject.Activation
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
-        public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
+        public Request(Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
 
             Service = service;
             Constraint = constraint;
@@ -125,9 +126,9 @@ namespace Ninject.Activation
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
         public Request(IContext parentContext, Type service, ITarget target, Func<object> scopeCallback)
         {
-            Ensure.ArgumentNotNull(parentContext, "parentContext");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(target, "target");
+            Contract.Requires(parentContext != null);
+            Contract.Requires(service != null);
+            Contract.Requires(target != null);
 
             ParentContext = parentContext;
             ParentRequest = parentContext.Request;

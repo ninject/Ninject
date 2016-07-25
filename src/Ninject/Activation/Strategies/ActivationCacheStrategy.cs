@@ -1,5 +1,6 @@
 namespace Ninject.Activation.Strategies
 {
+    using System.Diagnostics.Contracts;
     using Ninject.Activation.Caching;
     using Ninject.Infrastructure;
 
@@ -19,7 +20,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="activationCache">The activation cache.</param>
         public ActivationCacheStrategy(IActivationCache activationCache)
         {
-            Ensure.ArgumentNotNull(activationCache, "activationCache");
+            Contract.Requires(activationCache != null);
             this.activationCache = activationCache;
         }
 
@@ -28,7 +29,7 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <value>The ninject settings.</value>
         public INinjectSettings Settings { get; set; }
-        
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -20,7 +20,7 @@ namespace Ninject.Planning.Targets
     /// </summary>
     public class ParameterTarget : Target<ParameterInfo>
     {
-        private readonly Future<object> defaultValue;
+        private readonly Lazy<object> defaultValue;
 
         /// <summary>
         /// Gets the name of the target.
@@ -38,8 +38,6 @@ namespace Ninject.Planning.Targets
             get { return Site.ParameterType; }
         }
 
-// Windows Phone doesn't support default values and returns null instead of DBNull.
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets a value indicating whether the target has a default value.
         /// </summary>
@@ -56,16 +54,16 @@ namespace Ninject.Planning.Targets
         {
             get { return HasDefaultValue ? defaultValue.Value : base.DefaultValue; }
         }
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterTarget"/> class.
         /// </summary>
+        /// <param name="service">The service type.</param>
         /// <param name="method">The method that defines the parameter.</param>
         /// <param name="site">The parameter that this target represents.</param>
-        public ParameterTarget(MethodBase method, ParameterInfo site) : base(method, site)
+        public ParameterTarget(Type service, MethodBase method, ParameterInfo site) : base(service, method, site)
         {
-            defaultValue = new Future<object>(() => site.DefaultValue);
+            defaultValue = new Lazy<object>(() => site.DefaultValue);
         }
     }
 }

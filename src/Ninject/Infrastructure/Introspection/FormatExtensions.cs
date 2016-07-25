@@ -1,11 +1,11 @@
 ﻿#region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -35,7 +35,7 @@ namespace Ninject.Infrastructure.Introspection
         {
             using (var sw = new StringWriter())
             {
-                IRequest current = request;
+                var current = request;
 
                 while (current != null)
                 {
@@ -48,7 +48,7 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
-        /// Formats the given binding into a meaningful string representation. 
+        /// Formats the given binding into a meaningful string representation.
         /// </summary>
         /// <param name="binding">The binding to be formatted.</param>
         /// <param name="context">The context.</param>
@@ -63,7 +63,7 @@ namespace Ninject.Infrastructure.Introspection
                 if (binding.IsImplicit)
                     sw.Write("implicit ");
 
-                IProvider provider = binding.GetProvider(context);
+                var provider = binding.GetProvider(context);
 
                 switch (binding.Target)
                 {
@@ -141,7 +141,7 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
-                sw.Write(" of type {0}", target.Member.ReflectedType.Format());
+                sw.Write(" of type {0}", target.Service.Format());
 
                 return sw.ToString();
             }
@@ -165,7 +165,7 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
-            switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
+            switch (friendlyName.ToLowerInvariant())
             {
                 case "int16": return "short";
                 case "int32": return "int";
@@ -185,10 +185,10 @@ namespace Ninject.Infrastructure.Introspection
                 case "decimal": return "decimal";
             }
 
-            var genericArguments = type.GetGenericArguments();
-            if(genericArguments.Length > 0)
+            var genericArguments = type.GetTypeInfo().GetGenericArguments();
+            if (genericArguments.Length > 0)
                 return FormatGenericType(friendlyName, genericArguments);
-            
+
             return friendlyName;
         }
 
@@ -231,8 +231,8 @@ namespace Ninject.Infrastructure.Introspection
             {
                 if (friendlyName[index] == '`')
                 {
-                    var numArguments = friendlyName[index+1] - 48;
-                    
+                    var numArguments = friendlyName[index + 1] - 48;
+
                     sb.Append(friendlyName.Substring(startIndex, index - startIndex));
                     AppendGenericArguments(sb, genericArguments, genericArgumentIndex, numArguments);
                     genericArgumentIndex += numArguments;
@@ -250,14 +250,14 @@ namespace Ninject.Infrastructure.Introspection
         {
             sb.Append("{");
 
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 if (i != 0)
                     sb.Append(", ");
 
                 sb.Append(genericArguments[start + i].Format());
             }
-            
+
             sb.Append("}");
         }
     }

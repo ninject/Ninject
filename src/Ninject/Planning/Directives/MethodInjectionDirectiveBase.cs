@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Ninject.Infrastructure;
@@ -36,25 +37,28 @@ namespace Ninject.Planning.Directives
         /// <summary>
         /// Initializes a new instance of the MethodInjectionDirectiveBase&lt;TMethod, TInjector&gt; class.
         /// </summary>
+        /// <param name="service">The service this directive represents.</param>
         /// <param name="method">The method this directive represents.</param>
         /// <param name="injector">The injector that will be triggered.</param>
-        protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
+        protected MethodInjectionDirectiveBase(Type service, TMethod method, TInjector injector)
         {
-            Ensure.ArgumentNotNull(method, "method");
-            Ensure.ArgumentNotNull(injector, "injector");
+            Contract.Requires(service != null);
+            Contract.Requires(method != null);
+            Contract.Requires(injector != null);
 
             Injector = injector;
-            Targets = CreateTargetsFromParameters(method);
+            Targets = CreateTargetsFromParameters(service, method);
         }
 
         /// <summary>
         /// Creates targets for the parameters of the method.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="method">The method.</param>
         /// <returns>The targets for the method's parameters.</returns>
-        protected virtual ITarget[] CreateTargetsFromParameters(TMethod method)
+        protected virtual ITarget[] CreateTargetsFromParameters(Type service, TMethod method)
         {
-            return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
+            return method.GetParameters().Select(parameter => new ParameterTarget(service, method, parameter)).ToArray();
         }
     }
 }

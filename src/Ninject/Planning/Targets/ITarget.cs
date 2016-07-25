@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -32,6 +32,11 @@ namespace Ninject.Planning.Targets
         string Name { get; }
 
         /// <summary>
+        /// Get's the type of the service.
+        /// </summary>
+        Type Service { get; }
+
+        /// <summary>
         /// Gets the member that contains the target.
         /// </summary>
         MemberInfo Member { get; }
@@ -39,7 +44,7 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Gets the constraint defined on the target.
         /// </summary>
-        Func<IBindingMetadata, bool> Constraint { get; }
+        Predicate<IBindingMetadata> Constraint { get; }
 
         /// <summary>
         /// Gets a value indicating whether the target represents an optional dependency.

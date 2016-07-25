@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -49,14 +49,6 @@ namespace Ninject.Syntax
         IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>();
 
         /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
-        /// Types that derive from the specified type are considered as valid targets.
-        /// </summary>
-        /// <param name="parent">The type.</param>
-        /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent);
-
-        /// <summary>
         /// Indicates that the binding should be used only for injections on the specified types.
         /// Types that derive from one of the specified types are considered as valid targets.
         /// Should match at lease one of the targets.
@@ -68,7 +60,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// </summary>
         /// <typeparam name="TParent">The type.</typeparam>
         /// <returns>The fluent syntax.</returns>
@@ -76,17 +68,8 @@ namespace Ninject.Syntax
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
-        /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
-        /// </summary>
-        /// <param name="parent">The type.</param>
-        /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(Type parent);
-
-        /// <summary>
-        /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match one of the specified types exactly. Types that derive from one of the specified types
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// Should match at least one of the specified targets
         /// </summary>
         /// <param name="parents">The types.</param>
@@ -154,14 +137,6 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
-        [Obsolete("Use WhenAnyAncestorNamed(string name)")]
-        IBindingInNamedWithOrOnSyntax<T> WhenAnyAnchestorNamed(string name);
-
-        /// <summary>
-        /// Indicates that the binding should be used only when any ancestor is bound with the specified name.
-        /// </summary>
-        /// <param name="name">The name to expect.</param>
-        /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenAnyAncestorNamed(string name);
 
         /// <summary>
@@ -170,7 +145,7 @@ namespace Ninject.Syntax
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name);
-    
+
         /// <summary>
         /// Indicates that the binding should be used only when any ancestor matches the specified predicate.
         /// </summary>

@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -34,22 +34,24 @@ namespace Ninject.Planning.Directives
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyInjectionDirective"/> class.
         /// </summary>
+        /// <param name="service">The service this directive represents.</param>
         /// <param name="member">The member the directive describes.</param>
         /// <param name="injector">The injector that will be triggered.</param>
-        public PropertyInjectionDirective(PropertyInfo member, PropertyInjector injector)
+        public PropertyInjectionDirective(Type service, PropertyInfo member, PropertyInjector injector)
         {
             Injector = injector;
-            Target = CreateTarget(member);
+            Target = CreateTarget(service, member);
         }
 
         /// <summary>
         /// Creates a target for the property.
         /// </summary>
+        /// <param name="service">The service.</param>
         /// <param name="propertyInfo">The property.</param>
         /// <returns>The target for the property.</returns>
-        protected virtual ITarget CreateTarget(PropertyInfo propertyInfo)
+        protected virtual ITarget CreateTarget(Type service, PropertyInfo propertyInfo)
         {
-            return new PropertyTarget(propertyInfo);
+            return new PropertyTarget(service, propertyInfo);
         }
     }
 }

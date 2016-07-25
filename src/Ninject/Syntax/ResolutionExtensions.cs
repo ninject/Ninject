@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Ninject.Activation;
 using Ninject.Infrastructure;
@@ -58,7 +59,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>An instance of the service.</returns>
-        public static T Get<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static T Get<T>(this IResolutionRoot root, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return GetResolutionIterator(root, typeof(T), constraint, parameters, false, true).Cast<T>().Single();
         }
@@ -96,7 +97,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
-        public static T TryGet<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static T TryGet<T>(this IResolutionRoot root, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return TryGet(() => GetResolutionIterator(root, typeof(T), constraint, parameters, true, true).Cast<T>());
         }
@@ -134,7 +135,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
-        public static T TryGetAndThrowOnInvalidBinding<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static T TryGetAndThrowOnInvalidBinding<T>(this IResolutionRoot root, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return DoTryGetAndThrowOnInvalidBinding<T>(root, constraint, parameters);
         }
@@ -172,7 +173,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the bindings.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>A series of instances of the service.</returns>
-        public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static IEnumerable<T> GetAll<T>(this IResolutionRoot root, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return GetResolutionIterator(root, typeof(T), constraint, parameters, true, false).Cast<T>();
         }
@@ -210,7 +211,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>An instance of the service.</returns>
-        public static object Get(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static object Get(this IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return GetResolutionIterator(root, service, constraint, parameters, false, true).Single();
         }
@@ -248,7 +249,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
-        public static object TryGet(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static object TryGet(this IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return TryGet(() => GetResolutionIterator(root, service, constraint, parameters, true, false));
         }
@@ -286,7 +287,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the bindings.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns>A series of instances of the service.</returns>
-        public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static IEnumerable<object> GetAll(this IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return GetResolutionIterator(root, service, constraint, parameters, true, false);
         }
@@ -324,7 +325,7 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
-        public static bool CanResolve<T>(this IResolutionRoot root, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static bool CanResolve<T>(this IResolutionRoot root, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return CanResolve(root, typeof(T), constraint, parameters, false, true);
         }
@@ -362,38 +363,38 @@ namespace Ninject
         /// <param name="constraint">The constraint to apply to the binding.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
-        public static bool CanResolve(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
+        public static bool CanResolve(this IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, params IParameter[] parameters)
         {
             return CanResolve(root, service, constraint, parameters, false, true);
         }
 
-        private static bool CanResolve(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        private static bool CanResolve(IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(root != null);
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
 
-            IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+            var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             return root.CanResolve(request);
         }
 
-        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(root != null);
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
 
-            IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+            var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             return root.Resolve(request);
         }
-        
-        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
-        {
-            Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
 
-            IRequest request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
+        {
+            Contract.Requires(root != null);
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
+
+            var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             request.ForceUnique = forceUnique;
             return root.Resolve(request);
         }
@@ -410,7 +411,7 @@ namespace Ninject
             }
         }
 
-        private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+        private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters)
         {
             return GetResolutionIterator(root, typeof(T), constraint, parameters, true, true, true).Cast<T>().SingleOrDefault();
         }

@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -87,7 +87,7 @@ namespace Ninject.Syntax
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
         /// <param name="type">The type of the argument to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>    
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback);
 

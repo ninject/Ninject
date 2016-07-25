@@ -2,10 +2,10 @@
 //
 // Author: Remo Gloor (remo.gloor@bbv.ch)
 // Copyright (c) 2010, bbv Software Engineering AG.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Infrastructure.Language
@@ -15,37 +15,13 @@ namespace Ninject.Infrastructure.Language
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using Language;
 
     /// <summary>
     /// Extensions for MemberInfo
     /// </summary>
     public static class ExtensionsForMemberInfo
     {
-        const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
-#if !NO_LCG && !SILVERLIGHT
-        const BindingFlags Flags = DefaultFlags | BindingFlags.NonPublic;
-#else
-        const BindingFlags Flags = DefaultFlags;
-#endif
-
-#if !MONO
-        private static MethodInfo parentDefinitionMethodInfo;
-
-        private static MethodInfo ParentDefinitionMethodInfo
-        {
-            get
-            {
-                if (parentDefinitionMethodInfo == null)
-                {
-                    var runtimeAssemblyInfoType = typeof(MethodInfo).Assembly.GetType("System.Reflection.RuntimeMethodInfo");
-                    parentDefinitionMethodInfo = runtimeAssemblyInfoType.GetMethod("GetParentDefinition", Flags);
-                }
-
-                return parentDefinitionMethodInfo;
-            }
-        }
-#endif
-
         /// <summary>
         /// Determines whether the specified member has attribute.
         /// </summary>
@@ -75,21 +51,11 @@ namespace Ninject.Infrastructure.Language
                 return IsDefined(propertyInfo, type, true);
             }
 
-#if NETCF
-            // Workaround for the CF bug that derived generic methods throw an exception for IsDefined
-            // This means that the Inject attribute can not be defined on base methods for CF framework
-            var methodInfo = member as MethodInfo;
-            if (methodInfo != null)
-            {
-                return methodInfo.IsDefined(type, false);
-            }
-#endif
-
             return member.IsDefined(type, true);
         }
 
         /// <summary>
-        /// Gets the property info from its declared tpe.
+        /// Gets the property info from its declared type.
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
         /// <param name="propertyDefinition">The property definition.</param>
@@ -97,16 +63,14 @@ namespace Ninject.Infrastructure.Language
         /// <returns>The property info from the declared type of the property.</returns>
         public static PropertyInfo GetPropertyFromDeclaredType(
             this MemberInfo memberInfo,
-            PropertyInfo propertyDefinition,
-            BindingFlags flags)
+            PropertyInfo propertyDefinition)
         {
-            return memberInfo.DeclaringType.GetProperty(
-                propertyDefinition.Name,
-                flags,
-                null,
-                propertyDefinition.PropertyType,
-                propertyDefinition.GetIndexParameters().Select(parameter => parameter.ParameterType).ToArray(),
-                null);
+            return memberInfo.DeclaringType.GetRuntimeProperties().FirstOrDefault(pi =>
+                 pi.Name == propertyDefinition.Name &&
+                 pi.PropertyType == propertyDefinition.PropertyType &&
+                 pi.GetIndexParameters().Select(p => p.ParameterType).SequenceEqual(
+                     propertyDefinition.GetIndexParameters().Select(p => p.ParameterType))
+            );
         }
 
         /// <summary>
@@ -125,15 +89,15 @@ namespace Ninject.Infrastructure.Language
 
         /// <summary>
         /// Gets the custom attributes.
-        /// This version is able to get custom attributes for properties from base types even if the property is none public.
+        /// This version is able to get custom attributes for properties from base types even if the property is non-public.
         /// </summary>
         /// <param name="member">The member.</param>
         /// <param name="attributeType">Type of the attribute.</param>
         /// <param name="inherited">if set to <c>true</c> [inherited].</param>
         /// <returns></returns>
-        public static object[] GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
+        public static IEnumerable<Attribute> GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !NET_35 && !MONO_40
+#if !CORE
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;
@@ -142,51 +106,47 @@ namespace Ninject.Infrastructure.Language
                 return GetCustomAttributes(propertyInfo, attributeType, inherited);
             }
 
-            return member.GetCustomAttributes(attributeType, inherited);
+            return member.GetCustomAttributes(attributeType, inherited).Cast<Attribute>();
 #endif
         }
 
         private static PropertyInfo GetParentDefinition(PropertyInfo property)
         {
-            var propertyMethod = property.GetGetMethod(true) ?? property.GetSetMethod(true);
+            var propertyMethod = property.GetMethod ?? property.SetMethod;
+
             if (propertyMethod != null)
             {
-                propertyMethod = propertyMethod.GetParentDefinition(Flags);
+                propertyMethod = propertyMethod.GetParentDefinition();
                 if (propertyMethod != null)
                 {
-                    return propertyMethod.GetPropertyFromDeclaredType(property, Flags);
+                    return propertyMethod.GetPropertyFromDeclaredType(property);
                 }
             }
 
             return null;
         }
 
-        private static MethodInfo GetParentDefinition(this MethodInfo method, BindingFlags flags)
+        private static MethodInfo GetParentDefinition(this MethodInfo method)
         {
-#if MEDIUM_TRUST || MONO
-            var baseDefinition = method.GetBaseDefinition(); 
-            var type = method.DeclaringType.BaseType;
+            var baseDefinition = method.GetRuntimeBaseDefinition();
+
+            var type = method.DeclaringType.GetTypeInfo().BaseType;
+
             MethodInfo result = null;
             while (result == null && type != null)
             {
-                result = type.GetMethods(flags).Where(m => m.GetBaseDefinition().Equals(baseDefinition)).SingleOrDefault();
-                type = type.BaseType;
+
+                result = type.GetRuntimeMethods().SingleOrDefault(m => !m.IsStatic && m.GetRuntimeBaseDefinition().Equals(baseDefinition));
+                type = type.GetTypeInfo().BaseType;
+
             }
 
             return result;
-#else
-            if (ParentDefinitionMethodInfo == null)
-            {
-                return null;
-            }
-
-            return (MethodInfo)ParentDefinitionMethodInfo.Invoke(method, flags, null, null, CultureInfo.InvariantCulture);
-#endif
         }
 
         private static bool IsDefined(PropertyInfo element, Type attributeType, bool inherit)
         {
-            if (element.IsDefined(attributeType, inherit))
+            if (element.IsDefined(attributeType, false))
             {
                 return true;
             }
@@ -212,37 +172,36 @@ namespace Ninject.Infrastructure.Language
             return false;
         }
 
-        private static object[] GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
+        private static IEnumerable<Attribute> GetCustomAttributes(PropertyInfo propertyInfo, Type attributeType, bool inherit)
         {
             if (inherit)
             {
                 if (InternalGetAttributeUsage(attributeType).Inherited)
                 {
+                    var attributes = new List<Attribute>();
+
                     var attributeUsages = new Dictionary<Type, bool>();
-                    var attributes = new List<object>();
-                    attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false));
+                    attributes.AddRange(propertyInfo.GetCustomAttributes(attributeType, false).Cast<Attribute>());
                     for (var info = GetParentDefinition(propertyInfo);
                          info != null;
                          info = GetParentDefinition(info))
                     {
-                        object[] customAttributes = info.GetCustomAttributes(attributeType, false);
+                        var customAttributes = info.GetCustomAttributes(attributeType, false).Cast<Attribute>();
                         AddAttributes(attributes, customAttributes, attributeUsages);
                     }
 
-                    var result = Array.CreateInstance(attributeType, attributes.Count) as object[];
-                    Array.Copy(attributes.ToArray(), result, result.Length);
-                    return result;
+                    return attributes;
                 }
             }
 
-            return propertyInfo.GetCustomAttributes(attributeType, inherit);
+            return propertyInfo.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
         }
 
-        private static void AddAttributes(List<object> attributes, object[] customAttributes, Dictionary<Type, bool> attributeUsages)
+        private static void AddAttributes(List<Attribute> attributes, IEnumerable<Attribute> customAttributes, Dictionary<Type, bool> attributeUsages)
         {
-            foreach (object attribute in customAttributes)
+            foreach (var attribute in customAttributes)
             {
-                Type type = attribute.GetType();
+                var type = attribute.GetType();
                 if (!attributeUsages.ContainsKey(type))
                 {
                     attributeUsages[type] = InternalGetAttributeUsage(type).Inherited;
@@ -257,8 +216,7 @@ namespace Ninject.Infrastructure.Language
 
         private static AttributeUsageAttribute InternalGetAttributeUsage(Type type)
         {
-            object[] customAttributes = type.GetCustomAttributes(typeof(AttributeUsageAttribute), true);
-            return (AttributeUsageAttribute)customAttributes[0];
-        } 
+            return type.GetTypeInfo().GetCustomAttribute<AttributeUsageAttribute>(true);
+        }
     }
 }

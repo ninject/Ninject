@@ -1,15 +1,16 @@
 ﻿#region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Ninject.Activation;
@@ -28,8 +29,13 @@ namespace Ninject.Planning.Targets
     public abstract class Target<T> : ITarget
         where T : ICustomAttributeProvider
     {
-        private readonly Future<Func<IBindingMetadata, bool>> _constraint;
-        private readonly Future<bool> _isOptional;
+        private readonly Lazy<Predicate<IBindingMetadata>> _constraint;
+        private readonly Lazy<bool> _isOptional;
+
+        /// <summary>
+        /// Gets the service type.
+        /// </summary>
+        public Type Service { get; private set; }
 
         /// <summary>
         /// Gets the member that contains the target.
@@ -54,9 +60,9 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Gets the constraint defined on the target.
         /// </summary>
-        public Func<IBindingMetadata, bool> Constraint
+        public Predicate<IBindingMetadata> Constraint
         {
-            get { return _constraint; }
+            get { return _constraint.Value; }
         }
 
         /// <summary>
@@ -64,7 +70,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public bool IsOptional
         {
-            get { return _isOptional; }
+            get { return _isOptional.Value; }
         }
 
         /// <summary>
@@ -87,18 +93,21 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Initializes a new instance of the Target&lt;T&gt; class.
         /// </summary>
+        /// <param name="service">The service type.</param>
         /// <param name="member">The member that contains the target.</param>
         /// <param name="site">The site represented by the target.</param>
-        protected Target(MemberInfo member, T site)
+        protected Target(Type service, MemberInfo member, T site)
         {
-            Ensure.ArgumentNotNull(member, "member");
-            Ensure.ArgumentNotNull(site, "site");
+            Contract.Requires(service != null);
+            Contract.Requires(member != null);
+            Contract.Requires(site != null);
 
+            Service = service;
             Member = member;
             Site = site;
 
-            _constraint = new Future<Func<IBindingMetadata, bool>>(ReadConstraintFromTarget);
-            _isOptional = new Future<bool>(ReadOptionalFromTarget);
+            _constraint = new Lazy<Predicate<IBindingMetadata>>(ReadConstraintFromTarget);
+            _isOptional = new Lazy<bool>(ReadOptionalFromTarget);
         }
 
         /// <summary>
@@ -109,8 +118,8 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes of the specified type.</returns>
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
-            return Site.GetCustomAttributesExtended(attributeType, inherit);
+            Contract.Requires(attributeType != null);
+            return Site.GetCustomAttributesExtended(attributeType, inherit).ToArray();
         }
 
         /// <summary>
@@ -131,7 +140,7 @@ namespace Ninject.Planning.Targets
         /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
         public bool IsDefined(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
+            Contract.Requires(attributeType != null);
             return Site.IsDefined(attributeType, inherit);
         }
 
@@ -142,18 +151,18 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         public object ResolveWithin(IContext parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
+            Contract.Requires(parent != null);
 
             if (Type.IsArray)
             {
-                Type service = Type.GetElementType();
+                var service = Type.GetElementType();
                 return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
             }
 
-            if (Type.IsGenericType)
+            if (Type.GetTypeInfo().IsGenericType)
             {
-                Type gtd = Type.GetGenericTypeDefinition();
-                Type service = Type.GetGenericArguments()[0];
+                var gtd = Type.GetGenericTypeDefinition();
+                var service = Type.GetTypeInfo().GetGenericArguments()[0];
 
                 if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
                     return GetValues(service, parent).CastSlow(service).ToListSlow(service);
@@ -173,8 +182,8 @@ namespace Ninject.Planning.Targets
         /// <returns>A series of values that are available for injection.</returns>
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
+            Contract.Requires(service != null);
+            Contract.Requires(parent != null);
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsOptional = true;
@@ -189,8 +198,8 @@ namespace Ninject.Planning.Targets
         /// <returns>The value that is to be injected.</returns>
         protected virtual object GetValue(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
+            Contract.Requires(service != null);
+            Contract.Requires(parent != null);
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
@@ -210,9 +219,9 @@ namespace Ninject.Planning.Targets
         /// Reads the resolution constraint from target.
         /// </summary>
         /// <returns>The resolution constraint.</returns>
-        protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
+        protected virtual Predicate<IBindingMetadata> ReadConstraintFromTarget()
         {
-            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
+            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true).Cast<ConstraintAttribute>().ToArray();
 
             if (attributes == null || attributes.Length == 0)
                 return null;

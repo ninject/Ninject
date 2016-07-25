@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -24,9 +24,10 @@ namespace Ninject.Planning.Directives
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodInjectionDirective"/> class.
         /// </summary>
+        /// <param name="service">The service this directive represents.</param>
         /// <param name="method">The method described by the directive.</param>
         /// <param name="injector">The injector that will be triggered.</param>
-        public MethodInjectionDirective(MethodInfo method, MethodInjector injector)
-            : base(method, injector) { }
+        public MethodInjectionDirective(Type service, MethodInfo method, MethodInjector injector)
+            : base(service, method, injector) { }
     }
 }

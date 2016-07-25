@@ -28,7 +28,6 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
-#if !SILVERLIGHT
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
@@ -40,7 +39,6 @@ namespace Ninject.Tests.Integration
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
-#endif //!SILVERLIGHT
     }
 
     public class WithParameterTests : PropertyInjectionTests
@@ -63,7 +61,6 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
-#if !SILVERLIGHT
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
@@ -75,9 +72,7 @@ namespace Ninject.Tests.Integration
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
-#endif //!SILVERLIGHT
 
-#if !MONO
         [Fact]
         public void WeakPropertyValue()
         {
@@ -96,7 +91,6 @@ namespace Ninject.Tests.Integration
 
             weakReference.IsAlive.Should().BeFalse();
         }
-#endif
 
         private WeakReference Process()
         {
@@ -108,7 +102,6 @@ namespace Ninject.Tests.Integration
 
     public class WhenNoPropertyOverridesAreSupplied : PropertyInjectionTests
     {
-#if !SILVERLIGHT
         [Fact]
         public void DefaultBindingsAreUsed()
         {
@@ -117,7 +110,7 @@ namespace Ninject.Tests.Integration
             var warrior = this.kernel.Get<IWarrior>();
             Assert.IsType<Ninja>(warrior);
             Assert.IsType<Shuriken>(warrior.Weapon);
-            Ninja ninja = warrior as Ninja;
+            var ninja = warrior as Ninja;
             Assert.IsType<Shuriken>(ninja.SecondaryWeapon);
             Assert.IsType<Shuriken>(ninja.VerySecretWeaponAccessor);
         }
@@ -171,7 +164,6 @@ namespace Ninject.Tests.Integration
             {
             }
         }
-#endif //!SILVERLIGHT
     }
 
     public abstract class PropertyInjectionTests : DisposableObject
@@ -195,7 +187,7 @@ namespace Ninject.Tests.Integration
         {
             warrior.Should().BeOfType<Ninja>();
             warrior.Weapon.Should().BeOfType<Shuriken>();
-            Ninja ninja = warrior as Ninja;
+            var ninja = warrior as Ninja;
             ninja.SecondaryWeapon.Should().BeOfType<Sword>();
             ninja.VerySecretWeaponAccessor.Should().BeOfType<Sword>();
         }

@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -38,7 +38,7 @@ namespace Ninject.Syntax
         ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
         /// </returns>
         bool CanResolve(IRequest request, bool ignoreImplicitBindings);
-        
+
         /// <summary>
         /// Resolves instances for the specified request. The instances are not actually resolved
         /// until a consumer iterates over the enumerator.
@@ -56,7 +56,7 @@ namespace Ninject.Syntax
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         /// <returns>The created request.</returns>
-        IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
+        IRequest CreateRequest(Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
 
         /// <summary>
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.

@@ -19,7 +19,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-#if !SILVERLIGHT && !NETCF
 namespace Ninject
 {
     using Ninject.Modules;
@@ -49,4 +48,3 @@ namespace Ninject
         }
     }
 }
-#endif

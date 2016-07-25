@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Ninject.Infrastructure;
@@ -34,7 +35,7 @@ namespace Ninject.Activation.Strategies
         {
             get
             {
-                #if !NO_LCG && !SILVERLIGHT
+                #if !NO_LCG
                 return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
                 #else
                 return DefaultFlags;
@@ -64,14 +65,14 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
 
             var propertyValues = context.Parameters.OfType<IPropertyValue>().ToList();
 
             foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
             {
-                object value = this.GetValue(context, directive.Target, propertyValues);
+                var value = this.GetValue(context, directive.Target, propertyValues);
                 directive.Injector(reference.Instance, value);
             }
 
@@ -86,10 +87,10 @@ namespace Ninject.Activation.Strategies
         /// <param name="propertyValues">The parameter override value accessors.</param>
         private void AssignPropertyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
         {
-            var properties = reference.Instance.GetType().GetProperties(this.Flags);
+            var properties = reference.Instance.GetType().GetTypeInfo().GetProperties(this.Flags);
             foreach (var propertyValue in propertyValues)
             {
-                string propertyName = propertyValue.Name;
+                var propertyName = propertyValue.Name;
                 var propertyInfo = properties.FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal));
 
                 if (propertyInfo == null)
@@ -97,8 +98,8 @@ namespace Ninject.Activation.Strategies
                     throw new ActivationException(ExceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyName));
                 }
 
-                var target = new PropertyInjectionDirective(propertyInfo, this.InjectorFactory.Create(propertyInfo));
-                object value = this.GetValue(context, target.Target, propertyValues);
+                var target = new PropertyInjectionDirective(reference.Instance.GetType(), propertyInfo, this.InjectorFactory.Create(propertyInfo));
+                var value = this.GetValue(context, target.Target, propertyValues);
                 target.Injector(reference.Instance, value);
             }
         }
@@ -112,8 +113,8 @@ namespace Ninject.Activation.Strategies
         /// <returns>The value to inject into the specified target.</returns>
         private object GetValue(IContext context, ITarget target, IEnumerable<IPropertyValue> allPropertyValues)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
+            Contract.Requires(context != null);
+            Contract.Requires(target != null);
 
             var parameter = allPropertyValues.SingleOrDefault(p => p.Name == target.Name);
             return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);

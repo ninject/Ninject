@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Ninject.Infrastructure;
@@ -37,6 +38,7 @@ namespace Ninject.Components
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing">A Boolean indicating whether release managed resource or not.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !IsDisposed)
@@ -75,7 +77,7 @@ namespace Ninject.Components
             this.Add<TComponent, TImplementation>();
             this.transients.Add(new KeyValuePair<Type, Type>(typeof(TComponent), typeof(TImplementation)));
         }
-        
+
         /// <summary>
         /// Removes all registrations for the specified component.
         /// </summary>
@@ -109,7 +111,7 @@ namespace Ninject.Components
         /// <param name="component">The component type.</param>
         public void RemoveAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Contract.Requires(component != null);
 
             foreach (Type implementation in _mappings[component])
             {
@@ -151,27 +153,21 @@ namespace Ninject.Components
         /// <returns>The instance of the component.</returns>
         public object Get(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Contract.Requires(component != null);
 
             if (component == typeof(IKernel))
                 return Kernel;
 
-            if (component.IsGenericType)
+            if (component.GetTypeInfo().IsGenericType)
             {
-                Type gtd = component.GetGenericTypeDefinition();
-                Type argument = component.GetGenericArguments()[0];
+                var gtd = component.GetGenericTypeDefinition();
+                var argument = component.GetTypeInfo().GetGenericArguments()[0];
 
-#if WINDOWS_PHONE
-                Type discreteGenericType =
-                    typeof (IEnumerable<>).MakeGenericType(argument);
-                if (gtd.IsInterface && discreteGenericType.IsAssignableFrom(component))
+                if (gtd.GetTypeInfo().IsInterface && typeof (IEnumerable<>).GetTypeInfo().IsAssignableFrom(gtd))
                     return GetAll(argument).CastSlow(argument);
-#else
-                if (gtd.IsInterface && typeof (IEnumerable<>).IsAssignableFrom(gtd))
-                    return GetAll(argument).CastSlow(argument);
-#endif
             }
-            Type implementation = _mappings[component].FirstOrDefault();
+
+            var implementation = _mappings[component].FirstOrDefault();
 
             if (implementation == null)
                 throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
@@ -186,7 +182,7 @@ namespace Ninject.Components
         /// <returns>A series of instances of the specified component.</returns>
         public IEnumerable<object> GetAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Contract.Requires(component != null);
 
             return _mappings[component]
                 .Select(implementation => ResolveInstance(component, implementation));
@@ -200,7 +196,7 @@ namespace Ninject.Components
 
         private object CreateNewInstance(Type component, Type implementation)
         {
-            ConstructorInfo constructor = SelectConstructor(component, implementation);
+            var constructor = SelectConstructor(component, implementation);
             var arguments = constructor.GetParameters().Select(parameter => Get(parameter.ParameterType)).ToArray();
 
             try
@@ -210,7 +206,7 @@ namespace Ninject.Components
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {
-                    _instances.Add(implementation, instance);                    
+                    _instances.Add(implementation, instance);
                 }
 
                 return instance;
@@ -224,29 +220,12 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
+            var constructor = implementation.GetTypeInfo().GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 
             if (constructor == null)
                 throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
 
             return constructor;
         }
-
-#if SILVERLIGHT_30 || SILVERLIGHT_20 || WINDOWS_PHONE || NETCF_35 || MONO
-        private class HashSet<T>
-        {
-            private IDictionary<T, bool> data = new Dictionary<T,bool>();
- 
-            public void Add(T o)
-            {
-                this.data.Add(o, true);
-            }
-
-            public bool Contains(T o)
-            {
-                return this.data.ContainsKey(o);
-            }
-        }
-#endif
     }
 }

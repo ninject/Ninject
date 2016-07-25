@@ -1,15 +1,16 @@
 ﻿#region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Ninject.Infrastructure;
 #endregion
 
@@ -35,7 +36,7 @@ namespace Ninject.Planning.Bindings
         /// <returns><c>True</c> if such a piece of metadata exists; otherwise, <c>false</c>.</returns>
         public bool Has(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Contract.Requires(!string.IsNullOrEmpty(key));
             return _values.ContainsKey(key);
         }
 
@@ -47,7 +48,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The metadata value.</returns>
         public T Get<T>(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Contract.Requires(!string.IsNullOrEmpty(key));
             return Get(key, default(T));
         }
 
@@ -59,7 +60,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The metadata value, or the default value if none was set.</returns>
         public T Get<T>(string key, T defaultValue)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Contract.Requires(!string.IsNullOrEmpty(key));
             return _values.ContainsKey(key) ? (T)_values[key] : defaultValue;
         }
 
@@ -70,7 +71,7 @@ namespace Ninject.Planning.Bindings
         /// <param name="value">The metadata value.</param>
         public void Set(string key, object value)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Contract.Requires(!string.IsNullOrEmpty(key));
             _values[key] = value;
         }
     }

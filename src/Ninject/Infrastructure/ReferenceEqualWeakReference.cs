@@ -11,9 +11,6 @@ namespace Ninject.Infrastructure
 {
     using System;
     using System.Runtime.CompilerServices;
-#if SILVERLIGHT
-    using WeakReference = BaseWeakReference;
-#endif
 
     /// <summary>
     /// Weak reference that can be used in collections. It is equal to the
@@ -21,7 +18,7 @@ namespace Ninject.Infrastructure
     /// </summary>
     public class ReferenceEqualWeakReference : WeakReference
     {
-        private readonly int cashedHashCode;
+        private readonly int cachedHashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
@@ -29,11 +26,7 @@ namespace Ninject.Infrastructure
         /// <param name="target">The target.</param>
         public ReferenceEqualWeakReference(object target) : base(target)
         {
-#if !NETCF
-            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
-#else
-            this.cashedHashCode = target.GetHashCode();
-#endif
+            this.cachedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
         /// <summary>
@@ -43,11 +36,7 @@ namespace Ninject.Infrastructure
         /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
         public ReferenceEqualWeakReference(object target, bool trackResurrection) : base(target, trackResurrection)
         {
-#if !NETCF
-            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
-#else
-            this.cashedHashCode = target.GetHashCode();
-#endif
+            this.cachedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
         /// <summary>
@@ -81,7 +70,7 @@ namespace Ninject.Infrastructure
         /// </returns>
         public override int GetHashCode()
         {
-            return this.cashedHashCode;
+            return this.cachedHashCode;
         }
     }
 }

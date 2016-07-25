@@ -1,11 +1,6 @@
-_ReSharper.*
 bin
 obj
-build
-dist
 *.suo
-*resharper*
 *.user
-*.cache
-*.dotCover
-/src/Ninject.SilverlightTests/Bin
+.vs
+Thumbs.db

@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -24,9 +24,8 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
+    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
-#endif
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -46,8 +45,9 @@ namespace Ninject.Planning.Bindings
         /// <param name="serviceNames">The names of the services.</param>
         public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel, string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Contract.Requires(bindingConfiguration != null);
+            Contract.Requires(kernel != null);
+
             this.BindingConfiguration = bindingConfiguration;
             this.Kernel = kernel;
             this.ServiceNames = serviceNames;
@@ -93,14 +93,14 @@ namespace Ninject.Planning.Bindings
 
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
-        
+
         /// <summary>
         /// Indicates that the service should be bound to the specified constant value.
         /// </summary>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <param name="value">The constant value.</param>
         /// <returns>The fluent syntax.</returns>
-        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value) 
+        protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value)
         {
             this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
             this.BindingConfiguration.Target = BindingTarget.Constant;
@@ -168,7 +168,6 @@ namespace Ninject.Planning.Bindings
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
@@ -263,6 +262,5 @@ namespace Ninject.Planning.Bindings
                 throw new InvalidOperationException("This method is for declaration that a parameter shall be injected only! Never call it directly.");
             }
         }
-#endif
     }
 }

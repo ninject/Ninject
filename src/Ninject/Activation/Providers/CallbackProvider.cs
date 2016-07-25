@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using Ninject.Infrastructure;
 #endregion
 
@@ -31,7 +32,7 @@ namespace Ninject.Activation.Providers
         /// <param name="method">The callback method that will be called to create instances.</param>
         public CallbackProvider(Func<IContext, T> method)
         {
-            Ensure.ArgumentNotNull(method, "method");
+            Contract.Requires(method != null);
             Method = method;
         }
 
@@ -40,9 +41,6 @@ namespace Ninject.Activation.Providers
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The created instance.</returns>
-        protected override T CreateInstance(IContext context)
-        {
-            return Method(context);
-        }
+        protected override T CreateInstance(IContext context) => Method(context);
     }
 }

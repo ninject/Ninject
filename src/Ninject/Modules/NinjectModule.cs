@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -25,7 +25,7 @@ namespace Ninject.Modules
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Diagnostics.Contracts;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
@@ -73,14 +73,14 @@ namespace Ninject.Modules
                 return this.Kernel;
             }
         }
-        
+
         /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
         /// <param name="kernel">The kernel that is loading the module.</param>
         public void OnLoad(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Contract.Requires(kernel != null);
             this.Kernel = kernel;
             this.Load();
         }
@@ -91,7 +91,7 @@ namespace Ninject.Modules
         /// <param name="kernel">The kernel that is unloading the module.</param>
         public void OnUnload(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Contract.Requires(kernel != null);
             this.Unload();
             this.Bindings.Map(this.Kernel.RemoveBinding);
             this.Kernel = null;
@@ -139,7 +139,7 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to add.</param>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.Kernel.AddBinding(binding);
             this.Bindings.Add(binding);
@@ -151,7 +151,7 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to remove.</param>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.Kernel.RemoveBinding(binding);
             this.Bindings.Remove(binding);

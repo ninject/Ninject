@@ -2,7 +2,7 @@
 // <copyright file="GlobalKernelRegistration.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -32,20 +32,20 @@ namespace Ninject
     /// </summary>
     public abstract class GlobalKernelRegistration
     {
-        private static readonly ReaderWriterLock kernelRegistrationsLock = new ReaderWriterLock();
-        private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>(); 
+        private static readonly ReaderWriterLockSlim kernelRegistrationsLock = new ReaderWriterLockSlim();
+        private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>();
 
         internal static void RegisterKernelForType(IKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
-            registration.KernelLock.AcquireWriterLock(Timeout.Infinite);
+            registration.KernelLock.EnterWriteLock();
             try
             {
                 registration.Kernels.Add(new WeakReference(kernel));
             }
             finally
             {
-                registration.KernelLock.ReleaseWriterLock();
+                registration.KernelLock.ExitWriteLock();
             }
         }
 
@@ -63,7 +63,7 @@ namespace Ninject
         {
             bool requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
-            registration.KernelLock.AcquireReaderLock(Timeout.Infinite);
+            registration.KernelLock.EnterReadLock();
 
             try
             {
@@ -82,7 +82,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ReleaseReaderLock();
+                registration.KernelLock.ExitReadLock();
             }
 
             if (requiresCleanup)
@@ -90,10 +90,10 @@ namespace Ninject
                 RemoveKernels(registration, registration.Kernels.Where(reference => !reference.IsAlive));
             }
         }
-        
+
         private static void RemoveKernels(Registration registration, IEnumerable<WeakReference> references)
         {
-            registration.KernelLock.AcquireWriterLock(Timeout.Infinite);
+            registration.KernelLock.EnterWriteLock();
             try
             {
                 foreach (var reference in references.ToArray())
@@ -103,13 +103,13 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ReleaseWriterLock();
+                registration.KernelLock.ExitWriteLock();
             }
         }
 
         private static Registration GetRegistrationForType(Type type)
         {
-            kernelRegistrationsLock.AcquireReaderLock(Timeout.Infinite);
+            kernelRegistrationsLock.EnterUpgradeableReadLock();
             try
             {
                 Registration registration;
@@ -117,18 +117,18 @@ namespace Ninject
                 {
                     return registration;
                 }
-                
+
                 return CreateNewRegistration(type);
             }
             finally
             {
-                kernelRegistrationsLock.ReleaseReaderLock();
+                kernelRegistrationsLock.ExitUpgradeableReadLock();
             }
         }
 
         private static Registration CreateNewRegistration(Type type)
         {
-            var lockCookie = kernelRegistrationsLock.UpgradeToWriterLock(Timeout.Infinite);
+            kernelRegistrationsLock.EnterWriteLock();
             try
             {
                 Registration registration;
@@ -143,7 +143,7 @@ namespace Ninject
             }
             finally
             {
-                kernelRegistrationsLock.DowngradeFromWriterLock(ref lockCookie);
+                kernelRegistrationsLock.ExitWriteLock();
             }
         }
 
@@ -151,11 +151,11 @@ namespace Ninject
         {
             public Registration()
             {
-                this.KernelLock = new ReaderWriterLock();
+                this.KernelLock = new ReaderWriterLockSlim();
                 this.Kernels = new List<WeakReference>();
             }
 
-            public ReaderWriterLock KernelLock { get; private set; }
+            public ReaderWriterLockSlim KernelLock { get; private set; }
             public IList<WeakReference> Kernels { get; private set; }
         }
     }

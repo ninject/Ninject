@@ -54,7 +54,7 @@
         {
             kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
 
-            IWeapon weapon1 = kernel.Get<IWeapon>();
+            var weapon1 = kernel.Get<IWeapon>();
             IWeapon weapon2 = null;
 
             ThreadStart callback = () => weapon2 = kernel.Get<IWeapon>();

@@ -142,7 +142,6 @@ namespace Ninject.Tests.Integration
             barracks1.Warrior.Should().NotBeSameAs(barracks2.Warrior);
         }
 
-#if !WINDOWS_PHONE
         [Fact]
         public void ConstantsCanBePassedToToConstructor()
         {
@@ -154,13 +153,8 @@ namespace Ninject.Tests.Integration
 
             barracks1.Warrior.Should().BeSameAs(barracks2.Warrior);
         }
-#endif
 
-#if !SILVERLIGHT
         private static Ninja CreateNinja()
-#else
-        public static Ninja CreateNinja()
-#endif
         {
             return new Ninja(new Sword());
         }
@@ -222,7 +216,6 @@ namespace Ninject.Tests.Integration
             instance.Generic.Should().NotBeNull();
         }
 
-#if !SILVERLIGHT
         [Fact]
         public void WhenConstructorHasAValueWithDefaultValueItCountsAsServedParameter()
         {
@@ -244,7 +237,6 @@ namespace Ninject.Tests.Integration
 
             public int X { get; set; }
         }
-#endif
 
         public class ClassWithGeneric
         {

@@ -2,11 +2,7 @@ namespace Ninject.Tests.Fakes
 {
     using System;
 
-#if !SILVERLIGHT
     internal class Ninja : IWarrior
-#else
-    public class Ninja : IWarrior
-#endif
     {
         public Ninja(IWeapon weapon)
         {
@@ -30,7 +26,7 @@ namespace Ninject.Tests.Fakes
             get { return this.SecretWeapon; }
             set { this.SecretWeapon = value; }
         }
-        
+
         public IWeapon VerySecretWeaponAccessor
         {
             get { return this.VerySecretWeapon; }
@@ -52,13 +48,13 @@ namespace Ninject.Tests.Fakes
         /// Gets or sets the <see cref="System.Object"/> at the specified index.
         /// Added to have properties with the same name.
         /// </summary>
-        /// <value>Allways null.</value>
+        /// <value>Always null.</value>
         public object this[string index]
         {
             get { return null; }
             set { }
         }
-        
+
         #region IWarrior Members
 
         public IWeapon Weapon { get; set; }

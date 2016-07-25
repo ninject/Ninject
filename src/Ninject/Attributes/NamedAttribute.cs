@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 #endregion
@@ -32,7 +33,7 @@ namespace Ninject
         /// <param name="name">The name of the binding(s) to use.</param>
         public NamedAttribute(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Contract.Requires(name != null);
             Name = name;
         }
 
@@ -43,7 +44,7 @@ namespace Ninject
         /// <returns><c>True</c> if the metadata matches; otherwise <c>false</c>.</returns>
         public override bool Matches(IBindingMetadata metadata)
         {
-            Ensure.ArgumentNotNull(metadata, "metadata");
+            Contract.Requires(metadata != null);
             return metadata.Name == Name;
         }
     }

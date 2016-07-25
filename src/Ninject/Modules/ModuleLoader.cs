@@ -1,16 +1,17 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #if !NO_ASSEMBLY_SCANNING
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using Ninject.Components;
@@ -35,7 +36,7 @@ namespace Ninject.Modules
         /// <param name="kernel">The kernel into which modules will be loaded.</param>
         public ModuleLoader(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Contract.Requires(kernel != null);
             Kernel = kernel;
         }
 
@@ -53,8 +54,8 @@ namespace Ninject.Modules
 
             foreach (var fileGroup in fileGroups)
             {
-                string extension = fileGroup.Key;
-                IModuleLoaderPlugin plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
+                var extension = fileGroup.Key;
+                var plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
                 if (plugin != null)
                     plugin.LoadModules(fileGroup);
@@ -79,8 +80,8 @@ namespace Ninject.Modules
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
-            return String.IsNullOrEmpty(searchPath) 
-                ? new[] {baseDirectory} 
+            return String.IsNullOrEmpty(searchPath)
+                ? new[] {baseDirectory}
                 : searchPath.Split(new[] {Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path));
         }

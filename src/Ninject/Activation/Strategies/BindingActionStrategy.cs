@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Language;
 #endregion
@@ -27,8 +28,9 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            context.Binding.ActivationActions.Map(action => action(context, reference.Instance));
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
+            context.Binding.ActivationActions.Map(action => action?.Invoke(context, reference.Instance));
         }
 
         /// <summary>
@@ -38,8 +40,9 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being deactivated.</param>
         public override void Deactivate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            context.Binding.DeactivationActions.Map(action => action(context, reference.Instance));
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
+            context.Binding.DeactivationActions.Map(action => action?.Invoke(context, reference.Instance));
         }
     }
 }

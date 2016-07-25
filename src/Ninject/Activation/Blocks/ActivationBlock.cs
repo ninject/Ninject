@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Parameters;
@@ -41,21 +42,21 @@ namespace Ninject.Activation.Blocks
         /// <param name="parent">The parent resolution root.</param>
         public ActivationBlock(IResolutionRoot parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
+            Contract.Requires(parent != null);
             Parent = parent;
         }
 
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing">A Boolean indicating whether release managed resource or not.</param>
         public override void Dispose(bool disposing)
         {
             lock (this)
             {
                 if (disposing && !IsDisposed)
                 {
-                    var evt = Disposed;
-                    if (evt != null) evt(this, EventArgs.Empty);
+                    Disposed?.Invoke(this, EventArgs.Empty);
                     Disposed = null;
                 }
 
@@ -70,7 +71,7 @@ namespace Ninject.Activation.Blocks
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.Parent.CanResolve(request);
         }
 
@@ -84,7 +85,7 @@ namespace Ninject.Activation.Blocks
         /// </returns>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
@@ -96,7 +97,7 @@ namespace Ninject.Activation.Blocks
         /// <returns>An enumerator of instances that match the request.</returns>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return Parent.Resolve(request);
         }
 
@@ -109,10 +110,10 @@ namespace Ninject.Activation.Blocks
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         /// <returns>The created request.</returns>
-        public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        public virtual IRequest CreateRequest(Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
             return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
         }
 

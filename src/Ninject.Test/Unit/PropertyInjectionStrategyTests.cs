@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
+    using System;
     using FluentAssertions;
 
     public class PropertyInjectionDirectiveContext
@@ -20,7 +21,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
         public PropertyInjectionDirectiveContext()
         {
-            strategy = new PropertyInjectionStrategy(null) {Settings = new NinjectSettings()};
+            strategy = new PropertyInjectionStrategy(null) { Settings = new NinjectSettings() };
         }
     }
 
@@ -47,8 +48,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
             directives = new[]
             {
-                new FakePropertyInjectionDirective(property1, injector1),
-                new FakePropertyInjectionDirective(property2, injector2)
+                new FakePropertyInjectionDirective(typeof(Dummy),property1, injector1),
+                new FakePropertyInjectionDirective(typeof(Dummy),property2, injector2)
             };
 
             contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
@@ -88,10 +89,10 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
     {
         public Mock<ITarget> TargetMock { get; private set; }
 
-        public FakePropertyInjectionDirective(PropertyInfo property, PropertyInjector injector)
-            : base(property, injector) { }
+        public FakePropertyInjectionDirective(Type service, PropertyInfo property, PropertyInjector injector)
+            : base(service, property, injector) { }
 
-        protected override ITarget CreateTarget(PropertyInfo property)
+        protected override ITarget CreateTarget(Type service, PropertyInfo property)
         {
             TargetMock = new Mock<ITarget>();
             return TargetMock.Object;

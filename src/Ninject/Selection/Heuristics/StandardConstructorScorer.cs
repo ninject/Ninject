@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -25,8 +25,9 @@ namespace Ninject.Selection.Heuristics
 {
     using System;
     using System.Collections;
+    using System.Diagnostics.Contracts;
     using System.Linq;
-
+    using System.Reflection;
     using Ninject.Activation;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -49,8 +50,8 @@ namespace Ninject.Selection.Heuristics
         /// <returns>The constructor's score.</returns>
         public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(directive, "constructor");
+            Contract.Requires(context != null);
+            Contract.Requires(directive != null);
 
             if (directive.HasInjectAttribute)
             {
@@ -65,7 +66,7 @@ namespace Ninject.Selection.Heuristics
                     score++;
                     continue;
                 }
-                
+
                 if (BindingExists(context, target))
                 {
                     score++;
@@ -78,7 +79,7 @@ namespace Ninject.Selection.Heuristics
                     score += int.MinValue;
                 }
             }
-            
+
             return score;
         }
 
@@ -90,8 +91,8 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         protected virtual bool BindingExists(IContext context, ITarget target)
         {
-			return this.BindingExists(context.Kernel, context, target);
-		}
+            return this.BindingExists(context.Kernel, context, target);
+        }
 
         /// <summary>
         /// Checkes whether a binding exists for a given target on the specified kernel.
@@ -115,9 +116,9 @@ namespace Ninject.Selection.Heuristics
                 targetType = targetType.GetElementType();
             }
 
-            if (targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
+            if (targetType.GetTypeInfo().IsGenericType && targetType.GetTypeInfo().GetInterfaces().Any(type => type == typeof(IEnumerable)))
             {
-                targetType = targetType.GetGenericArguments()[0];
+                targetType = targetType.GetTypeInfo().GetGenericArguments()[0];
             }
 
             return targetType;

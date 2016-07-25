@@ -1,15 +1,16 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Ninject.Activation;
 using Ninject.Infrastructure;
 using Ninject.Parameters;
@@ -28,7 +29,7 @@ namespace Ninject.Planning.Bindings
         /// <param name="service">The service that is controlled by the binding.</param>
         public Binding(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Contract.Requires(service != null);
 
             this.Service = service;
             this.BindingConfiguration = new BindingConfiguration();
@@ -41,8 +42,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="configuration">The binding configuration.</param>
         public Binding(Type service, IBindingConfiguration configuration)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(configuration, "configuration");
+            Contract.Requires(service != null);
+            Contract.Requires(configuration != null);
 
             this.Service = service;
             this.BindingConfiguration = configuration;

@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -24,6 +24,7 @@
 namespace Ninject.Syntax
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Ninject.Infrastructure;
@@ -49,7 +50,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
-            Type service = typeof(T);
+            var service = typeof(T);
 
             var binding = new Binding(service);
             this.AddBinding(binding);
@@ -118,10 +119,11 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
-            Ensure.ArgumentNotNull(services, "service");
+            Contract.Requires(services != null);
+
             if (services.Length == 0)
             {
-                throw new ArgumentException("The services must contain at least one type", "services");                
+                throw new ArgumentException("The services must contain at least one type", nameof(services));
             }
 
             var firstBinding = new Binding(services[0]);
@@ -129,7 +131,7 @@ namespace Ninject.Syntax
 
             foreach (var service in services.Skip(1))
             {
-                this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));                
+                this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
             }
 
             return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
@@ -215,7 +217,7 @@ namespace Ninject.Syntax
         {
             foreach (var service in services)
             {
-                Unbind(service);                
+                Unbind(service);
             }
 
             return Bind(services);

@@ -1,5 +1,4 @@
-﻿#if !SILVERLIGHT
-namespace Ninject.Tests.Integration
+﻿namespace Ninject.Tests.Integration
 {
     using System.Runtime.InteropServices;
     using Ninject.Tests.Fakes;
@@ -14,4 +13,3 @@ namespace Ninject.Tests.Integration
         public ShieldColor Color { get; set; }
     }
 }
-#endif

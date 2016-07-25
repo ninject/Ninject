@@ -1,16 +1,18 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Infrastructure.Language
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     internal static class ExtensionsForICustomAttributeProvider
@@ -26,7 +28,7 @@ namespace Ninject.Infrastructure.Language
             return member.IsDefined(type, true);
         }
 
-        public static object[] GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
+        public static IEnumerable<Attribute> GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             var memberInfo = member as MemberInfo;
             if (memberInfo != null)
@@ -34,7 +36,7 @@ namespace Ninject.Infrastructure.Language
                 return memberInfo.GetCustomAttributesExtended(attributeType, inherit);
             }
 
-            return member.GetCustomAttributes(attributeType, inherit);
+            return member.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
         }
     }
 }

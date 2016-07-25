@@ -2,7 +2,7 @@
 // <copyright file="TypeMatchingConstructorArgument.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2013 Ninject Project Contributors
 //   Authors: Ivan Appert (iappert@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -21,6 +21,7 @@
 namespace Ninject.Parameters
 {
     using System;
+    using System.Diagnostics.Contracts;
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Planning.Targets;
@@ -50,8 +51,8 @@ namespace Ninject.Parameters
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
         public TypeMatchingConstructorArgument(Type type, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+            Contract.Requires(type != null);
+            Contract.Requires(valueCallback != null);
 
             this.ValueCallback = valueCallback;
             this.ShouldInherit = shouldInherit;
@@ -103,7 +104,7 @@ namespace Ninject.Parameters
         /// <returns>The value for the parameter.</returns>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
             return this.ValueCallback(context, target);
         }
 

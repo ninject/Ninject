@@ -2,7 +2,7 @@
 // <copyright file="ExtensionsForType.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -23,6 +23,7 @@ namespace Ninject.Infrastructure.Language
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
 
     /// <summary>
     /// Extension methods for type
@@ -35,13 +36,13 @@ namespace Ninject.Infrastructure.Language
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>An enumerable containing the given type and all its base types</returns>
-         public static IEnumerable<Type> GetAllBaseTypes(this Type type)
-         {
-             while (type != null)
-             {
-                 yield return type;
-                 type = type.BaseType;
-             }
-         }
+        public static IEnumerable<Type> GetAllBaseTypes(this Type type)
+        {
+            while (type != null)
+            {
+                yield return type;
+                type = type.GetTypeInfo().BaseType;
+            }
+        }
     }
 }

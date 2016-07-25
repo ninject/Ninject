@@ -11,7 +11,7 @@ namespace Ninject.Activation.Caching
     public class WeakReferenceEqualityComparer : IEqualityComparer<object>
     {
         /// <summary>
-        /// Returns if the specifed objects are equal.
+        /// Returns if the specified objects are equal.
         /// </summary>
         /// <param name="x">The first object.</param>
         /// <param name="y">The second object.</param>
@@ -29,12 +29,7 @@ namespace Ninject.Activation.Caching
         public int GetHashCode(object obj)
         {
             var weakReference = obj as ReferenceEqualWeakReference;
-            return weakReference != null ? weakReference.GetHashCode() : 
-#if !NETCF
-                RuntimeHelpers.GetHashCode(obj);
-#else
-                obj.GetHashCode();
-#endif
+            return weakReference != null ? weakReference.GetHashCode() : RuntimeHelpers.GetHashCode(obj);
         }
     }
 }

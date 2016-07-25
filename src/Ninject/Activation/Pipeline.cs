@@ -1,16 +1,17 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Activation
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using Ninject.Activation.Caching;
     using Ninject.Activation.Strategies;
@@ -35,8 +36,9 @@ namespace Ninject.Activation
         /// <param name="activationCache">The activation cache.</param>
         public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
-            Ensure.ArgumentNotNull(strategies, "strategies");
-            Ensure.ArgumentNotNull(activationCache, "activationCache");
+            Contract.Requires(strategies != null);
+            Contract.Requires(activationCache != null);
+
             this.Strategies = strategies.ToList();
             this.activationCache = activationCache;
         }
@@ -53,8 +55,9 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
+
             if (!this.activationCache.IsActivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Activate(context, reference));
@@ -68,8 +71,9 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Deactivate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
+
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {
                 this.Strategies.Map(s => s.Deactivate(context, reference));

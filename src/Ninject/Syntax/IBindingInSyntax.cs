@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -47,11 +47,13 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         IBindingNamedWithOrOnSyntax<T> InTransientScope();
 
+#if !NO_THREADING
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
         /// <returns>The fluent syntax.</returns>
         IBindingNamedWithOrOnSyntax<T> InThreadScope();
+#endif
 
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object

@@ -1,12 +1,11 @@
 namespace Ninject.Tests.Integration
 {
-#if !SILVERLIGHT
     using System;
 
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
-    
+
     public class NamedPropertyInjectionTests : IDisposable
     {
         private readonly IKernel kernel;
@@ -46,7 +45,7 @@ namespace Ninject.Tests.Integration
             ninja.SecretWeaponAccessor.Should().BeOfType<Shuriken>();
             ninja.VerySecretWeaponAccessor.Should().BeOfType<Dagger>();
         }
-        
+
         public class OwnStyleNinja
         {
             [Inject]
@@ -68,7 +67,7 @@ namespace Ninject.Tests.Integration
                     return this.VerySecretWeapon;
                 }
             }
-            
+
             [Inject]
             [Named("Offhand")]
             internal virtual IWeapon OffhandWeapon { get; set; }
@@ -91,5 +90,4 @@ namespace Ninject.Tests.Integration
             protected override IWeapon SecretWeapon { get; set; }
         }
     }
-#endif
 }

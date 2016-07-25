@@ -34,7 +34,7 @@
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
-            Assert.DoesNotThrow(() => kernel.Resolve(request));
+            kernel.Resolve(request);
         }
 
         [Fact]
@@ -56,7 +56,7 @@
         [Fact]
         public void DoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => kernel.Get<TwoWayPropertyFoo>());
+            kernel.Get<TwoWayPropertyFoo>();
         }
 
         [Fact]
@@ -83,7 +83,7 @@
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
-            Assert.DoesNotThrow(() => kernel.Resolve(request));
+            kernel.Resolve(request);
         }
 
         [Fact]
@@ -105,7 +105,7 @@
         [Fact]
         public void DoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => kernel.Get<ThreeWayPropertyFoo>());
+            kernel.Get<ThreeWayPropertyFoo>();
         }
 
         [Fact]
@@ -133,12 +133,14 @@
 
     public class TwoWayPropertyFoo
     {
-        [Inject] public TwoWayPropertyBar Bar { get; set; }
+        [Inject]
+        public TwoWayPropertyBar Bar { get; set; }
     }
 
     public class TwoWayPropertyBar
     {
-        [Inject] public TwoWayPropertyFoo Foo { get; set; }
+        [Inject]
+        public TwoWayPropertyFoo Foo { get; set; }
     }
 
     public class ThreeWayConstructorFoo
@@ -158,17 +160,20 @@
 
     public class ThreeWayPropertyFoo
     {
-        [Inject] public ThreeWayPropertyBar Bar { get; set; }
+        [Inject]
+        public ThreeWayPropertyBar Bar { get; set; }
     }
 
     public class ThreeWayPropertyBar
     {
-        [Inject] public ThreeWayPropertyBaz Baz { get; set; }
+        [Inject]
+        public ThreeWayPropertyBaz Baz { get; set; }
     }
 
     public class ThreeWayPropertyBaz
     {
-        [Inject] public ThreeWayPropertyFoo Foo { get; set; }
+        [Inject]
+        public ThreeWayPropertyFoo Foo { get; set; }
     }
 
 }

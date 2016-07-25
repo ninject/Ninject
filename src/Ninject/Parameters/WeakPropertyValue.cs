@@ -2,7 +2,7 @@
 // <copyright file="WeakPropertyValue.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2013 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -40,8 +40,8 @@ namespace Ninject.Parameters
             : base(name, (object)null, false)
         {
             this.weakReference = new WeakReference(value);
-            this.ValueCallback = (ctx, target) => this.weakReference.Target;            
+            this.ValueCallback = (ctx, target) => this.weakReference.Target;
         }
-        
+
     }
 }

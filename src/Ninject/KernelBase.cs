@@ -1,10 +1,10 @@
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 
 using System.Collections;
 
@@ -12,6 +12,7 @@ namespace Ninject
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using Ninject.Activation;
@@ -36,8 +37,8 @@ namespace Ninject
         /// <summary>
         /// Lock used when adding missing bindings.
         /// </summary>
-        protected readonly object HandleMissingBindingLockObject = new object();        
-        
+        protected readonly object HandleMissingBindingLockObject = new object();
+
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
         private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
@@ -81,9 +82,9 @@ namespace Ninject
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
-            Ensure.ArgumentNotNull(components, "components");
-            Ensure.ArgumentNotNull(settings, "settings");
-            Ensure.ArgumentNotNull(modules, "modules");
+            Contract.Requires(components != null);
+            Contract.Requires(settings != null);
+            Contract.Requires(modules != null);
 
             this.Settings = settings;
 
@@ -141,7 +142,7 @@ namespace Ninject
         /// <param name="service">The service to unbind.</param>
         public override void Unbind(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Contract.Requires(service != null);
 
             this.bindings.RemoveAll(service);
 
@@ -157,7 +158,7 @@ namespace Ninject
         /// <param name="binding">The binding to add.</param>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.AddBindings(new[] { binding });
         }
@@ -168,7 +169,7 @@ namespace Ninject
         /// <param name="binding">The binding to remove.</param>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.bindings.Remove(binding.Service, binding);
 
@@ -183,7 +184,7 @@ namespace Ninject
         /// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
         public bool HasModule(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Contract.Requires(name != null);
             return this.modules.ContainsKey(name);
         }
 
@@ -202,7 +203,7 @@ namespace Ninject
         /// <param name="m">The modules to load.</param>
         public void Load(IEnumerable<INinjectModule> m)
         {
-            Ensure.ArgumentNotNull(m, "modules");
+            Contract.Requires(modules != null);
 
             m = m.ToList();
             foreach (INinjectModule module in m)
@@ -211,7 +212,7 @@ namespace Ninject
                 {
                     throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
                 }
-                
+
                 INinjectModule existingModule;
 
                 if (this.modules.TryGetValue(module.Name, out existingModule))
@@ -257,7 +258,7 @@ namespace Ninject
         /// <param name="name">The plugin's name.</param>
         public void Unload(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Contract.Requires(name != null);
 
             INinjectModule module;
 
@@ -278,10 +279,10 @@ namespace Ninject
         /// <param name="parameters">The parameters to pass to the request.</param>
         public virtual void Inject(object instance, params IParameter[] parameters)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(instance != null);
+            Contract.Requires(parameters != null);
 
-            Type service = instance.GetType();
+            var service = instance.GetType();
 
             var planner = this.Components.Get<IPlanner>();
             var pipeline = this.Components.Get<IPipeline>();
@@ -303,7 +304,7 @@ namespace Ninject
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         public virtual bool Release(object instance)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
+            Contract.Requires(instance != null);
             var cache = this.Components.Get<ICache>();
             return cache.Release(instance);
         }
@@ -315,7 +316,7 @@ namespace Ninject
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public virtual bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
         }
 
@@ -329,7 +330,7 @@ namespace Ninject
         /// </returns>
         public virtual bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.GetBindings(request.Service)
                 .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
         }
@@ -410,10 +411,10 @@ namespace Ninject
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         /// <returns>The created request.</returns>
-        public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        public virtual IRequest CreateRequest(Type service, Predicate<IBindingMetadata> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
 
             return new Request(service, constraint, parameters, null, isOptional, isUnique);
         }
@@ -434,7 +435,7 @@ namespace Ninject
         /// <returns>A series of bindings that are registered for the service.</returns>
         public virtual IEnumerable<IBinding> GetBindings(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Contract.Requires(service != null);
 
             lock (this.bindingCache)
             {
@@ -496,7 +497,7 @@ namespace Ninject
         /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
         protected virtual bool HandleMissingBinding(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
 
 #pragma warning disable 612,618
             if (this.HandleMissingBinding(request.Service))
@@ -506,7 +507,7 @@ namespace Ninject
 #pragma warning restore 612,618
 
             var components = this.Components.GetAll<IMissingBindingResolver>();
-            
+
             // Take the first set of bindings that resolve.
             var bindings = components
                 .Select(c => c.Resolve(this.bindings, request).ToList())
@@ -537,11 +538,11 @@ namespace Ninject
         [Obsolete]
         protected virtual bool TypeIsSelfBindable(Type service)
         {
-            return !service.IsInterface
-                && !service.IsAbstract
-                && !service.IsValueType
+            return !service.GetTypeInfo().IsInterface
+                && !service.GetTypeInfo().IsAbstract
+                && !service.GetTypeInfo().IsValueType
                 && service != typeof(string)
-                && !service.ContainsGenericParameters;
+                && !service.GetTypeInfo().ContainsGenericParameters;
         }
 
         /// <summary>
@@ -552,8 +553,8 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(request != null);
+            Contract.Requires(binding != null);
 
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
         }
@@ -566,10 +567,12 @@ namespace Ninject
                 this.bindingCache.Clear();
         }
 
+        #if !NO_SERVICE_PROVIDER
         object IServiceProvider.GetService(Type service)
         {
             return this.Get(service);
         }
+        #endif
 
         private class BindingPrecedenceComparer : IComparer<IBinding>
         {
@@ -585,13 +588,13 @@ namespace Ninject
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
-                                b => !b.Service.ContainsGenericParameters, // closed generics > open generics
+                                b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 
                 var q = from func in funcs
                         let xVal = func(x)
-                        where xVal != func(y) 
+                        where xVal != func(y)
                         select xVal ? 1 : -1;
 
                 // returns the value of the first function that represents a difference

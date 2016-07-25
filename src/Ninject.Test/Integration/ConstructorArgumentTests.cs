@@ -2,7 +2,7 @@
 // <copyright file="ConstructorArgumentTests.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -39,7 +39,7 @@ namespace Ninject.Tests.Integration
         {
             this.kernel = new StandardKernel();
         }
-        
+
         public static IEnumerable<object[]> ConstructorArguments
         {
             get
@@ -73,7 +73,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Theory]
-        [PropertyData("ConstructorArguments")]
+        [MemberData("ConstructorArguments")]
         public void ConstructorArgumentsArePassedToFirstLevel(Func<bool, IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -86,7 +86,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Theory]
-        [PropertyData("ConstructorArgumentsWithoutShouldInheritArgument")]
+        [MemberData("ConstructorArgumentsWithoutShouldInheritArgument")]
         public void ConstructorArgumentsAreNotInheritedIfNotSpecified(Func<IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -95,9 +95,9 @@ namespace Ninject.Tests.Integration
 
             getAction.ShouldThrow<ActivationException>();
         }
-        
+
         [Theory]
-        [PropertyData("ConstructorArguments")]
+        [MemberData("ConstructorArguments")]
         public void ConstructorArgumentsAreInheritedIfSpecified(Func<bool, IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();

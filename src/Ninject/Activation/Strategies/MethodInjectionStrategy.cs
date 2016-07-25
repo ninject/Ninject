@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Ninject.Infrastructure;
 using Ninject.Injection;
@@ -30,8 +31,8 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
 
             foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
             {

@@ -1,17 +1,18 @@
 ﻿#region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Ninject.Activation;
 using Ninject.Activation.Providers;
 using Ninject.Components;
@@ -54,11 +55,11 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
         protected virtual bool TypeIsSelfBindable(Type service)
         {
-            return !service.IsInterface
-                   && !service.IsAbstract
-                   && !service.IsValueType
+            return !service.GetTypeInfo().IsInterface
+                   && !service.GetTypeInfo().IsAbstract
+                   && !service.GetTypeInfo().IsValueType
                    && service != typeof(string)
-                   && !service.ContainsGenericParameters;
+                   && !service.GetTypeInfo().ContainsGenericParameters;
         }
     }
 }

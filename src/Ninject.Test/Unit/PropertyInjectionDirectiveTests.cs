@@ -20,7 +20,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
             var method = typeof(Dummy).GetProperty("Foo");
             PropertyInjector injector = delegate { };
 
-            directive = new PropertyInjectionDirective(method, injector);
+            directive = new PropertyInjectionDirective(typeof(Dummy), method, injector);
 
             directive.Target.Name.Should().Be("Foo");
             directive.Target.Type.Should().Be(typeof(int));

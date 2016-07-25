@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -24,9 +24,8 @@
 namespace Ninject.Planning.Bindings
 {
     using System;
-#if !NETCF
+    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
-#endif    
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
@@ -48,8 +47,8 @@ namespace Ninject.Planning.Bindings
         public BindingBuilder(IBinding binding, IKernel kernel, string serviceNames)
             : base(binding.BindingConfiguration, kernel, serviceNames)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Contract.Requires(binding != null);
+            Contract.Requires(kernel != null);
             this.Binding = binding;
         }
 #pragma warning restore 1584
@@ -58,7 +57,7 @@ namespace Ninject.Planning.Bindings
         /// Gets the binding being built.
         /// </summary>
         public IBinding Binding { get; private set; }
-      
+
         /// <summary>
         /// Indicates that the service should be self-bound.
         /// </summary>
@@ -92,7 +91,6 @@ namespace Ninject.Planning.Bindings
             return this.InternalTo<T1>(implementation);
         }
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
@@ -105,7 +103,6 @@ namespace Ninject.Planning.Bindings
         {
             return this.InternalToConstructor(newExpression);
         }
-#endif
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.

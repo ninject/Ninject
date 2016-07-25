@@ -1,16 +1,17 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 #endregion
 
 namespace Ninject.Infrastructure
@@ -32,7 +33,7 @@ namespace Ninject.Infrastructure
         {
             get
             {
-                Ensure.ArgumentNotNull(key, "key");
+                Contract.Requires(key != null);
 
                 if (!_items.ContainsKey(key))
                     _items[key] = new List<V>();
@@ -64,8 +65,8 @@ namespace Ninject.Infrastructure
         /// <param name="value">The value.</param>
         public void Add(K key, V value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Contract.Requires(key != null);
+            Contract.Requires(value != null);
 
             this[key].Add(value);
         }
@@ -78,8 +79,8 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
         public bool Remove(K key, V value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Contract.Requires(key != null);
+            Contract.Requires(value != null);
 
             if (!_items.ContainsKey(key))
                 return false;
@@ -94,7 +95,7 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
         public bool RemoveAll(K key)
         {
-            Ensure.ArgumentNotNull(key, "key");
+            Contract.Requires(key != null);
             return _items.Remove(key);
         }
 
@@ -113,7 +114,7 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(K key)
         {
-            Ensure.ArgumentNotNull(key, "key");
+            Contract.Requires(key != null);
             return _items.ContainsKey(key);
         }
 
@@ -125,8 +126,8 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if the multimap contains such a value; otherwise, <c>false</c>.</returns>
         public bool ContainsValue(K key, V value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Contract.Requires(key != null);
+            Contract.Requires(value != null);
 
             return _items.ContainsKey(key) && _items[key].Contains(value);
         }

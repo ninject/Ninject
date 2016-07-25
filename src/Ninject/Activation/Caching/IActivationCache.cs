@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="instance">The instance to be added.</param>
         void AddDeactivatedInstance(object instance);
-        
+
         /// <summary>
         /// Determines whether the specified instance is activated.
         /// </summary>

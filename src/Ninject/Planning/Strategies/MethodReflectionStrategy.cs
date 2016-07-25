@@ -1,14 +1,15 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ninject.Components;
 using Ninject.Infrastructure;
@@ -41,8 +42,8 @@ namespace Ninject.Planning.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         public MethodReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+            Contract.Requires(selector != null);
+            Contract.Requires(injectorFactory != null);
 
             Selector = selector;
             InjectorFactory = injectorFactory;
@@ -55,10 +56,10 @@ namespace Ninject.Planning.Strategies
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
+            Contract.Requires(plan != null);
 
             foreach (MethodInfo method in Selector.SelectMethodsForInjection(plan.Type))
-                plan.Add(new MethodInjectionDirective(method, InjectorFactory.Create(method)));
+                plan.Add(new MethodInjectionDirective(plan.Type, method, InjectorFactory.Create(method)));
         }
     }
 }

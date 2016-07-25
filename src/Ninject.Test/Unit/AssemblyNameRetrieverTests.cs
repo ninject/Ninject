@@ -39,7 +39,7 @@ namespace Ninject.Tests.Unit
                 assemblyFullNames.Should().BeEquivalentTo(new[] { expected.FullName });
             }
         }
-        
+
         public class WhenGetAssemblyNamesIsCalledWithAssemblyName : AssemblyNameRetrieverContext
         {
             [Fact]

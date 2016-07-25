@@ -1,16 +1,18 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using Ninject.Activation.Caching;
 using Ninject.Infrastructure;
 using Ninject.Infrastructure.Introspection;
@@ -89,12 +91,12 @@ namespace Ninject.Activation
         /// <param name="pipeline">The pipeline component.</param>
         public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(cache, "cache");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(pipeline, "pipeline");
+            Contract.Requires(kernel != null);
+            Contract.Requires(request != null);
+            Contract.Requires(binding != null);
+            Contract.Requires(cache != null);
+            Contract.Requires(planner != null);
+            Contract.Requires(pipeline != null);
 
             Kernel = kernel;
             Request = request;
@@ -105,10 +107,10 @@ namespace Ninject.Activation
             Planner = planner;
             Pipeline = pipeline;
 
-            if (binding.Service.IsGenericTypeDefinition)
+            if (binding.Service.GetTypeInfo().IsGenericTypeDefinition)
             {
                 HasInferredGenericArguments = true;
-                GenericArguments = request.Service.GetGenericArguments();
+                GenericArguments = request.Service.GetTypeInfo().GetGenericArguments();
             }
         }
 
@@ -123,7 +125,7 @@ namespace Ninject.Activation
                 var scope = this.Request.GetScope() ?? this.Binding.GetScope(this);
                 this.cachedScope = new WeakReference(scope);
             }
-            
+
             return this.cachedScope.Target;
         }
 

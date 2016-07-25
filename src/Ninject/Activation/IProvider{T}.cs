@@ -2,7 +2,7 @@
 // <copyright file="IProvider{T}.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -22,10 +22,10 @@
 namespace Ninject.Activation
 {
     /// <summary>
-    /// Provides instances ot the type T
+    /// Provides instances of the type T
     /// </summary>
     /// <typeparam name="T">The type provides by this implementation.</typeparam>
     public interface IProvider<T> : IProvider
-    {       
+    {
     }
 }

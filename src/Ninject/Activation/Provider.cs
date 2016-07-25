@@ -1,16 +1,17 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Activation
 {
     using System;
+    using System.Diagnostics.Contracts;
     using Ninject.Infrastructure;
 
     /// <summary>
@@ -34,7 +35,8 @@ namespace Ninject.Activation
         /// <returns>The created instance.</returns>
         public object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Contract.Requires(context != null);
+
             return this.CreateInstance(context);
         }
 

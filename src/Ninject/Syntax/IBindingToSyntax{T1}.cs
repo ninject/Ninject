@@ -4,7 +4,7 @@
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -24,9 +24,7 @@
 namespace Ninject.Syntax
 {
     using System;
-#if !NETCF
     using System.Linq.Expressions;
-#endif
     using Ninject.Activation;
 
     /// <summary>
@@ -46,7 +44,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TImplementation">The implementation type.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>() 
+        IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>()
             where TImplementation : T1;
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<T1> ToProvider<TProvider>() 
+        IBindingWhenInNamedWithOrOnSyntax<T1> ToProvider<TProvider>()
             where TProvider : IProvider;
 
         /// <summary>
@@ -108,7 +106,6 @@ namespace Ninject.Syntax
         IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstant<TImplementation>(TImplementation value)
             where TImplementation : T1;
 
-#if !NETCF
         /// <summary>
         /// Indicates that the service should be bound to the specified constructor.
         /// </summary>
@@ -118,6 +115,5 @@ namespace Ninject.Syntax
         IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToConstructor<TImplementation>(
             Expression<Func<IConstructorArgumentSyntax, TImplementation>> newExpression)
             where TImplementation : T1;
-#endif
     }
 }

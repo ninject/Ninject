@@ -1,11 +1,11 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 #region Using Directives
 using System;
@@ -19,6 +19,7 @@ using Ninject.Selection.Heuristics;
 
 namespace Ninject.Selection
 {
+    using System.Diagnostics.Contracts;
     using Ninject.Infrastructure.Language;
 
     /// <summary>
@@ -35,11 +36,11 @@ namespace Ninject.Selection
         {
             get
             {
-                #if !NO_LCG && !SILVERLIGHT
+#if !NO_LCG
                 return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
-                #else
+#else
                 return DefaultFlags;
-                #endif
+#endif
             }
         }
 
@@ -60,8 +61,8 @@ namespace Ninject.Selection
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
+            Contract.Requires(constructorScorer != null);
+            Contract.Requires(injectionHeuristics != null);
 
             ConstructorScorer = constructorScorer;
             InjectionHeuristics = injectionHeuristics.ToList();
@@ -72,11 +73,14 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
-        public  virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
+        public virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Contract.Requires(type != null);
 
-            var constructors = type.GetConstructors( Flags );
+            if (type.GetTypeInfo().IsSubclassOf(typeof(MulticastDelegate)))
+                return null;
+
+            var constructors = type.GetTypeInfo().GetConstructors(Flags);
             return constructors.Length == 0 ? null : constructors;
         }
 
@@ -87,28 +91,27 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            List<PropertyInfo> properties = new List<PropertyInfo>();
+            Contract.Requires(type != null);
+            var properties = new List<PropertyInfo>();
             properties.AddRange(
-                type.GetProperties(this.Flags)
-                       .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
+                type.GetTypeInfo().GetProperties(this.Flags)
+                       .Select(p => p.GetPropertyFromDeclaredType(p))
                        .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p))));
-#if !SILVERLIGHT
+
             if (this.Settings.InjectParentPrivateProperties)
             {
-                for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
+                for (Type parentType = type.GetTypeInfo().BaseType; parentType != null; parentType = parentType.GetTypeInfo().BaseType)
                 {
-                    properties.AddRange(this.GetPrivateProperties(type.BaseType));
+                    properties.AddRange(this.GetPrivateProperties(type.GetTypeInfo().BaseType));
                 }
             }
-#endif
 
             return properties;
         }
 
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
-            return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
+            return type.GetTypeInfo().GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
                 .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p)));
         }
 
@@ -119,8 +122,8 @@ namespace Ninject.Selection
         /// <returns>A series of the selected methods.</returns>
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            return type.GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
+            Contract.Requires(type != null);
+            return type.GetTypeInfo().GetMethods(Flags).Where(m => InjectionHeuristics.Any(h => h.ShouldInject(m)));
         }
     }
 }

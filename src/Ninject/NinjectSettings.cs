@@ -83,7 +83,6 @@ namespace Ninject
         }
         #endif //!NO_LCG
 
-        #if !SILVERLIGHT
         /// <summary>
         /// Gets a value indicating whether Ninject should inject non public members.
         /// </summary>
@@ -105,7 +104,6 @@ namespace Ninject
             get { return this.Get("InjectParentPrivateProperties", false); }
             set { this.Set("InjectParentPrivateProperties", value); }
         }
-        #endif //!SILVERLIGHT
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

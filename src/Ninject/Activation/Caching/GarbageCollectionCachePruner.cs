@@ -1,17 +1,18 @@
 #region License
-// 
+//
 // Author: Nate Kohari <nate@enkari.com>
 // Copyright (c) 2007-2010, Enkari, Ltd.
-// 
+//
 // Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 // See the file LICENSE.txt for details.
-// 
+//
 #endregion
 
 namespace Ninject.Activation.Caching
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Threading;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -27,22 +28,26 @@ namespace Ninject.Activation.Caching
         /// indicator for if GC has been run.
         /// </summary>
         private readonly WeakReference indicator = new WeakReference(new object());
-        
+
         /// <summary>
         /// The caches that are being pruned.
         /// </summary>
         private readonly List<IPruneable> caches = new List<IPruneable>();
 
         /// <summary>
-        /// The timer used to trigger the cache pruning
+        /// The timer used to trigger the cache pruning.
         /// </summary>
         private Timer timer;
 
+        /// <summary>
+        /// The flag to indicate whether the cache pruning is stopped or not.
+        /// </summary>
         private bool stop;
 
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing">A Boolean indicating whether release managed resource or not.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !IsDisposed && this.timer != null)
@@ -59,7 +64,7 @@ namespace Ninject.Activation.Caching
         /// <param name="pruneable">The pruneable that will be pruned.</param>
         public void Start(IPruneable pruneable)
         {
-            Ensure.ArgumentNotNull(pruneable, "pruneable");
+            Contract.Requires(pruneable != null);
 
             this.caches.Add(pruneable);
             if (this.timer == null)
@@ -78,18 +83,9 @@ namespace Ninject.Activation.Caching
                 this.stop = true;
             }
 
-            using (var signal = new ManualResetEvent(false))
-            {
-#if !NETCF
-                this.timer.Dispose(signal);
-                signal.WaitOne();
-#else
-                this.timer.Dispose();
-#endif
-
-                this.timer = null;
-                this.caches.Clear();
-            }
+            this.timer.Dispose();
+            this.timer = null;
+            this.caches.Clear();
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
@@ -120,7 +116,7 @@ namespace Ninject.Activation.Caching
 
         private int GetTimeoutInMilliseconds()
         {
-            TimeSpan interval = Settings.CachePruningInterval;
+            var interval = Settings.CachePruningInterval;
             return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
         }
     }
