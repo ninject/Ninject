@@ -1,3 +1,7 @@
+Version 3.2.5-beta
+---------------
+- Add: support .net core
+
 Version 3.2
 ---------------
 - Add: bool IRequest.ForceUnique: In case there is an uncoditional and a conditional binding, return the conditional one. In case there are multiple unconditional or conditional bindings, throw an exception.
