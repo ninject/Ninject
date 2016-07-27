@@ -1,13 +1,25 @@
+//-------------------------------------------------------------------------------------------------
+// <copyright file="KernelBase.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-
-using System.Collections;
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject
 {
     using System;
@@ -119,9 +131,10 @@ namespace Ninject
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing">A Boolean indicating whether release managed resource or not.</param>
         public override void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed)
+            if (disposing && !this.IsDisposed)
             {
                 if (this.Components != null)
                 {
@@ -174,7 +187,9 @@ namespace Ninject
             this.bindings.Remove(binding.Service, binding);
 
             lock (this.bindingCache)
+            {
                 this.bindingCache.Clear();
+            }
         }
 
         /// <summary>
@@ -203,7 +218,7 @@ namespace Ninject
         /// <param name="m">The modules to load.</param>
         public void Load(IEnumerable<INinjectModule> m)
         {
-            Contract.Requires(modules != null);
+            Contract.Requires(this.modules != null);
 
             m = m.ToList();
             foreach (INinjectModule module in m)
@@ -346,62 +361,6 @@ namespace Ninject
             return this.Resolve(request, true);
         }
 
-        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
-        {
-            var satisfiedBindings = this.GetBindings(request.Service)
-                                        .Where(this.SatifiesRequest(request));
-            var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
-
-            if (!satisfiedBindingEnumerator.MoveNext())
-            {
-                if (handleMissingBindings && this.HandleMissingBinding(request))
-                {
-                    return this.Resolve(request, false);
-                }
-
-                if (request.IsOptional)
-                {
-                    return Enumerable.Empty<object>();
-                }
-
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
-            }
-
-            if (request.IsUnique)
-            {
-                var selectedBinding = satisfiedBindingEnumerator.Current;
-
-                if (satisfiedBindingEnumerator.MoveNext() &&
-                    bindingPrecedenceComparer.Compare(selectedBinding, satisfiedBindingEnumerator.Current) == 0)
-                {
-                    if (request.IsOptional && !request.ForceUnique)
-                    {
-                        return Enumerable.Empty<object>();
-                    }
-
-                    var formattedBindings =
-                        from binding in satisfiedBindings
-                        let context = this.CreateContext(request, binding)
-                        select binding.Format(context);
-
-                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(request,
-                        formattedBindings.ToArray()));
-                }
-
-                return new [] { this.CreateContext(request, selectedBinding).Resolve() };
-            }
-            else
-            {
-                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
-                {
-                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
-                }
-
-                return satisfiedBindings
-                    .Select(binding => this.CreateContext(request, binding).Resolve());
-            }
-        }
-
         /// <summary>
         /// Creates a request for the specified service.
         /// </summary>
@@ -445,7 +404,7 @@ namespace Ninject
 
                     var compiledBindings = resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .OrderByDescending(b => b, bindingPrecedenceComparer).ToList();
+                        .OrderByDescending(b => b, this.bindingPrecedenceComparer).ToList();
                     this.bindingCache.Add(service, compiledBindings);
 
                     return compiledBindings;
@@ -559,12 +518,71 @@ namespace Ninject
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
         }
 
+        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
+        {
+            var satisfiedBindings = this.GetBindings(request.Service)
+                                        .Where(this.SatifiesRequest(request));
+            var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
+
+            if (!satisfiedBindingEnumerator.MoveNext())
+            {
+                if (handleMissingBindings && this.HandleMissingBinding(request))
+                {
+                    return this.Resolve(request, false);
+                }
+
+                if (request.IsOptional)
+                {
+                    return Enumerable.Empty<object>();
+                }
+
+                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+            }
+
+            if (request.IsUnique)
+            {
+                var selectedBinding = satisfiedBindingEnumerator.Current;
+
+                if (satisfiedBindingEnumerator.MoveNext() &&
+                    this.bindingPrecedenceComparer.Compare(selectedBinding, satisfiedBindingEnumerator.Current) == 0)
+                {
+                    if (request.IsOptional && !request.ForceUnique)
+                    {
+                        return Enumerable.Empty<object>();
+                    }
+
+                    var formattedBindings =
+                        from binding in satisfiedBindings
+                        let context = this.CreateContext(request, binding)
+                        select binding.Format(context);
+
+                    throw new ActivationException(ExceptionFormatter.CouldNotUniquelyResolveBinding(
+                        request,
+                        formattedBindings.ToArray()));
+                }
+
+                return new[] { this.CreateContext(request, selectedBinding).Resolve() };
+            }
+            else
+            {
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
+                {
+                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
+                }
+
+                return satisfiedBindings
+                    .Select(binding => this.CreateContext(request, binding).Resolve());
+            }
+        }
+
         private void AddBindings(IEnumerable<IBinding> bindings)
         {
             bindings.Map(binding => this.bindings.Add(binding.Service, binding));
 
             lock (this.bindingCache)
+            {
                 this.bindingCache.Clear();
+            }
         }
 
         #if !NO_SERVICE_PROVIDER

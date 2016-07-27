@@ -1,23 +1,32 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="StandardInjectionHeuristic.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Diagnostics.Contracts;
-using System.Reflection;
-using Ninject.Components;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Language;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Selection.Heuristics
 {
+    using System.Diagnostics.Contracts;
+    using System.Reflection;
+    using Ninject.Components;
+    using Ninject.Infrastructure.Language;
+
     /// <summary>
     /// Determines whether members should be injected during activation by checking
     /// if they are decorated with an injection marker attribute.
@@ -37,14 +46,14 @@ namespace Ninject.Selection.Heuristics
 
             if (propertyInfo != null)
             {
-                bool injectNonPublic = Settings.InjectNonPublic;
+                var injectNonPublic = this.Settings.InjectNonPublic;
 
                 var setMethod = propertyInfo.GetSetMethod(injectNonPublic);
 
-                return member.HasAttribute(Settings.InjectAttribute) && setMethod != null;
+                return member.HasAttribute(this.Settings.InjectAttribute) && setMethod != null;
             }
 
-            return member.HasAttribute(Settings.InjectAttribute);
+            return member.HasAttribute(this.Settings.InjectAttribute);
         }
     }
 }

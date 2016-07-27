@@ -1,7 +1,9 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="WeakConstructorArgument.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2013 Ninject Project Contributors
-//   Authors: Remo Gloor (remo.gloor@gmail.com)
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
@@ -17,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Parameters
 {
     using System;
@@ -37,7 +38,7 @@ namespace Ninject.Parameters
         private readonly WeakReference weakReference;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConstructorArgument"/> class.
+        /// Initializes a new instance of the <see cref="WeakConstructorArgument"/> class.
         /// </summary>
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="value">The value to inject into the property.</param>
@@ -47,7 +48,7 @@ namespace Ninject.Parameters
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConstructorArgument"/> class.
+        /// Initializes a new instance of the <see cref="WeakConstructorArgument"/> class.
         /// </summary>
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="value">The value to inject into the property.</param>

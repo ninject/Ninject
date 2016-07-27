@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="IBindingToSyntax{T1,T2}.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Syntax
 {
     using System;
@@ -55,7 +54,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<object> ToProvider<TProvider>() where TProvider : IProvider;
+        IBindingWhenInNamedWithOrOnSyntax<object> ToProvider<TProvider>()
+            where TProvider : IProvider;
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.

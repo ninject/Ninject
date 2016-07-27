@@ -1,24 +1,42 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="DisposableObject.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using Ninject.Infrastructure.Language;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Infrastructure.Disposal
 {
+    using System;
+
     /// <summary>
     /// An object that notifies when it is disposed.
     /// </summary>
     public abstract class DisposableObject : IDisposableObject
     {
+        /// <summary>
+        /// Finalizes an instance of the <see cref="DisposableObject"/> class.
+        /// </summary>
+        ~DisposableObject()
+        {
+            this.Dispose(false);
+        }
+
         /// <summary>
         /// Gets a value indicating whether this instance is disposed.
         /// </summary>
@@ -29,7 +47,7 @@ namespace Ninject.Infrastructure.Disposal
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         /// <summary>
@@ -40,20 +58,12 @@ namespace Ninject.Infrastructure.Disposal
         {
             lock (this)
             {
-                if (disposing && !IsDisposed)
+                if (disposing && !this.IsDisposed)
                 {
-                    IsDisposed = true;
+                    this.IsDisposed = true;
                     GC.SuppressFinalize(this);
                 }
             }
-        }
-
-        /// <summary>
-        /// Releases resources before the object is reclaimed by garbage collection.
-        /// </summary>
-        ~DisposableObject()
-        {
-            Dispose(false);
         }
     }
 }

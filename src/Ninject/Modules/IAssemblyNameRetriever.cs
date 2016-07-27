@@ -1,8 +1,10 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="IAssemblyNameRetriever.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
-//   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -17,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {

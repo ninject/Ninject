@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="StandardConstructorScorer.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Selection.Heuristics
 {
     using System;
@@ -30,8 +29,6 @@ namespace Ninject.Selection.Heuristics
     using System.Reflection;
     using Ninject.Activation;
     using Ninject.Components;
-    using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
@@ -61,13 +58,13 @@ namespace Ninject.Selection.Heuristics
             var score = 1;
             foreach (ITarget target in directive.Targets)
             {
-                if (ParameterExists(context, target))
+                if (this.ParameterExists(context, target))
                 {
                     score++;
                     continue;
                 }
 
-                if (BindingExists(context, target))
+                if (this.BindingExists(context, target))
                 {
                     score++;
                     continue;
@@ -103,9 +100,22 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         protected virtual bool BindingExists(IKernel kernel, IContext context, ITarget target)
         {
-            var targetType = GetTargetType(target);
+            var targetType = this.GetTargetType(target);
             return kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
                    || target.HasDefaultValue;
+        }
+
+        /// <summary>
+        /// Checks whether any parameters exist for the given target..
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="target">The target.</param>
+        /// <returns>Whether a parameter exists for the target in the given context.</returns>
+        protected virtual bool ParameterExists(IContext context, ITarget target)
+        {
+            return context
+                .Parameters.OfType<IConstructorArgument>()
+                .Any(parameter => parameter.AppliesToTarget(context, target));
         }
 
         private Type GetTargetType(ITarget target)
@@ -122,19 +132,6 @@ namespace Ninject.Selection.Heuristics
             }
 
             return targetType;
-        }
-
-        /// <summary>
-        /// Checks whether any parameters exist for the given target..
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="target">The target.</param>
-        /// <returns>Whether a parameter exists for the target in the given context.</returns>
-        protected virtual bool ParameterExists(IContext context, ITarget target)
-        {
-            return context
-                .Parameters.OfType<IConstructorArgument>()
-                .Any(parameter => parameter.AppliesToTarget(context, target));
         }
     }
 }

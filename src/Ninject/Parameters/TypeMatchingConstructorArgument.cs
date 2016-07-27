@@ -1,7 +1,9 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="TypeMatchingConstructorArgument.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2013 Ninject Project Contributors
-//   Authors: Ivan Appert (iappert@gmail.com)
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
@@ -17,13 +19,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Parameters
 {
     using System;
     using System.Diagnostics.Contracts;
     using Ninject.Activation;
-    using Ninject.Infrastructure;
     using Ninject.Planning.Targets;
 
     /// <summary>

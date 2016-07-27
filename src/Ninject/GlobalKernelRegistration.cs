@@ -1,7 +1,9 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="GlobalKernelRegistration.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
-//   Authors: Remo Gloor (remo.gloor@gmail.com)
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
@@ -17,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject
 {
     using System;
@@ -32,8 +33,8 @@ namespace Ninject
     /// </summary>
     public abstract class GlobalKernelRegistration
     {
-        private static readonly ReaderWriterLockSlim kernelRegistrationsLock = new ReaderWriterLockSlim();
-        private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>();
+        private static readonly ReaderWriterLockSlim KernelRegistrationsLock = new ReaderWriterLockSlim();
+        private static readonly IDictionary<Type, Registration> KernelRegistrations = new Dictionary<Type, Registration>();
 
         internal static void RegisterKernelForType(IKernel kernel, Type type)
         {
@@ -61,7 +62,7 @@ namespace Ninject
         /// <param name="action">The action.</param>
         protected void MapKernels(Action<IKernel> action)
         {
-            bool requiresCleanup = false;
+            var requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
             registration.KernelLock.EnterReadLock();
 
@@ -109,11 +110,11 @@ namespace Ninject
 
         private static Registration GetRegistrationForType(Type type)
         {
-            kernelRegistrationsLock.EnterUpgradeableReadLock();
+            KernelRegistrationsLock.EnterUpgradeableReadLock();
             try
             {
                 Registration registration;
-                if (kernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out registration))
                 {
                     return registration;
                 }
@@ -122,28 +123,28 @@ namespace Ninject
             }
             finally
             {
-                kernelRegistrationsLock.ExitUpgradeableReadLock();
+                KernelRegistrationsLock.ExitUpgradeableReadLock();
             }
         }
 
         private static Registration CreateNewRegistration(Type type)
         {
-            kernelRegistrationsLock.EnterWriteLock();
+            KernelRegistrationsLock.EnterWriteLock();
             try
             {
                 Registration registration;
-                if (kernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out registration))
                 {
                     return registration;
                 }
 
                 registration = new Registration();
-                kernelRegistrations.Add(type, registration);
+                KernelRegistrations.Add(type, registration);
                 return registration;
             }
             finally
             {
-                kernelRegistrationsLock.ExitWriteLock();
+                KernelRegistrationsLock.ExitWriteLock();
             }
         }
 
@@ -156,6 +157,7 @@ namespace Ninject
             }
 
             public ReaderWriterLockSlim KernelLock { get; private set; }
+
             public IList<WeakReference> Kernels { get; private set; }
         }
     }

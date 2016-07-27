@@ -1,27 +1,37 @@
-﻿#region License
+﻿//-------------------------------------------------------------------------------------------------
+// <copyright file="Target.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using Ninject.Activation;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Infrastructure.Language;
-using Ninject.Planning.Bindings;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Targets
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Reflection;
+    using Ninject.Activation;
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Infrastructure.Language;
+    using Ninject.Planning.Bindings;
+
     /// <summary>
     /// Represents a site on a type where a value can be injected.
     /// </summary>
@@ -29,8 +39,28 @@ namespace Ninject.Planning.Targets
     public abstract class Target<T> : ITarget
         where T : ICustomAttributeProvider
     {
-        private readonly Lazy<Predicate<IBindingMetadata>> _constraint;
-        private readonly Lazy<bool> _isOptional;
+        private readonly Lazy<Predicate<IBindingMetadata>> constraint;
+        private readonly Lazy<bool> isOptional;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Target{T}"/> class.
+        /// </summary>
+        /// <param name="service">The service type.</param>
+        /// <param name="member">The member that contains the target.</param>
+        /// <param name="site">The site represented by the target.</param>
+        protected Target(Type service, MemberInfo member, T site)
+        {
+            Contract.Requires(service != null);
+            Contract.Requires(member != null);
+            Contract.Requires(site != null);
+
+            this.Service = service;
+            this.Member = member;
+            this.Site = site;
+
+            this.constraint = new Lazy<Predicate<IBindingMetadata>>(this.ReadConstraintFromTarget);
+            this.isOptional = new Lazy<bool>(this.ReadOptionalFromTarget);
+        }
 
         /// <summary>
         /// Gets the service type.
@@ -43,7 +73,7 @@ namespace Ninject.Planning.Targets
         public MemberInfo Member { get; private set; }
 
         /// <summary>
-        /// Gets or sets the site (property, parameter, etc.) represented by the target.
+        /// Gets the site (property, parameter, etc.) represented by the target.
         /// </summary>
         public T Site { get; private set; }
 
@@ -62,7 +92,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public Predicate<IBindingMetadata> Constraint
         {
-            get { return _constraint.Value; }
+            get { return this.constraint.Value; }
         }
 
         /// <summary>
@@ -70,7 +100,7 @@ namespace Ninject.Planning.Targets
         /// </summary>
         public bool IsOptional
         {
-            get { return _isOptional.Value; }
+            get { return this.isOptional.Value; }
         }
 
         /// <summary>
@@ -91,26 +121,6 @@ namespace Ninject.Planning.Targets
         }
 
         /// <summary>
-        /// Initializes a new instance of the Target&lt;T&gt; class.
-        /// </summary>
-        /// <param name="service">The service type.</param>
-        /// <param name="member">The member that contains the target.</param>
-        /// <param name="site">The site represented by the target.</param>
-        protected Target(Type service, MemberInfo member, T site)
-        {
-            Contract.Requires(service != null);
-            Contract.Requires(member != null);
-            Contract.Requires(site != null);
-
-            Service = service;
-            Member = member;
-            Site = site;
-
-            _constraint = new Lazy<Predicate<IBindingMetadata>>(ReadConstraintFromTarget);
-            _isOptional = new Lazy<bool>(ReadOptionalFromTarget);
-        }
-
-        /// <summary>
         /// Returns an array of custom attributes of a specified type defined on the target.
         /// </summary>
         /// <param name="attributeType">The type of attribute to search for.</param>
@@ -119,7 +129,7 @@ namespace Ninject.Planning.Targets
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
             Contract.Requires(attributeType != null);
-            return Site.GetCustomAttributesExtended(attributeType, inherit).ToArray();
+            return this.Site.GetCustomAttributesExtended(attributeType, inherit).ToArray();
         }
 
         /// <summary>
@@ -129,7 +139,7 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes.</returns>
         public object[] GetCustomAttributes(bool inherit)
         {
-            return Site.GetCustomAttributes(inherit);
+            return this.Site.GetCustomAttributes(inherit);
         }
 
         /// <summary>
@@ -141,7 +151,7 @@ namespace Ninject.Planning.Targets
         public bool IsDefined(Type attributeType, bool inherit)
         {
             Contract.Requires(attributeType != null);
-            return Site.IsDefined(attributeType, inherit);
+            return this.Site.IsDefined(attributeType, inherit);
         }
 
         /// <summary>
@@ -153,25 +163,29 @@ namespace Ninject.Planning.Targets
         {
             Contract.Requires(parent != null);
 
-            if (Type.IsArray)
+            if (this.Type.IsArray)
             {
-                var service = Type.GetElementType();
-                return GetValues(service, parent).CastSlow(service).ToArraySlow(service);
+                var service = this.Type.GetElementType();
+                return this.GetValues(service, parent).CastSlow(service).ToArraySlow(service);
             }
 
-            if (Type.GetTypeInfo().IsGenericType)
+            if (this.Type.GetTypeInfo().IsGenericType)
             {
-                var gtd = Type.GetGenericTypeDefinition();
-                var service = Type.GetTypeInfo().GetGenericArguments()[0];
+                var gtd = this.Type.GetGenericTypeDefinition();
+                var service = this.Type.GetTypeInfo().GetGenericArguments()[0];
 
                 if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
-                    return GetValues(service, parent).CastSlow(service).ToListSlow(service);
+                {
+                    return this.GetValues(service, parent).CastSlow(service).ToListSlow(service);
+                }
 
                 if (gtd == typeof(IEnumerable<>))
-                    return GetValues(service, parent).CastSlow(service);
+                {
+                    return this.GetValues(service, parent).CastSlow(service);
+                }
             }
 
-            return GetValue(Type, parent);
+            return this.GetValue(this.Type, parent);
         }
 
         /// <summary>
@@ -212,7 +226,7 @@ namespace Ninject.Planning.Targets
         /// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
         protected virtual bool ReadOptionalFromTarget()
         {
-            return Site.HasAttribute(typeof(OptionalAttribute));
+            return this.Site.HasAttribute(typeof(OptionalAttribute));
         }
 
         /// <summary>
@@ -224,10 +238,14 @@ namespace Ninject.Planning.Targets
             var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true).Cast<ConstraintAttribute>().ToArray();
 
             if (attributes == null || attributes.Length == 0)
+            {
                 return null;
+            }
 
             if (attributes.Length == 1)
+            {
                 return attributes[0].Matches;
+            }
 
             return metadata => attributes.All(attribute => attribute.Matches(metadata));
         }

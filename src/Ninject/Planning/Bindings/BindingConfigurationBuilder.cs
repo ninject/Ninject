@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingConfigurationBuilder.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Bindings
 {
     using System;
@@ -47,17 +46,7 @@ namespace Ninject.Planning.Bindings
         private readonly string serviceNames;
 
         /// <summary>
-        /// Gets the binding being built.
-        /// </summary>
-        public IBindingConfiguration BindingConfiguration { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        public IKernel Kernel { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
+        /// Initializes a new instance of the <see cref="BindingConfigurationBuilder{T}"/> class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
@@ -70,6 +59,16 @@ namespace Ninject.Planning.Bindings
             this.Kernel = kernel;
             this.serviceNames = serviceNames;
         }
+
+        /// <summary>
+        /// Gets the binding being built.
+        /// </summary>
+        public IBindingConfiguration BindingConfiguration { get; private set; }
+
+        /// <summary>
+        /// Gets the kernel.
+        /// </summary>
+        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Indicates that the binding should be used only for requests that support the specified condition.
@@ -90,7 +89,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>()
         {
-            return WhenInjectedInto(typeof(TParent));
+            return this.WhenInjectedInto(typeof(TParent));
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace Ninject.Planning.Bindings
             {
                 foreach (var parent in parents)
                 {
-                    bool matches = false;
+                    var matches = false;
                     if (parent.GetTypeInfo().IsGenericTypeDefinition)
                     {
                         if (parent.GetTypeInfo().IsInterface)
@@ -130,7 +129,10 @@ namespace Ninject.Planning.Bindings
                         matches = r.Target != null && parent.GetTypeInfo().IsAssignableFrom(r.Target.Service);
                     }
 
-                    if (matches) return true;
+                    if (matches)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -148,7 +150,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto<TParent>()
         {
-            return WhenInjectedExactlyInto(typeof(TParent));
+            return this.WhenInjectedExactlyInto(typeof(TParent));
         }
 
         /// <summary>
@@ -165,7 +167,7 @@ namespace Ninject.Planning.Bindings
             {
                 foreach (var parent in parents)
                 {
-                    bool matches = false;
+                    var matches = false;
                     if (parent.GetTypeInfo().IsGenericTypeDefinition)
                     {
                         matches =
@@ -178,7 +180,10 @@ namespace Ninject.Planning.Bindings
                         matches = r.Target != null && r.Target.Service == parent;
                     }
 
-                    if (matches) return true;
+                    if (matches)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -193,9 +198,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenClassHas(typeof(TAttribute));
+            return this.WhenClassHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -204,9 +210,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenMemberHas(typeof(TAttribute));
+            return this.WhenMemberHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -215,9 +222,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenTargetHas(typeof(TAttribute));
+            return this.WhenTargetHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -230,7 +238,7 @@ namespace Ninject.Planning.Bindings
         {
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType))
             {
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenClassHas", attributeType));
+                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, nameof(this.WhenClassHas), attributeType));
             }
 
             this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Service.GetTypeInfo().HasAttribute(attributeType);
@@ -248,7 +256,7 @@ namespace Ninject.Planning.Bindings
         {
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType))
             {
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenMemberHas", attributeType));
+                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, nameof(this.WhenMemberHas), attributeType));
             }
 
             this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.HasAttribute(attributeType);
@@ -266,7 +274,7 @@ namespace Ninject.Planning.Bindings
         {
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType))
             {
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenTargetHas", attributeType));
+                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, nameof(this.WhenTargetHas), attributeType));
             }
 
             this.BindingConfiguration.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
@@ -379,6 +387,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 #endif
+
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used as long as the object
         /// returned by the provided callback remains alive (that is, has not been garbage collected).

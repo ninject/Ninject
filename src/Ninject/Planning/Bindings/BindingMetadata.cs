@@ -1,28 +1,37 @@
-﻿#region License
+﻿//-------------------------------------------------------------------------------------------------
+// <copyright file="BindingMetadata.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Ninject.Infrastructure;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Bindings
 {
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     /// Additional information available about a binding, which can be used in constraints
     /// to select bindings to use in activation.
     /// </summary>
     public class BindingMetadata : IBindingMetadata
     {
-        private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> values = new Dictionary<string, object>();
 
         /// <summary>
         /// Gets or sets the binding's name.
@@ -37,7 +46,7 @@ namespace Ninject.Planning.Bindings
         public bool Has(string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
-            return _values.ContainsKey(key);
+            return this.values.ContainsKey(key);
         }
 
         /// <summary>
@@ -49,7 +58,7 @@ namespace Ninject.Planning.Bindings
         public T Get<T>(string key)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
-            return Get(key, default(T));
+            return this.Get(key, default(T));
         }
 
         /// <summary>
@@ -61,7 +70,7 @@ namespace Ninject.Planning.Bindings
         public T Get<T>(string key, T defaultValue)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
-            return _values.ContainsKey(key) ? (T)_values[key] : defaultValue;
+            return this.values.ContainsKey(key) ? (T)this.values[key] : defaultValue;
         }
 
         /// <summary>
@@ -72,7 +81,7 @@ namespace Ninject.Planning.Bindings
         public void Set(string key, object value)
         {
             Contract.Requires(!string.IsNullOrEmpty(key));
-            _values[key] = value;
+            this.values[key] = value;
         }
     }
 }

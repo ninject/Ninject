@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingBuilder.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Bindings
 {
     using System;
@@ -180,7 +179,7 @@ namespace Ninject.Planning.Bindings
             var ctorExpression = newExpression.Body as NewExpression;
             if (ctorExpression == null)
             {
-                throw new ArgumentException("The expression must be a constructor call.", "newExpression");
+                throw new ArgumentException("The expression must be a constructor call.", nameof(newExpression));
             }
 
             this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);

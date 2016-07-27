@@ -1,23 +1,33 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="Binding.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Ninject.Activation;
-using Ninject.Infrastructure;
-using Ninject.Parameters;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Bindings
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Ninject.Activation;
+    using Ninject.Parameters;
+
     /// <summary>
     /// Contains information about a service registration.
     /// </summary>
@@ -50,7 +60,7 @@ namespace Ninject.Planning.Bindings
         }
 
         /// <summary>
-        /// Gets or sets the binding configuration.
+        /// Gets the binding configuration.
         /// </summary>
         /// <value>The binding configuration.</value>
         public IBindingConfiguration BindingConfiguration { get; private set; }
@@ -63,7 +73,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the binding's metadata.
         /// </summary>
-        /// <value></value>
         public IBindingMetadata Metadata
         {
             get
@@ -75,7 +84,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the type of target for the binding.
         /// </summary>
-        /// <value></value>
         public BindingTarget Target
         {
             get
@@ -92,7 +100,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets a value indicating whether the binding was implicitly registered.
         /// </summary>
-        /// <value></value>
         public bool IsImplicit
         {
             get
@@ -109,7 +116,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets a value indicating whether the binding has a condition associated with it.
         /// </summary>
-        /// <value></value>
         public bool IsConditional
         {
             get
@@ -121,13 +127,13 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the condition defined for the binding.
         /// </summary>
-        /// <value></value>
         public Func<IRequest, bool> Condition
         {
             get
             {
                 return this.BindingConfiguration.Condition;
             }
+
             set
             {
                 this.BindingConfiguration.Condition = value;
@@ -137,7 +143,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the callback that returns the provider that should be used by the binding.
         /// </summary>
-        /// <value></value>
         public Func<IContext, IProvider> ProviderCallback
         {
             get
@@ -154,13 +159,13 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the callback that returns the object that will act as the binding's scope.
         /// </summary>
-        /// <value></value>
         public Func<IContext, object> ScopeCallback
         {
             get
             {
                 return this.BindingConfiguration.ScopeCallback;
             }
+
             set
             {
                 this.BindingConfiguration.ScopeCallback = value;
@@ -170,7 +175,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the parameters defined for the binding.
         /// </summary>
-        /// <value></value>
         public ICollection<IParameter> Parameters
         {
             get
@@ -182,7 +186,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the actions that should be called after instances are activated via the binding.
         /// </summary>
-        /// <value></value>
         public ICollection<Action<IContext, object>> ActivationActions
         {
             get
@@ -194,7 +197,6 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the actions that should be called before instances are deactivated via the binding.
         /// </summary>
-        /// <value></value>
         public ICollection<Action<IContext, object>> DeactivationActions
         {
             get

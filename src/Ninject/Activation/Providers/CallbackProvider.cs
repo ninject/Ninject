@@ -1,20 +1,30 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="CallbackProvider.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Diagnostics.Contracts;
-using Ninject.Infrastructure;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Activation.Providers
 {
+    using System;
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     /// A provider that delegates to a callback method to create instances.
     /// </summary>
@@ -22,25 +32,25 @@ namespace Ninject.Activation.Providers
     public class CallbackProvider<T> : Provider<T>
     {
         /// <summary>
-        /// Gets the callback method used by the provider.
-        /// </summary>
-        public Func<IContext, T> Method { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the CallbackProvider&lt;T&gt; class.
+        /// Initializes a new instance of the <see cref="CallbackProvider{T}"/> class.
         /// </summary>
         /// <param name="method">The callback method that will be called to create instances.</param>
         public CallbackProvider(Func<IContext, T> method)
         {
             Contract.Requires(method != null);
-            Method = method;
+            this.Method = method;
         }
+
+        /// <summary>
+        /// Gets the callback method used by the provider.
+        /// </summary>
+        public Func<IContext, T> Method { get; private set; }
 
         /// <summary>
         /// Invokes the callback method to create an instance.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The created instance.</returns>
-        protected override T CreateInstance(IContext context) => Method(context);
+        protected override T CreateInstance(IContext context) => this.Method(context);
     }
 }

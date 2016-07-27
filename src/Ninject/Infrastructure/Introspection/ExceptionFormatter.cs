@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="ExceptionFormatter.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Infrastructure.Introspection
 {
     using System;
@@ -116,6 +115,7 @@ namespace Ninject.Infrastructure.Introspection
                 {
                     sw.WriteLine("  {0}) {1}", i + 1, formattedMatchingBindings[i]);
                 }
+
                 sw.WriteLine("Activation path:");
                 sw.WriteLine(request.FormatActivationPath());
 

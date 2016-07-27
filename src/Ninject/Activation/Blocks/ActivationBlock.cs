@@ -1,25 +1,35 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="ActivationBlock.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Activation.Blocks
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Ninject.Infrastructure.Disposal;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+
     /// <summary>
     /// A block used for deterministic disposal of activated instances. When the block is
     /// disposed, all instances activated via it will be deactivated.
@@ -27,9 +37,14 @@ namespace Ninject.Activation.Blocks
     public class ActivationBlock : DisposableObject, IActivationBlock
     {
         /// <summary>
-        /// Gets or sets the parent resolution root (usually the kernel).
+        /// Initializes a new instance of the <see cref="ActivationBlock"/> class.
         /// </summary>
-        public IResolutionRoot Parent { get; private set; }
+        /// <param name="parent">The parent resolution root.</param>
+        public ActivationBlock(IResolutionRoot parent)
+        {
+            Contract.Requires(parent != null);
+            this.Parent = parent;
+        }
 
         /// <summary>
         /// Occurs when the object is disposed.
@@ -37,14 +52,9 @@ namespace Ninject.Activation.Blocks
         public event EventHandler Disposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActivationBlock"/> class.
+        /// Gets the parent resolution root (usually the kernel).
         /// </summary>
-        /// <param name="parent">The parent resolution root.</param>
-        public ActivationBlock(IResolutionRoot parent)
-        {
-            Contract.Requires(parent != null);
-            Parent = parent;
-        }
+        public IResolutionRoot Parent { get; private set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -54,10 +64,10 @@ namespace Ninject.Activation.Blocks
         {
             lock (this)
             {
-                if (disposing && !IsDisposed)
+                if (disposing && !this.IsDisposed)
                 {
-                    Disposed?.Invoke(this, EventArgs.Empty);
-                    Disposed = null;
+                    this.Disposed?.Invoke(this, EventArgs.Empty);
+                    this.Disposed = null;
                 }
 
                 base.Dispose(disposing);
@@ -98,7 +108,7 @@ namespace Ninject.Activation.Blocks
         public IEnumerable<object> Resolve(IRequest request)
         {
             Contract.Requires(request != null);
-            return Parent.Resolve(request);
+            return this.Parent.Resolve(request);
         }
 
         /// <summary>
@@ -122,10 +132,9 @@ namespace Ninject.Activation.Blocks
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
-        /// <remarks></remarks>
         public bool Release(object instance)
         {
-            return Parent.Release(instance);
+            return this.Parent.Release(instance);
         }
     }
 }

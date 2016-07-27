@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="NinjectModule.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,14 +19,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Modules
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
@@ -54,7 +52,7 @@ namespace Ninject.Modules
         /// </summary>
         public virtual string Name
         {
-            get { return GetType().FullName; }
+            get { return this.GetType().FullName; }
         }
 
         /// <summary>

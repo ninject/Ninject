@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------------------------
-// <copyright file="IProvider{T}.cs" company="Ninject Project Contributors">
+// <copyright file="IBindingConfigurationSyntax.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
@@ -20,13 +20,19 @@
 //   limitations under the License.
 // </copyright>
 //-------------------------------------------------------------------------------------------------
-namespace Ninject.Activation
+namespace Ninject.Planning.Bindings
 {
+    using Ninject.Syntax;
+
     /// <summary>
-    /// Provides instances of the type T
+    /// The syntax to define bindings.
     /// </summary>
-    /// <typeparam name="T">The type provides by this implementation.</typeparam>
-    public interface IProvider<T> : IProvider
+    /// <typeparam name="T">The type of the service.</typeparam>
+    public interface IBindingConfigurationSyntax<T> :
+        IBindingWhenInNamedWithOrOnSyntax<T>,
+        IBindingInNamedWithOrOnSyntax<T>,
+        IBindingNamedWithOrOnSyntax<T>,
+        IBindingWithOrOnSyntax<T>
     {
     }
 }

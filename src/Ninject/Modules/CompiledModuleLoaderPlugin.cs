@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="CompiledModuleLoaderPlugin.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
@@ -30,7 +29,6 @@ namespace Ninject.Modules
     using System.Reflection;
 
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
 
     /// <summary>
@@ -39,14 +37,14 @@ namespace Ninject.Modules
     public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
     {
         /// <summary>
-        /// The assembly name retriever.
-        /// </summary>
-        private readonly IAssemblyNameRetriever assemblyNameRetriever;
-
-        /// <summary>
         /// The file extensions that are supported.
         /// </summary>
         private static readonly string[] Extensions = new[] { ".dll" };
+
+        /// <summary>
+        /// The assembly name retriever.
+        /// </summary>
+        private readonly IAssemblyNameRetriever assemblyNameRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.

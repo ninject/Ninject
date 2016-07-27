@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingBuilder{T1}.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Planning.Bindings
 {
     using System;
@@ -28,7 +27,6 @@ namespace Ninject.Planning.Bindings
     using System.Linq.Expressions;
     using Ninject.Activation;
     using Ninject.Activation.Providers;
-    using Ninject.Infrastructure;
     using Ninject.Syntax;
 
     /// <summary>

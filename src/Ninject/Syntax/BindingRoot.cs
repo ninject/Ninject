@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingRoot.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,15 +19,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Syntax
 {
     using System;
     using System.Diagnostics.Contracts;
     using System.Linq;
-
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Infrastructure.Introspection;
     using Ninject.Planning.Bindings;
@@ -143,7 +140,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T">The service to unbind.</typeparam>
         public void Unbind<T>()
         {
-            Unbind(typeof(T));
+            this.Unbind(typeof(T));
         }
 
         /// <summary>
@@ -159,8 +156,8 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1> Rebind<T1>()
         {
-            Unbind<T1>();
-            return Bind<T1>();
+            this.Unbind<T1>();
+            return this.Bind<T1>();
         }
 
         /// <summary>
@@ -171,9 +168,9 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2> Rebind<T1, T2>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            return Bind<T1, T2>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            return this.Bind<T1, T2>();
         }
 
         /// <summary>
@@ -185,10 +182,10 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3> Rebind<T1, T2, T3>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            Unbind<T3>();
-            return Bind<T1, T2, T3>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            this.Unbind<T3>();
+            return this.Bind<T1, T2, T3>();
         }
 
         /// <summary>
@@ -201,11 +198,11 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Rebind<T1, T2, T3, T4>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            Unbind<T3>();
-            Unbind<T4>();
-            return Bind<T1, T2, T3, T4>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            this.Unbind<T3>();
+            this.Unbind<T4>();
+            return this.Bind<T1, T2, T3, T4>();
         }
 
         /// <summary>
@@ -217,10 +214,10 @@ namespace Ninject.Syntax
         {
             foreach (var service in services)
             {
-                Unbind(service);
+                this.Unbind(service);
             }
 
-            return Bind(services);
+            return this.Bind(services);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="IBindingWhenSyntax.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2009, Enkari, Ltd.
 //   Copyright (c) 2009-2011 Ninject Project Contributors
@@ -19,8 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Syntax
 {
     using System;
@@ -82,7 +81,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the member being injected has
@@ -90,7 +90,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the target being injected has
@@ -98,7 +99,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the class being injected has

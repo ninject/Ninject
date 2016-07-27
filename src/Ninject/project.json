@@ -4,7 +4,10 @@
   "description": "Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.",
   "copyright": "2007-2009, Enkari, Ltd. 2009-2016, Ninject Contributors.",
   "dependencies": {
-    "StyleCop.Analyzers": "1.0.0"
+    "StyleCop.Analyzers": {
+      "type": "build",
+      "version": "1.0.0"
+    }
   },
   "frameworks": {
     "netstandard1.5": {
@@ -25,5 +28,12 @@
         "define": [ "NO_PARTIAL_TRUST" ]
       }
     }
+  },
+  "buildOptions": {
+    "xmlDoc": true,
+    "additionalArguments": [ "/additionalfile:stylecop.json" ]
+  },
+  "configurations": {
+
   }
 }

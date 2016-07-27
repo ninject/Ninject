@@ -1,25 +1,34 @@
-﻿#region License
+﻿//-------------------------------------------------------------------------------------------------
+// <copyright file="FormatExtensions.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using Ninject.Activation;
-using Ninject.Planning.Bindings;
-using Ninject.Planning.Targets;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Infrastructure.Introspection
 {
-    using System.Globalization;
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
+    using Ninject.Activation;
+    using Ninject.Planning.Bindings;
+    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Provides extension methods for string formatting
@@ -58,10 +67,14 @@ namespace Ninject.Infrastructure.Introspection
             using (var sw = new StringWriter())
             {
                 if (binding.Condition != null)
+                {
                     sw.Write("conditional ");
+                }
 
                 if (binding.IsImplicit)
+                {
                     sw.Write("implicit ");
+                }
 
                 var provider = binding.GetProvider(context);
 
@@ -76,8 +89,11 @@ namespace Ninject.Infrastructure.Introspection
                         break;
 
                     case BindingTarget.Provider:
-                        sw.Write("provider binding from {0} to {1} (via {2})", binding.Service.Format(),
-                            provider.Type.Format(), provider.GetType().Format());
+                        sw.Write(
+                            "provider binding from {0} to {1} (via {2})",
+                            binding.Service.Format(),
+                            provider.Type.Format(),
+                            provider.GetType().Format());
                         break;
 
                     case BindingTarget.Method:
@@ -106,9 +122,13 @@ namespace Ninject.Infrastructure.Introspection
             using (var sw = new StringWriter())
             {
                 if (request.Target == null)
+                {
                     sw.Write("Request for {0}", request.Service.Format());
+                }
                 else
+                {
                     sw.Write("Injection of dependency {0} into {1}", request.Service.Format(), request.Target.Format());
+                }
 
                 return sw.ToString();
             }
@@ -158,11 +178,14 @@ namespace Ninject.Infrastructure.Introspection
 
 #if !MONO
             if (friendlyName.Contains("AnonymousType"))
+            {
                 return "AnonymousType";
+            }
 #else
-
             if (friendlyName.Contains("__AnonType"))
+            {
                 return "AnonymousType";
+            }
 #endif
 
             switch (friendlyName.ToLowerInvariant())
@@ -187,7 +210,9 @@ namespace Ninject.Infrastructure.Introspection
 
             var genericArguments = type.GetTypeInfo().GetGenericArguments();
             if (genericArguments.Length > 0)
+            {
                 return FormatGenericType(friendlyName, genericArguments);
+            }
 
             return friendlyName;
         }
@@ -199,30 +224,29 @@ namespace Ninject.Infrastructure.Introspection
             // remove generic arguments
             var firstBracket = friendlyName.IndexOf('[');
             if (firstBracket > 0)
+            {
                 friendlyName = friendlyName.Substring(0, firstBracket);
+            }
 
             // remove assembly info
             var firstComma = friendlyName.IndexOf(',');
             if (firstComma > 0)
+            {
                 friendlyName = friendlyName.Substring(0, firstComma);
+            }
 
             // remove namespace
             var lastPeriod = friendlyName.LastIndexOf('.');
             if (lastPeriod >= 0)
+            {
                 friendlyName = friendlyName.Substring(lastPeriod + 1);
+            }
 
             return friendlyName;
         }
 
         private static string FormatGenericType(string friendlyName, Type[] genericArguments)
         {
-            //var genericTag = "`" + genericArguments.Length;
-            //var genericArgumentNames = new string[genericArguments.Length];
-            //for (int i = 0; i < genericArguments.Length; i++)
-            //    genericArgumentNames[i] = genericArguments[i].Format();
-
-            //return friendlyName.Replace(genericTag, string.Join(", ", genericArgumentNames));
-
             var sb = new StringBuilder(friendlyName.Length + 10);
 
             var genericArgumentIndex = 0;
@@ -240,8 +264,11 @@ namespace Ninject.Infrastructure.Introspection
                     startIndex = index + 2;
                 }
             }
+
             if (startIndex < friendlyName.Length)
+            {
                 sb.Append(friendlyName.Substring(startIndex));
+            }
 
             return sb.ToString();
         }
@@ -253,7 +280,9 @@ namespace Ninject.Infrastructure.Introspection
             for (int i = 0; i < count; i++)
             {
                 if (i != 0)
+                {
                     sb.Append(", ");
+                }
 
                 sb.Append(genericArguments[start + i].Format());
             }

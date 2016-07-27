@@ -1,52 +1,44 @@
-#region License
+//-------------------------------------------------------------------------------------------------
+// <copyright file="PropertyInjectionStrategy.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2009, Enkari, Ltd.
+//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
 //
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
 //
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
 //
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Introspection;
-using Ninject.Infrastructure.Language;
-using Ninject.Injection;
-using Ninject.Parameters;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-#endregion
-
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 namespace Ninject.Activation.Strategies
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Reflection;
+    using Ninject.Infrastructure.Introspection;
+    using Ninject.Injection;
+    using Ninject.Parameters;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+
     /// <summary>
     /// Injects properties on an instance during activation.
     /// </summary>
     public class PropertyInjectionStrategy : ActivationStrategy
     {
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
-
-        private BindingFlags Flags
-        {
-            get
-            {
-                #if !NO_LCG
-                return Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
-                #else
-                return DefaultFlags;
-                #endif
-            }
-        }
-
-        /// <summary>
-        /// Gets the injector factory component.
-        /// </summary>
-        public IInjectorFactory InjectorFactory { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyInjectionStrategy"/> class.
@@ -55,6 +47,23 @@ namespace Ninject.Activation.Strategies
         public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
         {
             this.InjectorFactory = injectorFactory;
+        }
+
+        /// <summary>
+        /// Gets the injector factory component.
+        /// </summary>
+        public IInjectorFactory InjectorFactory { get; private set; }
+
+        private BindingFlags Flags
+        {
+            get
+            {
+                #if !NO_LCG
+                return this.Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
+                #else
+                return DefaultFlags;
+                #endif
+            }
         }
 
         /// <summary>
