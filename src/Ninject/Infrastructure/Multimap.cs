@@ -147,7 +147,7 @@ namespace Ninject.Infrastructure
         }
 
         /// <summary>
-        /// Returns an enumerator that iterates through a the multimap.
+        /// Returns an enumerator that iterates through the multimap.
         /// </summary>
         /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the multimap.</returns>
         public IEnumerator GetEnumerator()
@@ -155,6 +155,10 @@ namespace Ninject.Infrastructure
             return this.items.GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the multimap.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the multimap.</returns>
         IEnumerator<KeyValuePair<K, ICollection<V>>> IEnumerable<KeyValuePair<K, ICollection<V>>>.GetEnumerator()
         {
             return this.items.GetEnumerator();

@@ -31,6 +31,8 @@ namespace Ninject.Planning.Directives
     /// <summary>
     /// Describes the injection of a method or constructor.
     /// </summary>
+    /// <typeparam name="TMethod">The method info.</typeparam>
+    /// <typeparam name="TInjector">The injector.</typeparam>
     public abstract class MethodInjectionDirectiveBase<TMethod, TInjector> : IDirective
         where TMethod : MethodBase
     {

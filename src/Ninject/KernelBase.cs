@@ -46,11 +46,6 @@ namespace Ninject
     /// </summary>
     public abstract class KernelBase : BindingRoot, IKernel
     {
-        /// <summary>
-        /// Lock used when adding missing bindings.
-        /// </summary>
-        protected readonly object HandleMissingBindingLockObject = new object();
-
         private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
 
         private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
@@ -127,6 +122,11 @@ namespace Ninject
         /// Gets the component container, which holds components that contribute to Ninject.
         /// </summary>
         public IComponentContainer Components { get; private set; }
+
+        /// <summary>
+        /// Gets the lock which is used when adding missing bindings.
+        /// </summary>
+        protected object HandleMissingBindingLockObject { get; } = new object();
 
         /// <summary>
         /// Releases resources held by the object.
@@ -311,6 +311,21 @@ namespace Ninject
             var reference = new InstanceReference { Instance = instance };
             pipeline.Activate(context, reference);
         }
+
+#if !NO_SERVICE_PROVIDER
+        /// <summary>
+        /// Gets the service object of the specified type.
+        /// </summary>
+        /// <param name="service">An object that specifies the type of service object to get.</param>
+        /// <returns>
+        /// A service object of type serviceType.-or- null if there is no service object
+        /// of type serviceType.
+        /// </returns>
+        object IServiceProvider.GetService(Type service)
+        {
+            return this.Get(service);
+        }
+#endif
 
         /// <summary>
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.
@@ -584,13 +599,6 @@ namespace Ninject
                 this.bindingCache.Clear();
             }
         }
-
-        #if !NO_SERVICE_PROVIDER
-        object IServiceProvider.GetService(Type service)
-        {
-            return this.Get(service);
-        }
-        #endif
 
         private class BindingPrecedenceComparer : IComparer<IBinding>
         {

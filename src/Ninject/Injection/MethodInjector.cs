@@ -25,5 +25,7 @@ namespace Ninject.Injection
     /// <summary>
     /// A delegate that can inject values into a method.
     /// </summary>
+    /// <param name="target">The method info.</param>
+    /// <param name="arguments">The arguments used for the method.</param>
     public delegate void MethodInjector(object target, params object[] arguments);
 }

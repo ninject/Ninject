@@ -25,5 +25,7 @@ namespace Ninject.Injection
     /// <summary>
     /// A delegate that can inject values into a property.
     /// </summary>
+    /// <param name="target">The property info.</param>
+    /// <param name="value">The value to be injected to the property.</param>
     public delegate void PropertyInjector(object target, object value);
 }

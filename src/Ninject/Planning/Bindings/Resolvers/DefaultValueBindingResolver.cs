@@ -31,6 +31,7 @@ namespace Ninject.Planning.Bindings.Resolvers
     using Ninject.Planning.Targets;
 
     /// <summary>
+    /// Represents a binding resolver that takes the target default value as the resolved object.
     /// </summary>
     public class DefaultValueBindingResolver : NinjectComponent, IMissingBindingResolver
     {

@@ -51,6 +51,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the value of metadata defined with the specified key.
         /// </summary>
+        /// <typeparam name="T">The type of value to expect.</typeparam>
         /// <param name="key">The metadata key.</param>
         /// <param name="defaultValue">The value to return if the binding has no metadata set with the specified key.</param>
         /// <returns>The metadata value, or the default value if none was set.</returns>

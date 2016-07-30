@@ -25,14 +25,27 @@ namespace Ninject.Infrastructure.Language
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// Provides extension methods for <see cref="TargetInvocationException"/>.
+    /// </summary>
     internal static class ExtensionsForTargetInvocationException
     {
+        private static readonly FieldInfo StackTrace;
+
+        static ExtensionsForTargetInvocationException()
+        {
+            StackTrace = typeof(Exception).GetTypeInfo().GetField("_remoteStackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+
+        /// <summary>
+        /// Re-throws inner exception.
+        /// </summary>
+        /// <param name="exception">The <see cref="TargetInvocationException"/>.</param>
         public static void RethrowInnerException(this TargetInvocationException exception)
         {
             var innerException = exception.InnerException;
 
-            var stackTraceField = typeof(Exception).GetTypeInfo().GetField("_remoteStackTraceString", BindingFlags.Instance | BindingFlags.NonPublic);
-            stackTraceField.SetValue(innerException, innerException.StackTrace);
+            StackTrace.SetValue(innerException, innerException.StackTrace);
 
             throw innerException;
         }

@@ -102,6 +102,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="member">The member.</param>
         /// <param name="attributeType">Type of the attribute.</param>
         /// <param name="inherited">if set to <c>true</c> [inherited].</param>
+        /// <returns>The attributes.</returns>
         public static IEnumerable<Attribute> GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
 #if !CORE

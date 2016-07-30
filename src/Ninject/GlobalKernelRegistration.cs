@@ -36,6 +36,11 @@ namespace Ninject
         private static readonly ReaderWriterLockSlim KernelRegistrationsLock = new ReaderWriterLockSlim();
         private static readonly IDictionary<Type, Registration> KernelRegistrations = new Dictionary<Type, Registration>();
 
+        /// <summary>
+        /// Registers the kernel for the specified type.
+        /// </summary>
+        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="type">The service type.</param>
         internal static void RegisterKernelForType(IKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
@@ -50,6 +55,11 @@ namespace Ninject
             }
         }
 
+        /// <summary>
+        /// Un-registers the kernel for the specified type.
+        /// </summary>
+        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="type">The service type.</param>
         internal static void UnregisterKernelForType(IKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);

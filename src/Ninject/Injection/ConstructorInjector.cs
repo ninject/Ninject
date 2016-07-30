@@ -25,5 +25,7 @@ namespace Ninject.Injection
     /// <summary>
     /// A delegate that can inject values into a constructor.
     /// </summary>
+    /// <param name="arguments">The arguments used for the constructor.</param>
+    /// <returns>An object created from the constructor.</returns>
     public delegate object ConstructorInjector(params object[] arguments);
 }

@@ -32,6 +32,7 @@ namespace Ninject.Planning.Bindings.Resolvers
     using Ninject.Infrastructure;
 
     /// <summary>
+    /// Represents a binding resolver that use the service in question itself as the target to activate.
     /// </summary>
     public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
     {

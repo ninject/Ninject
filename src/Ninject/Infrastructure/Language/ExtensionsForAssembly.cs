@@ -29,13 +29,26 @@ namespace Ninject.Infrastructure.Language
     using System.Reflection;
     using Ninject.Modules;
 
+    /// <summary>
+    /// Provides extension methods for <see cref="Assembly"/>.
+    /// </summary>
     internal static class ExtensionsForAssembly
     {
+        /// <summary>
+        /// Determines whether the assembly has loadable <see cref="INinjectModule"/>.
+        /// </summary>
+        /// <param name="assembly">The <see cref="Assembly"/>.</param>
+        /// <returns><c>True</c> if there's any loadable <see cref="INinjectModule"/>, otherwise <c>False</c>.</returns>
         public static bool HasNinjectModules(this Assembly assembly)
         {
             return assembly.GetExportedTypes().Any(IsLoadableModule);
         }
 
+        /// <summary>
+        /// Gets loadable <see cref="INinjectModule"/>s from the <see cref="Assembly"/>.
+        /// </summary>
+        /// <param name="assembly">The <see cref="Assembly"/>.</param>
+        /// <returns>The loadable <see cref="INinjectModule"/>s</returns>
         public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
         {
             return assembly.GetExportedTypes()
