@@ -2,15 +2,15 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.2": {
+    ".NETFramework,Version=v4.5": {
       "Ninject/3.2.5-beta": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.2",
+        "framework": ".NETFramework,Version=v4.5",
         "compile": {
-          "net452/Ninject.dll": {}
+          "net45/Ninject.dll": {}
         },
         "runtime": {
-          "net452/Ninject.dll": {}
+          "net45/Ninject.dll": {}
         }
       }
     }
@@ -26,7 +26,7 @@
     "": [
       "Ninject >= 3.2.5-beta"
     ],
-    ".NETFramework,Version=v4.5.2": []
+    ".NETFramework,Version=v4.5": []
   },
   "tools": {},
   "projectFileToolGroups": {}

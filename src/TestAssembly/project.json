@@ -4,7 +4,7 @@
     "outputName": "Ninject.Tests.TestAssembly"
   },
   "frameworks": {
-    "net452": {
+    "net45": {
     }
   }
 }

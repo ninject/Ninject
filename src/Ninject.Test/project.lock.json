@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.2": {
+    ".NETFramework,Version=v4.5.1": {
       "Castle.Core/3.3.3": {
         "type": "package",
         "compile": {
@@ -422,35 +422,35 @@
       },
       "Ninject/3.2.5-beta": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.2",
+        "framework": ".NETFramework,Version=v4.5",
         "compile": {
-          "net452/Ninject.dll": {}
+          "net45/Ninject.dll": {}
         },
         "runtime": {
-          "net452/Ninject.dll": {}
+          "net45/Ninject.dll": {}
         }
       },
       "TestAssembly/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.2",
+        "framework": ".NETFramework,Version=v4.5",
         "compile": {
-          "net452/TestAssembly.dll": {}
+          "net45/TestAssembly.dll": {}
         },
         "runtime": {
-          "net452/TestAssembly.dll": {}
+          "net45/TestAssembly.dll": {}
         }
       },
       "TestModules/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.2",
+        "framework": ".NETFramework,Version=v4.5",
         "dependencies": {
           "Ninject": "3.2.5-beta"
         },
         "compile": {
-          "net452/TestModules.dll": {}
+          "net45/TestModules.dll": {}
         },
         "runtime": {
-          "net452/TestModules.dll": {}
+          "net45/TestModules.dll": {}
         }
       }
     }
@@ -1222,7 +1222,7 @@
       "dotnet-test-xunit >= 2.2.0-preview2-build1029",
       "xunit >= 2.2.0-beta2-build3300"
     ],
-    ".NETFramework,Version=v4.5.2": []
+    ".NETFramework,Version=v4.5.1": []
   },
   "tools": {},
   "projectFileToolGroups": {}

@@ -24,7 +24,7 @@
         "System.Reflection.Extensions": "4.0.1"
       }
     },
-    "net452": {
+    "net45": {
       "buildOptions": {
         "define": [ "NO_PARTIAL_TRUST" ]
       }

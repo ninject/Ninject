@@ -7,7 +7,7 @@
     "outputName": "Ninject.Tests.TestModule"
   },
   "frameworks": {
-    "net452": {
+    "net45": {
     }
   }
 }

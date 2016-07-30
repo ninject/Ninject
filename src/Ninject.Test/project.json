@@ -12,7 +12,7 @@
   },
   "buildOptions": { "copyToOutput": "TestModules\\*" },
   "frameworks": {
-    "net452": {
+    "net451": {
     }
   }
 }
