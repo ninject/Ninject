@@ -32,6 +32,7 @@ namespace Ninject.Activation
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
+    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Contains information about the activation of a single instance.
@@ -154,7 +155,7 @@ namespace Ninject.Activation
         /// <returns>The resolved instance.</returns>
         public object Resolve()
         {
-            if (this.Request.ActiveBindings.Contains(this.Binding))
+            if (this.IsCyclical(this.Request.ParentContext))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -217,6 +218,29 @@ namespace Ninject.Activation
             this.Pipeline.Activate(this, reference);
 
             return reference.Instance;
+        }
+
+        private bool IsCyclical(IContext targetContext)
+        {
+            if (targetContext == null)
+            {
+                return false;
+            }
+
+            if (targetContext.Request.Service == this.Request.Service)
+            {
+                if (!(this.Request.Target is PropertyTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
+                {
+                    return true;
+                }
+            }
+
+            if (this.IsCyclical(targetContext.Request.ParentContext))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

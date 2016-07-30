@@ -5,6 +5,7 @@
     using FluentAssertions;
     using Ninject.Activation;
     using Ninject.Parameters;
+    using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
     public class CircularDependenciesContext : IDisposable
@@ -70,6 +71,22 @@
         }
     }
 
+    public class WhenDependenciesHaveTwoWayCircularReferenceBetweenPropertiesBoundInTransientScope : CircularDependenciesContext
+    {
+        public WhenDependenciesHaveTwoWayCircularReferenceBetweenPropertiesBoundInTransientScope()
+        {
+            kernel.Bind<TwoWayPropertyFoo>().ToSelf();
+            kernel.Bind<TwoWayPropertyBar>().ToSelf();
+        }
+
+
+        [Fact]
+        public void ThrowsActivationException()
+        {
+            Assert.Throws<ActivationException>(() => kernel.Get<TwoWayPropertyFoo>());
+        }
+    }
+
     public class WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors : CircularDependenciesContext
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
@@ -119,6 +136,53 @@
             bar.Baz.Should().BeSameAs(baz);
             baz.Foo.Should().BeSameAs(foo);
         }
+    }
+
+    public class WhenDependenciesHaveOpenGenericCircularReferenceBetweenConstructors : CircularDependenciesContext
+    {
+        public WhenDependenciesHaveOpenGenericCircularReferenceBetweenConstructors()
+        {
+            kernel.Bind(typeof(IOptions<>)).To(typeof(OptionsManager<>));
+
+            kernel.Bind<IConfigureOptions<ClassA>>().To<ConfigureA1>();
+            kernel.Bind<IConfigureOptions<ClassB>>().To<ConfigureB1>();
+            kernel.Bind<IConfigureOptions<ClassC>>().To<HasCircularDependency1>();
+            kernel.Bind<IConfigureOptions<ClassD>>().To<HasCircularDependency2>();
+
+        }
+
+        [Fact]
+        public void DoesNotThrowException()
+        {
+            kernel.Get<IOptions<ClassA>>();
+
+        }
+
+        [Fact]
+        public void DoesNotThrowException2()
+        {
+            var o = kernel.Get<HasOptionsPropertyInjected>();
+
+        }
+
+        [Fact]
+        public void DetectsCyclicDependenciesInPropertySetter()
+        {
+            Action act = () => kernel.Get<IOptions<ClassC>>();
+
+            act.ShouldThrow<ActivationException>();
+        }
+
+        [Fact]
+        public void DetectsCyclicDependenciesForGenericServiceRegisteredViaOpenGenericType2()
+        {
+            kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericServiceWithGenericConstructor<>));
+
+            Action act = () => kernel.Get<IGeneric<int>>();
+
+            act.ShouldThrow<ActivationException>();
+        }
+
     }
 
     public class TwoWayConstructorFoo
@@ -176,4 +240,59 @@
         public ThreeWayPropertyFoo Foo { get; set; }
     }
 
+    public class GenericServiceWithGenericConstructor<T> : IGeneric<T>
+    {
+        public GenericServiceWithGenericConstructor(IGeneric<T> arg)
+        {
+        }
+    }
+
+    public interface IOptions<T>
+    {
+    }
+
+    public class OptionsManager<T> : IOptions<T>
+    {
+        public OptionsManager(IConfigureOptions<T> items)
+        {
+        }
+    }
+
+    public interface IConfigureOptions<T>
+    {
+    }
+
+    public class ConfigureA1 : IConfigureOptions<ClassA>
+    {
+        public ConfigureA1(IOptions<ClassB> bOptions)
+        {
+        }
+    }
+
+    public class ConfigureB1 : IConfigureOptions<ClassB>
+    {
+    }
+
+    public class HasOptionsPropertyInjected
+    {
+        [Inject]
+        public IOptions<ClassA> ClassAOptions { get; set; }
+    }
+
+    public class HasCircularDependency1 : IConfigureOptions<ClassC>
+    {
+        [Inject]
+        public IOptions<ClassD> ClassDOptions { get; set; }
+    }
+
+    public class HasCircularDependency2 : IConfigureOptions<ClassD>
+    {
+        public HasCircularDependency2(IOptions<ClassC> classCOptions) { }
+    }
+
+
+    public class ClassA { }
+    public class ClassB { }
+    public class ClassC { }
+    public class ClassD { }
 }
