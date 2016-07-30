@@ -3,15 +3,9 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.5.2": {
-      "StyleCop.Analyzers/1.0.0": {
-        "type": "package"
-      },
       "Ninject/3.2.5-beta": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.2",
-        "dependencies": {
-          "StyleCop.Analyzers": "1.0.0"
-        },
         "compile": {
           "net452/Ninject.dll": {}
         },
@@ -22,20 +16,6 @@
     }
   },
   "libraries": {
-    "StyleCop.Analyzers/1.0.0": {
-      "sha512": "NT0qdVF8gfXn6YcajL/s9orWNbO9NAr9AM8MDHIxXHstMvxi7+viLxAlZIoWRAA25Cs4O91qFcMt06cL/61TjQ==",
-      "type": "package",
-      "path": "StyleCop.Analyzers/1.0.0",
-      "files": [
-        "StyleCop.Analyzers.1.0.0.nupkg.sha512",
-        "StyleCop.Analyzers.nuspec",
-        "analyzers/dotnet/cs/Newtonsoft.Json.dll",
-        "analyzers/dotnet/cs/StyleCop.Analyzers.CodeFixes.dll",
-        "analyzers/dotnet/cs/StyleCop.Analyzers.dll",
-        "tools/install.ps1",
-        "tools/uninstall.ps1"
-      ]
-    },
     "Ninject/3.2.5-beta": {
       "type": "project",
       "path": "../Ninject/project.json",

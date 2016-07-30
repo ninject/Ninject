@@ -12,15 +12,16 @@
   "frameworks": {
     "netstandard1.5": {
       "buildOptions": {
-        "define": [ "CORE", "NO_PARTIAL_TRUST", "NO_SERVICE_PROVIDER", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION", "NO_THREADING" ]
+        "define": [ "CORE", "NO_PARTIAL_TRUST", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION", "NO_THREADING" ]
       },
       "dependencies": {
         "NETStandard.Library": "1.6.0",
+        "System.ComponentModel": "4.0.1",
+        "System.Data.Common": "4.1.0",
+        "System.Diagnostics.Contracts": "4.0.1",
         "System.Reflection.Emit.ILGeneration": "4.0.1",
         "System.Reflection.Emit.Lightweight": "4.0.1",
-        "System.Reflection.Extensions": "4.0.1",
-        "System.Diagnostics.Contracts": "4.0.1",
-        "System.Data.Common": "4.1.0"
+        "System.Reflection.Extensions": "4.0.1"
       }
     },
     "net452": {
@@ -32,8 +33,5 @@
   "buildOptions": {
     "xmlDoc": true,
     "additionalArguments": [ "/additionalfile:stylecop.json" ]
-  },
-  "configurations": {
-
   }
 }

@@ -312,7 +312,6 @@ namespace Ninject
             pipeline.Activate(context, reference);
         }
 
-#if !NO_SERVICE_PROVIDER
         /// <summary>
         /// Gets the service object of the specified type.
         /// </summary>
@@ -325,7 +324,6 @@ namespace Ninject
         {
             return this.Get(service);
         }
-#endif
 
         /// <summary>
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.
