@@ -13,3 +13,5 @@ packages/
 AppPackages
 .vs/
 TestResults/
+
+*.lock.json

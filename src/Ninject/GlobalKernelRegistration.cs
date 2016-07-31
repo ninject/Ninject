@@ -32,11 +32,8 @@ namespace Ninject
     /// </summary>
     public abstract class GlobalKernelRegistration
     {
-#if !WINRT && !PCL
-        private static readonly ReaderWriterLock kernelRegistrationsLock = new ReaderWriterLock();
-#elif !PCL
         private static readonly ReaderWriterLockSlim kernelRegistrationsLock = new ReaderWriterLockSlim();
-#endif
+
         private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>(); 
 
         internal static void RegisterKernelForType(IReadonlyKernel kernel, Type type)
@@ -45,22 +42,18 @@ namespace Ninject
             throw new NotImplementedException();
 #else
             var registration = GetRegistrationForType(type);
-#if !WINRT
-            registration.KernelLock.AcquireReaderLock(Timeout.Infinite);
-#else
+
             registration.KernelLock.EnterReadLock();
-#endif
+
             try
             {
                 registration.Kernels.Add(new WeakReference(kernel));
             }
             finally
             {
-#if !WINRT
-                registration.KernelLock.ReleaseReaderLock();
-#else
+
                 registration.KernelLock.ExitReadLock();
-#endif
+
             }
 #endif
         }
@@ -86,11 +79,9 @@ namespace Ninject
 #else
             bool requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
-#if !WINRT
-            registration.KernelLock.AcquireReaderLock(Timeout.Infinite);
-#else
+
             registration.KernelLock.EnterReadLock();
-#endif
+
 
 
             try
@@ -110,11 +101,9 @@ namespace Ninject
             }
             finally
             {
-#if !WINRT
-                registration.KernelLock.ReleaseReaderLock();
-#else
+
                 registration.KernelLock.ExitReadLock();
-#endif
+
             }
 
             if (requiresCleanup)
@@ -129,11 +118,9 @@ namespace Ninject
 #if PCL
             throw new NotImplementedException();
 #else
-#if !WINRT
-            registration.KernelLock.ReleaseReaderLock();
-#else
+
             registration.KernelLock.ExitReadLock();
-#endif
+
             try
             {
                 foreach (var reference in references.ToArray())
@@ -143,25 +130,17 @@ namespace Ninject
             }
             finally
             {
-#if !WINRT
-                registration.KernelLock.ReleaseReaderLock();
-#else
+
                 registration.KernelLock.ExitReadLock();
-#endif
+
             }
 #endif
         }
 
         private static Registration GetRegistrationForType(Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-#if !WINRT
-            kernelRegistrationsLock.AcquireReaderLock(Timeout.Infinite);
-#else
+
             kernelRegistrationsLock.EnterUpgradeableReadLock();
-#endif
             try
             {
                 Registration registration;
@@ -174,25 +153,18 @@ namespace Ninject
             }
             finally
             {
-#if !WINRT
-                kernelRegistrationsLock.ReleaseReaderLock();
-#else
+
                 kernelRegistrationsLock.ExitUpgradeableReadLock();
-#endif
+
             }
-#endif
+
         }
 
         private static Registration CreateNewRegistration(Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-#if !WINRT
-            var lockCookie = kernelRegistrationsLock.UpgradeToWriterLock(Timeout.Infinite);
-#else
+
             kernelRegistrationsLock.EnterWriteLock();
-#endif
+
             try
             {
                 Registration registration;
@@ -207,13 +179,11 @@ namespace Ninject
             }
             finally
             {
-#if !WINRT
-                kernelRegistrationsLock.DowngradeFromWriterLock(ref lockCookie);
-#else
+
                 kernelRegistrationsLock.ExitWriteLock();
-#endif
+
             }
-#endif
+
         }
 
         private class Registration
@@ -221,19 +191,14 @@ namespace Ninject
 #if !PCL
             public Registration()
             {
-#if !WINRT
-                this.KernelLock = new ReaderWriterLock();
-#else
+
                 this.KernelLock = new ReaderWriterLockSlim();
-#endif
+
                 this.Kernels = new List<WeakReference>();
             }
 
-#if !WINRT
-            public ReaderWriterLock KernelLock { get; private set; }
-#else
+
             public ReaderWriterLockSlim KernelLock { get; private set; }
-#endif
 
             public IList<WeakReference> Kernels { get; private set; }
 #endif

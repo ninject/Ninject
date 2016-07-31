@@ -134,7 +134,7 @@ namespace Ninject.Injection
 #endif
         }
 
-#if !PCL
+#if !NETSTANDARD1_3
         private static void EmitLoadMethodArguments(ILGenerator il, MethodBase targetMethod)
         {
             ParameterInfo[] parameters = targetMethod.GetParameters();

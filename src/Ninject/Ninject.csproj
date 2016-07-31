@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ninject</RootNamespace>
     <AssemblyName>Ninject</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile151</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
@@ -34,15 +35,15 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
-    <BaseIntermediateOutputPath>obj\PCL\</BaseIntermediateOutputPath>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <BaseIntermediateOutputPath>obj\netstandard1.3\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\PCL\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PCL</DefineConstants>
+    <OutputPath>bin\netstandard1.3\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;NO_LCG;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -54,11 +55,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\PCL\Release\</OutputPath>
-    <DefineConstants>TRACE;PCL</DefineConstants>
+    <OutputPath>bin\netstandard1.3\Release\</OutputPath>
+    <DefineConstants>TRACE;NETSTANDARD1_3;NO_LCG;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\PCL\Release\Ninject.xml</DocumentationFile>
+    <DocumentationFile>bin\netstandard1.3\Release\Ninject.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
@@ -131,6 +132,7 @@
     <Compile Include="Infrastructure\Introspection\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Introspection\FormatExtensions.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForAssembly.cs" />
+    <Compile Include="Infrastructure\Language\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIEnumerable.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForIEnumerableOfT.cs" />
     <Compile Include="Infrastructure\Language\ExtensionsForMemberInfo.cs" />
@@ -242,6 +244,7 @@
     <None Include="..\Ninject.snk">
       <Link>Ninject.snk</Link>
     </None>
+    <None Include="Ninject.project.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

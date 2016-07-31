@@ -122,7 +122,7 @@ namespace Ninject.Infrastructure.Introspection
 #endif
         }
 
-#if WINRT
+#if NETSTANDARD1_3
         private static MemberTypes GetMemberType(this MemberInfo member)
         {
             if (member is FieldInfo)
@@ -171,10 +171,10 @@ namespace Ninject.Infrastructure.Introspection
 #else
             using (var sw = new StringWriter())
             {
-#if !WINRT
+#if !NETSTANDARD1_3
                 switch (target.Member.MemberType)
 #else
-                switch(target.Member.GetMemberType())
+                switch (target.Member.GetMemberType())
 #endif
                 {
                     case MemberTypes.Constructor:
@@ -193,9 +193,9 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
-#if !WINRT
+#if !NETSTANDARD1_3
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
-                #else
+#else
 #endif
 
                 return sw.ToString();
@@ -226,7 +226,7 @@ namespace Ninject.Infrastructure.Introspection
                 return "AnonymousType";
 #endif
 
-#if !WINRT
+#if !NETSTANDARD1_3
             switch (friendlyName.ToLower(CultureInfo.InvariantCulture))
 #else
             switch (friendlyName.ToLower())

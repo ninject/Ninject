@@ -23,12 +23,9 @@ namespace Ninject.Planning.Targets
     /// <summary>
     /// Represents an injection target for a <see cref="ParameterInfo"/>.
     /// </summary>
-    public class ParameterTarget :
-#if !WINRT
+    public class ParameterTarget : 
         Target<ParameterInfo>
-#else
-        Target
-#endif
+
     {
         private readonly Future<object> defaultValue;
 
@@ -56,11 +53,11 @@ namespace Ninject.Planning.Targets
         public override bool HasDefaultValue
         {
             get 
-            { 
+            {
 #if PCL
             throw new NotImplementedException();
 #else
-#if WINRT
+#if NETSTANDARD1_3
                 var val = defaultValue.Value;
 
                 if (val != null)

@@ -432,7 +432,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-#if !PCL && !WINRT
+#if !NETSTANDARD1_3 && !WINRT
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>

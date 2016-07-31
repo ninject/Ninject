@@ -37,11 +37,10 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-#if !WINRT && !PCL
-        private readonly ReaderWriterLock plannerLock = new ReaderWriterLock();
-#elif !PCL
+
+
         private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
-#endif
+
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
 
         /// <summary>
@@ -69,11 +68,9 @@ namespace Ninject.Planning
             throw new NotImplementedException();
 #else
             
-#if !WINRT
-            this.plannerLock.AcquireReaderLock(Timeout.Infinite);
-#else
+
             this.plannerLock.EnterUpgradeableReadLock();
-#endif
+
             try
             {
                 IPlan plan;
@@ -81,11 +78,9 @@ namespace Ninject.Planning
             }
             finally
             {
-#if !WINRT
-                this.plannerLock.ReleaseReaderLock();
-#else
+
                 this.plannerLock.ExitUpgradeableReadLock();
-#endif
+
             }
 #endif
         }
@@ -111,11 +106,9 @@ namespace Ninject.Planning
 #if PCL
             throw new NotImplementedException();
 #else
-#if !WINRT
-            var lockCookie = this.plannerLock.UpgradeToWriterLock(Timeout.Infinite);
-#else
+
             this.plannerLock.EnterWriteLock();
-#endif
+
             try
             {
                 IPlan plan;
@@ -132,11 +125,9 @@ namespace Ninject.Planning
             }
             finally
             {
-#if !WINRT
-                this.plannerLock.DowngradeFromWriterLock(ref lockCookie);
-#else
+
                 this.plannerLock.ExitWriteLock();
-#endif
+
             }
 #endif
         }

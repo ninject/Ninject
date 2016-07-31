@@ -22,7 +22,7 @@ namespace Ninject.Infrastructure.Language
 
     internal static class ExtensionsForICustomAttributeProvider
     {
-#if !WINRT
+#if !NETSTANDARD1_3
 
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {
@@ -35,6 +35,9 @@ namespace Ninject.Infrastructure.Language
             return member.IsDefined(type, true);
         }
 
+
+
+
         public static IEnumerable<Attribute> GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             var memberInfo = member as MemberInfo;
@@ -45,36 +48,66 @@ namespace Ninject.Infrastructure.Language
 
             return member.GetCustomAttributes(attributeType, inherit).Cast<Attribute>();
         }
-        
-#else
-
-        public static bool HasAttribute(this PropertyInfo member, Type type)
-        {
-            var memberInfo = member as MemberInfo;
-            if (memberInfo != null)
-            {
-                return memberInfo.HasAttribute(type);
-            }
-
-            return member.IsDefined(type, true);
-        }
-
-        public static bool HasAttribute(this ParameterInfo member, Type type)
-        {
-            return member.IsDefined(type, true);
-        }
-
-        public static bool HasAttribute(this ITarget member, Type type)
-        {
-            var memberInfo = member as MemberInfo;
-            if (memberInfo != null)
-            {
-                return memberInfo.HasAttribute(type);
-            }
-
-            return member.IsDefined(type, true);
-        }
 
 #endif
+        public static bool HasAttribute(object target, Type type)
+        {
+            var memberInfo = target as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.HasAttribute(type);
+            }
+
+            return ((ParameterInfo)target).IsDefined(type, true);
+        }
+
+
+
+        public static IEnumerable<Attribute> GetCustomAttributesExtended(object target, Type attributeType, bool inherit)
+        {
+            var memberInfo = target as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.GetCustomAttributesExtended(attributeType, inherit);
+            }
+
+            return ((ParameterInfo)target).GetCustomAttributes(attributeType, inherit)
+#if !NETSTANDARD1_3
+                .Cast<Attribute>()
+#endif
+                ;
+        }
+
+
+        public static bool IsDefined(object target, Type attributeType, bool inherit)
+        {
+            var memberInfo = target as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.IsDefined(attributeType, inherit);
+            }
+
+            return ((ParameterInfo)target).IsDefined(attributeType, inherit);
+        }
+
+        public static IEnumerable<Attribute> GetCustomAttributes(object target, bool inherit)
+        {
+            var memberInfo = target as MemberInfo;
+            if (memberInfo != null)
+            {
+                return memberInfo.GetCustomAttributes(inherit)
+#if !NETSTANDARD1_3
+                .Cast<Attribute>()
+#endif
+                    ;
+            }
+
+            return ((ParameterInfo)target).GetCustomAttributes(inherit)
+#if !NETSTANDARD1_3
+                .Cast<Attribute>()
+#endif
+                ;
+        }
+
     }
 }

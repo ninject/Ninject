@@ -100,8 +100,13 @@ namespace Ninject.Activation.Caching
             using (var signal = new ManualResetEvent(false))
             {
 #if !WINRT
+#if NETSTANDARD1_3
+                this.timer.Dispose();
+#else
                 this.timer.Dispose(signal);
+
                 signal.WaitOne();
+#endif
 #else
                 this.timer.Cancel();
 #endif

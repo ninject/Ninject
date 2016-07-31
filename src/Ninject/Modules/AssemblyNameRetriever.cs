@@ -19,6 +19,8 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
@@ -56,7 +58,7 @@ namespace Ninject.Modules
 #if PCL
             throw new NotImplementedException();
 #else
-#if !WINRT
+#if !NETSTANDARD1_3
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -67,11 +69,11 @@ namespace Ninject.Modules
 
                 return checker.GetAssemblyNames(filenames.ToArray(), filter);
 #else
-                var checker = new AssemblyCheckerWinRT();
+            var checker = new AssemblyCheckerWinRT();
                 return checker.GetAssemblyListAsync(filenames.ToArray(), filter);
 #endif
 
-#if !WINRT
+#if !NETSTANDARD1_3
             }
             finally
             {
@@ -81,8 +83,8 @@ namespace Ninject.Modules
 #endif
         }
 
-#if !PCL
-#if !WINRT
+
+#if !NETSTANDARD1_3
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -202,7 +204,7 @@ namespace Ninject.Modules
             }
         }
 #endif
-#endif
+
     }
 }
 #endif

@@ -1,0 +1,11 @@
+﻿{
+  "dependencies": {
+  },
+  "frameworks": {
+    ".NETFramework,Version=v4.5.1": {}
+  },
+  "supports": {},
+  "runtimes": {
+    "win": {}
+  }
+}
