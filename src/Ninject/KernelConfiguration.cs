@@ -227,8 +227,7 @@
 
         private Multimap<Type, IBinding> CloneBindings()
         {
-            // Todo: Clone
-            return this.bindings;
+            return this.bindings.Clone();
         }
 
         /// <summary>
