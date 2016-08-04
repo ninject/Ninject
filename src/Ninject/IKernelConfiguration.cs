@@ -62,6 +62,6 @@ namespace Ninject
         /// Creates the readonly kernel.
         /// </summary>
         /// <returns>The readonly kernel.</returns>
-        IReadonlyKernel BuildReadonlyKernel();
+        IReadOnlyKernel BuildReadonlyKernel();
     }
 }

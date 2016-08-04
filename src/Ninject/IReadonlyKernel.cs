@@ -11,7 +11,7 @@ namespace Ninject
     /// <summary>
     /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore
     /// </summary>
-    public interface IReadonlyKernel :
+    public interface IReadOnlyKernel :
         IResolutionRoot, IHaveNinjectSettings, IServiceProvider, IDisposableObject
     {
         /// <summary>

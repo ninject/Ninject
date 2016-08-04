@@ -209,7 +209,7 @@
         }
 
         /// <inheritdoc />
-        public IReadonlyKernel BuildReadonlyKernel()
+        public IReadOnlyKernel BuildReadonlyKernel()
         {
             var readonlyKernel = new ReadonlyKernel(
                 this.CloneBindings(),

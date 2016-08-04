@@ -47,7 +47,7 @@ using Ninject.Planning.Bindings;
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IReadonlyKernel readonlyKernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IReadOnlyKernel readonlyKernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
             this.Kernel = readonlyKernel;
             this.Request = request;
@@ -65,7 +65,7 @@ using Ninject.Planning.Bindings;
         }
 
         /// <inheritdoc />
-        public IReadonlyKernel Kernel { get; set; }
+        public IReadOnlyKernel Kernel { get; set; }
 
         /// <inheritdoc />
         public IRequest Request { get; set; }

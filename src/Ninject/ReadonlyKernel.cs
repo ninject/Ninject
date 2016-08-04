@@ -20,7 +20,7 @@
     /// <summary>
     /// The readonly kernel
     /// </summary>
-    public class ReadonlyKernel : DisposableObject, IReadonlyKernel
+    public class ReadonlyKernel : DisposableObject, IReadOnlyKernel
     {
         private readonly ICache cache;
         private readonly IPlanner planner;
@@ -64,7 +64,7 @@
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
             this.Settings = settings;
 
-            this.AddReadonlyKernelBinding<IReadonlyKernel>(this, bindings);
+            this.AddReadonlyKernelBinding<IReadOnlyKernel>(this, bindings);
             this.AddReadonlyKernelBinding<IResolutionRoot>(this, bindings);
 
             this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);

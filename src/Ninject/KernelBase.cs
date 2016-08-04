@@ -30,7 +30,7 @@ namespace Ninject
         
         private readonly IKernelConfiguration kernelConfiguration;
 
-        private IReadonlyKernel kernel;
+        private IReadOnlyKernel kernel;
 
         private bool isDirty = true;
 
@@ -233,7 +233,7 @@ namespace Ninject
             this.isDirty = true;
         }
 
-        private IReadonlyKernel ReadonlyKernel
+        private IReadOnlyKernel ReadonlyKernel
         {
             get
             {
@@ -343,7 +343,7 @@ namespace Ninject
                 }
 
         /// <inheritdoc />
-        public IReadonlyKernel BuildReadonlyKernel()
+        public IReadOnlyKernel BuildReadonlyKernel()
         {
             throw new NotSupportedException("Kernel is built internally.");
         }

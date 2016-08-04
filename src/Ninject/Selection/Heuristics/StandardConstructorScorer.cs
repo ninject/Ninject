@@ -100,7 +100,7 @@ namespace Ninject.Selection.Heuristics
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>Whether a binding exists for the target in the given context.</returns>
-        protected virtual bool BindingExists(IReadonlyKernel kernel, IContext context, ITarget target)
+        protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
         {
             var targetType = GetTargetType(target);
             return kernel.GetBindings(targetType).Any(b => !b.IsImplicit)

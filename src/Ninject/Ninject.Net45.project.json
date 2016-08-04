@@ -2,7 +2,7 @@
   "dependencies": {
   },
   "frameworks": {
-    ".NETFramework,Version=v4.5.1": {}
+    ".NETFramework,Version=v4.5": {}
   },
   "supports": {},
   "runtimes": {

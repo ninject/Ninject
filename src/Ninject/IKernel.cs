@@ -22,7 +22,7 @@ namespace Ninject
     /// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
     /// </summary>
     [Obsolete("Use IKernelConfiguration and IReadonlyKernel")]
-    public interface IKernel : IKernelConfiguration, IReadonlyKernel
+    public interface IKernel : IKernelConfiguration, IReadOnlyKernel
     {
     }
 }

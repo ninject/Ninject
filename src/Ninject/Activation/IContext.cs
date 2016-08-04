@@ -27,7 +27,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the kernel that is driving the activation.
         /// </summary>
-        IReadonlyKernel Kernel { get; }
+        IReadOnlyKernel Kernel { get; }
 
         /// <summary>
         /// Gets the request.
