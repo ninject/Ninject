@@ -1,23 +1,34 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using Ninject.Planning.Targets;
-using Ninject.Syntax;
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="IRequest.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation
 {
+    using System;
+    using System.Collections.Generic;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Planning.Targets;
+
     /// <summary>
     /// Describes the request for a service resolution.
     /// </summary>
@@ -64,17 +75,17 @@ namespace Ninject.Activation
         int Depth { get; }
 
         /// <summary>
-        /// Gets or sets value indicating whether the request is optional.
+        /// Gets or sets a value indicating whether the request is optional.
         /// </summary>
         bool IsOptional { get; set; }
 
         /// <summary>
-        /// Gets or sets value indicating whether the request should return a unique result.
+        /// Gets or sets a value indicating whether the request should return a unique result.
         /// </summary>
         bool IsUnique { get; set; }
 
         /// <summary>
-        /// Gets or sets value indicating whether the request should force to return a unique value even if the request is optional.
+        /// Gets or sets a value indicating whether the request should force to return a unique value even if the request is optional.
         /// If this value is set true the request will throw an ActivationException if there are multiple satisfying bindings rather
         /// than returning null for the request is optional. For none optional requests this parameter does not change anything.
         /// </summary>

@@ -1,10 +1,11 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="Planner.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -28,7 +29,6 @@ namespace Ninject.Planning
     using System.Linq;
     using System.Threading;
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Strategies;
 
@@ -37,8 +37,6 @@ namespace Ninject.Planning
     /// </summary>
     public class Planner : NinjectComponent, IPlanner
     {
-
-
         private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
 
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
@@ -56,7 +54,7 @@ namespace Ninject.Planning
         /// Gets the strategies that contribute to the planning process.
         /// </summary>
         public IList<IPlanningStrategy> Strategies { get; private set; }
-        
+
         /// <summary>
         /// Gets or creates an activation plan for the specified type.
         /// </summary>
@@ -64,11 +62,6 @@ namespace Ninject.Planning
         /// <returns>The type's activation plan.</returns>
         public IPlan GetPlan(Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            
-
             this.plannerLock.EnterUpgradeableReadLock();
 
             try
@@ -78,11 +71,8 @@ namespace Ninject.Planning
             }
             finally
             {
-
                 this.plannerLock.ExitUpgradeableReadLock();
-
             }
-#endif
         }
 
         /// <summary>
@@ -103,10 +93,6 @@ namespace Ninject.Planning
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-
             this.plannerLock.EnterWriteLock();
 
             try
@@ -125,11 +111,8 @@ namespace Ninject.Planning
             }
             finally
             {
-
                 this.plannerLock.ExitWriteLock();
-
             }
-#endif
         }
     }
 }

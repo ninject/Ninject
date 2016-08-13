@@ -1,8 +1,11 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="IBindingConfiguration.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2011 Ninject Project Contributors
-//   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -83,6 +86,11 @@ namespace Ninject.Planning.Bindings
         ICollection<Action<IContext, object>> DeactivationActions { get; }
 
         /// <summary>
+        /// Gets or sets the InitizalizeProviderCallback action
+        /// </summary>
+        Action<ISelector> InitializeProviderCallback { get; set; }
+
+        /// <summary>
         /// Gets the provider for the binding.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -103,10 +111,5 @@ namespace Ninject.Planning.Bindings
         /// <param name="request">The request.</param>
         /// <returns><c>True</c> if the request satisfies the condition; otherwise <c>false</c>.</returns>
         bool Matches(IRequest request);
-
-        /// <summary>
-        /// Gets or sets the InitizalizeProviderCallback action
-        /// </summary>
-        Action<ISelector> InitializeProviderCallback { get; set; }
     }
 }

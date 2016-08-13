@@ -1,10 +1,10 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="IBindingWhenSyntax.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -19,7 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
@@ -68,7 +68,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// </summary>
         /// <typeparam name="TParent">The type.</typeparam>
         /// <returns>The fluent syntax.</returns>
@@ -77,7 +77,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// </summary>
         /// <param name="parent">The type.</param>
         /// <returns>The fluent syntax.</returns>
@@ -86,7 +86,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match one of the specified types exactly. Types that derive from one of the specified types
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// Should match at least one of the specified targets
         /// </summary>
         /// <param name="parents">The types.</param>
@@ -99,7 +99,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the member being injected has
@@ -107,7 +108,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the target being injected has
@@ -115,7 +117,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute;
+        IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>()
+            where TAttribute : Attribute;
 
         /// <summary>
         /// Indicates that the binding should be used only when the class being injected has
@@ -170,7 +173,7 @@ namespace Ninject.Syntax
         /// <param name="name">The name to expect.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingInNamedWithOrOnSyntax<T> WhenNoAncestorNamed(string name);
-    
+
         /// <summary>
         /// Indicates that the binding should be used only when any ancestor matches the specified predicate.
         /// </summary>

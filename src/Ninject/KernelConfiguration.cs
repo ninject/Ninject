@@ -1,7 +1,31 @@
-﻿namespace Ninject
+﻿//-------------------------------------------------------------------------------------------------
+// <copyright file="KernelConfiguration.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
+
+namespace Ninject
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -60,14 +84,14 @@
         /// <param name="modules">The modules to load into the kernel.</param>
         public KernelConfiguration(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
-            Ensure.ArgumentNotNull(components, "components");
-            Ensure.ArgumentNotNull(settings, "settings");
-            Ensure.ArgumentNotNull(modules, "modules");
+            Contract.Requires(components != null);
+            Contract.Requires(settings != null);
+            Contract.Requires(modules != null);
 
             this.settings = settings;
 
             this.Components = components;
-            
+
             components.KernelConfiguration = this;
 
             this.AddComponents();
@@ -82,6 +106,9 @@
         }
 
         /// <inheritdoc />
+        public IComponentContainer Components { get; private set; }
+
+        /// <inheritdoc />
         public override INinjectSettings Settings
         {
             get
@@ -93,7 +120,7 @@
         /// <inheritdoc />
         public override void Unbind(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Contract.Requires(service != null);
 
             this.bindings.RemoveAll(service);
         }
@@ -101,7 +128,7 @@
         /// <inheritdoc />
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.bindings.Add(binding.Service, binding);
         }
@@ -109,13 +136,10 @@
         /// <inheritdoc />
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Contract.Requires(binding != null);
 
             this.bindings.Remove(binding.Service, binding);
         }
-
-        /// <inheritdoc />
-        public IComponentContainer Components { get; private set; }
 
         /// <inheritdoc />
         public IEnumerable<INinjectModule> GetModules()
@@ -126,17 +150,17 @@
         /// <inheritdoc />
         public bool HasModule(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Contract.Requires(name != null);
             return this.modules.ContainsKey(name);
         }
 
         /// <inheritdoc />
-        public void Load(IEnumerable<INinjectModule> m)
+        public void Load(IEnumerable<INinjectModule> modules)
         {
-            Ensure.ArgumentNotNull(m, "modules");
+            Contract.Requires(this.modules != null);
 
-            m = m.ToList();
-            foreach (INinjectModule module in m)
+            modules = modules.ToList();
+            foreach (INinjectModule module in modules)
             {
                 if (string.IsNullOrEmpty(module.Name))
                 {
@@ -155,7 +179,7 @@
                 this.modules.Add(module.Name, module);
             }
 
-            foreach (INinjectModule module in m)
+            foreach (INinjectModule module in modules)
             {
                 module.OnVerifyRequiredModules();
             }
@@ -165,12 +189,8 @@
         /// <inheritdoc />
         public void Load(IEnumerable<string> filePatterns)
         {
-#if PCL
-            throw new NotImplementedException("Platform assembly must be referenced by app");
-#else
             var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
-#endif
         }
 
         /// <inheritdoc />
@@ -183,7 +203,7 @@
         /// <inheritdoc />
         public void Unload(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Contract.Requires(name != null);
 
             INinjectModule module;
 
@@ -200,18 +220,18 @@
         /// <inheritdoc />
         public IEnumerable<IBinding> GetBindings(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Contract.Requires(service != null);
             var resolvers = this.Components.GetAll<IBindingResolver>();
 
             return resolvers.SelectMany(resolver => resolver.Resolve(
-                bindings.Keys.ToDictionary(type => type, type => bindings[type]), 
+                this.bindings.Keys.ToDictionary(type => type, type => this.bindings[type]),
                 service));
         }
 
         /// <inheritdoc />
         public IReadOnlyKernel BuildReadonlyKernel()
         {
-            var readonlyKernel = new ReadonlyKernel(
+            var readonlyKernel = new ReadOnlyKernel(
                 this.CloneBindings(),
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
@@ -225,67 +245,67 @@
             return readonlyKernel;
         }
 
-        private Multimap<Type, IBinding> CloneBindings()
-        {
-            // Todo: Clone
-            return this.bindings;
-        }
-
         /// <summary>
         /// Adds components to the kernel during startup.
         /// </summary>
         protected virtual void AddComponents()
         {
-            Components.Add<IPlanner, Planner>();
-            Components.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
-            Components.Add<IPlanningStrategy, PropertyReflectionStrategy>();
-            Components.Add<IPlanningStrategy, MethodReflectionStrategy>();
+            this.Components.Add<IPlanner, Planner>();
+            this.Components.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
+            this.Components.Add<IPlanningStrategy, PropertyReflectionStrategy>();
+            this.Components.Add<IPlanningStrategy, MethodReflectionStrategy>();
 
-            Components.Add<ISelector, Selector>();
-            Components.Add<IConstructorScorer, StandardConstructorScorer>();
-            Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
+            this.Components.Add<ISelector, Selector>();
+            this.Components.Add<IConstructorScorer, StandardConstructorScorer>();
+            this.Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
 
-            Components.Add<IPipeline, Pipeline>();
-            if (!Settings.ActivationCacheDisabled)
+            this.Components.Add<IPipeline, Pipeline>();
+            if (!this.Settings.ActivationCacheDisabled)
             {
-                Components.Add<IActivationStrategy, ActivationCacheStrategy>();
+                this.Components.Add<IActivationStrategy, ActivationCacheStrategy>();
             }
 
-            Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
-            Components.Add<IActivationStrategy, MethodInjectionStrategy>();
-            Components.Add<IActivationStrategy, InitializableStrategy>();
-            Components.Add<IActivationStrategy, StartableStrategy>();
-            Components.Add<IActivationStrategy, BindingActionStrategy>();
-            Components.Add<IActivationStrategy, DisposableStrategy>();
+            this.Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
+            this.Components.Add<IActivationStrategy, MethodInjectionStrategy>();
+            this.Components.Add<IActivationStrategy, InitializableStrategy>();
+            this.Components.Add<IActivationStrategy, StartableStrategy>();
+            this.Components.Add<IActivationStrategy, BindingActionStrategy>();
+            this.Components.Add<IActivationStrategy, DisposableStrategy>();
 
-            Components.Add<IBindingPrecedenceComparer, BindingPrecedenceComparer>();
+            this.Components.Add<IBindingPrecedenceComparer, BindingPrecedenceComparer>();
 
-            Components.Add<IBindingResolver, StandardBindingResolver>();
-            Components.Add<IBindingResolver, OpenGenericBindingResolver>();
+            this.Components.Add<IBindingResolver, StandardBindingResolver>();
+            this.Components.Add<IBindingResolver, OpenGenericBindingResolver>();
 
-            Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
-            Components.Add<IMissingBindingResolver, SelfBindingResolver>();
+            this.Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
+            this.Components.Add<IMissingBindingResolver, SelfBindingResolver>();
 
 #if !NO_LCG
-            if (!Settings.UseReflectionBasedInjection)
+            if (!this.Settings.UseReflectionBasedInjection)
             {
-                Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
+                this.Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
             }
             else
 #endif
             {
-                Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
+                this.Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
             }
 
-            Components.Add<ICache, Cache>();
-            Components.Add<IActivationCache, ActivationCache>();
-            Components.Add<ICachePruner, GarbageCollectionCachePruner>();
+            this.Components.Add<ICache, Cache>();
+            this.Components.Add<IActivationCache, ActivationCache>();
+            this.Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 
 #if !NO_ASSEMBLY_SCANNING
-            Components.Add<IModuleLoader, ModuleLoader>();
-            Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
-            Components.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
+            this.Components.Add<IModuleLoader, ModuleLoader>();
+            this.Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
+            this.Components.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
 #endif
+        }
+
+        private Multimap<Type, IBinding> CloneBindings()
+        {
+            // Todo: Clone
+            return this.bindings;
         }
     }
 }

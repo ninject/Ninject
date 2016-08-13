@@ -1,20 +1,29 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections;
-using System.Collections.Generic;
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="Multimap.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Infrastructure
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -22,23 +31,9 @@ namespace Ninject.Infrastructure
     /// </summary>
     /// <typeparam name="K">The type of key.</typeparam>
     /// <typeparam name="V">The type of value.</typeparam>
-    public class Multimap<K, V> //: IEnumerable<KeyValuePair<K, ICollection<V>>>
+    public class Multimap<K, V> // : IEnumerable<KeyValuePair<K, ICollection<V>>>
     {
         private readonly Dictionary<K, ICollection<V>> items = new Dictionary<K, ICollection<V>>();
-
-        /// <summary>
-        /// Gets the collection of values stored under the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        public IEnumerable<V> this[K key]
-        {
-            get
-            {
-                ICollection<V> result;
-
-                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<V>();
-            }
-        }
 
         /// <summary>
         /// Gets the collection of keys.
@@ -54,6 +49,20 @@ namespace Ninject.Infrastructure
         public ICollection<ICollection<V>> Values
         {
             get { return this.items.Values; }
+        }
+
+        /// <summary>
+        /// Gets the collection of values stored under the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public IEnumerable<V> this[K key]
+        {
+            get
+            {
+                ICollection<V> result;
+
+                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<V>();
+            }
         }
 
         /// <summary>
@@ -76,7 +85,7 @@ namespace Ninject.Infrastructure
         {
             ICollection<V> values;
 
-            return this.items.TryGetValue(key, out values) && 
+            return this.items.TryGetValue(key, out values) &&
                    values.Remove(value);
         }
 
@@ -107,6 +116,7 @@ namespace Ninject.Infrastructure
         {
             return this.items.ContainsKey(key);
         }
+
         /*
         /// <summary>
         /// Returns an enumerator that iterates through a the multimap.

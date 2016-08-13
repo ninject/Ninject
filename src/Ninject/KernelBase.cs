@@ -1,10 +1,25 @@
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
+//-------------------------------------------------------------------------------------------------
+// <copyright file="KernelBase.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
@@ -17,7 +32,6 @@ namespace Ninject
     using Ninject.Modules;
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;
-    using Ninject.Selection;
     using Ninject.Syntax;
 
     /// <summary>
@@ -27,7 +41,7 @@ namespace Ninject
     public abstract class KernelBase : BindingRoot, IKernel
     {
         private readonly object kernelLockObject = new object();
-        
+
         private readonly IKernelConfiguration kernelConfiguration;
 
         private IReadOnlyKernel kernel;
@@ -72,7 +86,7 @@ namespace Ninject
             this.kernelConfiguration = new KernelConfiguration(components, settings, modules);
             this.kernelConfiguration.Bind<IKernel>().ToMethod(ctx => this);
             this.kernelConfiguration.Bind<IResolutionRoot>().ToMethod(ctx => this).When(ctx => true);
-            }
+        }
 
         /// <summary>
         /// Gets the kernel settings.
@@ -90,19 +104,42 @@ namespace Ninject
             get { return this.kernelConfiguration.Components; }
         }
 
+        private IReadOnlyKernel ReadOnlyKernel
+        {
+            get
+            {
+                if (!this.isDirty)
+                {
+                    return this.kernel;
+                }
+
+                lock (this.kernelLockObject)
+                {
+                    if (this.isDirty)
+                    {
+                        this.kernel = this.kernelConfiguration.BuildReadonlyKernel();
+                        this.isDirty = false;
+                    }
+
+                    return this.kernel;
+                }
+            }
+        }
+
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed)
+            if (disposing && !this.IsDisposed)
             {
                 if (this.kernel != null)
                 {
                     this.kernel.Dispose();
                 }
 
-                //this.kernelConfiguration.Dispose();
+                // this.kernelConfiguration.Dispose();
             }
 
             base.Dispose(disposing);
@@ -165,8 +202,8 @@ namespace Ninject
         {
             this.kernelConfiguration.Load(m);
             this.isDirty = true;
-                }
-                
+        }
+
 #if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
@@ -174,25 +211,9 @@ namespace Ninject
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             this.kernelConfiguration.Load(filePatterns);
             this.isDirty = true;
-#endif
         }
-
-#if WINRT
-        /// <summary>
-        /// Loads modules from the files that match the specified pattern(s).
-        /// </summary>
-        /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
-        public async System.Threading.Tasks.Task LoadAsync(IEnumerable<string> filePatterns)
-        {
-            var moduleLoader = this.Components.Get<IModuleLoader>();
-            await moduleLoader.LoadModules(filePatterns);
-        }
-#endif
 
         /// <summary>
         /// Loads modules defined in the specified assemblies.
@@ -207,19 +228,17 @@ namespace Ninject
         /// <summary>
         /// Does nothing on this framework
         /// </summary>
-        /// <param name="filePatterns"></param>
+        /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
-            
         }
 
         /// <summary>
         /// Does nothing on this framework
         /// </summary>
-        /// <param name="assembly"></param>
+        /// <param name="assembly">The assemblies to search.</param>
         public void Load(IEnumerable<Assembly> assembly)
         {
-            
         }
 #endif //!NO_ASSEMBLY_SCANNING
 
@@ -233,28 +252,6 @@ namespace Ninject
             this.isDirty = true;
         }
 
-        private IReadOnlyKernel ReadonlyKernel
-        {
-            get
-            {
-                if (!this.isDirty)
-                {
-                    return this.kernel;
-                }
-
-                lock (this.kernelLockObject)
-            {
-                    if (this.isDirty)
-                    {
-                        this.kernel = this.kernelConfiguration.BuildReadonlyKernel();
-                        this.isDirty = false;
-            }
-
-                    return this.kernel;
-        }
-            }
-        }
-
         /// <summary>
         /// Injects the specified existing instance, without managing its lifecycle.
         /// </summary>
@@ -262,7 +259,7 @@ namespace Ninject
         /// <param name="parameters">The parameters to pass to the request.</param>
         public virtual void Inject(object instance, params IParameter[] parameters)
         {
-            this.ReadonlyKernel.Inject(instance, parameters);
+            this.ReadOnlyKernel.Inject(instance, parameters);
         }
 
         /// <summary>
@@ -272,7 +269,7 @@ namespace Ninject
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         public virtual bool Release(object instance)
         {
-            return this.ReadonlyKernel.Release(instance);
+            return this.ReadOnlyKernel.Release(instance);
         }
 
         /// <summary>
@@ -282,7 +279,7 @@ namespace Ninject
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public virtual bool CanResolve(IRequest request)
         {
-            return this.ReadonlyKernel.CanResolve(request);
+            return this.ReadOnlyKernel.CanResolve(request);
         }
 
         /// <summary>
@@ -295,7 +292,7 @@ namespace Ninject
         /// </returns>
         public virtual bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            return this.ReadonlyKernel.CanResolve(request, ignoreImplicitBindings);
+            return this.ReadOnlyKernel.CanResolve(request, ignoreImplicitBindings);
         }
 
         /// <summary>
@@ -306,8 +303,8 @@ namespace Ninject
         /// <returns>An enumerator of instances that match the request.</returns>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
-            return this.ReadonlyKernel.Resolve(request);
-                    }
+            return this.ReadOnlyKernel.Resolve(request);
+        }
 
         /// <summary>
         /// Creates a request for the specified service.
@@ -320,7 +317,7 @@ namespace Ninject
         /// <returns>The created request.</returns>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            return this.ReadonlyKernel.CreateRequest(service, constraint, parameters, isOptional, isUnique);
+            return this.ReadOnlyKernel.CreateRequest(service, constraint, parameters, isOptional, isUnique);
         }
 
         /// <summary>
@@ -340,7 +337,7 @@ namespace Ninject
         public virtual IEnumerable<IBinding> GetBindings(Type service)
         {
             return this.kernelConfiguration.GetBindings(service);
-                }
+        }
 
         /// <inheritdoc />
         public IReadOnlyKernel BuildReadonlyKernel()
@@ -349,33 +346,33 @@ namespace Ninject
         }
 
         // Todo: Add
-        //protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
-        //{
+        // protected virtual IComparer<IBinding> GetBindingPrecedenceComparer()
+        // {
         //    return new BindingPrecedenceComparer();
-        //}
+        // }
 
         // Todo: Add
-        //protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
-        //{
+        // protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
+        // {
         //    return binding => binding.Matches(request) && request.Matches(binding);
-        //}
+        // }
 
         // Todo: Add
-        //protected abstract void AddComponents();
+        // protected abstract void AddComponents();
 
         // Todo: Add
-        //protected virtual IContext CreateContext(IRequest request, IBinding binding)
-        //{
+        // protected virtual IContext CreateContext(IRequest request, IBinding binding)
+        // {
         //    Ensure.ArgumentNotNull(request, "request");
         //    Ensure.ArgumentNotNull(binding, "binding");
 
-        //    return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
-        //}
+        // return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
+        // }
 
         /// <inheritdoc />
         public object GetService(Type serviceType)
-                            {
-            return this.ReadonlyKernel.GetService(serviceType);
+        {
+            return this.ReadOnlyKernel.GetService(serviceType);
         }
     }
 }

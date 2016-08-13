@@ -1,10 +1,10 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="ExceptionFormatter.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -19,7 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Infrastructure.Introspection
 {
@@ -50,6 +50,7 @@ namespace Ninject.Infrastructure.Introspection
         /// <summary>
         /// Generates a message saying that modules without names are not supported.
         /// </summary>
+        /// <param name="target">The target.</param>
         /// <returns>The exception message.</returns>
         public static string TargetDoesNotHaveADefaultValue(ITarget target)
         {
@@ -64,7 +65,6 @@ namespace Ninject.Infrastructure.Introspection
         /// <returns>The exception message.</returns>
         public static string ModuleWithSameNameIsAlreadyLoaded(INinjectModule newModule, INinjectModule existingModule)
         {
-
             using (var sw = new StringWriter())
             {
                 sw.WriteLine("Error loading module '{0}' of type {1}", newModule.Name, newModule.GetType().Format());
@@ -72,7 +72,7 @@ namespace Ninject.Infrastructure.Introspection
 
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that you have not accidentally loaded the same module twice.");
-#if !SILVERLIGHT
+#if !NO_ASSEMBLY_SCANNING
                 sw.WriteLine("  2) If you are using automatic module loading, ensure you have not manually loaded a module");
                 sw.WriteLine("     that may be found by the module loader.");
 #endif
@@ -118,6 +118,7 @@ namespace Ninject.Infrastructure.Introspection
                 {
                     sw.WriteLine("  {0}) {1}", i + 1, formattedMatchingBindings[i]);
                 }
+
                 sw.WriteLine("Activation path:");
                 sw.WriteLine(request.FormatActivationPath());
 
@@ -148,7 +149,7 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
                 sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
                 sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
-#if !SILVERLIGHT
+#if !NO_ASSEMBLY_SCANNING
                 sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
 #endif
 

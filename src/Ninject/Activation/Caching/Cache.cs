@@ -1,18 +1,31 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="Cache.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Caching
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
-
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
@@ -37,6 +50,9 @@ namespace Ninject.Activation.Caching
         /// <param name="cachePruner">The cache pruner component.</param>
         public Cache(IPipeline pipeline, ICachePruner cachePruner)
         {
+            Contract.Requires(pipeline != null);
+            Contract.Requires(cachePruner != null);
+
             this.Pipeline = pipeline;
             cachePruner.Start(this);
         }
@@ -57,10 +73,10 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed)
+            if (disposing && !this.IsDisposed)
             {
                 this.Clear();
             }
@@ -143,7 +159,7 @@ namespace Ninject.Activation.Caching
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
         public bool Release(object instance)
         {
-            lock(this.entries)
+            lock (this.entries)
             {
                 var instanceFound = false;
                 foreach (var bindingEntry in this.entries.Values.SelectMany(bindingEntries => bindingEntries.Values).ToList())
@@ -208,7 +224,7 @@ namespace Ninject.Activation.Caching
         }
 
         /// <summary>
-        /// Gets all entries for a binding withing the selected scope.
+        /// Gets all entries for a binding within the selected scope.
         /// </summary>
         /// <param name="bindings">The bindings.</param>
         /// <returns>All bindings of a binding.</returns>

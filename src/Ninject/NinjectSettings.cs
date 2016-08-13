@@ -1,22 +1,33 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using Ninject.Activation;
-using Ninject.Infrastructure;
-
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="NinjectSettings.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
+    using System;
+    using System.Collections.Generic;
+    using Ninject.Activation;
+    using Ninject.Infrastructure;
+
     /// <summary>
     /// Contains configuration options for Ninject.
     /// </summary>
@@ -27,7 +38,8 @@ namespace Ninject
         /// <summary>
         /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
         /// </summary>
-        public NinjectSettings() : this(new Dictionary<string, object>())
+        public NinjectSettings()
+            : this(new Dictionary<string, object>())
         {
         }
 
@@ -38,26 +50,18 @@ namespace Ninject
         private NinjectSettings(IDictionary<string, object> values)
         {
             this.values = values;
-
-#if SILVERLIGHT
-            InjectNonPublic = false;
-            InjectParentPrivateProperties = false;
-
-#endif
-
 #if NO_LCG
-            UseReflectionBasedInjection = false;
+            this.UseReflectionBasedInjection = false;
 #endif
         }
-
 
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
         /// </summary>
         public Type InjectAttribute
         {
-            get { return Get("InjectAttribute", typeof(InjectAttribute)); }
-            set { Set("InjectAttribute", value); }
+            get { return this.Get("InjectAttribute", typeof(InjectAttribute)); }
+            set { this.Set("InjectAttribute", value); }
         }
 
         /// <summary>
@@ -65,8 +69,8 @@ namespace Ninject
         /// </summary>
         public TimeSpan CachePruningInterval
         {
-            get { return Get("CachePruningInterval", TimeSpan.FromSeconds(30)); }
-            set { Set("CachePruningInterval", value); }
+            get { return this.Get("CachePruningInterval", TimeSpan.FromSeconds(30)); }
+            set { this.Set("CachePruningInterval", value); }
         }
 
         /// <summary>
@@ -74,18 +78,17 @@ namespace Ninject
         /// </summary>
         public Func<IContext, object> DefaultScopeCallback
         {
-            get { return Get("DefaultScopeCallback", StandardScopeCallbacks.Transient); }
-            set { Set("DefaultScopeCallback", value); }
+            get { return this.Get("DefaultScopeCallback", StandardScopeCallbacks.Transient); }
+            set { this.Set("DefaultScopeCallback", value); }
         }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
         public bool LoadExtensions
         {
-            get { return Get("LoadExtensions", true); }
-            set { Set("LoadExtensions", value); }
+            get { return this.Get("LoadExtensions", true); }
+            set { this.Set("LoadExtensions", value); }
         }
 
         /// <summary>
@@ -93,31 +96,31 @@ namespace Ninject
         /// </summary>
         public string[] ExtensionSearchPatterns
         {
-            get { return Get("ExtensionSearchPatterns", new [] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
-            set { Set("ExtensionSearchPatterns", value); }
+            get { return this.Get("ExtensionSearchPatterns", new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
+            set { this.Set("ExtensionSearchPatterns", value); }
         }
 
         /// <summary>
-        /// Gets a value indicating whether Ninject should use reflection-based injection instead of
+        /// Gets or sets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
         /// </summary>
         public bool UseReflectionBasedInjection
         {
-            get { return Get("UseReflectionBasedInjection", false); }
-            set { Set("UseReflectionBasedInjection", value); }
-        }
-        
-        /// <summary>
-        /// Gets a value indicating whether Ninject should inject non public members.
-        /// </summary>
-        public bool InjectNonPublic
-        {
-            get { return Get("InjectNonPublic", false); }
-            set { Set("InjectNonPublic", value); }
+            get { return this.Get("UseReflectionBasedInjection", false); }
+            set { this.Set("UseReflectionBasedInjection", value); }
         }
 
         /// <summary>
-        /// Gets a value indicating whether Ninject should inject private properties of base classes.
+        /// Gets or sets a value indicating whether Ninject should inject non public members.
+        /// </summary>
+        public bool InjectNonPublic
+        {
+            get { return this.Get("InjectNonPublic", false); }
+            set { this.Set("InjectNonPublic", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
         /// <remarks>
         /// Activating this setting has an impact on the performance. It is recommended not
@@ -137,7 +140,7 @@ namespace Ninject
         /// Bind{IA}().ToMethod(ctx =&gt; kernel.Get{IA}();
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
+        ///     <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
         /// </value>
         public bool ActivationCacheDisabled
         {
@@ -150,7 +153,7 @@ namespace Ninject
         /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if null is allowed as injected value otherwise false.
+        ///     <c>true</c> if null is allowed as injected value otherwise false.
         /// </value>
         public bool AllowNullInjection
         {

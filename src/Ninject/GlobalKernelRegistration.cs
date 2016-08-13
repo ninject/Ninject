@@ -1,8 +1,11 @@
 ﻿//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="GlobalKernelRegistration.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2011 Ninject Project Contributors
-//   Authors: Remo Gloor (remo.gloor@gmail.com)
-//           
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -32,15 +35,17 @@ namespace Ninject
     /// </summary>
     public abstract class GlobalKernelRegistration
     {
-        private static readonly ReaderWriterLockSlim kernelRegistrationsLock = new ReaderWriterLockSlim();
+        private static readonly ReaderWriterLockSlim KernelRegistrationsLock = new ReaderWriterLockSlim();
 
-        private static readonly IDictionary<Type, Registration> kernelRegistrations = new Dictionary<Type, Registration>(); 
+        private static readonly IDictionary<Type, Registration> KernelRegistrations = new Dictionary<Type, Registration>();
 
+        /// <summary>
+        /// Registers the kernel for the specified type.
+        /// </summary>
+        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="type">The service type.</param>
         internal static void RegisterKernelForType(IReadOnlyKernel kernel, Type type)
         {
- #if PCL
-            throw new NotImplementedException();
-#else
             var registration = GetRegistrationForType(type);
 
             registration.KernelLock.EnterReadLock();
@@ -51,21 +56,19 @@ namespace Ninject
             }
             finally
             {
-
                 registration.KernelLock.ExitReadLock();
-
             }
-#endif
         }
 
+        /// <summary>
+        /// Un-registers the kernel for the specified type.
+        /// </summary>
+        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="type">The service type.</param>
         internal static void UnregisterKernelForType(IReadOnlyKernel kernel, Type type)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             var registration = GetRegistrationForType(type);
             RemoveKernels(registration, registration.Kernels.Where(reference => reference.Target == kernel || !reference.IsAlive));
-#endif
         }
 
         /// <summary>
@@ -74,15 +77,10 @@ namespace Ninject
         /// <param name="action">The action.</param>
         protected void MapKernels(Action<IReadOnlyKernel> action)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            bool requiresCleanup = false;
+            var requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
 
             registration.KernelLock.EnterReadLock();
-
-
 
             try
             {
@@ -101,24 +99,17 @@ namespace Ninject
             }
             finally
             {
-
                 registration.KernelLock.ExitReadLock();
-
             }
 
             if (requiresCleanup)
             {
                 RemoveKernels(registration, registration.Kernels.Where(reference => !reference.IsAlive));
             }
-#endif
         }
-        
+
         private static void RemoveKernels(Registration registration, IEnumerable<WeakReference> references)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-
             registration.KernelLock.ExitReadLock();
 
             try
@@ -130,78 +121,63 @@ namespace Ninject
             }
             finally
             {
-
                 registration.KernelLock.ExitReadLock();
-
             }
-#endif
         }
 
         private static Registration GetRegistrationForType(Type type)
         {
-
-            kernelRegistrationsLock.EnterUpgradeableReadLock();
+            KernelRegistrationsLock.EnterUpgradeableReadLock();
             try
             {
                 Registration registration;
-                if (kernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out registration))
                 {
                     return registration;
                 }
-                
+
                 return CreateNewRegistration(type);
             }
             finally
             {
-
-                kernelRegistrationsLock.ExitUpgradeableReadLock();
-
+                KernelRegistrationsLock.ExitUpgradeableReadLock();
             }
-
         }
 
         private static Registration CreateNewRegistration(Type type)
         {
-
-            kernelRegistrationsLock.EnterWriteLock();
+            KernelRegistrationsLock.EnterWriteLock();
 
             try
             {
                 Registration registration;
-                if (kernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out registration))
                 {
                     return registration;
                 }
 
                 registration = new Registration();
-                kernelRegistrations.Add(type, registration);
+                KernelRegistrations.Add(type, registration);
                 return registration;
             }
             finally
             {
-
-                kernelRegistrationsLock.ExitWriteLock();
-
+                KernelRegistrationsLock.ExitWriteLock();
             }
-
         }
 
         private class Registration
         {
-#if !PCL
             public Registration()
             {
-
                 this.KernelLock = new ReaderWriterLockSlim();
 
                 this.Kernels = new List<WeakReference>();
             }
 
-
             public ReaderWriterLockSlim KernelLock { get; private set; }
 
             public IList<WeakReference> Kernels { get; private set; }
-#endif
         }
     }
 }

@@ -1,20 +1,31 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using Ninject.Activation;
-
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="INinjectSettings.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
+    using System;
+    using Ninject.Activation;
+
     /// <summary>
     /// Contains configuration options for Ninject.
     /// </summary>
@@ -47,29 +58,25 @@ namespace Ninject
         string[] ExtensionSearchPatterns { get; }
         #endif //!NO_ASSEMBLY_SCANNING
 
-   
         /// <summary>
         /// Gets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
         /// </summary>
         bool UseReflectionBasedInjection { get; }
 
-
-  
         /// <summary>
-        /// Gets a value indicating whether Ninject should inject non public members.
+        /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
         bool InjectNonPublic { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether Ninject should inject private properties of base classes.
+        /// Gets or sets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
         /// <remarks>
         /// Activating this setting has an impact on the performance. It is recommended not
         /// to use this feature and use constructor injection instead.
         /// </remarks>
         bool InjectParentPrivateProperties { get; set; }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

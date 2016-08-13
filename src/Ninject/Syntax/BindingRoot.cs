@@ -1,10 +1,10 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingRoot.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -19,11 +19,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
     using System;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Ninject.Infrastructure;
@@ -49,16 +50,12 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            Type service = typeof(T);
+            var service = typeof(T);
 
             var binding = new Binding(service);
             this.AddBinding(binding);
 
             return new BindingBuilder<T>(binding, this.Settings, service.Format());
-#endif
         }
 
         /// <summary>
@@ -69,16 +66,12 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
             return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
-#endif
         }
 
         /// <summary>
@@ -90,9 +83,6 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
@@ -100,7 +90,6 @@ namespace Ninject.Syntax
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
             return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
-#endif
         }
 
         /// <summary>
@@ -113,9 +102,6 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             var firstBinding = new Binding(typeof(T1));
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
@@ -124,7 +110,6 @@ namespace Ninject.Syntax
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
             return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
-#endif
         }
 
         /// <summary>
@@ -134,13 +119,11 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            Ensure.ArgumentNotNull(services, "service");
+            Contract.Requires(services != null);
+
             if (services.Length == 0)
             {
-                throw new ArgumentException("The services must contain at least one type", "services");                
+                throw new ArgumentException("The services must contain at least one type", "services");
             }
 
             var firstBinding = new Binding(services[0]);
@@ -148,11 +131,10 @@ namespace Ninject.Syntax
 
             foreach (var service in services.Skip(1))
             {
-                this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));                
+                this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
             }
 
             return new BindingBuilder<object>(firstBinding, this.Settings, string.Join(", ", services.Select(service => service.Format()).ToArray()));
-#endif
         }
 
         /// <summary>
@@ -161,7 +143,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T">The service to unbind.</typeparam>
         public void Unbind<T>()
         {
-            Unbind(typeof(T));
+            this.Unbind(typeof(T));
         }
 
         /// <summary>
@@ -177,8 +159,8 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1> Rebind<T1>()
         {
-            Unbind<T1>();
-            return Bind<T1>();
+            this.Unbind<T1>();
+            return this.Bind<T1>();
         }
 
         /// <summary>
@@ -189,9 +171,9 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2> Rebind<T1, T2>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            return Bind<T1, T2>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            return this.Bind<T1, T2>();
         }
 
         /// <summary>
@@ -203,10 +185,10 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3> Rebind<T1, T2, T3>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            Unbind<T3>();
-            return Bind<T1, T2, T3>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            this.Unbind<T3>();
+            return this.Bind<T1, T2, T3>();
         }
 
         /// <summary>
@@ -219,11 +201,11 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Rebind<T1, T2, T3, T4>()
         {
-            Unbind<T1>();
-            Unbind<T2>();
-            Unbind<T3>();
-            Unbind<T4>();
-            return Bind<T1, T2, T3, T4>();
+            this.Unbind<T1>();
+            this.Unbind<T2>();
+            this.Unbind<T3>();
+            this.Unbind<T4>();
+            return this.Bind<T1, T2, T3, T4>();
         }
 
         /// <summary>
@@ -235,10 +217,10 @@ namespace Ninject.Syntax
         {
             foreach (var service in services)
             {
-                Unbind(service);                
+                this.Unbind(service);
             }
 
-            return Bind(services);
+            return this.Bind(services);
         }
 
         /// <summary>

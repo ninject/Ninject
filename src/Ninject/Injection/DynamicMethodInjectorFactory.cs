@@ -1,24 +1,34 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#if !NO_LCG
-#region Using Directives
-using System;
-using System.Reflection;
-#if !PCL
-using System.Reflection.Emit;
-#endif
-using Ninject.Components;
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="DynamicMethodInjectorFactory.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
+#if !NO_LCG
 namespace Ninject.Injection
 {
+    using System;
+    using System.Reflection;
+    using System.Reflection.Emit;
+    using Ninject.Components;
+
     /// <summary>
     /// Creates injectors for members via DynamicMethods.
     /// </summary>
@@ -31,31 +41,21 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            #if SILVERLIGHT
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) });
-            #else
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) }, true);
-            #endif
 
-            ILGenerator il = dynamicMethod.GetILGenerator();
+            var il = dynamicMethod.GetILGenerator();
 
             EmitLoadMethodArguments(il, constructor);
             il.Emit(OpCodes.Newobj, constructor);
 
-#if !WINRT
-            if (constructor.ReflectedType.IsValueType)
-                il.Emit(OpCodes.Box, constructor.ReflectedType);
-#else
             if (constructor.DeclaringType.GetTypeInfo().IsValueType)
+            {
                 il.Emit(OpCodes.Box, constructor.DeclaringType);
-#endif
+            }
+
             il.Emit(OpCodes.Ret);
 
-            return (ConstructorInjector) dynamicMethod.CreateDelegate(typeof(ConstructorInjector));
-#endif
+            return (ConstructorInjector)dynamicMethod.CreateDelegate(typeof(ConstructorInjector));
         }
 
         /// <summary>
@@ -65,16 +65,13 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public PropertyInjector Create(PropertyInfo property)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            #if NO_SKIP_VISIBILITY
+#if NO_SKIP_VISIBILITY
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
-            #else
+#else
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
-            #endif
-            
-            ILGenerator il = dynamicMethod.GetILGenerator();
+#endif
+
+            var il = dynamicMethod.GetILGenerator();
 
             il.Emit(OpCodes.Ldarg_0);
             EmitUnboxOrCast(il, property.DeclaringType);
@@ -82,23 +79,12 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ldarg_1);
             EmitUnboxOrCast(il, property.PropertyType);
 
-            #if !SILVERLIGHT
-            bool injectNonPublic = Settings.InjectNonPublic;
-            #else
-            const bool injectNonPublic = false;
-            #endif // !SILVERLIGHT
+            var injectNonPublic = this.Settings.InjectNonPublic;
 
-            EmitMethodCall(il, 
-#if !WINRT
-                property.GetSetMethod(injectNonPublic)
-#else
-                property.SetMethod
-#endif
-                );
+            EmitMethodCall(il, property.GetSetMethod(injectNonPublic));
             il.Emit(OpCodes.Ret);
 
-            return (PropertyInjector) dynamicMethod.CreateDelegate(typeof(PropertyInjector));
-#endif
+            return (PropertyInjector)dynamicMethod.CreateDelegate(typeof(PropertyInjector));
         }
 
         /// <summary>
@@ -108,16 +94,13 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public MethodInjector Create(MethodInfo method)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            #if NO_SKIP_VISIBILITY
+#if NO_SKIP_VISIBILITY
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
-            #else
+#else
             var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, true);
-            #endif
+#endif
 
-            ILGenerator il = dynamicMethod.GetILGenerator();
+            var il = dynamicMethod.GetILGenerator();
 
             il.Emit(OpCodes.Ldarg_0);
             EmitUnboxOrCast(il, method.DeclaringType);
@@ -126,20 +109,20 @@ namespace Ninject.Injection
             EmitMethodCall(il, method);
 
             if (method.ReturnType != typeof(void))
+            {
                 il.Emit(OpCodes.Pop);
+            }
 
             il.Emit(OpCodes.Ret);
 
-            return (MethodInjector) dynamicMethod.CreateDelegate(typeof(MethodInjector));
-#endif
+            return (MethodInjector)dynamicMethod.CreateDelegate(typeof(MethodInjector));
         }
 
-#if !NETSTANDARD1_3
         private static void EmitLoadMethodArguments(ILGenerator il, MethodBase targetMethod)
         {
-            ParameterInfo[] parameters = targetMethod.GetParameters();
-            OpCode ldargOpcode = targetMethod is ConstructorInfo ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1;
-            
+            var parameters = targetMethod.GetParameters();
+            var ldargOpcode = targetMethod is ConstructorInfo ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1;
+
             for (int idx = 0; idx < parameters.Length; idx++)
             {
                 il.Emit(ldargOpcode);
@@ -152,17 +135,13 @@ namespace Ninject.Injection
 
         private static void EmitMethodCall(ILGenerator il, MethodInfo method)
         {
-            OpCode opCode = method.IsFinal ? OpCodes.Call : OpCodes.Callvirt;
+            var opCode = method.IsFinal ? OpCodes.Call : OpCodes.Callvirt;
             il.Emit(opCode, method);
         }
 
         private static void EmitUnboxOrCast(ILGenerator il, Type type)
         {
-            OpCode opCode = type
-#if WINRT
-                .GetTypeInfo()
-#endif
-                .IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass;
+            var opCode = type.GetTypeInfo().IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass;
             il.Emit(opCode, type);
         }
 
@@ -170,7 +149,6 @@ namespace Ninject.Injection
         {
             return "DynamicInjector" + Guid.NewGuid().ToString("N");
         }
-#endif
     }
 }
 #endif //!NO_LCG

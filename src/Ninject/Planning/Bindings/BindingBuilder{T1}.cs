@@ -1,10 +1,11 @@
 ﻿//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingBuilder{T1}.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -27,7 +28,6 @@ namespace Ninject.Planning.Bindings
     using System.Linq.Expressions;
     using Ninject.Activation;
     using Ninject.Activation.Providers;
-    using Ninject.Infrastructure;
     using Ninject.Syntax;
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace Ninject.Planning.Bindings
         /// Gets the binding being built.
         /// </summary>
         public IBinding Binding { get; private set; }
-      
+
         /// <summary>
         /// Indicates that the service should be self-bound.
         /// </summary>

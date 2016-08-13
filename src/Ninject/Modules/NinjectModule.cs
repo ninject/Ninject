@@ -1,10 +1,11 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="NinjectModule.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -21,14 +22,11 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-using Ninject.Infrastructure.Language;
-
 namespace Ninject.Modules
 {
     using System;
     using System.Collections.Generic;
-
-    using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
 
@@ -70,20 +68,20 @@ namespace Ninject.Modules
         /// </summary>
         /// <value>The kernel configuration that the module is loaded into.</value>
         public IKernelConfiguration KernelConfiguration { get; private set; }
-        
+
         /// <summary>
         /// Gets the module's name. Only a single module with a given name can be loaded at one time.
         /// </summary>
         public virtual string Name
         {
-            get { return GetType().FullName; }
+            get { return this.GetType().FullName; }
         }
 
         /// <summary>
         /// Gets the bindings that were registered by the module.
         /// </summary>
         public ICollection<IBinding> Bindings { get; private set; }
-        
+
         /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>

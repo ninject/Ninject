@@ -1,19 +1,30 @@
-#region License
-// 
-// Author: Remo Gloor (remo.gloor@bbv.ch)
-// Copyright (c) 2010, bbv Software Services AG
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="ReferenceEqualWeakReference.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
+
 namespace Ninject.Infrastructure
 {
     using System;
     using System.Runtime.CompilerServices;
-#if SILVERLIGHT
-    using WeakReference = BaseWeakReference;
-#endif
 
     /// <summary>
     /// Weak reference that can be used in collections. It is equal to the
@@ -27,9 +38,9 @@ namespace Ninject.Infrastructure
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
         /// </summary>
         /// <param name="target">The target.</param>
-        public ReferenceEqualWeakReference(object target) : base(target)
+        public ReferenceEqualWeakReference(object target)
+            : base(target)
         {
-
             this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
@@ -38,7 +49,8 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="target">The target.</param>
         /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
-        public ReferenceEqualWeakReference(object target, bool trackResurrection) : base(target, trackResurrection)
+        public ReferenceEqualWeakReference(object target, bool trackResurrection)
+            : base(target, trackResurrection)
         {
             this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
         }
@@ -70,7 +82,7 @@ namespace Ninject.Infrastructure
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {

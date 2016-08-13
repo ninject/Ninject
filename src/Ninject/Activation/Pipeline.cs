@@ -1,16 +1,30 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="Pipeline.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using Ninject.Activation.Caching;
     using Ninject.Activation.Strategies;
@@ -35,8 +49,8 @@ namespace Ninject.Activation
         /// <param name="activationCache">The activation cache.</param>
         public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
-            Ensure.ArgumentNotNull(strategies, "strategies");
-            Ensure.ArgumentNotNull(activationCache, "activationCache");
+            Contract.Requires(strategies != null);
+            Contract.Requires(activationCache != null);
 
             this.Strategies = strategies.ToList();
             this.activationCache = activationCache;
@@ -54,8 +68,8 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
 
             if (!this.activationCache.IsActivated(reference.Instance))
             {
@@ -70,8 +84,8 @@ namespace Ninject.Activation
         /// <param name="reference">The instance reference.</param>
         public void Deactivate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Contract.Requires(context != null);
+            Contract.Requires(reference != null);
 
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {

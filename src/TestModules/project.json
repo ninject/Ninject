@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Ninject": "3.2.5-beta"
+  },
+  "buildOptions": {
+    "outputName": "Ninject.Tests.TestModule"
+  },
+  "frameworks": {
+    "net45": {
+    }
+  }
+}

@@ -1,28 +1,34 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-
-
+//-------------------------------------------------------------------------------------------------
+// <copyright file="GarbageCollectionCachePruner.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Caching
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Threading;
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
-
-#if WINRT
-    using Windows.System.Threading;
-#endif
-
 
     /// <summary>
     /// Uses a <see cref="Timer"/> and some <see cref="WeakReference"/> magic to poll
@@ -34,30 +40,29 @@ namespace Ninject.Activation.Caching
         /// indicator for if GC has been run.
         /// </summary>
         private readonly WeakReference indicator = new WeakReference(new object());
-        
+
         /// <summary>
         /// The caches that are being pruned.
         /// </summary>
         private readonly List<IPruneable> caches = new List<IPruneable>();
 
         /// <summary>
-        /// The timer used to trigger the cache pruning
+        /// The timer used to trigger the cache pruning.
         /// </summary>
-#if !WINRT
         private Timer timer;
-#else
-        private ThreadPoolTimer timer;
-#endif
-#if !PCL
+
+        /// <summary>
+        /// The flag to indicate whether the cache pruning is stopped or not.
+        /// </summary>
         private bool stop;
-#endif
 
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
+        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
-            if (disposing && !IsDisposed && this.timer != null)
+            if (disposing && !this.IsDisposed && this.timer != null)
             {
                 this.Stop();
             }
@@ -74,13 +79,7 @@ namespace Ninject.Activation.Caching
             this.caches.Add(pruneable);
             if (this.timer == null)
             {
-#if !WINRT
                 this.timer = new Timer(this.PruneCacheIfGarbageCollectorHasRun, null, this.GetTimeoutInMilliseconds(), Timeout.Infinite);
-#else
-                
-                this.timer = ThreadPoolTimer.CreatePeriodicTimer(t => this.PruneCacheIfGarbageCollectorHasRun(null),
-                                                                 TimeSpan.FromMilliseconds(this.GetTimeoutInMilliseconds()));
-#endif
             }
         }
 
@@ -89,39 +88,18 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Stop()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             lock (this)
             {
                 this.stop = true;
             }
 
-            using (var signal = new ManualResetEvent(false))
-            {
-#if !WINRT
-#if NETSTANDARD1_3
-                this.timer.Dispose();
-#else
-                this.timer.Dispose(signal);
-
-                signal.WaitOne();
-#endif
-#else
-                this.timer.Cancel();
-#endif
-
-                this.timer = null;
-                this.caches.Clear();
-            }
-#endif
+            this.timer.Dispose();
+            this.timer = null;
+            this.caches.Clear();
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             lock (this)
             {
                 if (this.stop)
@@ -141,17 +119,14 @@ namespace Ninject.Activation.Caching
                 }
                 finally
                 {
-#if !WINRT
                     this.timer.Change(this.GetTimeoutInMilliseconds(), Timeout.Infinite);
-#endif
                 }
             }
-#endif
         }
 
         private int GetTimeoutInMilliseconds()
         {
-            TimeSpan interval = Settings.CachePruningInterval;
+            var interval = this.Settings.CachePruningInterval;
             return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
         }
     }

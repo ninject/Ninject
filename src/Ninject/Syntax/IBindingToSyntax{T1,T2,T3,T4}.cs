@@ -1,10 +1,10 @@
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="IBindingToSyntax{T1,T2,T3,T4}.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -19,7 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
@@ -41,7 +41,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TImplementation">The implementation type.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>() 
+        IBindingWhenInNamedWithOrOnSyntax<TImplementation> To<TImplementation>()
             where TImplementation : T1, T2, T3, T4;
 
         /// <summary>
@@ -57,7 +57,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<object> ToProvider<TProvider>() where TProvider : IProvider;
+        IBindingWhenInNamedWithOrOnSyntax<object> ToProvider<TProvider>()
+            where TProvider : IProvider;
 
         /// <summary>
         /// Indicates that the service should be bound to an instance of the specified provider type.
@@ -66,7 +67,7 @@ namespace Ninject.Syntax
         /// <typeparam name="TProvider">The type of provider to activate.</typeparam>
         /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProvider<TProvider, TImplementation>() 
+        IBindingWhenInNamedWithOrOnSyntax<TImplementation> ToProvider<TProvider, TImplementation>()
             where TProvider : IProvider<TImplementation>
             where TImplementation : T1, T2, T3, T4;
 

@@ -1,15 +1,19 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="StandardProvider.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2014 Ninject Project Contributors
-// 
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   You may not use this file except in compliance with one of the Licenses.
+//   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
-// 
+//
 //       http://www.apache.org/licenses/LICENSE-2.0
 //   or
 //       http://www.microsoft.com/opensource/licenses.mspx
-// 
+//
 //   Unless required by applicable law or agreed to in writing, software
 //   distributed under the License is distributed on an "AS IS" BASIS,
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,16 +24,17 @@
 
 namespace Ninject.Activation.Providers
 {
-using System;
-using System.Linq;
+    using System;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Reflection;
-using Ninject.Infrastructure.Introspection;
+    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
-using Ninject.Parameters;
+    using Ninject.Parameters;
     using Ninject.Planning.Bindings;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-using Ninject.Selection;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+    using Ninject.Selection;
     using Ninject.Selection.Heuristics;
 
     /// <summary>
@@ -44,6 +49,9 @@ using Ninject.Selection;
         /// <param name="constructorScorer">The constructor scorer component.</param>
         public StandardProvider(Type type, IConstructorScorer constructorScorer)
         {
+            Contract.Requires(type != null);
+            Contract.Requires(constructorScorer != null);
+
             this.Type = type;
             this.ConstructorScorer = constructorScorer;
         }
@@ -57,6 +65,49 @@ using Ninject.Selection;
         /// Gets the selector component.
         /// </summary>
         public IConstructorScorer ConstructorScorer { get; private set; }
+
+        /// <summary>
+        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
+        /// for the specified type.
+        /// </summary>
+        /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The created callback.</returns>
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
+        {
+            var provider = new StandardProvider(prototype, selector.ConstructorScorer);
+            return ctx => provider;
+        }
+
+        /// <summary>
+        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
+        /// for the specified type and constructor.
+        /// </summary>
+        /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="constructor">The constructor.</param>
+        /// <returns>The created callback.</returns>
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
+        {
+            var provider = new StandardProvider(prototype, new SpecificConstructorSelector(constructor));
+            return ctx => provider;
+        }
+
+        /// <summary>
+        /// Assigns the provider callback to the building configuration.
+        /// </summary>
+        /// <param name="bindingConfiguration">
+        /// The building configuration.
+        /// </param>
+        /// <param name="prototype">
+        /// The prototype.
+        /// </param>
+        public static void AssignProviderCallback(IBindingConfiguration bindingConfiguration, Type prototype)
+        {
+            var provider = new StandardProvider(prototype, null);
+            bindingConfiguration.ProviderCallback = ctx => provider;
+            bindingConfiguration.InitializeProviderCallback =
+                selector => provider.ConstructorScorer = selector.ConstructorScorer;
+        }
 
         /// <summary>
         /// Creates an instance within the specified context.
@@ -96,58 +147,9 @@ using Ninject.Selection;
         /// <returns>The implementation type that will be activated.</returns>
         public Type GetImplementationType(Type service)
         {
-            return Type.GetTypeInfo().ContainsGenericParameters ? 
-                Type.MakeGenericType(service.GetTypeInfo().GenericTypeArguments) : 
-                Type;
-        }
-
-        /// <summary>
-        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
-        /// for the specified type.
-        /// </summary>
-        /// <param name="prototype">
-        /// The prototype the provider instance will create.
-        /// </param>
-        /// <param name="selector">
-        /// The selector.
-        /// </param>
-        /// <returns>
-        /// The created callback.
-        /// </returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ISelector selector)
-        {
-            var provider = new StandardProvider(prototype, selector.ConstructorScorer);
-            return ctx => provider;
-        }
-
-        /// <summary>
-        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
-        /// for the specified type and constructor.
-        /// </summary>
-        /// <param name="prototype">The prototype the provider instance will create.</param>
-        /// <param name="constructor">The constructor.</param>
-        /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
-        {
-            var provider = new StandardProvider(prototype, new SpecificConstructorSelector(constructor));
-            return ctx => provider;
-        }
-
-        /// <summary>
-        /// Assigns the provider callback to the building configuration.
-        /// </summary>
-        /// <param name="bindingConfiguration">
-        /// The building configuration.
-        /// </param>
-        /// <param name="prototype">
-        /// The prototype.
-        /// </param>
-        public static void AssignProviderCallback(IBindingConfiguration bindingConfiguration, Type prototype)
-        {
-            var provider = new StandardProvider(prototype, null);
-            bindingConfiguration.ProviderCallback = ctx => provider;
-            bindingConfiguration.InitializeProviderCallback =
-                selector => provider.ConstructorScorer = selector.ConstructorScorer;
+            return this.Type.GetTypeInfo().ContainsGenericParameters ?
+                this.Type.MakeGenericType(service.GetTypeInfo().GenericTypeArguments) :
+                this.Type;
         }
 
         private ConstructorInjectionDirective DetermineConstructorInjectionDirective(IContext context)
@@ -157,7 +159,8 @@ using Ninject.Selection;
             {
                 return directives[0];
             }
-            IGrouping<int, ConstructorInjectionDirective> bestDirectives =
+
+            var bestDirectives =
                 directives
                     .GroupBy(option => this.ConstructorScorer.Score(context, option))
                     .OrderByDescending(g => g.Key)

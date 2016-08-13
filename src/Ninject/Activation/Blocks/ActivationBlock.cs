@@ -1,24 +1,36 @@
-#region License
-// 
-// Author: Nate Kohari <nate@enkari.com>
-// Copyright (c) 2007-2010, Enkari, Ltd.
-// 
-// Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-// See the file LICENSE.txt for details.
-// 
-#endregion
-#region Using Directives
-using System;
-using System.Collections.Generic;
-using Ninject.Infrastructure;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-#endregion
+//-------------------------------------------------------------------------------------------------
+// <copyright file="ActivationBlock.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Blocks
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Ninject.Infrastructure.Disposal;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+
     /// <summary>
     /// A block used for deterministic disposal of activated instances. When the block is
     /// disposed, all instances activated via it will be deactivated.
@@ -26,42 +38,19 @@ namespace Ninject.Activation.Blocks
     public class ActivationBlock : DisposableObject, IActivationBlock
     {
         /// <summary>
-        /// Gets or sets the parent resolution root (usually the kernel).
-        /// </summary>
-        public IResolutionRoot Parent { get; private set; }
-
-        /// <summary>
-        /// Occurs when the object is disposed.
-        /// </summary>
-        public event EventHandler Disposed;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ActivationBlock"/> class.
         /// </summary>
         /// <param name="parent">The parent resolution root.</param>
         public ActivationBlock(IResolutionRoot parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
-            Parent = parent;
+            Contract.Requires(parent != null);
+            this.Parent = parent;
         }
 
         /// <summary>
-        /// Releases resources held by the object.
+        /// Gets the parent resolution root (usually the kernel).
         /// </summary>
-        public override void Dispose(bool disposing)
-        {
-            lock (this)
-            {
-                if (disposing && !IsDisposed)
-                {
-                    var evt = Disposed;
-                    if (evt != null) evt(this, EventArgs.Empty);
-                    Disposed = null;
-                }
-
-                base.Dispose(disposing);
-            }
-        }
+        public IResolutionRoot Parent { get; private set; }
 
         /// <summary>
         /// Injects the specified existing instance, without managing its lifecycle.
@@ -70,7 +59,7 @@ namespace Ninject.Activation.Blocks
         /// <param name="parameters">The parameters to pass to the request.</param>
         public void Inject(object instance, params IParameter[] parameters)
         {
-            Parent.Inject(instance, parameters);
+            this.Parent.Inject(instance, parameters);
         }
 
         /// <summary>
@@ -80,7 +69,7 @@ namespace Ninject.Activation.Blocks
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.Parent.CanResolve(request);
         }
 
@@ -94,7 +83,7 @@ namespace Ninject.Activation.Blocks
         /// </returns>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Contract.Requires(request != null);
             return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
@@ -106,8 +95,8 @@ namespace Ninject.Activation.Blocks
         /// <returns>An enumerator of instances that match the request.</returns>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
-            return Parent.Resolve(request);
+            Contract.Requires(request != null);
+            return this.Parent.Resolve(request);
         }
 
         /// <summary>
@@ -121,8 +110,8 @@ namespace Ninject.Activation.Blocks
         /// <returns>The created request.</returns>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Contract.Requires(service != null);
+            Contract.Requires(parameters != null);
             return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
         }
 
@@ -131,10 +120,9 @@ namespace Ninject.Activation.Blocks
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
-        /// <remarks></remarks>
         public bool Release(object instance)
         {
-            return Parent.Release(instance);
+            return this.Parent.Release(instance);
         }
     }
 }

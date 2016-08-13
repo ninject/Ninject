@@ -1,0 +1,10 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "outputName": "Ninject.Tests.TestAssembly"
+  },
+  "frameworks": {
+    "net45": {
+    }
+  }
+}

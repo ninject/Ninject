@@ -1,8 +1,30 @@
+//-------------------------------------------------------------------------------------------------
+// <copyright file="ActivationCache.cs" company="Ninject Project Contributors">
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
+//   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
+//   you may not use this file except in compliance with one of the Licenses.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//   or
+//       http://www.microsoft.com/opensource/licenses.mspx
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+// </copyright>
+//-------------------------------------------------------------------------------------------------
+
 namespace Ninject.Activation.Caching
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Diagnostics.Contracts;
     using Ninject.Components;
     using Ninject.Infrastructure;
 
@@ -11,17 +33,6 @@ namespace Ninject.Activation.Caching
     /// </summary>
     public class ActivationCache : NinjectComponent, IActivationCache, IPruneable
     {
-#if WINDOWS_PHONE || MONO
-        /// <summary>
-        /// The objects that were activated as reference equal weak references.
-        /// </summary>
-        private readonly IDictionary<object, bool> activatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
-
-        /// <summary>
-        /// The objects that were activated as reference equal weak references.
-        /// </summary>
-        private readonly IDictionary<object, bool> deactivatedObjects = new Dictionary<object, bool>(new WeakReferenceEqualityComparer());
-#else
         /// <summary>
         /// The objects that were activated as reference equal weak references.
         /// </summary>
@@ -31,7 +42,6 @@ namespace Ninject.Activation.Caching
         /// The objects that were activated as reference equal weak references.
         /// </summary>
         private readonly HashSet<object> deactivatedObjects = new HashSet<object>(new WeakReferenceEqualityComparer());
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivationCache"/> class.
@@ -39,10 +49,10 @@ namespace Ninject.Activation.Caching
         /// <param name="cachePruner">The cache pruner.</param>
         public ActivationCache(ICachePruner cachePruner)
         {
-            Ensure.ArgumentNotNull(cachePruner, "cachePruner");
+            Contract.Requires(cachePruner != null);
             cachePruner.Start(this);
         }
-        
+
         /// <summary>
         /// Gets the activated object count.
         /// </summary>
@@ -66,7 +76,7 @@ namespace Ninject.Activation.Caching
                 return this.deactivatedObjects.Count;
             }
         }
-        
+
         /// <summary>
         /// Clears the cache.
         /// </summary>
@@ -89,18 +99,10 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddActivatedInstance(object instance)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             lock (this.activatedObjects)
             {
-#if WINDOWS_PHONE || MONO || PCL
-                this.activatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
-#else
                 this.activatedObjects.Add(new ReferenceEqualWeakReference(instance));
-#endif
             }
-#endif
         }
 
         /// <summary>
@@ -109,18 +111,10 @@ namespace Ninject.Activation.Caching
         /// <param name="instance">The instance to be added.</param>
         public void AddDeactivatedInstance(object instance)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             lock (this.deactivatedObjects)
             {
-#if WINDOWS_PHONE || MONO || PCL
-                this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance), true);
-#else
                 this.deactivatedObjects.Add(new ReferenceEqualWeakReference(instance));
-#endif
             }
-#endif
         }
 
         /// <summary>
@@ -132,15 +126,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsActivated(object instance)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-#if WINDOWS_PHONE || MONO || PCL
-            return this.activatedObjects.ContainsKey(instance);
-#else
             return this.activatedObjects.Contains(instance);
-#endif
-#endif
         }
 
         /// <summary>
@@ -152,15 +138,7 @@ namespace Ninject.Activation.Caching
         /// </returns>
         public bool IsDeactivated(object instance)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-#if WINDOWS_PHONE || MONO || PCL
-            return this.deactivatedObjects.ContainsKey(instance);
-#else
             return this.deactivatedObjects.Contains(instance);
-#endif        
-#endif
         }
 
         /// <summary>
@@ -168,9 +146,6 @@ namespace Ninject.Activation.Caching
         /// </summary>
         public void Prune()
         {
-#if PCL
-            throw new NotImplementedException();
-#else
             lock (this.activatedObjects)
             {
                 RemoveDeadObjects(this.activatedObjects);
@@ -180,39 +155,15 @@ namespace Ninject.Activation.Caching
             {
                 RemoveDeadObjects(this.deactivatedObjects);
             }
-#endif
         }
 
-#if WINDOWS_PHONE || MONO || PCL
-        /// <summary>
-        /// Removes all dead objects.
-        /// </summary>
-        /// <param name="objects">The objects collection to be freed of dead objects.</param>
-        private static void RemoveDeadObjects(IDictionary<object, bool> objects)
-        {
-            var deadObjects = objects.Where(entry => !((ReferenceEqualWeakReference)entry.Key).IsAlive).ToList();
-            foreach (var deadObject in deadObjects)
-            {
-                objects.Remove(deadObject.Key);
-            }
-        }
-#else
         /// <summary>
         /// Removes all dead objects.
         /// </summary>
         /// <param name="objects">The objects collection to be freed of dead objects.</param>
         private static void RemoveDeadObjects(HashSet<object> objects)
         {
-#if WINRT
-            var deadObjects = objects.Where(reference => !((ReferenceEqualWeakReference)reference).IsAlive).ToList();
-            foreach (var deadObject in deadObjects)
-            {
-                objects.Remove(deadObject);
-            }
-#else
             objects.RemoveWhere(reference => !((ReferenceEqualWeakReference)reference).IsAlive);
-#endif
         }
-#endif
     }
 }

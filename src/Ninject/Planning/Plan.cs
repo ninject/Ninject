@@ -1,15 +1,19 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="Plan.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2009-2014 Ninject Project Contributors
-//   
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
+//   Authors: Nate Kohari (nate@enkari.com)
+//            Remo Gloor (remo.gloor@gmail.com)
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   You may not use this file except in compliance with one of the Licenses.
+//   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
-//   
+//
 //       http://www.apache.org/licenses/LICENSE-2.0
 //   or
 //       http://www.microsoft.com/opensource/licenses.mspx
-//   
+//
 //   Unless required by applicable law or agreed to in writing, software
 //   distributed under the License is distributed on an "AS IS" BASIS,
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +35,17 @@ namespace Ninject.Planning
     public class Plan : IPlan
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Plan"/> class.
+        /// </summary>
+        /// <param name="type">The type the plan describes.</param>
+        public Plan(Type type)
+        {
+            this.Type = type;
+            this.Directives = new List<IDirective>();
+            this.ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
+        }
+
+        /// <summary>
         /// Gets the type that the plan describes.
         /// </summary>
         public Type Type { get; private set; }
@@ -44,17 +59,6 @@ namespace Ninject.Planning
         /// Gets the constructor injection directives defined in the plan.
         /// </summary>
         public IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Plan"/> class.
-        /// </summary>
-        /// <param name="type">The type the plan describes.</param>
-        public Plan(Type type)
-        {
-            Type = type;
-            this.Directives = new List<IDirective>();
-            this.ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
-        }
 
         /// <summary>
         /// Adds the specified directive to the plan.
@@ -71,7 +75,7 @@ namespace Ninject.Planning
             {
                 this.Directives.Add(directive);
             }
-        }        
+        }
 
         /// <summary>
         /// Determines whether the plan contains one or more directives of the specified type.

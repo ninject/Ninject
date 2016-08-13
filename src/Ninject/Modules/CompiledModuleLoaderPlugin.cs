@@ -1,10 +1,11 @@
 //-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="CompiledModuleLoaderPlugin.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -21,32 +22,31 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-using System;
-
 #if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
+    using System;
+
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
     using Ninject.Components;
     using Ninject.Infrastructure.Language;
-    
+
     /// <summary>
     /// Loads modules from compiled assemblies.
     /// </summary>
     public class CompiledModuleLoaderPlugin : NinjectComponent, IModuleLoaderPlugin
     {
         /// <summary>
-        /// The assembly name retriever.
-        /// </summary>
-        private readonly IAssemblyNameRetriever assemblyNameRetriever;
-
-        /// <summary>
         /// The file extensions that are supported.
         /// </summary>
         private static readonly string[] Extensions = { ".dll" };
+
+        /// <summary>
+        /// The assembly name retriever.
+        /// </summary>
+        private readonly IAssemblyNameRetriever assemblyNameRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
@@ -76,26 +76,12 @@ namespace Ninject.Modules
         /// Loads modules from the specified files.
         /// </summary>
         /// <param name="filenames">The names of the files to load modules from.</param>
-        public
-#if !WINRT
-        void 
-#else
- async System.Threading.Tasks.Task
-#endif
-            LoadModules(IEnumerable<string> filenames)
+        public void LoadModules(IEnumerable<string> filenames)
         {
-#if PCL
-            throw new NotImplementedException();
-#else
-            var assembliesWithModules = 
-#if WINRT
-                await 
-#endif
+            var assembliesWithModules =
             this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
 
-
             this.KernelConfiguration.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
-#endif
         }
     }
 }

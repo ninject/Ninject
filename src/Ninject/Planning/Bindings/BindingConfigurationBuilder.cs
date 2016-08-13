@@ -1,10 +1,11 @@
 ﻿//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 // <copyright file="BindingConfigurationBuilder.cs" company="Ninject Project Contributors">
-//   Copyright (c) 2007-2009, Enkari, Ltd.
-//   Copyright (c) 2009-2011 Ninject Project Contributors
+//   Copyright (c) 2007-2010, Enkari, Ltd.
+//   Copyright (c) 2010-2016, Ninject Project Contributors
 //   Authors: Nate Kohari (nate@enkari.com)
 //            Remo Gloor (remo.gloor@gmail.com)
-//           
+//
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   you may not use this file except in compliance with one of the Licenses.
 //   You may obtain a copy of the License at
@@ -26,7 +27,6 @@ namespace Ninject.Planning.Bindings
     using System;
     using System.Linq;
 
-
     using System.Reflection;
     using Ninject.Activation;
     using Ninject.Infrastructure;
@@ -47,13 +47,8 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         private readonly string serviceNames;
 
-        /// <summary>
-        /// Gets the binding being built.
-        /// </summary>
-        public IBindingConfiguration BindingConfiguration { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the BindingBuilder&lt;T&gt; class.
+       /// <summary>
+        /// Initializes a new instance of the <see cref="BindingConfigurationBuilder{T}"/> class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
@@ -62,6 +57,11 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration = bindingConfiguration;
             this.serviceNames = serviceNames;
         }
+
+        /// <summary>
+        /// Gets the binding being built.
+        /// </summary>
+        public IBindingConfiguration BindingConfiguration { get; private set; }
 
         /// <summary>
         /// Indicates that the binding should be used only for requests that support the specified condition.
@@ -82,7 +82,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto<TParent>()
         {
-            return WhenInjectedInto(typeof(TParent));
+            return this.WhenInjectedInto(typeof(TParent));
         }
 
         /// <summary>
@@ -93,10 +93,9 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedInto(Type parent)
         {
-
             if (parent.GetTypeInfo().IsGenericTypeDefinition)
             {
-                if(parent.GetTypeInfo().IsInterface)
+                if (parent.GetTypeInfo().IsInterface)
                 {
                     this.BindingConfiguration.Condition = r =>
                         r.Target != null &&
@@ -106,7 +105,6 @@ namespace Ninject.Planning.Bindings
                 }
                 else
                 {
-
                     this.BindingConfiguration.Condition = r =>
                         r.Target != null &&
                         r.Target.Member.DeclaringType.GetAllBaseTypes().Any(i =>
@@ -134,13 +132,11 @@ namespace Ninject.Planning.Bindings
             {
                 foreach (var parent in parents)
                 {
-                    bool matches = false;
+                    var matches = false;
 
                     if (parent.GetTypeInfo().IsGenericTypeDefinition)
-
                     {
                         if (parent.GetTypeInfo().IsInterface)
-
                         {
                             matches =
                                 r.Target != null &&
@@ -162,7 +158,10 @@ namespace Ninject.Planning.Bindings
                         matches = r.Target != null && parent.GetTypeInfo().IsAssignableFrom(r.Target.Member.DeclaringType.GetTypeInfo());
                     }
 
-                    if (matches) return true;
+                    if (matches)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -174,19 +173,19 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// </summary>
         /// <typeparam name="TParent">The type.</typeparam>
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto<TParent>()
         {
-            return WhenInjectedExactlyInto(typeof(TParent));
+            return this.WhenInjectedExactlyInto(typeof(TParent));
         }
 
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// </summary>
         /// <param name="parent">The type.</param>
         /// <returns>The fluent syntax.</returns>
@@ -210,20 +209,20 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
-        /// will not be considered as valid target.  
+        /// will not be considered as valid target.
         /// Should match at least one of the specified targets
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenInjectedExactlyInto(params Type[] parents)
         {
-            this.BindingConfiguration.Condition = r => {
+            this.BindingConfiguration.Condition = r =>
+            {
                 foreach (var parent in parents)
                 {
-                    bool matches = false;
+                    var matches = false;
 
-                    if(parent.GetTypeInfo().IsGenericTypeDefinition)
-
+                    if (parent.GetTypeInfo().IsGenericTypeDefinition)
                     {
                         matches =
                             r.Target != null &&
@@ -235,7 +234,10 @@ namespace Ninject.Planning.Bindings
                         matches = r.Target != null && r.Target.Member.DeclaringType == parent;
                     }
 
-                    if(matches) return true;
+                    if (matches)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -250,9 +252,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenClassHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenClassHas(typeof(TAttribute));
+            return this.WhenClassHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -261,9 +264,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenMemberHas(typeof(TAttribute));
+            return this.WhenMemberHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -272,9 +276,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="TAttribute">The type of attribute.</typeparam>
         /// <returns>The fluent syntax.</returns>
-        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>() where TAttribute : Attribute
+        public IBindingInNamedWithOrOnSyntax<T> WhenTargetHas<TAttribute>()
+            where TAttribute : Attribute
         {
-            return WhenTargetHas(typeof(TAttribute));
+            return this.WhenTargetHas(typeof(TAttribute));
         }
 
         /// <summary>
@@ -285,8 +290,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenClassHas(Type attributeType)
         {
-
-            if(!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
             {
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenClassHas", attributeType));
             }
@@ -305,11 +309,11 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingInNamedWithOrOnSyntax<T> WhenMemberHas(Type attributeType)
         {
-            if(!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
             {
                 throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenMemberHas", attributeType));
             }
-            
+
             this.BindingConfiguration.Condition = r => r.Target != null && r.Target.Member.IsDefined(attributeType, true);
 
             return this;
@@ -325,10 +329,10 @@ namespace Ninject.Planning.Bindings
         {
             if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(attributeType.GetTypeInfo()))
             {
-                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenTargetHas", attributeType));                
+                throw new InvalidOperationException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(this.serviceNames, "WhenTargetHas", attributeType));
             }
 
-            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.IsDefined(attributeType, true);
+            this.BindingConfiguration.Condition = r => r.Target != null && r.Target.HasAttribute(attributeType);
 
             return this;
         }
@@ -432,7 +436,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-#if !NETSTANDARD1_3 && !WINRT
+#if !CORE
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>
@@ -540,7 +544,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
         /// <param name="type">The type of the argument to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>    
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback)
         {
@@ -552,11 +556,11 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
         /// <typeparam name="TValue">Specifies the argument type to override.</typeparam>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>    
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
         public IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(Func<IContext, ITarget, TValue> callback)
         {
-            this.WithConstructorArgument(typeof (TValue), callback);
+            this.WithConstructorArgument(typeof(TValue), callback);
             return this;
         }
 
@@ -595,7 +599,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Parameters.Add(new PropertyValue(name, callback));
             return this;
         }
-        
+
         /// <summary>
         /// Adds a custom parameter to the binding.
         /// </summary>
