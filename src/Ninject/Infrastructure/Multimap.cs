@@ -159,5 +159,15 @@ namespace Ninject.Infrastructure
 
             return result;
         }
+
+        public Multimap<K, V> Clone()
+        {
+            var map = new Multimap<K, V>();
+            foreach (var key in Keys)
+                map.items.Add(key, items[key].ToList());
+
+            return map;
+        }
+
     }
 }

@@ -117,7 +117,7 @@ namespace Ninject.Activation
         /// <inheritdoc />
         public object Resolve()
         {
-            if (this.Request.ActiveBindings.Contains(this.Binding))
+            if (IsCyclical(Request.ParentContext))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -196,6 +196,23 @@ namespace Ninject.Activation
             this.Pipeline.Activate(this, reference);
 
             return reference.Instance;
+        }
+
+        private bool IsCyclical(IContext targetContext)
+        {
+            if (targetContext == null)
+                return false;
+
+            if (targetContext.Request.Service == Request.Service)
+            {
+                if (!(Request.Target is PropertyTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
+                    return true;
+            }
+
+            if (IsCyclical(targetContext.Request.ParentContext))
+                return true;
+
+            return false;
         }
     }
 }
