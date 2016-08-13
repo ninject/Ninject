@@ -245,11 +245,6 @@ namespace Ninject
             return readonlyKernel;
         }
 
-        private Multimap<Type, IBinding> CloneBindings()
-        {
-            return this.bindings.Clone();
-        }
-
         /// <summary>
         /// Adds components to the kernel during startup.
         /// </summary>
@@ -309,8 +304,7 @@ namespace Ninject
 
         private Multimap<Type, IBinding> CloneBindings()
         {
-            // Todo: Clone
-            return this.bindings;
+            return this.bindings.Clone();
         }
     }
 }

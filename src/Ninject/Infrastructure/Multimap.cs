@@ -148,6 +148,21 @@ namespace Ninject.Infrastructure
             return result;
         }
 
+        /// <summary>
+        /// Clones the multimap.
+        /// </summary>
+        /// <returns>The cloned multimap.</returns>
+        public Multimap<K, V> Clone()
+        {
+            var map = new Multimap<K, V>();
+            foreach (var key in this.Keys)
+            {
+                map.items.Add(key, this.items[key].ToList());
+            }
+
+            return map;
+        }
+
         private ICollection<V> GetValues(K key)
         {
             ICollection<V> result;
@@ -159,15 +174,5 @@ namespace Ninject.Infrastructure
 
             return result;
         }
-
-        public Multimap<K, V> Clone()
-        {
-            var map = new Multimap<K, V>();
-            foreach (var key in Keys)
-                map.items.Add(key, items[key].ToList());
-
-            return map;
-        }
-
     }
 }
