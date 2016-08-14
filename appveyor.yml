@@ -19,6 +19,8 @@ build:
 
 after_build:
   - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
+  - cmd: dotnet pack .\src\Ninject --configuration %Configuration% --version-suffix %GitVersion_BuildMetaDataPadded%
+  - cmd: appveyor PushArtifact ".\src\Ninject\bin\%Configuration%\Ninject.%GitVersion_NuGetVersion%-beta-%GitVersion_BuildMetaDataPadded%.nupkg"
 
 test:
   assemblies:
