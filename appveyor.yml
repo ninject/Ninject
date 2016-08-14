@@ -19,7 +19,6 @@ build:
 
 after_build:
   - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
-  - cmd: dotnet pack .\src\Ninject
 
 test:
   assemblies:
@@ -29,3 +28,4 @@ deploy:
   provider: NuGet
   api_key:
     secure: 61GnKhv/vndUGtmAu9tITU0MCRhBO+WVL3CDXk5TZLxbDpHkjkCTnyzxp0yrGKTa
+  artifact: /.*\.nupkg/
