@@ -1,4 +1,3 @@
-//-------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 // <copyright file="StandardProvider.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
@@ -20,7 +19,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Providers
 {

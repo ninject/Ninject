@@ -1,5 +1,4 @@
-﻿//-------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------------------
 // <copyright file="TypeMatchingConstructorArgument.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
 //   Copyright (c) 2010-2016, Ninject Project Contributors
@@ -20,7 +19,8 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+
 namespace Ninject.Parameters
 {
     using System;
