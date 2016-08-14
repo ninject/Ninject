@@ -2,36 +2,30 @@ configuration: Release
 
 init:
   - cmd: set
-  
+
 install:
   - cmd: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-  - cmd: nuget install GitVersion.CommandLine -SolutionDir %APPVEYOR_BUILD_FOLDER% -Verbosity quiet -ExcludeVersion -pre  
+  - cmd: nuget install GitVersion.CommandLine -SolutionDir %APPVEYOR_BUILD_FOLDER% -Verbosity quiet -ExcludeVersion -pre
   - cmd: nuget install gitlink -SolutionDir %APPVEYOR_BUILD_FOLDER% -Verbosity quiet -ExcludeVersion -pre
-     
+
 before_build:
   - cmd: nuget restore Ninject.sln
   - cmd: '.\packages\GitVersion.CommandLine\tools\GitVersion.exe /l console /output buildserver /updateAssemblyInfo'
-  
+
 build:
   verbosity: normal
   parallel: true
   project: Ninject.sln
-  
+
 after_build:
   - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
-  - cmd: nuget pack Portable.Ninject.nuspec -version "%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
-  - cmd: nuget pack Portable.CommonServiceLocator.NinjectAdapter.nuspec -version "%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%" -prop "target=%CONFIGURATION%" -NoPackageAnalysis
-  - cmd: appveyor PushArtifact "Portable.Ninject.%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%.nupkg"  
-  - cmd: appveyor PushArtifact "Portable.CommonServiceLocator.NinjectAdapter.%GitVersion_NuGetVersion%-alpha-build%GitVersion_BuildMetaDataPadded%.nupkg"  
-  
+  - cmd: dotnet pack .\src\Ninject
+
 test:
   assemblies:
     - '**\Ninject.Tests.dll'
-    - '**\CommonServiceLocator.NinjectAdapter.Tests.dll'
-  
+
 deploy:
   provider: NuGet
-  server: https://www.myget.org/F/ninject/api/v2/package
   api_key:
-    secure: bmqlJK8a5HYiUXOT99HXT1j7JiM5+fpR4kHhxIC30oaaEXbv94f0fKdiKlU1QC/l
-  artifact: /.*\.nupkg/
+    secure: 61GnKhv/vndUGtmAu9tITU0MCRhBO+WVL3CDXk5TZLxbDpHkjkCTnyzxp0yrGKTa
