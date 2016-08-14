@@ -1,4 +1,6 @@
 Version 4.0
+----------------
+- Add support for NETSTANDARD1.3 and NETSTANDARD1.5
 - Removed support for .NET 3.5
 - Removed support for Windows Phone 7.x
 - Removed support for .NET compact framework
