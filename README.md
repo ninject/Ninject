@@ -68,7 +68,7 @@ encouraged to evaluate both to determine which best fits your intended use.
 Refer to [LICENSE.txt](https://github.com/ninject/ninject/blob/master/LICENSE.txt) for detailed information.
 
 ## CI build status
-[![Build status](https://ci.appveyor.com/api/projects/status/kxj62plt2p31eick/branch/master?svg=true)](https://ci.appveyor.com/project/onovotny/ninject/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/78vd2lxcbcoky84s/branch/master?svg=true)](https://ci.appveyor.com/project/scott-xu/ninject/branch/master)
 
 ## Changes history
 - [Changes in Ninject 3](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-3)
