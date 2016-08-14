@@ -2,7 +2,7 @@
   "version": "4.0.0-beta-*",
   "authors": [ "Nate Kohari (nate@enkari.com)", "Remo Gloor (remo.gloor@gmail.com)", "Ninject Contributors" ],
   "description": "Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.",
-  "copyright": "2007-2009, Enkari, Ltd. 2009-2016, Ninject Contributors.",
+  "copyright": "2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.",
   "packOptions": {
     "requireLicenseAcceptance": true,
     "licenseUrl": "https://github.com/ninject/ninject/raw/master/LICENSE.txt",
@@ -30,7 +30,7 @@
   "frameworks": {
     "netstandard1.3": {
       "buildOptions": {
-        "define": [ "CORE", "NO_MEMBERTYPE", "NO_CUSTOM_ATTRIBUTE_PROVIDER", "NO_PARTIAL_TRUST", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION" ]
+        "define": [ "CORE", "NO_MEMBERTYPE", "NO_CUSTOM_ATTRIBUTE_PROVIDER", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION" ]
       },
       "dependencies": {
         "NETStandard.Library": "1.6.0",
@@ -45,7 +45,7 @@
     },
     "netstandard1.5": {
       "buildOptions": {
-        "define": [ "CORE", "NO_PARTIAL_TRUST", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION" ]
+        "define": [ "CORE", "NO_ASSEMBLY_SCANNING", "NO_EXCEPTION_SERIALIZATION" ]
       },
       "dependencies": {
         "NETStandard.Library": "1.6.0",
@@ -59,9 +59,6 @@
       }
     },
     "net45": {
-      "buildOptions": {
-        "define": [ "NO_PARTIAL_TRUST" ]
-      }
     }
   }
 }

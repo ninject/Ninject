@@ -21,11 +21,16 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------------
 
+using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Ninject Core Library")]
-
-#if !NO_PARTIAL_TRUST
-[assembly: AllowPartiallyTrustedCallers]
-#endif
 [assembly: AssemblyDescription("IoC container")]
+[assembly: AssemblyProduct("Ninject: Lightweight dependency injection for .NET")]
+[assembly: AssemblyCompany("Ninject Project Contributors")]
+[assembly: AssemblyCopyright("2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.6")]
+[assembly: ComVisible(false)]
+[assembly: CLSCompliant(true)]
