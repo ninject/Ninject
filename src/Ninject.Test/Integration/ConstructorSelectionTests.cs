@@ -222,6 +222,18 @@ namespace Ninject.Tests.Integration
             instance.Generic.Should().NotBeNull();
         }
 
+        [Fact]
+        public void DoNotChooseObsoleteConstructors()
+        {
+            kernel.Bind<ClassWithObsoleteContructor>().ToSelf();
+
+            var instance = kernel.Get<ClassWithObsoleteContructor>();
+
+            instance.Should().NotBeNull();
+            instance.SomeObject.Should().NotBeNull();
+            instance.ObsoleteConstructorCalled.Should().Be(false);
+        }
+
 #if !SILVERLIGHT
         [Fact]
         public void WhenConstructorHasAValueWithDefaultValueItCountsAsServedParameter()
@@ -285,6 +297,24 @@ namespace Ninject.Tests.Integration
             public ClassWithTwoInjectAttributes(int someValue)
             {
             }
+        }
+
+        public class ClassWithObsoleteContructor
+        {
+            [Obsolete("Use Ninject to create an instance")]
+            public ClassWithObsoleteContructor()
+                : this(new object())
+            {
+                ObsoleteConstructorCalled = true;
+            }
+
+            public ClassWithObsoleteContructor(Object someObject)
+            {
+                SomeObject = someObject;
+            }
+
+            public Object SomeObject { get; set; }
+            public bool ObsoleteConstructorCalled { get; set; }
         }
     }
 }

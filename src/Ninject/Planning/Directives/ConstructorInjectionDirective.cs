@@ -51,5 +51,11 @@ namespace Ninject.Planning.Directives
         /// </summary>
         /// <value><c>true</c> if this constructor has an inject attribute; otherwise, <c>false</c>.</value>
         public bool HasInjectAttribute { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this constructor has an Obsolete attribute.
+        /// </summary>
+        /// <value><c>true</c> if this constructor has an Obsolete attribute; otherwise, <c>false</c>.</value>
+        public bool HasObsoleteAttribute { get; set; }
     }
 }
