@@ -57,6 +57,11 @@ namespace Ninject.Selection.Heuristics
                 return int.MaxValue;
             }
 
+            if (directive.HasObsoleteAttribute)
+            {
+                return int.MinValue;
+            }
+
             var score = 1;
             foreach (ITarget target in directive.Targets)
             {

@@ -65,6 +65,15 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Gets or sets the attribute that indicates that a member is obsolete and should not be injected.
+        /// </summary>
+        public Type ObsoleteAttribute
+        {
+            get { return this.Get("ObsoleteAttribute", typeof(ObsoleteAttribute)); }
+            set { this.Set("ObsoleteAttribute", value); }
+        }
+
+        /// <summary>
         /// Gets or sets the interval at which the GC should be polled.
         /// </summary>
         public TimeSpan CachePruningInterval

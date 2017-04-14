@@ -37,6 +37,11 @@ namespace Ninject
         Type InjectAttribute { get; }
 
         /// <summary>
+        /// Gets the attribute that indicates that a member is obsolete and should not be injected.
+        /// </summary>
+        Type ObsoleteAttribute { get; }
+
+        /// <summary>
         /// Gets the interval at which the cache should be pruned.
         /// </summary>
         TimeSpan CachePruningInterval { get; }
