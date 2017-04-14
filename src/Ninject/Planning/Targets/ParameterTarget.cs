@@ -25,15 +25,12 @@ namespace Ninject.Planning.Targets
 {
     using System;
     using System.Reflection;
-    using Ninject.Infrastructure;
 
     /// <summary>
     /// Represents an injection target for a <see cref="ParameterInfo"/>.
     /// </summary>
     public class ParameterTarget : Target<ParameterInfo>
     {
-        private readonly Lazy<object> defaultValue;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterTarget"/> class.
         /// </summary>
@@ -42,7 +39,6 @@ namespace Ninject.Planning.Targets
         public ParameterTarget(MethodBase method, ParameterInfo site)
             : base(method, site)
         {
-            this.defaultValue = new Lazy<object>(() => site.DefaultValue);
         }
 
         /// <summary>
@@ -68,17 +64,17 @@ namespace Ninject.Planning.Targets
         {
             get
             {
-                return this.defaultValue.Value != DBNull.Value;
+                return this.Site.HasDefaultValue;
             }
         }
 
         /// <summary>
         /// Gets the default value for the target.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">If the item does not have a default value.</exception>
+        /// <exception cref="InvalidOperationException">If the item does not have a default value.</exception>
         public override object DefaultValue
         {
-            get { return this.HasDefaultValue ? this.defaultValue.Value : base.DefaultValue; }
+            get { return this.HasDefaultValue ? this.DefaultValue : base.DefaultValue; }
         }
     }
 }
