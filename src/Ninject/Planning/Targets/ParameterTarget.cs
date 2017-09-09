@@ -74,7 +74,7 @@ namespace Ninject.Planning.Targets
         /// <exception cref="InvalidOperationException">If the item does not have a default value.</exception>
         public override object DefaultValue
         {
-            get { return this.HasDefaultValue ? this.DefaultValue : base.DefaultValue; }
+            get { return this.HasDefaultValue ? this.Site.DefaultValue : base.DefaultValue; }
         }
     }
 }
