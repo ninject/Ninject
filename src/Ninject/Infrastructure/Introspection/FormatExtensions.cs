@@ -47,7 +47,7 @@ namespace Ninject.Infrastructure.Introspection
             Property,
             Method,
             NestedType,
-            TypeInfo
+            TypeInfo,
         }
 #endif
 

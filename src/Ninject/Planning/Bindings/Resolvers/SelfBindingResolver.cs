@@ -66,8 +66,8 @@ namespace Ninject.Planning.Bindings.Resolvers
                         {
                             new Binding(service)
                             {
-                                ProviderCallback = StandardProvider.GetCreationCallback(service, this.selector)
-                            }
+                                ProviderCallback = StandardProvider.GetCreationCallback(service, this.selector),
+                            },
                         };
         }
 

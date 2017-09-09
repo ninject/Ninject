@@ -51,7 +51,7 @@ namespace Ninject.Planning.Bindings.Resolvers
                                      {
                                          Condition = r => HasDefaultValue(r.Target),
                                          ProviderCallback = _ => new DefaultParameterValueProvider(service),
-                                     }
+                                     },
                              }
                        : Enumerable.Empty<IBinding>();
         }

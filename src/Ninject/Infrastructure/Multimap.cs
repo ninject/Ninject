@@ -29,16 +29,16 @@ namespace Ninject.Infrastructure
     /// <summary>
     /// A data structure that contains multiple values for a each key.
     /// </summary>
-    /// <typeparam name="K">The type of key.</typeparam>
-    /// <typeparam name="V">The type of value.</typeparam>
-    public class Multimap<K, V> // : IEnumerable<KeyValuePair<K, ICollection<V>>>
+    /// <typeparam name="TK">The type of key.</typeparam>
+    /// <typeparam name="TV">The type of value.</typeparam>
+    public class Multimap<TK, TV> // : IEnumerable<KeyValuePair<K, ICollection<V>>>
     {
-        private readonly Dictionary<K, ICollection<V>> items = new Dictionary<K, ICollection<V>>();
+        private readonly Dictionary<TK, ICollection<TV>> items = new Dictionary<TK, ICollection<TV>>();
 
         /// <summary>
         /// Gets the collection of keys.
         /// </summary>
-        public ICollection<K> Keys
+        public ICollection<TK> Keys
         {
             get { return this.items.Keys; }
         }
@@ -46,7 +46,7 @@ namespace Ninject.Infrastructure
         /// <summary>
         /// Gets the collection of collections of values.
         /// </summary>
-        public ICollection<ICollection<V>> Values
+        public ICollection<ICollection<TV>> Values
         {
             get { return this.items.Values; }
         }
@@ -55,13 +55,13 @@ namespace Ninject.Infrastructure
         /// Gets the collection of values stored under the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public IEnumerable<V> this[K key]
+        public IEnumerable<TV> this[TK key]
         {
             get
             {
-                ICollection<V> result;
+                ICollection<TV> result;
 
-                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<V>();
+                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<TV>();
             }
         }
 
@@ -70,7 +70,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        public void Add(K key, V value)
+        public void Add(TK key, TV value)
         {
             this.GetValues(key).Add(value);
         }
@@ -81,9 +81,9 @@ namespace Ninject.Infrastructure
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
         /// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
-        public bool Remove(K key, V value)
+        public bool Remove(TK key, TV value)
         {
-            ICollection<V> values;
+            ICollection<TV> values;
 
             return this.items.TryGetValue(key, out values) &&
                    values.Remove(value);
@@ -94,7 +94,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
-        public bool RemoveAll(K key)
+        public bool RemoveAll(TK key)
         {
             return this.items.Remove(key);
         }
@@ -112,7 +112,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TK key)
         {
             return this.items.ContainsKey(key);
         }
@@ -138,9 +138,9 @@ namespace Ninject.Infrastructure
         /// <param name="key">The key</param>
         /// <param name="values">The values</param>
         /// <returns><c>True</c> when values are found or <c>false</c> if not</returns>
-        public bool TryGetValues(K key, out IEnumerable<V> values)
+        public bool TryGetValues(TK key, out IEnumerable<TV> values)
         {
-            ICollection<V> tempValues;
+            ICollection<TV> tempValues;
 
             var result = this.items.TryGetValue(key, out tempValues);
             values = tempValues;
@@ -152,9 +152,9 @@ namespace Ninject.Infrastructure
         /// Clones the multimap.
         /// </summary>
         /// <returns>The cloned multimap.</returns>
-        public Multimap<K, V> Clone()
+        public Multimap<TK, TV> Clone()
         {
-            var map = new Multimap<K, V>();
+            var map = new Multimap<TK, TV>();
             foreach (var key in this.Keys)
             {
                 map.items.Add(key, this.items[key].ToList());
@@ -163,12 +163,12 @@ namespace Ninject.Infrastructure
             return map;
         }
 
-        private ICollection<V> GetValues(K key)
+        private ICollection<TV> GetValues(TK key)
         {
-            ICollection<V> result;
+            ICollection<TV> result;
             if (!this.items.TryGetValue(key, out result))
             {
-                result = new List<V>();
+                result = new List<TV>();
                 this.items[key] = result;
             }
 

@@ -1,33 +1,16 @@
 configuration: Release
 
-init:
-  - cmd: set
-
-install:
-  - cmd: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-  - cmd: nuget install GitVersion.CommandLine -SolutionDir %APPVEYOR_BUILD_FOLDER% -Verbosity quiet -ExcludeVersion -pre
-  - cmd: nuget install gitlink -SolutionDir %APPVEYOR_BUILD_FOLDER% -Verbosity quiet -ExcludeVersion -pre
-
 before_build:
-  - cmd: nuget restore Ninject.sln
-  - cmd: '.\packages\GitVersion.CommandLine\tools\GitVersion.exe /l console /output buildserver /updateAssemblyInfo'
+  - cmd: nuget restore
 
 build:
   verbosity: normal
   parallel: true
-  project: Ninject.sln
-
-after_build:
-  - cmd: '.\packages\gitlink\lib\net45\GitLink.exe . -f Ninject.sln -u https://github.com/Ninject/Ninject -s %APPVEYOR_REPO_COMMIT% -errorsaswarnings'
-  - cmd: dotnet pack .\src\Ninject --configuration %Configuration% --version-suffix %GitVersion_BuildMetaDataPadded%
-  - cmd: appveyor PushArtifact ".\src\Ninject\bin\%Configuration%\Ninject.%GitVersion_NuGetVersion%-beta-%GitVersion_BuildMetaDataPadded%.nupkg"
-
-test:
-  assemblies:
-    - '**\Ninject.Tests.dll'
+  publish_nuget: true
 
 deploy:
   provider: NuGet
   api_key:
     secure: 61GnKhv/vndUGtmAu9tITU0MCRhBO+WVL3CDXk5TZLxbDpHkjkCTnyzxp0yrGKTa
-  artifact: /.*\.nupkg/
+  on:
+    appveyor_repo_tag: true

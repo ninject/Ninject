@@ -74,7 +74,7 @@ namespace Ninject.Planning.Strategies
                 var hasInjectAttribute = constructor.HasAttribute(this.Settings.InjectAttribute);
                 var directive = new ConstructorInjectionDirective(constructor, this.InjectorFactory.Create(constructor))
                 {
-                     HasInjectAttribute = hasInjectAttribute
+                     HasInjectAttribute = hasInjectAttribute,
                 };
 
                 plan.Add(directive);
