@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <AssemblyName>Ninject.Tests.TestAssembly</AssemblyName>
-    <PackageId>TestAssembly</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

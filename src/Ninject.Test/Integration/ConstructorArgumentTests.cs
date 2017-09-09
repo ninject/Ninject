@@ -86,6 +86,8 @@ namespace Ninject.Tests.Integration
             this.kernel.Bind<IWarrior>().To<Samurai>();
             this.kernel.Bind<IWeapon>().To<Dagger>();
 
+            GC.SuppressFinalize(this);
+
             var barracks = this.kernel.Get<Barracks>(constructorArgument(false));
 
             barracks.Weapon.Should().BeOfType<Sword>();
@@ -108,6 +110,8 @@ namespace Ninject.Tests.Integration
         public void ConstructorArgumentsAreInheritedIfSpecified(Func<bool, IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
+
+            GC.SuppressFinalize(this);
 
             var barracks = this.kernel.Get<Barracks>(constructorArgument(true));
 
