@@ -8,7 +8,6 @@ build:
   verbosity: normal
   parallel: true
   publish_nuget: true
-  publish_nuget_symbols: true
 
 deploy:
   provider: NuGet
