@@ -5,7 +5,7 @@
     <Copyright>2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.</Copyright>
     <VersionPrefix>4.0.0-beta</VersionPrefix>
     <Authors>Nate Kohari (nate@enkari.com);Remo Gloor (remo.gloor@gmail.com);Ninject Contributors</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard1.5;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard1.5;netstandard2.0;net45</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Ninject</AssemblyName>
@@ -20,25 +20,25 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">1.6.1</NetStandardImplicitPackageVersion>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.5' ">1.6.1</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Include symbols in the package -->
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
     <Content Include="$(OutputPath)/**/$(AssemblyName).pdb">
       <Pack>true</Pack>
       <PackagePath>$(BuildOutputTargetFolder)/%(RecursiveDir)$(AssemblyName).pdb</PackagePath>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageReference Include="gitlink" Version="3.0.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="gitlink" Version="3.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
@@ -70,17 +69,26 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);CORE;NO_MEMBERTYPE;NO_CUSTOM_ATTRIBUTE_PROVIDER;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_CURRENT_THREAD</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
-    <DefineConstants>$(DefineConstants);CORE;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_CURRENT_THREAD</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NO_REMOTING;NO_REFLECTEDTYPE;NO_GETCUSTOMATTRIBUTES;NO_MEMBERTYPE;NO_CUSTOM_ATTRIBUTE_PROVIDER;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_THREAD_SCOPE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
+    <DefineConstants>$(DefineConstants);NO_REMOTING;NO_REFLECTEDTYPE;NO_GETCUSTOMATTRIBUTES;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_THREAD_SCOPE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NO_REMOTING;NO_ASSEMBLY_SCANNING</DefineConstants>
+  </PropertyGroup>
 
 </Project>

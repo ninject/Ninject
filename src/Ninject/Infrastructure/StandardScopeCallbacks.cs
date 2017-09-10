@@ -41,7 +41,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         public static readonly Func<IContext, object> Singleton = ctx => ctx.Kernel;
 
-#if !NO_CURRENT_THREAD
+#if !NO_THREAD_SCOPE
         /// <summary>
         /// Gets the callback for thread scope.
         /// </summary>

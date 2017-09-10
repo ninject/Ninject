@@ -106,7 +106,7 @@ namespace Ninject.Infrastructure.Language
         /// <returns>The custom attributes.</returns>
         public static IEnumerable<Attribute> GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
-#if !CORE
+#if !NO_GETCUSTOMATTRIBUTES
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
             var propertyInfo = member as PropertyInfo;

@@ -181,7 +181,7 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
-#if !CORE
+#if !NO_REFLECTEDTYPE
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
 #endif
                 return sw.ToString();

@@ -435,7 +435,7 @@ namespace Ninject.Planning.Bindings
             return this;
         }
 
-#if !NO_CURRENT_THREAD
+#if !NO_THREAD_SCOPE
         /// <summary>
         /// Indicates that instances activated via the binding should be re-used within the same thread.
         /// </summary>

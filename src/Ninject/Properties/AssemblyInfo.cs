@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Ninject Project Contributors")]
 [assembly: AssemblyCopyright("2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.")]
 [assembly: AssemblyVersion("4.0.0.0")]
-[assembly: AssemblyFileVersion("4.0.0.6")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]

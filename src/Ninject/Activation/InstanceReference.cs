@@ -44,7 +44,7 @@ namespace Ninject.Activation
         [SecuritySafeCritical]
         public bool Is<T>()
         {
-#if !CORE
+#if !NO_REMOTING
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(this.Instance)
                 && System.Runtime.Remoting.RemotingServices.GetRealProxy(this.Instance).GetType().Name == "RemotingProxy")
             {
