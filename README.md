@@ -1,4 +1,4 @@
-# Ninject [![NuGet Version](http://img.shields.io/nuget/v/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/) 
+# Ninject [![NuGet Version](http://img.shields.io/nuget/v/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/) [![Build status](https://ci.appveyor.com/api/projects/status/78vd2lxcbcoky84s/branch/master?svg=true)](https://ci.appveyor.com/project/scott-xu/ninject/branch/master)
 Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications. It helps you split your
 application into a collection of loosely-coupled, highly-cohesive pieces, and then glue them back together in a
 flexible manner. By using Ninject to support your software's architecture, your code will become easier to write,
@@ -66,9 +66,6 @@ Version 2.0, or the Microsoft Public License (Ms-PL). These licenses are essenti
 encouraged to evaluate both to determine which best fits your intended use.
 
 Refer to [LICENSE.txt](https://github.com/ninject/ninject/blob/master/LICENSE.txt) for detailed information.
-
-## CI build status
-[![Build status](https://ci.appveyor.com/api/projects/status/78vd2lxcbcoky84s/branch/master?svg=true)](https://ci.appveyor.com/project/scott-xu/ninject/branch/master)
 
 ## Changes history
 - [Changes in Ninject 3](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-3)
