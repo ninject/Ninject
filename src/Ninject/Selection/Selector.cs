@@ -108,7 +108,7 @@ namespace Ninject.Selection
             {
                 for (Type parentType = type.GetTypeInfo().BaseType; parentType != null; parentType = parentType.GetTypeInfo().BaseType)
                 {
-                    properties.AddRange(this.GetPrivateProperties(type.GetTypeInfo().BaseType));
+                    properties.AddRange(this.GetPrivateProperties(parentType));
                 }
             }
 

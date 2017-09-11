@@ -149,7 +149,21 @@ namespace Ninject.Tests.Integration
             warrior.SecretWeaponAccessor.Should().NotBeNull();
             warrior.VerySecretWeaponAccessor.Should().NotBeNull();
         }
-        
+
+        [Fact]
+        public void GrandParentPropertiesAreInjected()
+        {
+            this.kernel.Settings.InjectNonPublic = true;
+            this.kernel.Settings.InjectParentPrivateProperties = true;
+            var warrior = this.kernel.Get<GrandFatherStyleNinja>();
+
+            warrior.Should().NotBeNull();
+            warrior.OffHandWeapon.Should().NotBeNull();
+            warrior.SecondaryWeapon.Should().NotBeNull();
+            warrior.SecretWeaponAccessor.Should().NotBeNull();
+            warrior.VerySecretWeaponAccessor.Should().NotBeNull();
+        }
+
         private class OwnStyleNinja : Ninja
         {
             public OwnStyleNinja(IWeapon weapon)
@@ -167,6 +181,14 @@ namespace Ninject.Tests.Integration
         private class FatherStyleNinja : Ninja
         {
             public FatherStyleNinja(IWeapon weapon)
+                : base(weapon)
+            {
+            }
+        }
+
+        private class GrandFatherStyleNinja : FatherStyleNinja
+        {
+            public GrandFatherStyleNinja(IWeapon weapon)
                 : base(weapon)
             {
             }
