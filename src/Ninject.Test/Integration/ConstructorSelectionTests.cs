@@ -222,6 +222,16 @@ namespace Ninject.Tests.Integration
             instance.Generic.Should().NotBeNull();
         }
 
+        [Fact]
+        public void DoNotChooseObsoleteConstructors()
+        {
+            kernel.Bind<ClassWithObsoleteContructor>().ToSelf();
+
+            var instance = kernel.Get<ClassWithObsoleteContructor>();
+
+            instance.Sword.Should().NotBeNull();
+        }
+
 #if !SILVERLIGHT
         [Fact]
         public void WhenConstructorHasAValueWithDefaultValueItCountsAsServedParameter()
@@ -285,6 +295,21 @@ namespace Ninject.Tests.Integration
             public ClassWithTwoInjectAttributes(int someValue)
             {
             }
+        }
+
+        public class ClassWithObsoleteContructor
+        {
+            [Obsolete]
+            public ClassWithObsoleteContructor()
+            {
+            }
+
+            public ClassWithObsoleteContructor(Sword sword)
+            {
+                this.Sword = sword;
+            }
+
+            public Sword Sword { get; set; }
         }
     }
 }

@@ -22,6 +22,7 @@
 
 namespace Ninject.Planning.Strategies
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using Ninject.Components;
@@ -72,9 +73,11 @@ namespace Ninject.Planning.Strategies
             foreach (ConstructorInfo constructor in constructors)
             {
                 var hasInjectAttribute = constructor.HasAttribute(this.Settings.InjectAttribute);
+                var hasObsoleteAttribute = constructor.HasAttribute(typeof(ObsoleteAttribute));
                 var directive = new ConstructorInjectionDirective(constructor, this.InjectorFactory.Create(constructor))
                 {
                      HasInjectAttribute = hasInjectAttribute,
+                     HasObsoleteAttribute = hasObsoleteAttribute,
                 };
 
                 plan.Add(directive);
