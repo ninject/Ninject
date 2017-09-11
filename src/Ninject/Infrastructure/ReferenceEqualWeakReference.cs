@@ -32,7 +32,7 @@ namespace Ninject.Infrastructure
     /// </summary>
     public class ReferenceEqualWeakReference : WeakReference
     {
-        private readonly int cashedHashCode;
+        private readonly int cachedHashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
@@ -41,7 +41,7 @@ namespace Ninject.Infrastructure
         public ReferenceEqualWeakReference(object target)
             : base(target)
         {
-            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
+            this.cachedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Ninject.Infrastructure
         public ReferenceEqualWeakReference(object target, bool trackResurrection)
             : base(target, trackResurrection)
         {
-            this.cashedHashCode = RuntimeHelpers.GetHashCode(target);
+            this.cachedHashCode = RuntimeHelpers.GetHashCode(target);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Ninject.Infrastructure
         /// </returns>
         public override int GetHashCode()
         {
-            return this.cashedHashCode;
+            return this.cachedHashCode;
         }
     }
 }
