@@ -3,7 +3,7 @@ configuration: Release
 image: Visual Studio 2017
 
 before_build:
-  - cmd: nuget restore
+  - cmd: nuget restore -Verbosity quiet
 
 build:
   verbosity: minimal
