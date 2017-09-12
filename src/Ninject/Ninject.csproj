@@ -22,24 +22,10 @@
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild> 
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Content Include="$(OutputPath)/**/$(AssemblyName).pdb">
-      <Pack>true</Pack>
-      <PackagePath>$(BuildOutputTargetFolder)/%(RecursiveDir)$(AssemblyName).pdb</PackagePath>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PackageReference Include="gitlink" Version="3.0.0">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
