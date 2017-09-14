@@ -8,15 +8,15 @@
     {
         protected EnumerableDependenciesContext()
         {
-            this.Configuration = new KernelConfiguration();
+            this.Kernel = new StandardKernel();
         }
 
         public void Dispose()
         {
-            this.Configuration.Dispose();
+            this.Kernel.Dispose();
         }
 
-        protected IKernelConfiguration Configuration { get; set; }
+        protected StandardKernel Kernel { get; private set; }
 
         protected abstract void VerifyInjection(IParent parent);
     }

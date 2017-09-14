@@ -9,11 +9,11 @@
         [Fact]
         public void ServiceIsInjectedWithArrayOfAllAvailableDependencies()
         {
-            this.Configuration.Bind<IParent>().To<RequestsArray>();
-            this.Configuration.Bind<IChild>().To<ChildA>();
-            this.Configuration.Bind<IChild>().To<ChildB>();
+            this.Kernel.Bind<IParent>().To<RequestsArray>();
+            this.Kernel.Bind<IChild>().To<ChildA>();
+            this.Kernel.Bind<IChild>().To<ChildB>();
 
-            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
+            var parent = this.Kernel.Get<IParent>();
 
             VerifyInjection(parent);
         }
@@ -21,11 +21,11 @@
         [Fact]
         public void ServiceIsInjectedWithArrayOfAllAvailableDependenciesWhenDefaultCtorIsAvailable()
         {
-            this.Configuration.Bind<IParent>().To<RequestsArrayWithDefaultCtor>();
-            this.Configuration.Bind<IChild>().To<ChildA>();
-            this.Configuration.Bind<IChild>().To<ChildB>();
+            this.Kernel.Bind<IParent>().To<RequestsArrayWithDefaultCtor>();
+            this.Kernel.Bind<IChild>().To<ChildA>();
+            this.Kernel.Bind<IChild>().To<ChildB>();
 
-            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
+            var parent = this.Kernel.Get<IParent>();
 
             VerifyInjection(parent);
         }
@@ -33,9 +33,9 @@
         [Fact]
         public void EmptyArrayIsInjectedWhenNoBindingIsAvailable()
         {
-            this.Configuration.Bind<IParent>().To<RequestsArray>();
+            this.Kernel.Bind<IParent>().To<RequestsArray>();
 
-            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
+            var parent = this.Kernel.Get<IParent>();
 
             parent.Should().NotBeNull();
             parent.Children.Count.Should().Be(0);

@@ -14,6 +14,10 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;0618</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="TestModules\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
