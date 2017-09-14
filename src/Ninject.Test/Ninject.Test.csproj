@@ -6,9 +6,6 @@
     <NoWarn>$(NoWarn);0618</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-  </PropertyGroup>
-
   <ItemGroup>
     <None Update="TestModules\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
