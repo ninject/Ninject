@@ -69,8 +69,7 @@ namespace Ninject.Infrastructure
         {
             var thisInstance = this.IsAlive ? this.Target : this;
 
-            var referenceEqualWeakReference = obj as WeakReference;
-            if (referenceEqualWeakReference != null && referenceEqualWeakReference.IsAlive)
+            if (obj is WeakReference referenceEqualWeakReference && referenceEqualWeakReference.IsAlive)
             {
                 obj = referenceEqualWeakReference.Target;
             }

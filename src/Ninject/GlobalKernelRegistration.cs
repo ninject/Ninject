@@ -85,8 +85,7 @@ namespace Ninject
             {
                 foreach (var weakReference in registration.Kernels)
                 {
-                    var kernel = weakReference.Target as IReadOnlyKernel;
-                    if (kernel != null)
+                    if (weakReference.Target is IReadOnlyKernel kernel)
                     {
                         action(kernel);
                     }

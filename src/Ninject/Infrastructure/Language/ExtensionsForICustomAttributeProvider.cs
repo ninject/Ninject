@@ -85,8 +85,7 @@ namespace Ninject.Infrastructure.Language
         {
             Contract.Requires(target is MemberInfo || target is ParameterInfo);
 
-            var memberInfo = target as MemberInfo;
-            if (memberInfo != null)
+            if (target is MemberInfo memberInfo)
             {
                 return memberInfo.HasAttribute(type);
             }
@@ -105,8 +104,7 @@ namespace Ninject.Infrastructure.Language
         {
             Contract.Requires(target is MemberInfo || target is ParameterInfo);
 
-            var memberInfo = target as MemberInfo;
-            if (memberInfo != null)
+            if (target is MemberInfo memberInfo)
             {
                 return memberInfo.GetCustomAttributesExtended(attributeType, inherit);
             }

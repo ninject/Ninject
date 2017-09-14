@@ -56,8 +56,7 @@ namespace Ninject.Infrastructure.Language
         /// </returns>
         public static bool HasAttribute(this MemberInfo member, Type type)
         {
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
+            if (member is PropertyInfo propertyInfo)
             {
                 return IsDefined(propertyInfo, type, true);
             }
@@ -109,8 +108,7 @@ namespace Ninject.Infrastructure.Language
 #if !NO_GETCUSTOMATTRIBUTES
             return Attribute.GetCustomAttributes(member, attributeType, inherited);
 #else
-            var propertyInfo = member as PropertyInfo;
-            if (propertyInfo != null)
+            if (member is PropertyInfo propertyInfo)
             {
                 return GetCustomAttributes(propertyInfo, attributeType, inherited);
             }

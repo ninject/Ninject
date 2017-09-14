@@ -100,8 +100,7 @@ namespace Ninject.Activation.Caching
                 if (!this.entries.ContainsKey(weakScopeReference))
                 {
                     this.entries[weakScopeReference] = new Multimap<IBindingConfiguration, CacheEntry>();
-                    var notifyScope = scope as INotifyWhenDisposed;
-                    if (notifyScope != null)
+                    if (scope is INotifyWhenDisposed notifyScope)
                     {
                         notifyScope.Disposed += (o, e) => this.Clear(weakScopeReference);
                     }

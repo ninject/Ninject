@@ -65,8 +65,7 @@ namespace Ninject.Planning
         /// <param name="directive">The directive.</param>
         public void Add(IDirective directive)
         {
-            var constructorInjectionDirective = directive as ConstructorInjectionDirective;
-            if (constructorInjectionDirective != null)
+            if (directive is ConstructorInjectionDirective constructorInjectionDirective)
             {
                 this.ConstructorInjectionDirectives.Add(constructorInjectionDirective);
             }
