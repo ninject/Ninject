@@ -29,7 +29,7 @@ namespace Ninject
     /// <summary>
     /// The standard implementation of a kernel.
     /// </summary>
-    [Obsolete("Use StandardKernelConfiguration and StandardReadonlyKernel")]
+    [Obsolete("Use KernelConfiguration and ReadOnlyKernel")]
     public class StandardKernel : KernelBase
     {
         /// <summary>

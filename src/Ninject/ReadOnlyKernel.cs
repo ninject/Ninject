@@ -88,8 +88,8 @@ namespace Ninject
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
             this.Settings = settings;
 
-            this.AddReadonlyKernelBinding<IReadOnlyKernel>(this, bindings);
-            this.AddReadonlyKernelBinding<IResolutionRoot>(this, bindings);
+            this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
+            this.AddReadOnlyKernelBinding<IResolutionRoot>(this, bindings);
 
             this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
             this.InitializeBindings(selector);
@@ -162,23 +162,11 @@ namespace Ninject
         }
 
         /// <inheritdoc />
-        public override void Dispose(bool disposing)
-        {
-            if (disposing && !this.IsDisposed)
-            {
-                this.cache.Clear();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IBinding> GetBindings(Type service)
         {
             Contract.Requires(service != null);
 
-            List<IBinding> result;
-            if (this.bindingCache.TryGetValue(service, out result))
+            if (this.bindingCache.TryGetValue(service, out List<IBinding> result))
             {
                 return result;
             }
@@ -244,8 +232,7 @@ namespace Ninject
                     .Map(
                         serviceGroup =>
                             {
-                                IEnumerable<IBinding> existingBindings;
-                                if (newBindings.TryGetValue(serviceGroup.service, out existingBindings))
+                                if (newBindings.TryGetValue(serviceGroup.service, out IEnumerable<IBinding> existingBindings))
                                 {
                                     var newBindingList = new List<IBinding>(existingBindings);
                                     newBindingList.AddRange(serviceGroup.bindings);
@@ -351,7 +338,7 @@ namespace Ninject
                 .FirstOrDefault(b => b.Any());
         }
 
-        private void AddReadonlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
+        private void AddReadOnlyKernelBinding<T>(T readonlyKernel, Multimap<Type, IBinding> bindings)
         {
             var binding = new Binding(typeof(T));
             new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);

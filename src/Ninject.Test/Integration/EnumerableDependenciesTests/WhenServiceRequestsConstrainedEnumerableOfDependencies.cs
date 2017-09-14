@@ -9,11 +9,11 @@
         [Fact]
         public void ServiceIsInjectedWithAllDependenciesThatMatchTheConstraint()
         {
-            this.Kernel.Bind<IParent>().To<RequestsConstrainedEnumerable>();
-            this.Kernel.Bind<IChild>().To<ChildA>().Named("joe");
-            this.Kernel.Bind<IChild>().To<ChildB>().Named("bob");
+            this.Configuration.Bind<IParent>().To<RequestsConstrainedEnumerable>();
+            this.Configuration.Bind<IChild>().To<ChildA>().Named("joe");
+            this.Configuration.Bind<IChild>().To<ChildB>().Named("bob");
 
-            var parent = this.Kernel.Get<IParent>();
+            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
 
             VerifyInjection(parent);
         }
@@ -21,11 +21,11 @@
         [Fact]
         public void WhenNoMatchingBindingExistsEmptyEnumerableIsInjected()
         {
-            this.Kernel.Bind<IParent>().To<RequestsConstrainedEnumerable>();
-            this.Kernel.Bind<IChild>().To<ChildA>().Named("joe");
-            this.Kernel.Bind<IChild>().To<ChildB>().Named("ian");
+            this.Configuration.Bind<IParent>().To<RequestsConstrainedEnumerable>();
+            this.Configuration.Bind<IChild>().To<ChildA>().Named("joe");
+            this.Configuration.Bind<IChild>().To<ChildB>().Named("ian");
 
-            var parent = this.Kernel.Get<IParent>();
+            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
 
             parent.Should().NotBeNull();
             parent.Children.Count.Should().Be(0);

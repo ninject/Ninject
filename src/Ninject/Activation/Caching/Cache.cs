@@ -126,8 +126,7 @@ namespace Ninject.Activation.Caching
 
             lock (this.entries)
             {
-                Multimap<IBindingConfiguration, CacheEntry> bindings;
-                if (!this.entries.TryGetValue(scope, out bindings))
+                if (!this.entries.TryGetValue(scope, out Multimap<IBindingConfiguration, CacheEntry> bindings))
                 {
                     return null;
                 }
@@ -202,8 +201,7 @@ namespace Ninject.Activation.Caching
         {
             lock (this.entries)
             {
-                Multimap<IBindingConfiguration, CacheEntry> bindings;
-                if (this.entries.TryGetValue(scope, out bindings))
+                if (this.entries.TryGetValue(scope, out Multimap<IBindingConfiguration, CacheEntry> bindings))
                 {
                     this.entries.Remove(scope);
                     this.Forget(GetAllBindingEntries(bindings));

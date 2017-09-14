@@ -129,8 +129,7 @@ namespace Ninject
             KernelRegistrationsLock.EnterUpgradeableReadLock();
             try
             {
-                Registration registration;
-                if (KernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out Registration registration))
                 {
                     return registration;
                 }
@@ -149,8 +148,7 @@ namespace Ninject
 
             try
             {
-                Registration registration;
-                if (KernelRegistrations.TryGetValue(type, out registration))
+                if (KernelRegistrations.TryGetValue(type, out Registration registration))
                 {
                     return registration;
                 }

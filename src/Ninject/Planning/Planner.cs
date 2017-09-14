@@ -65,8 +65,7 @@ namespace Ninject.Planning
 
             try
             {
-                IPlan plan;
-                return this.plans.TryGetValue(type, out plan) ? plan : this.CreateNewPlan(type);
+                return this.plans.TryGetValue(type, out IPlan plan) ? plan : this.CreateNewPlan(type);
             }
             finally
             {
@@ -96,8 +95,7 @@ namespace Ninject.Planning
 
             try
             {
-                IPlan plan;
-                if (this.plans.TryGetValue(type, out plan))
+                if (this.plans.TryGetValue(type, out IPlan plan))
                 {
                     return plan;
                 }

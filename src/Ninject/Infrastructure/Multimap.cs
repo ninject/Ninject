@@ -59,9 +59,7 @@ namespace Ninject.Infrastructure
         {
             get
             {
-                ICollection<TV> result;
-
-                return this.items.TryGetValue(key, out result) ? result : Enumerable.Empty<TV>();
+                return this.items.TryGetValue(key, out ICollection<TV> result) ? result : Enumerable.Empty<TV>();
             }
         }
 
@@ -83,9 +81,7 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
         public bool Remove(TK key, TV value)
         {
-            ICollection<TV> values;
-
-            return this.items.TryGetValue(key, out values) &&
+            return this.items.TryGetValue(key, out ICollection<TV> values) &&
                    values.Remove(value);
         }
 
@@ -140,9 +136,7 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> when values are found or <c>false</c> if not</returns>
         public bool TryGetValues(TK key, out IEnumerable<TV> values)
         {
-            ICollection<TV> tempValues;
-
-            var result = this.items.TryGetValue(key, out tempValues);
+            var result = this.items.TryGetValue(key, out ICollection<TV> tempValues);
             values = tempValues;
 
             return result;
@@ -165,8 +159,7 @@ namespace Ninject.Infrastructure
 
         private ICollection<TV> GetValues(TK key)
         {
-            ICollection<TV> result;
-            if (!this.items.TryGetValue(key, out result))
+            if (!this.items.TryGetValue(key, out ICollection<TV> result))
             {
                 result = new List<TV>();
                 this.items[key] = result;

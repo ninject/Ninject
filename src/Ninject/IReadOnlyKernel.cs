@@ -25,15 +25,13 @@ namespace Ninject
 {
     using System;
     using System.Collections.Generic;
-    using Ninject.Infrastructure.Disposal;
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
 
     /// <summary>
     /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore
     /// </summary>
-    public interface IReadOnlyKernel :
-        IResolutionRoot, IHaveNinjectSettings, IServiceProvider, IDisposableObject
+    public interface IReadOnlyKernel : IResolutionRoot, IHaveNinjectSettings, IServiceProvider
     {
         /// <summary>
         /// Gets the bindings registered for the specified service.

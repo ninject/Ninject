@@ -9,11 +9,11 @@
         [Fact]
         public void ServiceIsInjectedWithListOfAllAvailableDependencies()
         {
-            this.Kernel.Bind<IParent>().To<RequestsList>();
-            this.Kernel.Bind<IChild>().To<ChildA>();
-            this.Kernel.Bind<IChild>().To<ChildB>();
+            this.Configuration.Bind<IParent>().To<RequestsList>();
+            this.Configuration.Bind<IChild>().To<ChildA>();
+            this.Configuration.Bind<IChild>().To<ChildB>();
 
-            var parent = this.Kernel.Get<IParent>();
+            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
 
             VerifyInjection(parent);
         }
@@ -21,11 +21,11 @@
         [Fact]
         public void ServiceIsInjectedWithListOfAllAvailableDependenciesWhenDefaultCtorIsAvailable()
         {
-            this.Kernel.Bind<IParent>().To<RequestsListWithDefaultCtor>();
-            this.Kernel.Bind<IChild>().To<ChildA>();
-            this.Kernel.Bind<IChild>().To<ChildB>();
+            this.Configuration.Bind<IParent>().To<RequestsListWithDefaultCtor>();
+            this.Configuration.Bind<IChild>().To<ChildA>();
+            this.Configuration.Bind<IChild>().To<ChildB>();
 
-            var parent = this.Kernel.Get<IParent>();
+            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
 
             VerifyInjection(parent);
         }
@@ -33,9 +33,9 @@
         [Fact]
         public void EmptyListIsInjectedWhenNoBindingIsAvailable()
         {
-            this.Kernel.Bind<IParent>().To<RequestsList>();
+            this.Configuration.Bind<IParent>().To<RequestsList>();
 
-            var parent = this.Kernel.Get<IParent>();
+            var parent = this.Configuration.BuildReadOnlyKernel().Get<IParent>();
 
             parent.Should().NotBeNull();
             parent.Children.Count.Should().Be(0);

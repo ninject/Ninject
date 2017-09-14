@@ -41,8 +41,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <returns>The series of matching bindings.</returns>
         public IEnumerable<IBinding> Resolve(IDictionary<Type, IEnumerable<IBinding>> bindings, Type service)
         {
-            IEnumerable<IBinding> result;
-            return bindings.TryGetValue(service, out result)
+            return bindings.TryGetValue(service, out IEnumerable<IBinding> result)
                 ? result
                 : Enumerable.Empty<IBinding>();
         }

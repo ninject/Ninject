@@ -167,9 +167,7 @@ namespace Ninject
                     throw new NotSupportedException(ExceptionFormatter.ModulesWithNullOrEmptyNamesAreNotSupported());
                 }
 
-                INinjectModule existingModule;
-
-                if (this.modules.TryGetValue(module.Name, out existingModule))
+                if (this.modules.TryGetValue(module.Name, out INinjectModule existingModule))
                 {
                     throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
                 }
@@ -205,9 +203,7 @@ namespace Ninject
         {
             Contract.Requires(name != null);
 
-            INinjectModule module;
-
-            if (!this.modules.TryGetValue(name, out module))
+            if (!this.modules.TryGetValue(name, out INinjectModule module))
             {
                 throw new NotSupportedException(ExceptionFormatter.NoModuleLoadedWithTheSpecifiedName(name));
             }
@@ -229,20 +225,31 @@ namespace Ninject
         }
 
         /// <inheritdoc />
-        public IReadOnlyKernel BuildReadonlyKernel()
+        public IReadOnlyKernel BuildReadOnlyKernel()
         {
             var readonlyKernel = new ReadOnlyKernel(
-                this.CloneBindings(),
+                this.bindings.Clone(),
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IPipeline>(),
                 this.Components.Get<IBindingPrecedenceComparer>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
                 this.Components.GetAll<IMissingBindingResolver>().ToList(),
-                this.Settings.Clone(),
+                this.settings.Clone(),
                 this.Components.Get<ISelector>());
 
             return readonlyKernel;
+        }
+
+        /// <inheritdoc />
+        public override void Dispose(bool disposing)
+        {
+            if (!this.IsDisposed && disposing)
+            {
+                this.Components.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -300,11 +307,6 @@ namespace Ninject
             this.Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
             this.Components.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
 #endif
-        }
-
-        private Multimap<Type, IBinding> CloneBindings()
-        {
-            return this.bindings.Clone();
         }
     }
 }

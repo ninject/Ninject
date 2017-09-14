@@ -117,7 +117,7 @@ namespace Ninject
                 {
                     if (this.isDirty)
                     {
-                        this.kernel = this.kernelConfiguration.BuildReadonlyKernel();
+                        this.kernel = this.kernelConfiguration.BuildReadOnlyKernel();
                         this.isDirty = false;
                     }
 
@@ -134,12 +134,7 @@ namespace Ninject
         {
             if (disposing && !this.IsDisposed)
             {
-                if (this.kernel != null)
-                {
-                    this.kernel.Dispose();
-                }
-
-                // this.kernelConfiguration.Dispose();
+                this.kernelConfiguration.Dispose();
             }
 
             base.Dispose(disposing);
@@ -340,7 +335,7 @@ namespace Ninject
         }
 
         /// <inheritdoc />
-        public IReadOnlyKernel BuildReadonlyKernel()
+        public IReadOnlyKernel BuildReadOnlyKernel()
         {
             throw new NotSupportedException("Kernel is built internally.");
         }

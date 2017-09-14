@@ -170,8 +170,7 @@ namespace Ninject
         /// <returns>The value, or the default value if none was found.</returns>
         public T Get<T>(string key, T defaultValue)
         {
-            object value;
-            return this.values.TryGetValue(key, out value) ? (T)value : defaultValue;
+            return this.values.TryGetValue(key, out object value) ? (T)value : defaultValue;
         }
 
         /// <summary>

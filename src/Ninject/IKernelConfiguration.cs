@@ -33,7 +33,7 @@ namespace Ninject
     /// <summary>
     /// Configuration for a Ninject kernel.
     /// </summary>
-    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IHaveNinjectComponents
+    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IHaveNinjectComponents, IDisposable
     {
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.
@@ -85,6 +85,6 @@ namespace Ninject
         /// Creates the readonly kernel.
         /// </summary>
         /// <returns>The readonly kernel.</returns>
-        IReadOnlyKernel BuildReadonlyKernel();
+        IReadOnlyKernel BuildReadOnlyKernel();
     }
 }

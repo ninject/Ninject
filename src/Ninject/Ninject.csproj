@@ -22,7 +22,7 @@
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild> 
   </PropertyGroup>
