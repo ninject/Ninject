@@ -308,7 +308,7 @@ namespace Ninject.Infrastructure.Introspection
         {
             using (var sw = new StringWriter())
             {
-                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+                sw.WriteLine("Error activating {0}", context.Request.Service.Format());
                 sw.WriteLine("Provider callback is null.");
 
                 sw.WriteLine("Activation path:");
