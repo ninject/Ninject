@@ -27,6 +27,7 @@ namespace Ninject.Planning.Bindings
     using System.Collections.Generic;
     using Ninject.Activation;
     using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Selection;
 
@@ -113,6 +114,11 @@ namespace Ninject.Planning.Bindings
         /// <returns>The provider to use.</returns>
         public IProvider GetProvider(IContext context)
         {
+            if (this.ProviderCallback == null)
+            {
+                throw new ActivationException(ExceptionFormatter.ProviderCallbackIsNull(context));
+            }
+
             return this.ProviderCallback(context);
         }
 

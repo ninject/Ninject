@@ -20,6 +20,14 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
+        public void ThrowActivationExceptionWhenActivateIfMissingToMethod()
+        {
+            this.kernel.Bind<IConfig>();
+
+            Assert.Throws<ActivationException>(() => this.kernel.Get<IConfig>());
+        }
+
+        [Fact]
         public void InstancesCanBeCreated()
         {
             this.kernel.Bind<IConfig>().ToProvider<ConfigProvider>();
@@ -38,7 +46,7 @@ namespace Ninject.Tests.Integration
                     return typeof(DynamicConfigReader);
                 }
             }
-            
+
             public object Create(IContext context)
             {
                 return new DynamicConfigReader("test");

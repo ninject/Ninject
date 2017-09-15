@@ -300,6 +300,28 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
+        /// Generates a message saying that the provider callback on the specified context is null.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
+        public static string ProviderCallbackIsNull(IContext context)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+                sw.WriteLine("Provider callback is null.");
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(context.Request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that one of the 'To' methods is called after 'Bind' methond.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
         /// Generates a message saying that the provider on the specified context returned null.
         /// </summary>
         /// <param name="context">The context.</param>
