@@ -121,6 +121,13 @@ namespace Ninject.Activation.Providers
 
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
 
+            var cachedInstance = context.Cache.TryGet(context);
+
+            if (cachedInstance != null)
+            {
+                return cachedInstance;
+            }
+
             return directive.Injector(arguments);
         }
 

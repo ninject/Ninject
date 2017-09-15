@@ -25,6 +25,7 @@ namespace Ninject.Activation
 {
     using System;
     using System.Collections.Generic;
+    using Ninject.Activation.Caching;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
@@ -53,6 +54,11 @@ namespace Ninject.Activation
         /// Gets or sets the activation plan.
         /// </summary>
         IPlan Plan { get; set; }
+
+        /// <summary>
+        /// Gets the cache component.
+        /// </summary>
+        ICache Cache { get; }
 
         /// <summary>
         /// Gets the parameters that were passed to manipulate the activation process.

@@ -171,7 +171,34 @@
 
     }
 
+    public class WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructorAndProperty : CircularDependenciesContext
+    {
+        public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructorAndProperty()
+        {
+            kernel.Bind<TwoWayConstructorPropertyFoo>().ToSelf().InSingletonScope();
+            kernel.Bind<TwoWayConstructorPropertyBar>().ToSelf().InSingletonScope();
+        }
 
+        [Fact]
+        public void ThrowsActivationExceptionWhenHookIsResolved()
+        {
+            Assert.Throws<ActivationException>(() => kernel.Get<TwoWayConstructorPropertyFoo>());
+        }
+
+        [Fact]
+        public void DoesNotThrowException()
+        {
+            kernel.Get<TwoWayConstructorPropertyBar>();
+        }
+
+        [Fact]
+        public void ScopeIsRespected()
+        {
+            var bar = kernel.Get<TwoWayConstructorPropertyBar>();
+            var foo = kernel.Get<TwoWayConstructorPropertyFoo>();
+            bar.Foo.Should().BeSameAs(foo);
+        }
+    }
 
     public class TwoWayConstructorFoo
     {
@@ -193,6 +220,22 @@
     {
         [Inject]
         public TwoWayPropertyFoo Foo { get; set; }
+    }
+
+    public class TwoWayConstructorPropertyFoo
+    {
+        public TwoWayConstructorPropertyFoo(TwoWayConstructorPropertyBar bar)
+        {
+            this.Bar = bar;
+        }
+
+        public TwoWayConstructorPropertyBar Bar { get; private set; }
+    }
+
+    public class TwoWayConstructorPropertyBar
+    {
+        [Inject]
+        public TwoWayConstructorPropertyFoo Foo { get; set; }
     }
 
     public class ThreeWayConstructorFoo

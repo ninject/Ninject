@@ -144,6 +144,8 @@ namespace Ninject.Tests.Unit.CacheTests
 
         public IPlan Plan { get; set; }
 
+        public ICache Cache { get; private set; }
+
         public ICollection<IParameter> Parameters { get; set; }
 
         public Type[] GenericArguments

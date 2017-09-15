@@ -208,7 +208,7 @@ namespace Ninject.Activation
 
             if (targetContext.Request.Service == this.Request.Service)
             {
-                if (!(this.Request.Target is PropertyTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
+                if ((this.Request.Target is ParameterTarget && targetContext.Request.Target is ParameterTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
                 {
                     return true;
                 }
