@@ -24,8 +24,8 @@ build:
   verbosity: minimal
 
 artifacts:
-  path: 'src\Ninject\bin\Release\Ninject.{Version}.nupkg'
-  name: 'Ninject.{Version}.nupkg'
+  path: 'src\Ninject\bin\Release\Ninject.{version}.nupkg'
+  name: 'Ninject.{version}.nupkg'
 
 deploy:
   provider: NuGet
