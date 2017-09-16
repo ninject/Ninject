@@ -13,6 +13,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>Ninject</PackageId>
+    <PackageVersion>4.0.0</PackageVersion>
     <PackageTags>IoC;DI;Ninject</PackageTags>
     <PackageProjectUrl>http://www.ninject.org/</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/ninject/Ninject/blob/master/ReleaseNotes.md</PackageReleaseNotes>

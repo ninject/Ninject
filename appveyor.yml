@@ -10,7 +10,7 @@ init:
       }
       else
       {
-          Update-AppveyorBuild -Version "4.0.0-beta+sha.$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+          Update-AppveyorBuild -Version "4.0.0-beta.1.$($env:APPVEYOR_BUILD_NUMBER)+sha.$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
       }
 
 dotnet_csproj:
@@ -27,6 +27,7 @@ build:
 
 artifacts:
   path: '**\*.nupkg'
+  name: 'Ninject NuGet Package'
 
 deploy:
   provider: NuGet
