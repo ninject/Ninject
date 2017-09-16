@@ -2,15 +2,35 @@ configuration: Release
 
 image: Visual Studio 2017
 
+dotnet_csproj:
+  patch: true
+  file: 'src\Ninject\Ninject.csproj'
+  version: '{version}'
+  package_version: '{version}'
+
+before_build:
+- ps: >-
+    if ($env:APPVEYOR_REPO_TAG -eq "true")
+
+    {
+      Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
+    }
+
+    else
+
+    {
+      Update-AppveyorBuild -Version "4.0.0-beta+sha.$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+    }
+
 before_build:
   - cmd: nuget restore -Verbosity quiet
 
 build:
   verbosity: minimal
-  parallel: true
 
 artifacts:
-  path: '**\*.nupkg'
+  path: 'src\Ninject\bin\Release\Ninject.{Version}.nupkg'
+  name: 'Ninject.{Version}.nupkg'
 
 deploy:
   provider: NuGet

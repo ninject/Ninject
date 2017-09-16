@@ -1,11 +1,25 @@
 Version 4.0
 ----------------
-- Add support for NETSTANDARD1.3 and NETSTANDARD1.5
-- Removed support for .NET 3.5
-- Removed support for Windows Phone 7.x
-- Removed support for .NET compact framework
-- Removed support for Mono < 3.x
-- Removed support for Silverlight < 5
+- Add: Support for NETSTANDARD1.3 and NETSTANDARD1.5 and NETSTANDARD2.0
+- Add: Introduced IKernalConfiguration and IReadOnlyKernel
+- Add: Added strongly typed overloads of WithConstructorArgument which use a callback to get the value https://github.com/ninject/Ninject/pull/197
+- Add: Do not choose constructors with an "Obsolete" attribute https://github.com/ninject/Ninject/pull/224
+- Add: Meaningful exception message if there is error in configuration https://github.com/ninject/Ninject/issues/240 https://github.com/ninject/Ninject/issues/245
+
+- Change: Using HasDefaultValue instead of DBNull https://github.com/ninject/Ninject/issues/235
+
+- Removed: Support for .NET 3.5
+- Removed: Support for Windows Phone 7.x
+- Removed: Support for .NET compact framework
+- Removed: Support for Mono < 3.x
+- Removed: Support for Silverlight < 5
+
+- Bugfix: Improved cyclical dependencies detection https://github.com/ninject/Ninject/issues/143
+- Bugfix: WhenMemberHas broken https://github.com/ninject/Ninject/issues/189
+- Bugfix: Injection into private parent parent properties fails https://github.com/ninject/Ninject/issues/241 https://github.com/ninject/Ninject/issues/217
+- Bugfix: Break Singleton / circular dependency WithPropertyValue
+- Bugfix: InSingletonScope bug when requesting an instance in OnActivation callback https://github.com/ninject/Ninject/issues/221 https://github.com/ninject/Ninject/issues/224
+- Bugfix: The invoked member is not supported in a dynamic assembly https://github.com/ninject/Ninject/issues/225
 
 Version 3.2
 ---------------

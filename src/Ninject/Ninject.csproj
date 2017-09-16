@@ -1,29 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>netstandard1.3;netstandard1.5;netstandard2.0;net45</TargetFrameworks>
+    <Version>4.0.0</Version>
+    <Authors>Nate Kohari (nate@enkari.com);Remo Gloor (remo.gloor@gmail.com);Ninject Contributors</Authors>
+    <Company>Ninject Project Contributors</Company>
+    <Product>Ninject: Lightweight dependency injection for .NET</Product>
     <Description>Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.</Description>
     <Copyright>2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.</Copyright>
-    <VersionPrefix>4.0.0-beta</VersionPrefix>
-    <Authors>Nate Kohari (nate@enkari.com);Remo Gloor (remo.gloor@gmail.com);Ninject Contributors</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard1.5;netstandard2.0;net45</TargetFrameworks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Ninject</AssemblyName>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>Ninject</PackageId>
     <PackageTags>IoC;DI;Ninject</PackageTags>
+    <PackageProjectUrl>http://www.ninject.org/</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/ninject/Ninject/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <PackageIconUrl>https://github.com/ninject/ninject/raw/master/logos/Ninject-Logo32.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/ninject/ninject/raw/master/LICENSE.txt</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild> 
   </PropertyGroup>
 
