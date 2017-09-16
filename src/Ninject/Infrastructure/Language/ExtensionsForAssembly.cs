@@ -52,8 +52,10 @@ namespace Ninject.Infrastructure.Language
         /// <returns>The loadable <see cref="INinjectModule"/>s</returns>
         public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
         {
-            return assembly.ExportedTypes.Where(IsLoadableModule)
-                                         .Select(type => Activator.CreateInstance(type) as INinjectModule);
+            return assembly.IsDynamic ?
+                Enumerable.Empty<INinjectModule>() :
+                assembly.ExportedTypes.Where(IsLoadableModule)
+                                      .Select(type => Activator.CreateInstance(type) as INinjectModule);
         }
 
         private static bool IsLoadableModule(Type type)
