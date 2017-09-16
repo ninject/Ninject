@@ -86,11 +86,19 @@ namespace Ninject.Tests.Integration
             this.kernel.Bind<IWarrior>().To<Samurai>();
             this.kernel.Bind<IWeapon>().To<Dagger>();
 
-            GC.SuppressFinalize(this);
+            var argument = constructorArgument(false);
 
-            var barracks = this.kernel.Get<Barracks>(constructorArgument(false));
+            var barracks = this.kernel.Get<Barracks>(argument);
 
-            barracks.Weapon.Should().BeOfType<Sword>();
+            if (argument is WeakConstructorArgument)
+            {
+                barracks.Weapon.Should().Match<IWeapon>(s => s == null || s is Sword);
+            }
+            else
+            {
+                barracks.Weapon.Should().BeOfType<Sword>();
+            }
+
             barracks.Warrior.Weapon.Should().BeOfType<Dagger>();
         }
 
@@ -111,12 +119,20 @@ namespace Ninject.Tests.Integration
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
 
-            GC.SuppressFinalize(this);
+            var argument = constructorArgument(true);
 
-            var barracks = this.kernel.Get<Barracks>(constructorArgument(true));
+            var barracks = this.kernel.Get<Barracks>(argument);
 
-            barracks.Weapon.Should().BeOfType<Sword>();
-            barracks.Warrior.Weapon.Should().BeOfType<Sword>();
+            if (argument is WeakConstructorArgument)
+            {
+                barracks.Weapon.Should().Match<IWeapon>(s => s == null || s is Sword);
+                barracks.Warrior.Weapon.Should().Match<IWeapon>(s => s == null || s is Sword);
+            }
+            else
+            {
+                barracks.Weapon.Should().BeOfType<Sword>();
+                barracks.Warrior.Weapon.Should().BeOfType<Sword>();
+            }
         }
 
 #if !MONO
