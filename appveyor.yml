@@ -20,13 +20,13 @@ dotnet_csproj:
   package_version: '{version}'
 
 before_build:
-  - cmd: nuget restore -Verbosity quiet
+- cmd: nuget restore -Verbosity quiet
 
 build:
   verbosity: minimal
 
 artifacts:
-  path: '**\*.nupkg'
+- path: '**\*.nupkg'
   name: 'Ninject NuGet Package'
 
 deploy:
