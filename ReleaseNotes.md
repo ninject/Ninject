@@ -1,7 +1,7 @@
 Version 4.0
 ----------------
 - Add: Support for NETSTANDARD1.3 and NETSTANDARD1.5 and NETSTANDARD2.0
-- Add: Introduced IKernalConfiguration and IReadOnlyKernel
+- Add: Introduced IKernelConfiguration and IReadOnlyKernel
 - Add: Added strongly typed overloads of WithConstructorArgument which use a callback to get the value https://github.com/ninject/Ninject/pull/197
 - Add: Do not choose constructors with an "Obsolete" attribute https://github.com/ninject/Ninject/pull/224
 - Add: Meaningful exception message if there is error in configuration https://github.com/ninject/Ninject/issues/240 https://github.com/ninject/Ninject/issues/245
