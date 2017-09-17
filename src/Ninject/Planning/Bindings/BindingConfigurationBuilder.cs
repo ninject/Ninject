@@ -46,7 +46,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         private readonly string serviceNames;
 
-       /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="BindingConfigurationBuilder{T}"/> class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
