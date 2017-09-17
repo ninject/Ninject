@@ -61,6 +61,19 @@ namespace Ninject.Tests.Integration
         }
 
         [Fact]
+        public void UnsatisfiedConditionalShouldBeIngored()
+        {
+            kernel.Bind<Barracks>().ToSelf();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWarrior>().To<Samurai>().When(_ => false);
+
+            var barracks = kernel.Get<Barracks>();
+            barracks.Should().NotBeNull();
+            barracks.Warrior.Should().BeNull();
+            barracks.Weapon.Should().NotBeNull();
+        }
+
+        [Fact]
         public void CtorWithMostDependenciesIsUsedWhenBindingsAreAvailable()
         {
             kernel.Bind<Barracks>().ToSelf();

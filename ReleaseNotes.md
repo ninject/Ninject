@@ -17,6 +17,7 @@ Version 4.0
 - Bugfix: Break Singleton / circular dependency WithPropertyValue
 - Bugfix: InSingletonScope bug when requesting an instance in OnActivation callback https://github.com/ninject/Ninject/issues/221 https://github.com/ninject/Ninject/issues/224
 - Bugfix: The invoked member is not supported in a dynamic assembly https://github.com/ninject/Ninject/issues/225
+- Bugfix: Conditional binding is not being considered when score constructors https://github.com/ninject/Ninject/issues/237
 
 Version 3.2
 ---------------

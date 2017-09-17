@@ -108,7 +108,9 @@ namespace Ninject.Selection.Heuristics
         protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
         {
             var targetType = this.GetTargetType(target);
-            return kernel.GetBindings(targetType).Any(b => !b.IsImplicit)
+            var request = context.Request.CreateChild(targetType, context, target);
+
+            return kernel.GetBindings(targetType).Any(b => !b.IsImplicit && b.Matches(request))
                    || target.HasDefaultValue;
         }
 
