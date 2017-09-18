@@ -6,6 +6,7 @@ Version 4.0
 - Add: Do not choose constructors with an "Obsolete" attribute https://github.com/ninject/Ninject/pull/224
 - Add: Meaningful exception message if there is error in configuration https://github.com/ninject/Ninject/issues/240 https://github.com/ninject/Ninject/issues/245
 - Change: Using HasDefaultValue instead of DBNull https://github.com/ninject/Ninject/issues/235
+- Change: Array/List of concrete classes will return empty if the concrete class is not explictly binded https://github.com/ninject/Ninject/issues
 - Removed: Support for .NET 3.5
 - Removed: Support for Windows Phone 7.x
 - Removed: Support for .NET compact framework

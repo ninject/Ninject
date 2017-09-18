@@ -24,10 +24,11 @@
 namespace Ninject
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-
+    using System.Reflection;
     using Ninject.Activation;
     using Ninject.Activation.Caching;
     using Ninject.Infrastructure;
@@ -211,6 +212,24 @@ namespace Ninject
         protected virtual bool HandleMissingBinding(IRequest request)
         {
             Contract.Requires(request != null);
+
+            if (request.Target != null)
+            {
+                var targetType = request.Target.Type;
+
+                if (targetType.IsArray)
+                {
+                    return false;
+                }
+
+                var targetTypeInfo = targetType.GetTypeInfo();
+
+                if (targetTypeInfo.IsGenericType &&
+                    targetTypeInfo.ImplementedInterfaces.Contains(typeof(IEnumerable)))
+                {
+                    return false;
+                }
+            }
 
             var bindings = this.GetBindingsFromFirstResolverThatReturnsAtLeastOneBinding(request);
             if (bindings == null)
