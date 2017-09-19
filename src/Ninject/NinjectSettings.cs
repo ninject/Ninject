@@ -161,6 +161,20 @@ namespace Ninject
             set { this.Set("AllowNullInjection", value); }
         }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether only unloaded modules be loaded.
+		/// If the module is not loaded, it will load the module; otherwise, it will skip
+		/// loading the module.
+		/// By default this is disabled and whenever a module is loaded and has already been
+		/// loaded, an exception is thrown.
+		/// </summary>
+		/// <value><c>true</c>Module is loaded only if it has not been loaded; otherwise, <c>false</c>.</value>
+		public bool LoadModuleIfNotLoaded
+		{
+			get { return this.Get("LoadModuleIfNotLoaded", false); }
+			set { this.Set("LoadModuleIfNotLoaded", value); }
+		}
+
         /// <summary>
         /// Gets the value for the specified key.
         /// </summary>

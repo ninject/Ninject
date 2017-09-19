@@ -97,6 +97,16 @@ namespace Ninject
         /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
         bool AllowNullInjection { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether only unloaded modules be loaded.
+		/// If the module is not loaded, it will load the module; otherwise, it will skip
+		/// loading the module.
+		/// By default this is disabled and whenever a module is loaded and has already been
+		/// loaded, an exception is thrown.
+		/// </summary>
+		/// <value><c>true</c>Module is loaded only if it has not been loaded; otherwise, <c>false</c>.</value>
+		bool LoadModuleIfNotLoaded { get; set; }
+
         /// <summary>
         /// Gets the value for the specified key.
         /// </summary>
