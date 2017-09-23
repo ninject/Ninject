@@ -3,7 +3,7 @@ configuration: Release
 image: Visual Studio 2017
 
 init:
-- ps: >-
+  - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
           Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
@@ -19,20 +19,24 @@ dotnet_csproj:
   version: '{version}'
   package_version: '{version}'
 
+cache:
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  - '%LocalAppData%\NuGet\v3-cache'
+
 before_build:
-- nuget restore -Verbosity quiet
-- choco install opencover.portable
-- choco install codecov
+  - nuget restore -Verbosity quiet
+  - choco install opencover.portable
+  - choco install codecov
 
 build:
   verbosity: minimal
 
 test_script:
-- OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject*]* -[Ninject.Test*]*" -output:".\Ninject_coverage.xml"
-- codecov -f "Ninject_coverage.xml
+  - codecov -f "Ninject_coverage.xml
 
 artifacts:
-- path: '**\*.nupkg'
+  - path: '**\*.nupkg'
 
 deploy:
   provider: NuGet

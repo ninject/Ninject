@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);0618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
