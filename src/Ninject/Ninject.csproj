@@ -7,7 +7,7 @@
     <Company>Ninject Project Contributors</Company>
     <Product>Ninject: Lightweight dependency injection for .NET</Product>
     <Description>Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.</Description>
-    <Copyright>2007-2010, Enkari, Ltd. 2010-2016, Ninject Contributors.</Copyright>
+    <Copyright>2007-2010, Enkari, Ltd. 2010-2017, Ninject Contributors.</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
