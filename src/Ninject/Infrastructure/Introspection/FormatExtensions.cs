@@ -23,19 +23,6 @@ namespace Ninject.Infrastructure.Introspection
     /// </summary>
     public static class FormatExtensions
     {
-#if NO_MEMBERTYPE
-        private enum MemberTypes
-        {
-            Field,
-            Event,
-            Constructor,
-            Property,
-            Method,
-            NestedType,
-            TypeInfo,
-        }
-#endif
-
         /// <summary>
         /// Formats the activation path into a meaningful string representation.
         /// </summary>
@@ -144,11 +131,7 @@ namespace Ninject.Infrastructure.Introspection
         {
             using (var sw = new StringWriter())
             {
-#if !NO_MEMBERTYPE
                 switch (target.Member.MemberType)
-#else
-                switch (target.Member.GetMemberType())
-#endif
                 {
                     case MemberTypes.Constructor:
                         sw.Write("parameter {0} of constructor", target.Name);
@@ -166,9 +149,8 @@ namespace Ninject.Infrastructure.Introspection
                         throw new ArgumentOutOfRangeException();
                 }
 
-#if !NO_REFLECTEDTYPE
                 sw.Write(" of type {0}", target.Member.ReflectedType.Format());
-#endif
+
                 return sw.ToString();
             }
         }
@@ -182,17 +164,10 @@ namespace Ninject.Infrastructure.Introspection
         {
             var friendlyName = GetFriendlyName(type);
 
-#if !MONO
             if (friendlyName.Contains("AnonymousType"))
             {
                 return "AnonymousType";
             }
-#else
-            if (friendlyName.Contains("__AnonType"))
-            {
-                return "AnonymousType";
-            }
-#endif
 
             switch (friendlyName.ToLowerInvariant())
             {
@@ -296,37 +271,5 @@ namespace Ninject.Infrastructure.Introspection
 
             sb.Append("}");
         }
-
-#if NO_MEMBERTYPE
-        private static MemberTypes GetMemberType(this MemberInfo member)
-        {
-            if (member is FieldInfo)
-            {
-                return MemberTypes.Field;
-            }
-
-            if (member is ConstructorInfo)
-            {
-                return MemberTypes.Constructor;
-            }
-
-            if (member is PropertyInfo)
-            {
-                return MemberTypes.Property;
-            }
-
-            if (member is EventInfo)
-            {
-                return MemberTypes.Event;
-            }
-
-            if (member is MethodInfo)
-            {
-                return MemberTypes.Method;
-            }
-
-            return MemberTypes.TypeInfo;
-        }
-#endif
     }
 }

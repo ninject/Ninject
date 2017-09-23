@@ -39,7 +39,7 @@ namespace Ninject
             kernel.Load(modules);
         }
 
-        #if !NO_ASSEMBLY_SCANNING
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
@@ -59,6 +59,6 @@ namespace Ninject
         {
             kernel.Load(assemblies);
         }
-        #endif
+#endif
     }
 }
