@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
-    <Version>4.0.0</Version>
+    <Version>0.0.0</Version>
     <Authors>Nate Kohari (nate@enkari.com);Remo Gloor (remo.gloor@gmail.com);Ninject Contributors</Authors>
     <Company>Ninject Project Contributors</Company>
     <Product>Ninject: Lightweight dependency injection for .NET</Product>
@@ -13,7 +13,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>Ninject</PackageId>
-    <PackageVersion>4.0.0</PackageVersion>
+    <PackageVersion>0.0.0</PackageVersion>
     <PackageTags>IoC;DI;Ninject</PackageTags>
     <PackageProjectUrl>http://www.ninject.org/</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/ninject/Ninject/blob/master/ReleaseNotes.md</PackageReleaseNotes>
@@ -40,24 +40,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
@@ -67,14 +49,6 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NO_REMOTING;NO_REFLECTEDTYPE;NO_GETCUSTOMATTRIBUTES;NO_MEMBERTYPE;NO_CUSTOM_ATTRIBUTE_PROVIDER;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_THREAD_SCOPE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
-    <DefineConstants>$(DefineConstants);NO_REMOTING;NO_REFLECTEDTYPE;NO_GETCUSTOMATTRIBUTES;NO_ASSEMBLY_SCANNING;NO_EXCEPTION_SERIALIZATION;NO_THREAD_SCOPE</DefineConstants>
-  </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);NO_REMOTING;NO_ASSEMBLY_SCANNING</DefineConstants>

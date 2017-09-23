@@ -1,17 +1,12 @@
-Version 4.0
+Version 3.3
 ----------------
-- Add: Support for NETSTANDARD1.3 and NETSTANDARD1.5 and NETSTANDARD2.0
-- Add: Introduced IKernelConfiguration and IReadOnlyKernel
-- Add: Added strongly typed overloads of WithConstructorArgument which use a callback to get the value https://github.com/ninject/Ninject/pull/197
+- Add: Support NETSTANDARD2.0
+- Add: Strongly typed overloads of WithConstructorArgument which use a callback to get the value https://github.com/ninject/Ninject/pull/197
 - Add: Do not choose constructors with an "Obsolete" attribute https://github.com/ninject/Ninject/pull/224
 - Add: Meaningful exception message if there is error in configuration https://github.com/ninject/Ninject/issues/240 https://github.com/ninject/Ninject/issues/245
+- Removed: Support for .NET 3.5 and Silverlight
 - Change: Using HasDefaultValue instead of DBNull https://github.com/ninject/Ninject/issues/235
 - Change: Array/List of concrete classes will return empty if the concrete class is not explictly binded https://github.com/ninject/Ninject/issues/227
-- Removed: Support for .NET 3.5
-- Removed: Support for Windows Phone 7.x
-- Removed: Support for .NET compact framework
-- Removed: Support for Mono < 3.x
-- Removed: Support for Silverlight < 5
 - Bugfix: Improved cyclical dependencies detection https://github.com/ninject/Ninject/issues/143
 - Bugfix: WhenMemberHas broken https://github.com/ninject/Ninject/issues/189
 - Bugfix: Injection into private parent parent properties fails https://github.com/ninject/Ninject/issues/241 https://github.com/ninject/Ninject/issues/217
