@@ -1,25 +1,10 @@
-﻿//-------------------------------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="GlobalKernelRegistration.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
@@ -43,11 +28,11 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The <see cref="IKernel"/>.</param>
         /// <param name="type">The service type.</param>
-        internal static void RegisterKernelForType(IReadOnlyKernel kernel, Type type)
+        internal static void RegisterKernelForType(IKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
 
-            registration.KernelLock.EnterReadLock();
+            registration.KernelLock.EnterWriteLock();
 
             try
             {
@@ -55,7 +40,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ExitReadLock();
+                registration.KernelLock.ExitWriteLock();
             }
         }
 
@@ -64,7 +49,7 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The <see cref="IKernel"/>.</param>
         /// <param name="type">The service type.</param>
-        internal static void UnregisterKernelForType(IReadOnlyKernel kernel, Type type)
+        internal static void UnregisterKernelForType(IKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
             RemoveKernels(registration, registration.Kernels.Where(reference => reference.Target == kernel || !reference.IsAlive));
@@ -74,7 +59,7 @@ namespace Ninject
         /// Performs an action on all registered kernels.
         /// </summary>
         /// <param name="action">The action.</param>
-        protected void MapKernels(Action<IReadOnlyKernel> action)
+        protected void MapKernels(Action<IKernel> action)
         {
             var requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
@@ -85,7 +70,7 @@ namespace Ninject
             {
                 foreach (var weakReference in registration.Kernels)
                 {
-                    if (weakReference.Target is IReadOnlyKernel kernel)
+                    if (weakReference.Target is IKernel kernel)
                     {
                         action(kernel);
                     }
@@ -108,7 +93,7 @@ namespace Ninject
 
         private static void RemoveKernels(Registration registration, IEnumerable<WeakReference> references)
         {
-            registration.KernelLock.ExitReadLock();
+            registration.KernelLock.EnterWriteLock();
 
             try
             {
@@ -119,7 +104,7 @@ namespace Ninject
             }
             finally
             {
-                registration.KernelLock.ExitReadLock();
+                registration.KernelLock.ExitWriteLock();
             }
         }
 

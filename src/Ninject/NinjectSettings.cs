@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="NinjectSettings.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
@@ -33,27 +18,7 @@ namespace Ninject
     /// </summary>
     public class NinjectSettings : INinjectSettings
     {
-        private readonly IDictionary<string, object> values;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
-        /// </summary>
-        public NinjectSettings()
-            : this(new Dictionary<string, object>())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
-        /// </summary>
-        /// <param name="values">Dependency injection for the settings values</param>
-        private NinjectSettings(IDictionary<string, object> values)
-        {
-            this.values = values;
-#if NO_LCG
-            this.UseReflectionBasedInjection = false;
-#endif
-        }
+        private readonly Dictionary<string, object> values = new Dictionary<string, object>();
 
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
@@ -82,6 +47,7 @@ namespace Ninject
             set { this.Set("DefaultScopeCallback", value); }
         }
 
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
@@ -99,7 +65,9 @@ namespace Ninject
             get { return this.Get("ExtensionSearchPatterns", new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
             set { this.Set("ExtensionSearchPatterns", value); }
         }
+#endif //!NO_ASSEMBLY_SCANNING
 
+#if !NO_LCG
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
@@ -109,6 +77,7 @@ namespace Ninject
             get { return this.Get("UseReflectionBasedInjection", false); }
             set { this.Set("UseReflectionBasedInjection", value); }
         }
+#endif //!NO_LCG
 
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
@@ -140,7 +109,7 @@ namespace Ninject
         /// Bind{IA}().ToMethod(ctx =&gt; kernel.Get{IA}();
         /// </summary>
         /// <value>
-        ///     <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
+        /// <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
         /// </value>
         public bool ActivationCacheDisabled
         {
@@ -153,7 +122,7 @@ namespace Ninject
         /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if null is allowed as injected value otherwise false.
+        /// <c>true</c> if null is allowed as injected value otherwise false.
         /// </value>
         public bool AllowNullInjection
         {
@@ -181,16 +150,6 @@ namespace Ninject
         public void Set(string key, object value)
         {
             this.values[key] = value;
-        }
-
-        /// <summary>
-        /// Clones the ninject settings into a new instance
-        /// </summary>
-        /// <returns>A new instance of the ninject settings</returns>
-        public INinjectSettings Clone()
-        {
-            var clonedValues = new Dictionary<string, object>(this.values);
-            return new NinjectSettings(clonedValues);
         }
     }
 }

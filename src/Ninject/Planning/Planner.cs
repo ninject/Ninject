@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Planner.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning
 {
@@ -28,6 +13,7 @@ namespace Ninject.Planning
     using System.Linq;
     using System.Threading;
     using Ninject.Components;
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Strategies;
 
@@ -37,7 +23,6 @@ namespace Ninject.Planning
     public class Planner : NinjectComponent, IPlanner
     {
         private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
-
         private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
 
         /// <summary>
@@ -46,6 +31,8 @@ namespace Ninject.Planning
         /// <param name="strategies">The strategies to execute during planning.</param>
         public Planner(IEnumerable<IPlanningStrategy> strategies)
         {
+            Ensure.ArgumentNotNull(strategies, "strategies");
+
             this.Strategies = strategies.ToList();
         }
 
@@ -61,6 +48,8 @@ namespace Ninject.Planning
         /// <returns>The type's activation plan.</returns>
         public IPlan GetPlan(Type type)
         {
+            Ensure.ArgumentNotNull(type, "type");
+
             this.plannerLock.EnterUpgradeableReadLock();
 
             try
@@ -80,6 +69,8 @@ namespace Ninject.Planning
         /// <returns>The created plan.</returns>
         protected virtual IPlan CreateEmptyPlan(Type type)
         {
+            Ensure.ArgumentNotNull(type, "type");
+
             return new Plan(type);
         }
 

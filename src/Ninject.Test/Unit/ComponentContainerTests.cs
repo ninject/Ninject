@@ -13,7 +13,7 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
     public class ComponentContainerContext
     {
         protected ComponentContainer container;
-        protected Mock<IKernelConfiguration> kernelConfigurationMock;
+        protected Mock<IKernel> kernelMock;
 
         public ComponentContainerContext()
         {
@@ -23,10 +23,9 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
         public void SetUp()
         {
             this.container = new ComponentContainer();
-            this.kernelConfigurationMock = new Mock<IKernelConfiguration>();
-            this.kernelConfigurationMock.SetupGet(c => c.Settings).Returns(new NinjectSettings());
+            this.kernelMock = new Mock<IKernel>();
 
-            this.container.KernelConfiguration = this.kernelConfigurationMock.Object;
+            this.container.Kernel = kernelMock.Object;
         }
     }
 

@@ -1,25 +1,10 @@
-﻿//-------------------------------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="Target.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Targets
 {
@@ -38,9 +23,7 @@ namespace Ninject.Planning.Targets
     /// </summary>
     /// <typeparam name="T">The type of site this represents.</typeparam>
     public abstract class Target<T> : ITarget
-#if !NO_CUSTOM_ATTRIBUTE_PROVIDER
         where T : ICustomAttributeProvider
-#endif
     {
         private readonly Lazy<Func<IBindingMetadata, bool>> constraint;
         private readonly Lazy<bool> isOptional;
@@ -52,6 +35,9 @@ namespace Ninject.Planning.Targets
         /// <param name="site">The site represented by the target.</param>
         protected Target(MemberInfo member, T site)
         {
+            Ensure.ArgumentNotNull(member, "member");
+            Ensure.ArgumentNotNull(site, "site");
+
             this.Member = member;
             this.Site = site;
 
@@ -112,7 +98,6 @@ namespace Ninject.Planning.Targets
             get { throw new InvalidOperationException(ExceptionFormatter.TargetDoesNotHaveADefaultValue(this)); }
         }
 
-#if !NO_CUSTOM_ATTRIBUTE_PROVIDER
         /// <summary>
         /// Returns an array of custom attributes of a specified type defined on the target.
         /// </summary>
@@ -121,7 +106,9 @@ namespace Ninject.Planning.Targets
         /// <returns>An array of custom attributes of the specified type.</returns>
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
-            return this.Site.GetCustomAttributesExtended(attributeType, inherit).ToArray();
+            Ensure.ArgumentNotNull(attributeType, "attributeType");
+
+            return this.Site.GetCustomAttributesExtended(attributeType, inherit);
         }
 
         /// <summary>
@@ -142,21 +129,10 @@ namespace Ninject.Planning.Targets
         /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
         public bool IsDefined(Type attributeType, bool inherit)
         {
+            Ensure.ArgumentNotNull(attributeType, "attributeType");
+
             return this.Site.IsDefined(attributeType, inherit);
         }
-#else
-        /// <summary>
-        /// Determines if the target has the specified attribute.
-        /// </summary>
-        /// <param name="attributeType">The type of attribute</param>
-        /// <returns>
-        ///     <c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
-        /// </returns>
-        public bool HasAttribute(Type attributeType)
-        {
-            return this.Site.HasAttribute(attributeType);
-        }
-#endif
 
         /// <summary>
         /// Resolves a value for the target within the specified parent context.
@@ -165,16 +141,17 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolved value.</returns>
         public object ResolveWithin(IContext parent)
         {
+            Ensure.ArgumentNotNull(parent, "parent");
+
             if (this.Type.IsArray)
             {
                 var service = this.Type.GetElementType();
                 return this.GetValues(service, parent).CastSlow(service).ToArraySlow(service);
             }
 
-            if (this.Type.GetTypeInfo().IsGenericType)
+            if (this.Type.IsGenericType)
             {
                 var gtd = this.Type.GetGenericTypeDefinition();
-
                 var service = this.Type.GenericTypeArguments[0];
 
                 if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
@@ -199,6 +176,9 @@ namespace Ninject.Planning.Targets
         /// <returns>A series of values that are available for injection.</returns>
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parent, "parent");
+
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsOptional = true;
             return parent.Kernel.Resolve(request);
@@ -212,6 +192,9 @@ namespace Ninject.Planning.Targets
         /// <returns>The value that is to be injected.</returns>
         protected virtual object GetValue(Type service, IContext parent)
         {
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parent, "parent");
+
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
             return parent.Kernel.Resolve(request).SingleOrDefault();
@@ -232,14 +215,14 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolution constraint.</returns>
         protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
         {
-            var attributes = this.Site.GetCustomAttributesExtended(typeof(ConstraintAttribute), true).Cast<ConstraintAttribute>().ToList();
+            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
 
-            if (attributes == null || attributes.Count == 0)
+            if (attributes == null || attributes.Length == 0)
             {
                 return null;
             }
 
-            if (attributes.Count == 1)
+            if (attributes.Length == 1)
             {
                 return attributes[0].Matches;
             }

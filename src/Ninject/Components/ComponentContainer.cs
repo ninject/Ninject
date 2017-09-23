@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ComponentContainer.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Components
 {
@@ -42,9 +27,9 @@ namespace Ninject.Components
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
-        /// Gets or sets the kernel configuration
+        /// Gets or sets the kernel that owns the component container.
         /// </summary>
-        public IKernelConfiguration KernelConfiguration { get; set; }
+        public IKernel Kernel { get; set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -127,6 +112,8 @@ namespace Ninject.Components
         /// <param name="component">The component type.</param>
         public void RemoveAll(Type component)
         {
+            Ensure.ArgumentNotNull(component, "component");
+
             foreach (Type implementation in this.mappings[component])
             {
                 if (this.instances.ContainsKey(implementation))
@@ -169,18 +156,19 @@ namespace Ninject.Components
         /// <returns>The instance of the component.</returns>
         public object Get(Type component)
         {
-            if (component == typeof(IKernelConfiguration))
+            Ensure.ArgumentNotNull(component, "component");
+
+            if (component == typeof(IKernel))
             {
-                return this.KernelConfiguration;
+                return this.Kernel;
             }
 
-            if (component.GetTypeInfo().IsGenericType)
+            if (component.IsGenericType)
             {
                 var gtd = component.GetGenericTypeDefinition();
-                var argument = component.GetTypeInfo().GenericTypeArguments[0];
+                var argument = component.GenericTypeArguments[0];
 
-                var info = gtd.GetTypeInfo();
-                if (info.IsInterface && typeof(IEnumerable<>).GetTypeInfo().IsAssignableFrom(info))
+                if (gtd.IsInterface && typeof(IEnumerable<>).IsAssignableFrom(gtd))
                 {
                     return this.GetAll(argument).CastSlow(argument);
                 }
@@ -203,15 +191,15 @@ namespace Ninject.Components
         /// <returns>A series of instances of the specified component.</returns>
         public IEnumerable<object> GetAll(Type component)
         {
+            Ensure.ArgumentNotNull(component, "component");
+
             return this.mappings[component]
                 .Select(implementation => this.ResolveInstance(component, implementation));
         }
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-            var constructor =
-                implementation.GetTypeInfo().DeclaredConstructors.Where(c => c.IsPublic && !c.IsStatic).OrderByDescending(c => c.GetParameters().Length).
-                    FirstOrDefault();
+            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
 
             if (constructor == null)
             {
@@ -238,8 +226,7 @@ namespace Ninject.Components
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
 
-                // Todo: Clone Settings during kernel build (is this still important? Can clone settings now)
-                instance.Settings = this.KernelConfiguration.Settings.Clone();
+                instance.Settings = this.Kernel.Settings;
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {

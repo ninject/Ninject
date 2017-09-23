@@ -1,25 +1,10 @@
-﻿//-------------------------------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="BindingBuilder.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Bindings
 {
@@ -40,19 +25,27 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder"/> class.
         /// </summary>
         /// <param name="bindingConfiguration">The binding to build.</param>
-        /// <param name="settings">The ninject configuration settings.</param>
+        /// <param name="kernel">The kernel.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfiguration, INinjectSettings settings, string serviceNames)
+        public BindingBuilder(IBindingConfiguration bindingConfiguration, IKernel kernel, string serviceNames)
         {
+            Ensure.ArgumentNotNull(bindingConfiguration, "binding");
+            Ensure.ArgumentNotNull(kernel, "kernel");
             this.BindingConfiguration = bindingConfiguration;
+            this.Kernel = kernel;
             this.ServiceNames = serviceNames;
-            this.BindingConfiguration.ScopeCallback = settings.DefaultScopeCallback;
+            this.BindingConfiguration.ScopeCallback = kernel.Settings.DefaultScopeCallback;
         }
 
         /// <summary>
         /// Gets the binding being built.
         /// </summary>
         public IBindingConfiguration BindingConfiguration { get; private set; }
+
+        /// <summary>
+        /// Gets the kernel.
+        /// </summary>
+        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Gets the names of the services.
@@ -78,10 +71,10 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> InternalTo<T>(Type implementation)
         {
-            StandardProvider.AssignProviderCallback(this.BindingConfiguration, implementation);
+            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation);
             this.BindingConfiguration.Target = BindingTarget.Type;
 
-            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -92,12 +85,11 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToConfiguration<TImplementation>(TImplementation value)
         {
-            var constantProvider = new ConstantProvider<TImplementation>(value);
-            this.BindingConfiguration.ProviderCallback = ctx => constantProvider;
+            this.BindingConfiguration.ProviderCallback = ctx => new ConstantProvider<TImplementation>(value);
             this.BindingConfiguration.Target = BindingTarget.Constant;
             this.BindingConfiguration.ScopeCallback = StandardScopeCallbacks.Singleton;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -108,11 +100,10 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<TImplementation> InternalToMethod<TImplementation>(Func<IContext, TImplementation> method)
         {
-            var callbackProvider = new CallbackProvider<TImplementation>(method);
-            this.BindingConfiguration.ProviderCallback = ctx => callbackProvider;
+            this.BindingConfiguration.ProviderCallback = ctx => new CallbackProvider<TImplementation>(method);
             this.BindingConfiguration.Target = BindingTarget.Method;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -126,7 +117,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => provider;
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -142,7 +133,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get<TProvider>();
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -157,7 +148,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.ProviderCallback = ctx => ctx.Kernel.Get(providerType) as IProvider;
             this.BindingConfiguration.Target = BindingTarget.Provider;
 
-            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>
@@ -179,7 +170,7 @@ namespace Ninject.Planning.Bindings
             this.BindingConfiguration.Target = BindingTarget.Type;
             this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
 
-            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames);
+            return new BindingConfigurationBuilder<TImplementation>(this.BindingConfiguration, this.ServiceNames, this.Kernel);
         }
 
         /// <summary>

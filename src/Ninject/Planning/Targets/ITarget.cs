@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ITarget.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Targets
 {
@@ -31,10 +16,7 @@ namespace Ninject.Planning.Targets
     /// <summary>
     /// Represents a site on a type where a value will be injected.
     /// </summary>
-    public interface ITarget
-#if !NO_CUSTOM_ATTRIBUTE_PROVIDER
-        : ICustomAttributeProvider
-#endif
+    public interface ITarget : ICustomAttributeProvider
     {
         /// <summary>
         /// Gets the type of the target.
@@ -78,16 +60,5 @@ namespace Ninject.Planning.Targets
         /// <param name="parent">The parent context.</param>
         /// <returns>The resolved value.</returns>
         object ResolveWithin(IContext parent);
-
-#if NO_CUSTOM_ATTRIBUTE_PROVIDER
-        /// <summary>
-        /// Determines if the target has the specified attribute.
-        /// </summary>
-        /// <param name="attributeType">The type of attribute</param>
-        /// <returns>
-        ///     <c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
-        /// </returns>
-        bool HasAttribute(Type attributeType);
-#endif
     }
 }

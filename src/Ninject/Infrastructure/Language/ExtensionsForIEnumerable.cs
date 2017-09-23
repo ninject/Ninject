@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ExtensionsForIEnumerable.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Infrastructure.Language
 {
@@ -33,16 +18,9 @@ namespace Ninject.Infrastructure.Language
     /// </summary>
     internal static class ExtensionsForIEnumerable
     {
-        private static readonly MethodInfo Cast;
-        private static readonly MethodInfo ToArray;
-        private static readonly MethodInfo ToList;
-
-        static ExtensionsForIEnumerable()
-        {
-            Cast = typeof(Enumerable).GetMethod(nameof(Cast));
-            ToArray = typeof(Enumerable).GetMethod(nameof(ToArray));
-            ToList = typeof(Enumerable).GetMethod(nameof(ToList));
-        }
+        private static readonly MethodInfo Cast = typeof(Enumerable).GetMethod(nameof(Cast));
+        private static readonly MethodInfo ToArray = typeof(Enumerable).GetMethod(nameof(ToArray));
+        private static readonly MethodInfo ToList = typeof(Enumerable).GetMethod(nameof(ToList));
 
         /// <summary>
         /// Casts the elements of an <see cref="IEnumerable"/> to the specified type using reflection.

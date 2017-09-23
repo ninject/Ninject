@@ -1,36 +1,21 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ActivationCacheStrategy.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Strategies
 {
-    using System.Diagnostics.Contracts;
     using Ninject.Activation.Caching;
+    using Ninject.Components;
     using Ninject.Infrastructure;
 
     /// <summary>
     /// Adds all activated instances to the activation cache.
     /// </summary>
-    public class ActivationCacheStrategy : IActivationStrategy
+    public class ActivationCacheStrategy : NinjectComponent, IActivationStrategy
     {
         /// <summary>
         /// The activation cache.
@@ -43,21 +28,9 @@ namespace Ninject.Activation.Strategies
         /// <param name="activationCache">The activation cache.</param>
         public ActivationCacheStrategy(IActivationCache activationCache)
         {
-            Contract.Requires(activationCache != null);
+            Ensure.ArgumentNotNull(activationCache, "activationCache");
+
             this.activationCache = activationCache;
-        }
-
-        /// <summary>
-        /// Gets or sets the settings.
-        /// </summary>
-        /// <value>The ninject settings.</value>
-        public INinjectSettings Settings { get; set; }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
         }
 
         /// <summary>

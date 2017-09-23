@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="BindingConfiguration.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Bindings
 {
@@ -29,7 +14,6 @@ namespace Ninject.Planning.Bindings
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
-    using Ninject.Selection;
 
     /// <summary>
     /// The configuration of a binding.
@@ -46,7 +30,6 @@ namespace Ninject.Planning.Bindings
             this.ActivationActions = new List<Action<IContext, object>>();
             this.DeactivationActions = new List<Action<IContext, object>>();
             this.ScopeCallback = StandardScopeCallbacks.Transient;
-            this.InitializeProviderCallback = s => { };
         }
 
         /// <summary>
@@ -103,17 +86,14 @@ namespace Ninject.Planning.Bindings
         public ICollection<Action<IContext, object>> DeactivationActions { get; private set; }
 
         /// <summary>
-        /// Gets or sets the InitizalizeProviderCallback action
-        /// </summary>
-        public Action<ISelector> InitializeProviderCallback { get; set; }
-
-        /// <summary>
         /// Gets the provider for the binding.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The provider to use.</returns>
         public IProvider GetProvider(IContext context)
         {
+            Ensure.ArgumentNotNull(context, "context");
+
             if (this.ProviderCallback == null)
             {
                 throw new ActivationException(ExceptionFormatter.ProviderCallbackIsNull(context));
@@ -129,6 +109,8 @@ namespace Ninject.Planning.Bindings
         /// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
         public object GetScope(IContext context)
         {
+            Ensure.ArgumentNotNull(context, "context");
+
             return this.ScopeCallback(context);
         }
 
@@ -139,6 +121,8 @@ namespace Ninject.Planning.Bindings
         /// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
         public bool Matches(IRequest request)
         {
+            Ensure.ArgumentNotNull(request, "request");
+
             return this.Condition == null || this.Condition(request);
         }
     }

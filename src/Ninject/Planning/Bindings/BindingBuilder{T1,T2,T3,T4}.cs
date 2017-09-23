@@ -1,25 +1,10 @@
-﻿//-------------------------------------------------------------------------------------------------
+﻿// -------------------------------------------------------------------------------------------------
 // <copyright file="BindingBuilder{T1,T2,T3,T4}.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Bindings
 {
@@ -37,18 +22,16 @@ namespace Ninject.Planning.Bindings
     /// <typeparam name="T4">The fourth service type.</typeparam>
     public class BindingBuilder<T1, T2, T3, T4> : BindingBuilder, IBindingToSyntax<T1, T2, T3, T4>
     {
-#pragma warning disable 1584 //mono compiler bug
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingBuilder{T1, T2, T3, T4}"/> class.
         /// </summary>
         /// <param name="bindingConfigurationConfiguration">The binding to build.</param>
-        /// <param name="settings">The ninject configuration settings.</param>
+        /// <param name="kernel">The kernel.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, INinjectSettings settings, string serviceNames)
-            : base(bindingConfigurationConfiguration, settings, serviceNames)
+        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, IKernel kernel, string serviceNames)
+            : base(bindingConfigurationConfiguration, kernel, serviceNames)
         {
         }
-#pragma warning restore 1584
 
         /// <summary>
         /// Indicates that the service should be bound to the specified implementation type.

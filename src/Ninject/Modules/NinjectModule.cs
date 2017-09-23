@@ -1,30 +1,17 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="NinjectModule.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Modules
 {
     using System;
     using System.Collections.Generic;
+
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
@@ -43,30 +30,9 @@ namespace Ninject.Modules
         }
 
         /// <summary>
-        /// Gets the ninject settings.
-        /// </summary>
-        /// <value>The ninject settings.</value>
-        public override INinjectSettings Settings
-        {
-            get
-            {
-                return this.KernelConfiguration.Settings;
-            }
-        }
-
-#pragma warning disable 618
-        /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
-        [Obsolete]
         public IKernel Kernel { get; private set; }
-#pragma warning restore 618
-
-        /// <summary>
-        /// Gets the kernel configuration that the module is loaded into.
-        /// </summary>
-        /// <value>The kernel configuration that the module is loaded into.</value>
-        public IKernelConfiguration KernelConfiguration { get; private set; }
 
         /// <summary>
         /// Gets the module's name. Only a single module with a given name can be loaded at one time.
@@ -82,24 +48,40 @@ namespace Ninject.Modules
         public ICollection<IBinding> Bindings { get; private set; }
 
         /// <summary>
+        /// Gets the kernel.
+        /// </summary>
+        /// <value>The kernel.</value>
+        protected override IKernel KernelInstance
+        {
+            get
+            {
+                return this.Kernel;
+            }
+        }
+
+        /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
-        /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
-        public void OnLoad(IKernelConfiguration kernelConfiguration)
+        /// <param name="kernel">The kernel that is loading the module.</param>
+        public void OnLoad(IKernel kernel)
         {
-            this.KernelConfiguration = kernelConfiguration;
+            Ensure.ArgumentNotNull(kernel, "kernel");
+
+            this.Kernel = kernel;
             this.Load();
         }
 
         /// <summary>
         /// Called when the module is unloaded from a kernel.
         /// </summary>
-        /// <param name="kernelConfiguration">The kernel configuration that is unloading the module.</param>
-        public void OnUnload(IKernelConfiguration kernelConfiguration)
+        /// <param name="kernel">The kernel that is unloading the module.</param>
+        public void OnUnload(IKernel kernel)
         {
+            Ensure.ArgumentNotNull(kernel, "kernel");
+
             this.Unload();
-            this.Bindings.Map(this.KernelConfiguration.RemoveBinding);
-            this.KernelConfiguration = null;
+            this.Bindings.Map(this.Kernel.RemoveBinding);
+            this.Kernel = null;
         }
 
         /// <summary>
@@ -135,7 +117,7 @@ namespace Ninject.Modules
         /// <param name="service">The service to unbind.</param>
         public override void Unbind(Type service)
         {
-            this.KernelConfiguration.Unbind(service);
+            this.Kernel.Unbind(service);
         }
 
         /// <summary>
@@ -144,7 +126,9 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to add.</param>
         public override void AddBinding(IBinding binding)
         {
-            this.KernelConfiguration.AddBinding(binding);
+            Ensure.ArgumentNotNull(binding, "binding");
+
+            this.Kernel.AddBinding(binding);
             this.Bindings.Add(binding);
         }
 
@@ -154,7 +138,9 @@ namespace Ninject.Modules
         /// <param name="binding">The binding to remove.</param>
         public override void RemoveBinding(IBinding binding)
         {
-            this.KernelConfiguration.RemoveBinding(binding);
+            Ensure.ArgumentNotNull(binding, "binding");
+
+            this.Kernel.RemoveBinding(binding);
             this.Bindings.Remove(binding);
         }
     }

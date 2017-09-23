@@ -1,31 +1,17 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Plan.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Ninject.Infrastructure;
     using Ninject.Planning.Directives;
 
     /// <summary>
@@ -39,6 +25,8 @@ namespace Ninject.Planning
         /// <param name="type">The type the plan describes.</param>
         public Plan(Type type)
         {
+            Ensure.ArgumentNotNull(type, "type");
+
             this.Type = type;
             this.Directives = new List<IDirective>();
             this.ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
@@ -65,14 +53,14 @@ namespace Ninject.Planning
         /// <param name="directive">The directive.</param>
         public void Add(IDirective directive)
         {
+            Ensure.ArgumentNotNull(directive, "directive");
+
             if (directive is ConstructorInjectionDirective constructorInjectionDirective)
             {
                 this.ConstructorInjectionDirectives.Add(constructorInjectionDirective);
             }
-            else
-            {
-                this.Directives.Add(directive);
-            }
+
+            this.Directives.Add(directive);
         }
 
         /// <summary>

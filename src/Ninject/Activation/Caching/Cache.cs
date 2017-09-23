@@ -1,31 +1,16 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Cache.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Caching
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
+
     using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
@@ -50,8 +35,8 @@ namespace Ninject.Activation.Caching
         /// <param name="cachePruner">The cache pruner component.</param>
         public Cache(IPipeline pipeline, ICachePruner cachePruner)
         {
-            Contract.Requires(pipeline != null);
-            Contract.Requires(cachePruner != null);
+            Ensure.ArgumentNotNull(pipeline, "pipeline");
+            Ensure.ArgumentNotNull(cachePruner, "cachePruner");
 
             this.Pipeline = pipeline;
             cachePruner.Start(this);
@@ -91,6 +76,8 @@ namespace Ninject.Activation.Caching
         /// <param name="reference">The instance reference.</param>
         public void Remember(IContext context, InstanceReference reference)
         {
+            Ensure.ArgumentNotNull(context, "context");
+
             var scope = context.GetScope();
             var entry = new CacheEntry(context, reference);
 
@@ -117,6 +104,8 @@ namespace Ninject.Activation.Caching
         /// <returns>The instance for re-use, or <see langword="null"/> if none has been stored.</returns>
         public object TryGet(IContext context)
         {
+            Ensure.ArgumentNotNull(context, "context");
+
             var scope = context.GetScope();
             if (scope == null)
             {

@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Context.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation
 {
@@ -28,6 +13,7 @@ namespace Ninject.Activation
     using System.Linq;
     using System.Reflection;
     using Ninject.Activation.Caching;
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning;
@@ -44,48 +30,70 @@ namespace Ninject.Activation
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
-        /// <param name="readonlyKernel">The kernel managing the resolution.</param>
+        /// <param name="kernel">The kernel managing the resolution.</param>
         /// <param name="request">The context's request.</param>
         /// <param name="binding">The context's binding.</param>
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IReadOnlyKernel readonlyKernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
-            this.Kernel = readonlyKernel;
+            Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(cache, "cache");
+            Ensure.ArgumentNotNull(planner, "planner");
+            Ensure.ArgumentNotNull(pipeline, "pipeline");
+
+            this.Kernel = kernel;
             this.Request = request;
             this.Binding = binding;
             this.Parameters = request.Parameters.Union(binding.Parameters).ToList();
+
             this.Cache = cache;
             this.Planner = planner;
             this.Pipeline = pipeline;
 
-            if (binding.Service.GetTypeInfo().IsGenericTypeDefinition)
+            if (binding.Service.IsGenericTypeDefinition)
             {
                 this.HasInferredGenericArguments = true;
-                this.GenericArguments = request.Service.GetTypeInfo().GenericTypeArguments;
+                this.GenericArguments = request.Service.GenericTypeArguments;
             }
         }
 
-        /// <inheritdoc />
-        public IReadOnlyKernel Kernel { get; set; }
+        /// <summary>
+        /// Gets or sets the kernel that is driving the activation.
+        /// </summary>
+        public IKernel Kernel { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the request.
+        /// </summary>
         public IRequest Request { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the binding.
+        /// </summary>
         public IBinding Binding { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the activation plan.
+        /// </summary>
         public IPlan Plan { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets or sets the parameters that were passed to manipulate the activation process.
+        /// </summary>
         public ICollection<IParameter> Parameters { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the generic arguments for the request, if any.
+        /// </summary>
         public Type[] GenericArguments { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets a value indicating whether the request involves inferred generic arguments.
+        /// </summary>
         public bool HasInferredGenericArguments { get; private set; }
 
         /// <summary>
@@ -103,19 +111,28 @@ namespace Ninject.Activation
         /// </summary>
         public IPipeline Pipeline { get; private set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the scope for the context that "owns" the instance activated therein.
+        /// </summary>
+        /// <returns>The object that acts as the scope.</returns>
         public object GetScope()
         {
             return this.cachedScope ?? this.Request.GetScope() ?? this.Binding.GetScope(this);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the provider that should be used to create the instance for this context.
+        /// </summary>
+        /// <returns>The provider that should be used.</returns>
         public IProvider GetProvider()
         {
             return this.Binding.GetProvider(this);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Resolves the instance associated with this hook.
+        /// </summary>
+        /// <returns>The resolved instance.</returns>
         public object Resolve()
         {
             if (this.IsCyclical(this.Request.ParentContext))
@@ -142,15 +159,6 @@ namespace Ninject.Activation
             finally
             {
                 this.cachedScope = null;
-            }
-        }
-
-        /// <inheritdoc />
-        public void BuildPlan(Type type)
-        {
-            if (this.Plan == null)
-            {
-                this.Plan = this.Planner.GetPlan(type);
             }
         }
 

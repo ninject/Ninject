@@ -1,31 +1,16 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ActivationBlock.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Blocks
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;
@@ -43,7 +28,8 @@ namespace Ninject.Activation.Blocks
         /// <param name="parent">The parent resolution root.</param>
         public ActivationBlock(IResolutionRoot parent)
         {
-            Contract.Requires(parent != null);
+            Ensure.ArgumentNotNull(parent, "parent");
+
             this.Parent = parent;
         }
 
@@ -69,7 +55,8 @@ namespace Ninject.Activation.Blocks
         /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve(IRequest request)
         {
-            Contract.Requires(request != null);
+            Ensure.ArgumentNotNull(request, "request");
+
             return this.Parent.CanResolve(request);
         }
 
@@ -83,7 +70,8 @@ namespace Ninject.Activation.Blocks
         /// </returns>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Contract.Requires(request != null);
+            Ensure.ArgumentNotNull(request, "request");
+
             return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
@@ -95,7 +83,8 @@ namespace Ninject.Activation.Blocks
         /// <returns>An enumerator of instances that match the request.</returns>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Contract.Requires(request != null);
+            Ensure.ArgumentNotNull(request, "request");
+
             return this.Parent.Resolve(request);
         }
 
@@ -110,8 +99,9 @@ namespace Ninject.Activation.Blocks
         /// <returns>The created request.</returns>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Contract.Requires(service != null);
-            Contract.Requires(parameters != null);
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parameters, "parameters");
+
             return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
         }
 

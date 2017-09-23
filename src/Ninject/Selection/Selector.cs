@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Selector.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Selection
 {
@@ -28,6 +13,7 @@ namespace Ninject.Selection
     using System.Linq;
     using System.Reflection;
     using Ninject.Components;
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
     using Ninject.Selection.Heuristics;
 
@@ -45,14 +31,17 @@ namespace Ninject.Selection
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
+            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
+            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
+
             this.ConstructorScorer = constructorScorer;
             this.InjectionHeuristics = injectionHeuristics.ToList();
         }
 
         /// <summary>
-        /// Gets or sets the constructor scorer.
+        /// Gets the constructor scorer.
         /// </summary>
-        public IConstructorScorer ConstructorScorer { get; set; }
+        public IConstructorScorer ConstructorScorer { get; private set; }
 
         /// <summary>
         /// Gets the property injection heuristics.
@@ -81,7 +70,9 @@ namespace Ninject.Selection
         /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
         public virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
-            if (type.GetTypeInfo().IsSubclassOf(typeof(MulticastDelegate)))
+            Ensure.ArgumentNotNull(type, "type");
+
+            if (type.IsSubclassOf(typeof(MulticastDelegate)))
             {
                 return null;
             }
@@ -97,16 +88,17 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            var properties = new List<PropertyInfo>();
+            Ensure.ArgumentNotNull(type, "type");
 
+            var properties = new List<PropertyInfo>();
             properties.AddRange(
                 type.GetProperties(this.Flags)
-                    .Select(p => p.GetPropertyFromDeclaredType(p))
+                    .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
                     .Where(p => this.InjectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
 
             if (this.Settings.InjectParentPrivateProperties)
             {
-                for (Type parentType = type.GetTypeInfo().BaseType; parentType != null; parentType = parentType.GetTypeInfo().BaseType)
+                for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
                 {
                     properties.AddRange(this.GetPrivateProperties(parentType));
                 }
@@ -122,6 +114,8 @@ namespace Ninject.Selection
         /// <returns>A series of the selected methods.</returns>
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
+            Ensure.ArgumentNotNull(type, "type");
+
             return type.GetMethods(this.Flags).Where(m => this.InjectionHeuristics.Any(h => h.ShouldInject(m)));
         }
 

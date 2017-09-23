@@ -136,7 +136,7 @@ namespace Ninject.Tests.Unit.CacheTests
             throw new NotImplementedException();
         }
 
-        public IReadOnlyKernel Kernel { get; set; }
+        public IKernel Kernel { get; set; }
 
         public IRequest Request { get; set; }
 

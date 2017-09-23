@@ -1,33 +1,18 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="GarbageCollectionCachePruner.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Activation.Caching
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using Ninject.Components;
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
 
     /// <summary>
@@ -76,6 +61,8 @@ namespace Ninject.Activation.Caching
         /// <param name="pruneable">The pruneable that will be pruned.</param>
         public void Start(IPruneable pruneable)
         {
+            Ensure.ArgumentNotNull(pruneable, "pruneable");
+
             this.caches.Add(pruneable);
             if (this.timer == null)
             {
@@ -93,9 +80,13 @@ namespace Ninject.Activation.Caching
                 this.stop = true;
             }
 
-            this.timer.Dispose();
-            this.timer = null;
-            this.caches.Clear();
+            using (var signal = new ManualResetEvent(false))
+            {
+                this.timer.Dispose(signal);
+                signal.WaitOne();
+                this.timer = null;
+                this.caches.Clear();
+            }
         }
 
         private void PruneCacheIfGarbageCollectorHasRun(object state)

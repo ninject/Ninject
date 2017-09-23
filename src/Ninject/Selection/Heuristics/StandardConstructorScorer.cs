@@ -1,33 +1,17 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="StandardConstructorScorer.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Selection.Heuristics
 {
     using System;
     using System.Collections;
-    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Reflection;
+
     using Ninject.Activation;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -49,8 +33,8 @@ namespace Ninject.Selection.Heuristics
         /// <returns>The constructor's score.</returns>
         public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
-            Contract.Requires(context != null);
-            Contract.Requires(directive != null);
+            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(directive, "directive");
 
             if (directive.HasInjectAttribute)
             {
@@ -105,7 +89,7 @@ namespace Ninject.Selection.Heuristics
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>Whether a binding exists for the target in the given context.</returns>
-        protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
+        protected virtual bool BindingExists(IKernel kernel, IContext context, ITarget target)
         {
             var targetType = this.GetTargetType(target);
             var request = context.Request.CreateChild(targetType, context, target);
@@ -136,13 +120,9 @@ namespace Ninject.Selection.Heuristics
                 targetType = targetType.GetElementType();
             }
 
-            var typeInfo = targetType.GetTypeInfo();
-            if (typeInfo.IsGenericType)
+            if (targetType.IsGenericType && targetType.GetInterfaces().Any(type => type == typeof(IEnumerable)))
             {
-                if (typeInfo.ImplementedInterfaces.Any(type => type == typeof(IEnumerable)))
-                {
-                    targetType = typeInfo.GenericTypeArguments[0];
-                }
+                targetType = targetType.GetGenericArguments()[0];
             }
 
             return targetType;

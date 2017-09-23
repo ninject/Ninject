@@ -1,30 +1,14 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="BindingRoot.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Ninject.Infrastructure;
@@ -38,10 +22,10 @@ namespace Ninject.Syntax
     public abstract class BindingRoot : DisposableObject, IBindingRoot
     {
         /// <summary>
-        /// Gets the ninject settings.
+        /// Gets the kernel.
         /// </summary>
-        /// <value>The ninject settings.</value>
-        public abstract INinjectSettings Settings { get; }
+        /// <value>The kernel.</value>
+        protected abstract IKernel KernelInstance { get; }
 
         /// <summary>
         /// Declares a binding for the specified service.
@@ -55,7 +39,7 @@ namespace Ninject.Syntax
             var binding = new Binding(service);
             this.AddBinding(binding);
 
-            return new BindingBuilder<T>(binding, this.Settings, service.Format());
+            return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
         }
 
         /// <summary>
@@ -71,7 +55,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -89,7 +73,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -109,7 +93,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -119,8 +103,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
-            Contract.Requires(services != null);
-
+            Ensure.ArgumentNotNull(services, "service");
             if (services.Length == 0)
             {
                 throw new ArgumentException("The services must contain at least one type", "services");
@@ -134,7 +117,7 @@ namespace Ninject.Syntax
                 this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
             }
 
-            return new BindingBuilder<object>(firstBinding, this.Settings, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+            return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
         }
 
         /// <summary>

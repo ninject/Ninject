@@ -1,31 +1,17 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="Binding.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Planning.Bindings
 {
     using System;
     using System.Collections.Generic;
     using Ninject.Activation;
+    using Ninject.Infrastructure;
     using Ninject.Parameters;
     using Ninject.Selection;
 
@@ -40,6 +26,8 @@ namespace Ninject.Planning.Bindings
         /// <param name="service">The service that is controlled by the binding.</param>
         public Binding(Type service)
         {
+            Ensure.ArgumentNotNull(service, "service");
+
             this.Service = service;
             this.BindingConfiguration = new BindingConfiguration();
         }
@@ -51,6 +39,9 @@ namespace Ninject.Planning.Bindings
         /// <param name="configuration">The binding configuration.</param>
         public Binding(Type service, IBindingConfiguration configuration)
         {
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(configuration, "configuration");
+
             this.Service = service;
             this.BindingConfiguration = configuration;
         }
@@ -198,22 +189,6 @@ namespace Ninject.Planning.Bindings
             get
             {
                 return this.BindingConfiguration.DeactivationActions;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the InitizalizeProviderCallback action
-        /// </summary>
-        public Action<ISelector> InitializeProviderCallback
-        {
-            get
-            {
-                return this.BindingConfiguration.InitializeProviderCallback;
-            }
-
-            set
-            {
-                this.BindingConfiguration.InitializeProviderCallback = value;
             }
         }
 

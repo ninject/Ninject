@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="IBindingWithSyntax.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject.Syntax
 {
@@ -78,15 +63,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
-        /// <param name="type">The type of the argument to override.</param>
-        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
-        /// <returns>The fluent syntax.</returns>
-        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, object> callback);
-
-        /// <summary>
-        /// Indicates that the specified constructor argument should be overridden with the specified value.
-        /// </summary>
-        /// <typeparam name="TValue">Specifies the argument type to override.</typeparam>
+        /// <typeparam name="TValue">The type of the argument to override.</typeparam>
         /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(Func<IContext, TValue> callback);
@@ -97,15 +74,23 @@ namespace Ninject.Syntax
         /// <param name="type">The type of the argument to override.</param>
         /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
-        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback);
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, object> callback);
 
         /// <summary>
         /// Indicates that the specified constructor argument should be overridden with the specified value.
         /// </summary>
-        /// <typeparam name="TValue">Specifies the argument type to override.</typeparam>
+        /// <typeparam name="TValue">The type of the argument to override.</typeparam>
         /// <param name="callback">The callback to invoke to get the value for the argument.</param>
         /// <returns>The fluent syntax.</returns>
         IBindingWithOrOnSyntax<T> WithConstructorArgument<TValue>(Func<IContext, ITarget, TValue> callback);
+
+        /// <summary>
+        /// Indicates that the specified constructor argument should be overridden with the specified value.
+        /// </summary>
+        /// <param name="type">The type of the argument to override.</param>
+        /// <param name="callback">The callback to invoke to get the value for the argument.</param>
+        /// <returns>The fluent syntax.</returns>
+        IBindingWithOrOnSyntax<T> WithConstructorArgument(Type type, Func<IContext, ITarget, object> callback);
 
         /// <summary>
         /// Indicates that the specified property should be injected with the specified value.

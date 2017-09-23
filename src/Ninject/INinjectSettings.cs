@@ -1,25 +1,10 @@
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="INinjectSettings.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010, Enkari, Ltd.
-//   Copyright (c) 2010-2016, Ninject Project Contributors
-//   Authors: Nate Kohari (nate@enkari.com)
-//            Remo Gloor (remo.gloor@gmail.com)
-//
+//   Copyright (c) 2010-2017, Ninject Project Contributors
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
-//   you may not use this file except in compliance with one of the Licenses.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//   or
-//       http://www.microsoft.com/opensource/licenses.mspx
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
 // </copyright>
-//-------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 
 namespace Ninject
 {
@@ -46,7 +31,7 @@ namespace Ninject
         /// </summary>
         Func<IContext, object> DefaultScopeCallback { get; }
 
-        #if !NO_ASSEMBLY_SCANNING
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Gets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
@@ -56,13 +41,15 @@ namespace Ninject
         /// Gets the paths that should be searched for extensions.
         /// </summary>
         string[] ExtensionSearchPatterns { get; }
-        #endif //!NO_ASSEMBLY_SCANNING
+#endif //!NO_ASSEMBLY_SCANNING
 
+#if !NO_LCG
         /// <summary>
         /// Gets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
         /// </summary>
         bool UseReflectionBasedInjection { get; }
+#endif //!NO_LCG
 
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
@@ -112,11 +99,5 @@ namespace Ninject
         /// <param name="key">The setting's key.</param>
         /// <param name="value">The setting's value.</param>
         void Set(string key, object value);
-
-        /// <summary>
-        /// Clones the ninject settings into a new instance
-        /// </summary>
-        /// <returns>A new instance of the ninject settings</returns>
-        INinjectSettings Clone();
     }
 }
