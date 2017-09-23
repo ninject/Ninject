@@ -33,6 +33,7 @@ build:
   verbosity: minimal
 
 test_script:
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage.xml"
   - codecov -f "Ninject_coverage.xml
 
 artifacts:
