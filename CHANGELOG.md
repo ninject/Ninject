@@ -8,24 +8,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Support NETSTANDARD2.0
-- Strongly typed overloads of WithConstructorArgument which use a callback to get the value [pull 197](https://github.com/ninject/Ninject/pull/197)
-- Do not choose constructors with an "Obsolete" attribute [pull 224](https://github.com/ninject/Ninject/pull/224)
-- Meaningful exception message if there is error in configuration [issue 240](https://github.com/ninject/Ninject/issues/240) [issue 245](https://github.com/ninject/Ninject/issues/245)
+- Strongly typed overloads of WithConstructorArgument which use a callback to get the value [#197](https://github.com/ninject/Ninject/pull/197)
+- Do not choose constructors with an "Obsolete" attribute [#224](https://github.com/ninject/Ninject/pull/224)
+- Meaningful exception message if there is error in configuration [#240](https://github.com/ninject/Ninject/issues/240) [#245](https://github.com/ninject/Ninject/issues/245)
 
 ### Changed
-- Using HasDefaultValue instead of DBNull [issue 235](https://github.com/ninject/Ninject/issues/235)
-- Array/List of concrete classes will return empty if the concrete class is not explictly binded [issue 227](https://github.com/ninject/Ninject/issues/227)
+- Using HasDefaultValue instead of DBNull [#235](https://github.com/ninject/Ninject/issues/235)
+- Array/List of concrete classes will return empty if the concrete class is not explictly binded [#227](https://github.com/ninject/Ninject/issues/227)
 
 ### Removed
 - Support for .NET 3.5 and Silverlight
 
 ### Fixed
-- Improved cyclical dependencies detection [issue 143](https://github.com/ninject/Ninject/issues/143)
-- WhenMemberHas broken [issue 189](https://github.com/ninject/Ninject/issues/189)
-- Injection into private parent parent properties fails [issue 217](https://github.com/ninject/Ninject/issues/241 https://github.com/ninject/Ninject/issues/217)
-- Break Singleton / circular dependency WithPropertyValue or OnActivation callback [issue 221](https://github.com/ninject/Ninject/issues/221) [issue 224](https://github.com/ninject/Ninject/issues/224)
-- The invoked member is not supported in a dynamic assembly [issue 225](https://github.com/ninject/Ninject/issues/225)
-- Conditional binding is not being considered when score constructors [issue 237](https://github.com/ninject/Ninject/issues/237)
+- Improved cyclical dependencies detection [#143](https://github.com/ninject/Ninject/issues/143)
+- WhenMemberHas broken [#189](https://github.com/ninject/Ninject/issues/189)
+- Injection into private parent parent properties fails [#214](https://github.com/ninject/Ninject/issues/241) [#217](https://github.com/ninject/Ninject/issues/217)
+- Break Singleton / circular dependency WithPropertyValue or OnActivation callback [#221](https://github.com/ninject/Ninject/issues/221) [#224](https://github.com/ninject/Ninject/issues/224)
+- The invoked member is not supported in a dynamic assembly [#225](https://github.com/ninject/Ninject/issues/225)
+- Conditional binding is not being considered when score constructors [#237](https://github.com/ninject/Ninject/issues/237)
 
 ## [3.2]
 
