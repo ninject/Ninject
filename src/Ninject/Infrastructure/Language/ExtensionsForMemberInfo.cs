@@ -15,7 +15,7 @@ namespace Ninject.Infrastructure.Language
     using System.Reflection;
 
     /// <summary>
-    /// Extensions for MemberInfo
+    /// Provides extension methods for <see cref="MemberInfo"/>.
     /// </summary>
     public static class ExtensionsForMemberInfo
     {
