@@ -33,7 +33,7 @@ namespace Ninject
                             {
                                 b => b != null,       // null bindings should never happen, but just in case
                                 b => b.IsConditional, // conditional bindings > unconditional
-                                b => !b.Service.GetTypeInfo().ContainsGenericParameters, // closed generics > open generics
+                                b => !b.Service.ContainsGenericParameters, // closed generics > open generics
                                 b => !b.IsImplicit,   // explicit bindings > implicit
                             };
 

@@ -437,10 +437,8 @@ namespace Ninject
                     return false;
                 }
 
-                var targetTypeInfo = targetType.GetTypeInfo();
-
-                if (targetTypeInfo.IsGenericType &&
-                    targetTypeInfo.ImplementedInterfaces.Contains(typeof(IEnumerable)))
+                if (targetType.IsGenericType &&
+                    targetType.GetInterfaces().Contains(typeof(IEnumerable)))
                 {
                     return false;
                 }

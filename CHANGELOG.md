@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Improved cyclical dependencies detection [#143](https://github.com/ninject/Ninject/issues/143)
+- InvalidProgramException when select constructors for MulticastDelegate [#175](https://github.com/ninject/ninject/issues/175)
 - WhenMemberHas broken [#189](https://github.com/ninject/Ninject/issues/189)
 - Injection into private parent parent properties fails [#214](https://github.com/ninject/Ninject/issues/241) [#217](https://github.com/ninject/Ninject/issues/217)
 - Break Singleton / circular dependency WithPropertyValue or OnActivation callback [#221](https://github.com/ninject/Ninject/issues/221) [#224](https://github.com/ninject/Ninject/issues/224)
