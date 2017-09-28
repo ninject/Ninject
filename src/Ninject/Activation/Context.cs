@@ -9,6 +9,7 @@
 namespace Ninject.Activation
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -214,7 +215,7 @@ namespace Ninject.Activation
                 return false;
             }
 
-            if (targetContext.Request.Service == this.Request.Service)
+            if (targetContext.Request.Service == this.Request.Service && targetContext.Binding.Condition == this.Binding.Condition)
             {
                 if ((this.Request.Target is ParameterTarget && targetContext.Request.Target is ParameterTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
                 {

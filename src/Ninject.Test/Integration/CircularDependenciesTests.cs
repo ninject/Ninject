@@ -30,6 +30,9 @@
         {
             kernel.Bind<TwoWayConstructorFoo>().ToSelf().InSingletonScope();
             kernel.Bind<TwoWayConstructorBar>().ToSelf().InSingletonScope();
+
+            kernel.Bind<IDecoratorPattern>().To<Decorator1>().WhenInjectedInto<Decorator2>();
+            kernel.Bind<IDecoratorPattern>().To<Decorator2>();
         }
 
         [Fact]
@@ -37,6 +40,12 @@
         {
             var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
             kernel.Resolve(request);
+        }
+
+        [Fact]
+        public void DoesNotThrowExceptionIfConditionaDoesNotMatch()
+        {
+            kernel.Get<IDecoratorPattern>();
         }
 
         [Fact]
@@ -327,5 +336,12 @@
     public class ClassC { }
     public class ClassD { }
 
+    public interface IDecoratorPattern { }
 
+    public class Decorator1 : IDecoratorPattern { }
+
+    public class Decorator2 : IDecoratorPattern
+    {
+        public Decorator2(IDecoratorPattern decorator) { }
+    }
 }
