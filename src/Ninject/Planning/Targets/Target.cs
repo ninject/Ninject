@@ -143,29 +143,9 @@ namespace Ninject.Planning.Targets
         {
             Ensure.ArgumentNotNull(parent, "parent");
 
-            if (this.Type.IsArray)
-            {
-                var service = this.Type.GetElementType();
-                return this.GetValues(service, parent).CastSlow(service).ToArraySlow(service);
-            }
-
-            if (this.Type.IsGenericType)
-            {
-                var gtd = this.Type.GetGenericTypeDefinition();
-                var service = this.Type.GenericTypeArguments[0];
-
-                if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
-                {
-                    return this.GetValues(service, parent).CastSlow(service).ToListSlow(service);
-                }
-
-                if (gtd == typeof(IEnumerable<>))
-                {
-                    return this.GetValues(service, parent).CastSlow(service);
-                }
-            }
-
-            return this.GetValue(this.Type, parent);
+            var request = parent.Request.CreateChild(this.Type, parent, this);
+            request.IsUnique = true;
+            return parent.Kernel.Resolve(request).SingleOrDefault();
         }
 
         /// <summary>
@@ -174,6 +154,7 @@ namespace Ninject.Planning.Targets
         /// <param name="service">The service that the target is requesting.</param>
         /// <param name="parent">The parent context in which the target is being injected.</param>
         /// <returns>A series of values that are available for injection.</returns>
+        [Obsolete]
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
             Ensure.ArgumentNotNull(service, "service");
@@ -190,6 +171,7 @@ namespace Ninject.Planning.Targets
         /// <param name="service">The service that the target is requesting.</param>
         /// <param name="parent">The parent context in which the target is being injected.</param>
         /// <returns>The value that is to be injected.</returns>
+        [Obsolete]
         protected virtual object GetValue(Type service, IContext parent)
         {
             Ensure.ArgumentNotNull(service, "service");

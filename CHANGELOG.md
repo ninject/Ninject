@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Support `kernel.Get<IEnumerable<IFoo>>()` [#252](https://github.com/ninject/Ninject/issues/252)
+
+### Deprecated 
+- The `GetValues` and `GetValue` methods of `Target` are obsolete.
+
 ### Fixed
 - Cyclical dependency check throws false positive for decorator pattern [#251](https://github.com/ninject/Ninject/issue/251)
 

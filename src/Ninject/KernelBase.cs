@@ -428,22 +428,6 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(request, "request");
 
-            if (request.Target != null)
-            {
-                var targetType = request.Target.Type;
-
-                if (targetType.IsArray)
-                {
-                    return false;
-                }
-
-                if (targetType.IsGenericType &&
-                    targetType.GetInterfaces().Contains(typeof(IEnumerable)))
-                {
-                    return false;
-                }
-            }
-
             var components = this.Components.GetAll<IMissingBindingResolver>();
 
             // Take the first set of bindings that resolve.
@@ -484,6 +468,38 @@ namespace Ninject
 
         private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
         {
+            if (request.Service.IsArray)
+            {
+                var service = request.Service.GetElementType();
+
+                CreateOrUpdateRequest(service);
+
+                return new[] { this.Resolve(request, false).CastSlow(service).ToArraySlow(service) };
+            }
+
+            if (request.Service.IsGenericType)
+            {
+                var gtd = request.Service.GetGenericTypeDefinition();
+
+                if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>) || gtd == typeof(IEnumerable<>))
+                {
+                    var service = request.Service.GenericTypeArguments[0];
+
+                    CreateOrUpdateRequest(service);
+
+                    return new[] { this.Resolve(request, false).CastSlow(service).ToListSlow(service) };
+                }
+
+                if (gtd == typeof(IEnumerable<>))
+                {
+                    var service = request.Service.GenericTypeArguments[0];
+
+                    CreateOrUpdateRequest(service);
+
+                    return new[] { this.Resolve(request, false).CastSlow(service) };
+                }
+            }
+
             var satisfiedBindings = this.GetBindings(request.Service)
                                         .Where(this.SatifiesRequest(request));
             var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
@@ -536,6 +552,20 @@ namespace Ninject
 
                 return satisfiedBindings
                     .Select(binding => this.CreateContext(request, binding).Resolve());
+            }
+
+            void CreateOrUpdateRequest(Type service)
+            {
+                if (request.ParentRequest == null)
+                {
+                    request = this.CreateRequest(service, null, request.Parameters.Where(p => p.ShouldInherit), true, false);
+                }
+                else
+                {
+                    request = request.ParentRequest.CreateChild(service, request.ParentContext, request.Target);
+                }
+
+                request.IsOptional = true;
             }
         }
 

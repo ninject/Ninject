@@ -1,5 +1,6 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
+    using System.Collections.Generic;
     using FluentAssertions;
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
     using Xunit;
@@ -19,7 +20,7 @@
         }
 
         [Fact]
-        public void EmptyEnumerableIsInjectedWhenNoBindingIsAvailable()
+        public void EmptyEnumerableIsInjectedIfElementTypeIsMissingBinding()
         {
             this.Kernel.Bind<IParent>().To<RequestsEnumerable>();
 
@@ -27,6 +28,25 @@
 
             parent.Should().NotBeNull();
             parent.Children.Count.Should().Be(0);
+        }
+
+        [Fact]
+        public void EnumerableIsResolvedIfElementTypeIsIsExplicitlyBinded()
+        {
+            this.Kernel.Bind<IChild>().To<ChildA>();
+            this.Kernel.Bind<IChild>().To<ChildB>();
+
+            var children = this.Kernel.Get<IEnumerable<IChild>>();
+
+            children.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void EmptyEnumerableIsResolvedIfElementTypeIsMissingBinding()
+        {
+            var children = this.Kernel.Get<IEnumerable<IChild>>();
+
+            children.Should().BeEmpty();
         }
     }
 }

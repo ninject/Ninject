@@ -31,14 +31,14 @@
         }
 
         [Fact]
-        public void EmptyListIsInjectedWhenNoBindingIsAvailable()
+        public void ServiceIsInjectedWithEmptyListIfElementTypeIsMissingBinding()
         {
             this.Kernel.Bind<IParent>().To<RequestsList>();
 
             var parent = this.Kernel.Get<IParent>();
 
             parent.Should().NotBeNull();
-            parent.Children.Count.Should().Be(0);
+            parent.Children.Should().BeEmpty();
         }
     }
 }
