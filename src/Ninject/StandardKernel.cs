@@ -14,6 +14,7 @@ namespace Ninject
     using Ninject.Injection;
     using Ninject.Modules;
     using Ninject.Planning;
+    using Ninject.Planning.Bindings;
     using Ninject.Planning.Bindings.Resolvers;
     using Ninject.Planning.Strategies;
     using Ninject.Selection;

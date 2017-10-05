@@ -6,12 +6,10 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject
+namespace Ninject.Planning.Bindings
 {
     using System.Collections.Generic;
-
     using Ninject.Components;
-    using Ninject.Planning.Bindings;
 
     /// <summary>
     /// The binding precedence comparer interface

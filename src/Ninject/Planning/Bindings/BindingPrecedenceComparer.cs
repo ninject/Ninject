@@ -6,21 +6,24 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject
+namespace Ninject.Planning.Bindings
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Ninject.Components;
-    using Ninject.Planning.Bindings;
 
     /// <summary>
     /// Implements the binding precedence comparer interface
     /// </summary>
     public class BindingPrecedenceComparer : NinjectComponent, IBindingPrecedenceComparer
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Compares the two bindings.
+        /// </summary>
+        /// <param name="x">The first binding.</param>
+        /// <param name="y">The second binding.</param>
+        /// <returns>Less than zero if x is less than y; Zero is x equals y; Greater than zero if x is greater than y.</returns>
         public int Compare(IBinding x, IBinding y)
         {
             if (x == y)

@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Support `kernel.Get<IEnumerable<IFoo>>()` [#252](https://github.com/ninject/Ninject/issues/252)
 
+### Changed
+- Moved BindingPrecedenceComparer to Bindings folder.
+
 ### Deprecated 
 - The `GetValues` and `GetValue` methods of `Target` are obsolete.
 
