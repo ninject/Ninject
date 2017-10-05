@@ -13,7 +13,6 @@ namespace Ninject.Planning.Bindings
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
-    using Ninject.Selection;
 
     /// <summary>
     /// Contains information about a service registration.

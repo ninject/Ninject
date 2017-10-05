@@ -8,7 +8,6 @@
 
 namespace Ninject.Infrastructure.Language
 {
-    using System;
     using System.Reflection;
     using System.Runtime.ExceptionServices;
 

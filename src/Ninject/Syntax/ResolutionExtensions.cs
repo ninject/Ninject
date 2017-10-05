@@ -11,7 +11,6 @@ namespace Ninject
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;

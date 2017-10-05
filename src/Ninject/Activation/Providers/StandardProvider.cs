@@ -16,7 +16,6 @@ namespace Ninject.Activation.Providers
     using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning;
-    using Ninject.Planning.Bindings;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
     using Ninject.Selection;

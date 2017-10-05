@@ -10,7 +10,6 @@ namespace Ninject.Infrastructure.Language
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
 
     /// <summary>
     /// Extension methods for <see cref="Type"/>.

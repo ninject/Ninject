@@ -9,7 +9,6 @@
 namespace Ninject.Planning.Strategies
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using Ninject.Components;
     using Ninject.Infrastructure;

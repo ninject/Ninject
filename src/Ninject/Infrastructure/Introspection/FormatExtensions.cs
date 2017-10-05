@@ -9,12 +9,10 @@
 namespace Ninject.Infrastructure.Introspection
 {
     using System;
-    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Text;
     using Ninject.Activation;
-    using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
     using Ninject.Planning.Targets;
 
