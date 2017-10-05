@@ -59,7 +59,7 @@ namespace Ninject.Planning.Bindings.Resolvers
             public object Create(IContext context)
             {
                 var target = context.Request.Target;
-                return (target == null) ? null : target.DefaultValue;
+                return target?.DefaultValue;
             }
         }
     }
