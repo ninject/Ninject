@@ -29,15 +29,15 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
         [Fact]
         public void FirstActivatedInstanceIsReusedWithinThread()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
 
             IWeapon weapon1 = null;
             IWeapon weapon2 = null;
 
             ThreadStart callback = () =>
             {
-                weapon1 = kernel.Get<IWeapon>();
-                weapon2 = kernel.Get<IWeapon>();
+                weapon1 = this.kernel.Get<IWeapon>();
+                weapon2 = this.kernel.Get<IWeapon>();
             };
 
             var thread = new Thread(callback);
@@ -53,12 +53,12 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
         [Fact]
         public void ScopeDoesNotInterfereWithExternalRequests()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InThreadScope();
 
-            IWeapon weapon1 = kernel.Get<IWeapon>();
+            IWeapon weapon1 = this.kernel.Get<IWeapon>();
             IWeapon weapon2 = null;
 
-            ThreadStart callback = () => weapon2 = kernel.Get<IWeapon>();
+            ThreadStart callback = () => weapon2 = this.kernel.Get<IWeapon>();
 
             var thread = new Thread(callback);
 
@@ -74,12 +74,12 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
         [Fact]
         public void InstancesActivatedWithinScopeAreDeactivatedAfterThreadIsGarbageCollectedAndCacheIsPruned()
         {
-            kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();
-            var cache = kernel.Components.Get<ICache>();
+            this.kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();
+            var cache = this.kernel.Components.Get<ICache>();
 
             NotifiesWhenDisposed instance = null;
 
-            ThreadStart callback = () => instance = kernel.Get<NotifiesWhenDisposed>();
+            ThreadStart callback = () => instance = this.kernel.Get<NotifiesWhenDisposed>();
 
             var thread = new Thread(callback);
 

@@ -16,8 +16,8 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
 
         public DisposableStrategyContext()
         {
-            contextMock = new Mock<IContext>();
-            strategy = new DisposableStrategy();
+            this.contextMock = new Mock<IContext>();
+            this.strategy = new DisposableStrategy();
         }
     }
 
@@ -29,7 +29,7 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
             var instance = new NotifiesWhenDisposed();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Deactivate(contextMock.Object, reference);
+            this.strategy.Deactivate(this.contextMock.Object, reference);
             instance.IsDisposed.Should().BeTrue();
         }
 
@@ -39,7 +39,7 @@ namespace Ninject.Tests.Unit.DisposableStrategyTests
             var instance = new object();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Deactivate(contextMock.Object, reference);
+            this.strategy.Deactivate(this.contextMock.Object, reference);
         }
     }
 }

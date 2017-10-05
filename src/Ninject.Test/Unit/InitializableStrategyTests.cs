@@ -15,8 +15,8 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 
         public InitializableStrategyContext()
         {
-            contextMock = new Mock<IContext>();
-            strategy = new InitializableStrategy();
+            this.contextMock = new Mock<IContext>();
+            this.strategy = new InitializableStrategy();
         }
     }
 
@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
             var instance = new InitializableObject();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, reference);
             instance.WasInitialized.Should().BeTrue();
         }
 
@@ -38,7 +38,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
             var instance = new object();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, reference);
         }
     }
 
@@ -48,7 +48,7 @@ namespace Ninject.Tests.Unit.InitializableStrategyTests
 
         public void Initialize()
         {
-            WasInitialized = true;
+            this.WasInitialized = true;
         }
     }
 }

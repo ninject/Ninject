@@ -14,8 +14,8 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
 
         public NamedAttributeContext()
         {
-            attribute = new NamedAttribute("foo");
-            metadataMock = new Mock<IBindingMetadata>();
+            this.attribute = new NamedAttribute("foo");
+            this.metadataMock = new Mock<IBindingMetadata>();
         }
     }
 
@@ -24,15 +24,15 @@ namespace Ninject.Tests.Unit.NamedAttributeTests
         [Fact]
         public void ReturnsTrueIfTheNameMatches()
         {
-            metadataMock.SetupGet(x => x.Name).Returns("foo");
-            attribute.Matches(metadataMock.Object).Should().BeTrue();
+            this.metadataMock.SetupGet(x => x.Name).Returns("foo");
+            this.attribute.Matches(this.metadataMock.Object).Should().BeTrue();
         }
 
         [Fact]
         public void ReturnsFalseIfTheNameDoesNotMatch()
         {
-            metadataMock.SetupGet(x => x.Name).Returns("bar");
-            attribute.Matches(metadataMock.Object).Should().BeFalse();
+            this.metadataMock.SetupGet(x => x.Name).Returns("bar");
+            this.attribute.Matches(this.metadataMock.Object).Should().BeFalse();
         }
     }
 }

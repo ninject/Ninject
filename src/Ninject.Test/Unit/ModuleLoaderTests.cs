@@ -21,18 +21,18 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
 
         public ModuleLoaderContext()
         {
-            kernelMock = new Mock<IKernel>();
-            componentsMock = new Mock<IComponentContainer>();
-            fooPluginMock = new Mock<IModuleLoaderPlugin>();
-            barPluginMock = new Mock<IModuleLoaderPlugin>();
-            moduleLoader = new ModuleLoader(kernelMock.Object);
+            this.kernelMock = new Mock<IKernel>();
+            this.componentsMock = new Mock<IComponentContainer>();
+            this.fooPluginMock = new Mock<IModuleLoaderPlugin>();
+            this.barPluginMock = new Mock<IModuleLoaderPlugin>();
+            this.moduleLoader = new ModuleLoader(this.kernelMock.Object);
 
-            var plugins = new[] { fooPluginMock.Object, barPluginMock.Object };
+            var plugins = new[] { this.fooPluginMock.Object, this.barPluginMock.Object };
 
-            kernelMock.SetupGet(x => x.Components).Returns(componentsMock.Object);
-            componentsMock.Setup(x => x.GetAll<IModuleLoaderPlugin>()).Returns(plugins);
-            fooPluginMock.SetupGet(x => x.SupportedExtensions).Returns(new[] { ".foo" });
-            barPluginMock.SetupGet(x => x.SupportedExtensions).Returns(new[] { ".bar" });
+            this.kernelMock.SetupGet(x => x.Components).Returns(this.componentsMock.Object);
+            this.componentsMock.Setup(x => x.GetAll<IModuleLoaderPlugin>()).Returns(plugins);
+            this.fooPluginMock.SetupGet(x => x.SupportedExtensions).Returns(new[] { ".foo" });
+            this.barPluginMock.SetupGet(x => x.SupportedExtensions).Returns(new[] { ".bar" });
         }
     }
 
@@ -41,13 +41,13 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
         [Fact]
         public void PassesMatchingFilesToAppropriatePlugin()
         {
-            moduleLoader.LoadModules(new[] { "TestModules/*" });
+            this.moduleLoader.LoadModules(new[] { "TestModules/*" });
 
             var fooFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.foo") };
             var barFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.bar") };
 
-            fooPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(fooFiles))));
-            barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));
+            this.fooPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(fooFiles))));
+            this.barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));
         }
     }
 }

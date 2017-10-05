@@ -101,7 +101,7 @@
 
         public override void Dispose( bool disposing )
         {
-            if ( disposing && !IsDisposed )
+            if ( disposing && !this.IsDisposed )
             {
                 this.kernel.Dispose();
                 this.kernel = null;

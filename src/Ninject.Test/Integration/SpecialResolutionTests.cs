@@ -26,12 +26,12 @@
         [Fact]
         public void InstanceOfKernelIsInjected()
         {
-            kernel.Bind<RequestsKernel>().ToSelf();
-            var instance = kernel.Get<RequestsKernel>();
+            this.kernel.Bind<RequestsKernel>().ToSelf();
+            var instance = this.kernel.Get<RequestsKernel>();
 
             instance.Should().NotBeNull();
             instance.Kernel.Should().NotBeNull();
-            instance.Kernel.Should().BeSameAs(kernel);
+            instance.Kernel.Should().BeSameAs(this.kernel);
         }
     }
 
@@ -40,12 +40,12 @@
         [Fact]
         public void InstanceOfKernelIsInjected()
         {
-            kernel.Bind<RequestsResolutionRoot>().ToSelf();
-            var instance = kernel.Get<RequestsResolutionRoot>();
+            this.kernel.Bind<RequestsResolutionRoot>().ToSelf();
+            var instance = this.kernel.Get<RequestsResolutionRoot>();
 
             instance.Should().NotBeNull();
             instance.ResolutionRoot.Should().NotBeNull();
-            instance.ResolutionRoot.Should().BeSameAs(kernel);
+            instance.ResolutionRoot.Should().BeSameAs(this.kernel);
         }
     }
 
@@ -54,8 +54,8 @@
         [Fact]
         public void InstanceOfStringIsInjected()
         {
-            kernel.Bind<RequestsString>().ToSelf();
-            Assert.Throws<ActivationException>(() => kernel.Get<RequestsString>());
+            this.kernel.Bind<RequestsString>().ToSelf();
+            Assert.Throws<ActivationException>(() => this.kernel.Get<RequestsString>());
         }
     }
 
@@ -65,7 +65,7 @@
 
         public RequestsKernel(IKernel kernel)
         {
-            Kernel = kernel;
+            this.Kernel = kernel;
         }
     }
 
@@ -85,7 +85,7 @@
 
         public RequestsString(string stringValue)
         {
-            StringValue = stringValue;
+            this.StringValue = stringValue;
         }
     }
 }

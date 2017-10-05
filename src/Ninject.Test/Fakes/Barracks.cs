@@ -8,18 +8,18 @@ namespace Ninject.Tests.Fakes
 
         public Barracks( IWarrior warrior )
         {
-            Warrior = warrior;
+            this.Warrior = warrior;
         }
 
         public Barracks( IWeapon weapon )
         {
-            Weapon = weapon;
+            this.Weapon = weapon;
         }
 
         public Barracks( IWarrior warrior, IWeapon weapon )
         {
-            Warrior = warrior;
-            Weapon = weapon;
+            this.Warrior = warrior;
+            this.Weapon = weapon;
         }
 
         public IWeapon Weapon { get; set; }

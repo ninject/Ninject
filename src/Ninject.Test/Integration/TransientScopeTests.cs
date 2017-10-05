@@ -27,10 +27,10 @@
         [Fact]
         public void NewInstanceIsReturnedForEachRequest()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
 
-            var instance1 = kernel.Get<IWeapon>();
-            var instance2 = kernel.Get<IWeapon>();
+            var instance1 = this.kernel.Get<IWeapon>();
+            var instance2 = this.kernel.Get<IWeapon>();
 
             instance1.Should().NotBeSameAs(instance2);
         }
@@ -39,9 +39,9 @@
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
 
-            var instance = kernel.Get<IWeapon>();
+            var instance = this.kernel.Get<IWeapon>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -59,10 +59,10 @@
         [Fact]
         public void NewInstanceIsReturnedForEachRequest()
         {
-            kernel.Bind<Sword>().ToSelf().InTransientScope();
+            this.kernel.Bind<Sword>().ToSelf().InTransientScope();
 
-            var sword1 = kernel.Get<Sword>();
-            var sword2 = kernel.Get<Sword>();
+            var sword1 = this.kernel.Get<Sword>();
+            var sword2 = this.kernel.Get<Sword>();
 
             sword1.Should().NotBeSameAs(sword2);
         }
@@ -71,9 +71,9 @@
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
-            kernel.Bind<Sword>().ToSelf().InTransientScope();
+            this.kernel.Bind<Sword>().ToSelf().InTransientScope();
 
-            var instance = kernel.Get<Sword>();
+            var instance = this.kernel.Get<Sword>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -83,7 +83,7 @@
 
             reference.IsAlive.Should().BeFalse();
 
-            var cache = kernel.Components.Get<ICache>();
+            var cache = this.kernel.Components.Get<ICache>();
             cache.Prune();
 
             cache.Count.Should().Be(0);
@@ -96,10 +96,10 @@
         [Fact]
         public void NewInstanceIsReturnedForEachRequest()
         {
-            kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
+            this.kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
 
-            var instance1 = kernel.Get<IWeapon>();
-            var instance2 = kernel.Get<IWeapon>();
+            var instance1 = this.kernel.Get<IWeapon>();
+            var instance2 = this.kernel.Get<IWeapon>();
 
             instance1.Should().NotBeSameAs(instance2);
         }
@@ -108,9 +108,9 @@
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
-            kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
+            this.kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
 
-            var instance = kernel.Get<IWeapon>();
+            var instance = this.kernel.Get<IWeapon>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -128,10 +128,10 @@
         [Fact]
         public void NewInstanceIsReturnedForEachRequest()
         {
-            kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
+            this.kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
 
-            var instance1 = kernel.Get<IWeapon>();
-            var instance2 = kernel.Get<IWeapon>();
+            var instance1 = this.kernel.Get<IWeapon>();
+            var instance2 = this.kernel.Get<IWeapon>();
 
             instance1.Should().NotBeSameAs(instance2);
         }
@@ -140,9 +140,9 @@
         [Fact]
         public void InstancesAreGarbageCollectedIfAllExternalReferencesAreDropped()
         {
-            kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
+            this.kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
 
-            var instance = kernel.Get<IWeapon>();
+            var instance = this.kernel.Get<IWeapon>();
             var reference = new WeakReference(instance);
 
             instance = null;

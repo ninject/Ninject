@@ -25,10 +25,10 @@ namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 #endif
             PropertyInjector injector = delegate { };
 
-            directive = new PropertyInjectionDirective(method, injector);
+            this.directive = new PropertyInjectionDirective(method, injector);
 
-            directive.Target.Name.Should().Be("Foo");
-            directive.Target.Type.Should().Be(typeof(int));
+            this.directive.Target.Name.Should().Be("Foo");
+            this.directive.Target.Type.Should().Be(typeof(int));
         }
     }
 

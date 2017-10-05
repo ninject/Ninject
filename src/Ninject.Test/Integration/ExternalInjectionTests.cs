@@ -26,10 +26,10 @@
         [Fact]
         public void InstanceOfKernelIsInjected()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
             var warrior = new ExternalWarrior();
-            kernel.Inject(warrior);
+            this.kernel.Inject(warrior);
 
             warrior.Weapon.Should().NotBeNull();
             warrior.Weapon.Should().BeOfType<Sword>();
@@ -40,8 +40,8 @@
         {
             var instance = new NotifiesWhenDisposed();
 
-            kernel.Inject(instance);
-            kernel.Dispose();
+            this.kernel.Inject(instance);
+            this.kernel.Dispose();
 
             instance.IsDisposed.Should().BeFalse();
         }

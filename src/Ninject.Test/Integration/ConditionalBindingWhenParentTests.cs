@@ -28,7 +28,7 @@
         [Fact]
         public void NamedInstanceAvailableEvenWithWhenBinding()
         {
-            var instance = kernel.Get<Sword>("Broken");
+            var instance = this.kernel.Get<Sword>("Broken");
 
             instance.Should().NotBeNull();
             instance.Should().BeOfType<Sword>();

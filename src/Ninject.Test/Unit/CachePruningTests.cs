@@ -44,7 +44,7 @@ namespace Ninject.Tests.Unit.CacheTests
             sword = null;
             context = null;
             GC.Collect();
-            cache.Prune();
+            this.cache.Prune();
             
             GC.Collect();
             bool swordCollected = !swordWeakReference.IsAlive;

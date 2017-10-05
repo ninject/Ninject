@@ -14,7 +14,7 @@
         public ActivationBlockContext()
         {
             this.kernel = new StandardKernel();
-            this.block = new ActivationBlock(kernel);
+            this.block = new ActivationBlock(this.kernel);
         }
 
         public void Dispose()
@@ -28,10 +28,10 @@
         [Fact]
         public void FirstActivatedInstanceIsReusedWithinBlock()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var weapon1 = block.Get<IWeapon>();
-            var weapon2 = block.Get<IWeapon>();
+            var weapon1 = this.block.Get<IWeapon>();
+            var weapon2 = this.block.Get<IWeapon>();
 
             weapon1.Should().BeSameAs(weapon2);
         }
@@ -39,10 +39,10 @@
         [Fact]
         public void BlockDoesNotInterfereWithExternalResolution()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var weapon1 = block.Get<IWeapon>();
-            var weapon2 = kernel.Get<IWeapon>();
+            var weapon1 = this.block.Get<IWeapon>();
+            var weapon2 = this.kernel.Get<IWeapon>();
 
             weapon1.Should().NotBeSameAs(weapon2);
         }
@@ -50,9 +50,9 @@
         [Fact]
         public void InstancesAreNotGarbageCollectedAsLongAsBlockRemainsAlive()
         {
-            kernel.Bind<NotifiesWhenDisposed>().ToSelf();
+            this.kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-            var instance = block.Get<NotifiesWhenDisposed>();
+            var instance = this.block.Get<NotifiesWhenDisposed>();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -66,10 +66,10 @@
         [Fact]
         public void InstancesActivatedWithinBlockAreDeactivated()
         {
-            kernel.Bind<NotifiesWhenDisposed>().ToSelf();
+            this.kernel.Bind<NotifiesWhenDisposed>().ToSelf();
 
-            var instance = block.Get<NotifiesWhenDisposed>();
-            block.Dispose();
+            var instance = this.block.Get<NotifiesWhenDisposed>();
+            this.block.Dispose();
 
             instance.IsDisposed.Should().BeTrue();
         }

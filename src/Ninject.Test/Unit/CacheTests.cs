@@ -47,7 +47,7 @@ namespace Ninject.Tests.Unit.CacheTests
             var scope = new TestObject(42);
             var context = CreateContext(scope, this.bindingConfiguration);
 
-            var instance = cache.TryGet(context);
+            var instance = this.cache.TryGet(context);
 
             instance.Should().BeNull();
         }
@@ -60,8 +60,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(scope, this.bindingConfiguration);
             var context2 = CreateContext(scope, this.bindingConfiguration);
 
-            cache.Remember(context1, reference);
-            object instance = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            object instance = this.cache.TryGet(context2);
 
             instance.Should().BeSameAs(reference.Instance);
         }
@@ -73,8 +73,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
             var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(context1, reference);
-            object instance = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            object instance = this.cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -86,8 +86,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
             var context2 = CreateContext(null, this.bindingConfiguration);
 
-            cache.Remember(context1, reference);
-            object instance = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            object instance = this.cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -103,8 +103,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(scope, this.bindingConfiguration, typeof(int));
             var context2 = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(context1, reference);
-            object instance = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            object instance = this.cache.TryGet(context2);
 
             instance.Should().BeSameAs(reference.Instance);
         }
@@ -117,8 +117,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(scope, this.bindingConfiguration, typeof(int));
             var context2 = CreateContext(scope, this.bindingConfiguration, typeof(double));
 
-            cache.Remember(context1, reference);
-            object instance = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            object instance = this.cache.TryGet(context2);
 
             instance.Should().BeNull();
         }
@@ -129,7 +129,7 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void ReturnsFalseIfInstanceIsNotTracked()
         {
-            bool result = cache.Release(new TestObject(42));
+            bool result = this.cache.Release(new TestObject(42));
             result.Should().BeFalse();
         }
 
@@ -141,8 +141,8 @@ namespace Ninject.Tests.Unit.CacheTests
             var reference = new InstanceReference { Instance = instance };
             var writeContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(writeContext, reference);
-            bool result = cache.Release(instance);
+            this.cache.Remember(writeContext, reference);
+            bool result = this.cache.Release(instance);
 
             result.Should().BeTrue();
         }
@@ -156,10 +156,10 @@ namespace Ninject.Tests.Unit.CacheTests
             var writeContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
             var readContext = CreateContext(scope, this.bindingConfiguration, typeof(int));
 
-            cache.Remember(writeContext, reference);
-            object instance1 = cache.TryGet(readContext);
-            bool result = cache.Release(instance1);
-            object instance2 = cache.TryGet(readContext);
+            this.cache.Remember(writeContext, reference);
+            object instance1 = this.cache.TryGet(readContext);
+            bool result = this.cache.Release(instance1);
+            object instance2 = this.cache.TryGet(readContext);
 
             instance1.Should().BeSameAs(reference.Instance);
             result.Should().BeTrue();
@@ -178,11 +178,11 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(scope, this.bindingConfiguration);
             var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(context1, reference);
-            cache.Remember(context2, reference);
-            cache.Clear(scope);
-            var instance1 = cache.TryGet(context1);
-            var instance2 = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            this.cache.Remember(context2, reference);
+            this.cache.Clear(scope);
+            var instance1 = this.cache.TryGet(context1);
+            var instance2 = this.cache.TryGet(context2);
 
             instance1.Should().BeNull();
             instance2.Should().NotBeNull();
@@ -196,11 +196,11 @@ namespace Ninject.Tests.Unit.CacheTests
             var context1 = CreateContext(new TestObject(42), this.bindingConfiguration);
             var context2 = CreateContext(new TestObject(42), this.bindingConfiguration);
 
-            cache.Remember(context1, reference);
-            cache.Remember(context2, reference);
-            cache.Clear();
-            var instance1 = cache.TryGet(context1);
-            var instance2 = cache.TryGet(context2);
+            this.cache.Remember(context1, reference);
+            this.cache.Remember(context2, reference);
+            this.cache.Clear();
+            var instance1 = this.cache.TryGet(context1);
+            var instance2 = this.cache.TryGet(context2);
 
             instance1.Should().BeNull();
             instance2.Should().BeNull();
@@ -217,9 +217,9 @@ namespace Ninject.Tests.Unit.CacheTests
             var reference = new InstanceReference { Instance = sword };
             var context = CreateContext(scopeMock.Object, this.bindingConfiguration);
 
-            cache.Remember(context, reference);
+            this.cache.Remember(context, reference);
             scopeMock.Raise(scope => scope.Disposed += null, EventArgs.Empty);
-            object instance = cache.TryGet(context);
+            object instance = this.cache.TryGet(context);
 
             instance.Should().BeNull();
 
@@ -236,10 +236,10 @@ namespace Ninject.Tests.Unit.CacheTests
             var sword = new Sword();
             var context = CreateContext(scope, this.bindingConfiguration);
 
-            cache.Remember(context, new InstanceReference { Instance = sword });
-            cache.Remember(CreateContext(scopeOfScope, this.bindingConfiguration), new InstanceReference { Instance = scope });
-            cache.Clear(scopeOfScope);
-            var instance = cache.TryGet(context);
+            this.cache.Remember(context, new InstanceReference { Instance = sword });
+            this.cache.Remember(CreateContext(scopeOfScope, this.bindingConfiguration), new InstanceReference { Instance = scope });
+            this.cache.Clear(scopeOfScope);
+            var instance = this.cache.TryGet(context);
 
             instance.Should().BeNull();
         }

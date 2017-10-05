@@ -21,7 +21,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
         public PropertyInjectionDirectiveContext()
         {
-            strategy = new PropertyInjectionStrategy(null) {Settings = new NinjectSettings()};
+            this.strategy = new PropertyInjectionStrategy(null) {Settings = new NinjectSettings()};
         }
     }
 
@@ -41,47 +41,47 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
         public WhenActivateIsCalled()
         {
-            contextMock = new Mock<IContext>();
-            planMock = new Mock<IPlan>();
-            injector1 = (x, y) => { injector1WasCalled = true; };
-            injector2 = (x, y) => { injector2WasCalled = true; };
+            this.contextMock = new Mock<IContext>();
+            this.planMock = new Mock<IPlan>();
+            this.injector1 = (x, y) => { this.injector1WasCalled = true; };
+            this.injector2 = (x, y) => { this.injector2WasCalled = true; };
 
-            directives = new[]
+            this.directives = new[]
             {
-                new FakePropertyInjectionDirective(property1, injector1),
-                new FakePropertyInjectionDirective(property2, injector2)
+                new FakePropertyInjectionDirective(this.property1, this.injector1),
+                new FakePropertyInjectionDirective(this.property2, this.injector2)
             };
 
-            contextMock.SetupGet(x => x.Plan).Returns(planMock.Object);
-            contextMock.SetupGet(x => x.Parameters).Returns(new IParameter[0]);
+            this.contextMock.SetupGet(x => x.Plan).Returns(this.planMock.Object);
+            this.contextMock.SetupGet(x => x.Parameters).Returns(new IParameter[0]);
 
-            reference = new InstanceReference { Instance = instance };
+            this.reference = new InstanceReference { Instance = this.instance };
 
-            planMock.Setup(x => x.GetAll<PropertyInjectionDirective>()).Returns(directives);
+            this.planMock.Setup(x => x.GetAll<PropertyInjectionDirective>()).Returns(this.directives);
         }
 
         [Fact]
         public void ReadsMethodInjectorsFromPlan()
         {
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, this.reference);
 
-            planMock.Verify(x => x.GetAll<PropertyInjectionDirective>());
+            this.planMock.Verify(x => x.GetAll<PropertyInjectionDirective>());
         }
 
         [Fact]
         public void ResolvesValuesForEachTargetOfEachDirective()
         {
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, this.reference);
 
-            directives.Map(d => d.TargetMock.Verify(x => x.ResolveWithin(contextMock.Object)));
+            this.directives.Map(d => d.TargetMock.Verify(x => x.ResolveWithin(this.contextMock.Object)));
         }
 
         [Fact]
         public void InvokesInjectorsForEachDirective()
         {
-            strategy.Activate(contextMock.Object, reference);
-            injector1WasCalled.Should().BeTrue();
-            injector2WasCalled.Should().BeTrue();
+            this.strategy.Activate(this.contextMock.Object, this.reference);
+            this.injector1WasCalled.Should().BeTrue();
+            this.injector2WasCalled.Should().BeTrue();
         }
     }
 
@@ -94,8 +94,8 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
         protected override ITarget CreateTarget(PropertyInfo property)
         {
-            TargetMock = new Mock<ITarget>();
-            return TargetMock.Object;
+            this.TargetMock = new Mock<ITarget>();
+            return this.TargetMock.Object;
         }
     }
 

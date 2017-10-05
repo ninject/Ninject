@@ -25,14 +25,14 @@
         [Fact]
         public void InstanceIsActivatedOnCreation()
         {
-            kernel.Bind<Barracks>().ToSelf().OnActivation(
+            this.kernel.Bind<Barracks>().ToSelf().OnActivation(
                 instance =>
                     {
                         instance.Warrior = new FootSoldier();
                         instance.Weapon = new Shuriken();
                     });
 
-            var barracks = kernel.Get<Barracks>();
+            var barracks = this.kernel.Get<Barracks>();
             barracks.Warrior.Should().NotBeNull();
             barracks.Warrior.Should().BeOfType<FootSoldier>();
             barracks.Weapon.Should().NotBeNull();
@@ -42,14 +42,14 @@
         [Fact]
         public void InstanceIsActivatedOnCreationWithContext()
         {
-            kernel.Bind<Barracks>().ToSelf().OnActivation(
+            this.kernel.Bind<Barracks>().ToSelf().OnActivation(
                 (ctx, instance) =>
                     {
                         instance.Warrior = new FootSoldier();
                         instance.Weapon = new Shuriken();
                     });
 
-            var barracks = kernel.Get<Barracks>();
+            var barracks = this.kernel.Get<Barracks>();
             barracks.Warrior.Should().NotBeNull();
             barracks.Warrior.Should().BeOfType<FootSoldier>();
             barracks.Weapon.Should().NotBeNull();
@@ -60,7 +60,7 @@
         public void InstanceIsDeactivatedWhenItLeavesScope()
         {
             Barracks barracks;
-            kernel.Bind<Barracks>().ToSelf().InSingletonScope()
+            this.kernel.Bind<Barracks>().ToSelf().InSingletonScope()
                   .OnActivation(
                       instance =>
                       {
@@ -74,11 +74,11 @@
                           instance.Weapon = null;
                       });
 
-            barracks = kernel.Get<Barracks>();
+            barracks = this.kernel.Get<Barracks>();
             barracks.Warrior.Should().BeOfType<FootSoldier>();
             barracks.Weapon.Should().BeOfType<Shuriken>();
 
-            kernel.Components.Get<ICache>().Release(barracks);
+            this.kernel.Components.Get<ICache>().Release(barracks);
             barracks.Warrior.Should().BeNull();
             barracks.Weapon.Should().BeNull();
         }
@@ -87,7 +87,7 @@
         public void InstanceIsDeactivatedWhenItLeavesScopeWithContext()
         {
             Barracks barracks;
-            kernel.Bind<Barracks>().ToSelf().InSingletonScope()
+            this.kernel.Bind<Barracks>().ToSelf().InSingletonScope()
                   .OnActivation(
                       instance =>
                       {
@@ -101,11 +101,11 @@
                           instance.Weapon = null;
                       });
 
-            barracks = kernel.Get<Barracks>();
+            barracks = this.kernel.Get<Barracks>();
             barracks.Warrior.Should().BeOfType<FootSoldier>();
             barracks.Weapon.Should().BeOfType<Shuriken>();
 
-            kernel.Components.Get<ICache>().Release(barracks);
+            this.kernel.Components.Get<ICache>().Release(barracks);
             barracks.Warrior.Should().BeNull();
             barracks.Weapon.Should().BeNull();
         }
@@ -113,13 +113,13 @@
         [Fact]
         public void ObjectsActivatedOnlyOnce()
         {
-            kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<Sword>().ToSelf();
-            kernel.Bind<IWeapon>().ToMethod(ctx => ctx.Kernel.Get<Sword>());
-            var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
+            this.kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<Sword>().ToSelf();
+            this.kernel.Bind<IWeapon>().ToMethod(ctx => ctx.Kernel.Get<Sword>());
+            var testActivationStrategy = this.kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
 
-            kernel.Get<IWarrior>();
+            this.kernel.Get<IWarrior>();
 
             testActivationStrategy.ActivationCount.Should().Be(2);
         }
@@ -127,13 +127,13 @@
         [Fact]
         public void NullIsNotActivated()
         {
-            kernel.Settings.AllowNullInjection = true;
-            kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().ToConstant((IWeapon)null);
-            var testActivationStrategy = kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
+            this.kernel.Settings.AllowNullInjection = true;
+            this.kernel.Components.Add<IActivationStrategy, TestActivationStrategy>();
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().ToConstant((IWeapon)null);
+            var testActivationStrategy = this.kernel.Components.GetAll<IActivationStrategy>().OfType<TestActivationStrategy>().Single();
 
-            kernel.Get<IWarrior>();
+            this.kernel.Get<IWarrior>();
 
             testActivationStrategy.ActivationCount.Should().Be(1);
         }

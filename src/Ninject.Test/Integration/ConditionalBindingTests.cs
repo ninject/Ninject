@@ -12,77 +12,77 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void GivenADefaultAndSingleSatisfiedConditional_ThenTheConditionalIsUsed()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
-            kernel.Bind<Samurai>().ToSelf();
-            var warrior = kernel.Get<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
+            this.kernel.Bind<Samurai>().ToSelf();
+            var warrior = this.kernel.Get<Samurai>();
             warrior.Weapon.Should().BeOfType<Shuriken>();
         }
 
         [Fact]
         public void GivenADefaultAndSingleUnsatisfiedConditional_ThenTheDefaultIsUsed()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
-            kernel.Bind<Samurai>().ToSelf();
-            var warrior = kernel.Get<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
+            this.kernel.Bind<Samurai>().ToSelf();
+            var warrior = this.kernel.Get<Samurai>();
             warrior.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void GivenADefaultAndAnUnSatisfiedConditional_ThenTheDefaultIsUsed()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
-            kernel.Bind<Samurai>().ToSelf();
-            var warrior = kernel.Get<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Ninja>();
+            this.kernel.Bind<Samurai>().ToSelf();
+            var warrior = this.kernel.Get<Samurai>();
             warrior.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void GivenADefaultAndAnManySatisfiedConditionals_ThenAnExceptionIsThrown()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedInto<Samurai>();
-            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
-            kernel.Bind<Samurai>().ToSelf();
-            Assert.Throws<ActivationException>(() => kernel.Get<Samurai>());
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenInjectedInto<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto<Samurai>();
+            this.kernel.Bind<Samurai>().ToSelf();
+            Assert.Throws<ActivationException>(() => this.kernel.Get<Samurai>());
         }
 
         [Fact]
         public void GivenNoBinding_ThenASelfBindableTypeWillResolve()
         {
-            var weapon = kernel.Get<Sword>();
+            var weapon = this.kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void GivenBindingIsMadeAfterImplicitBinding_ThenExplicitBindingWillResolve()
         {
-            IWeapon weapon = kernel.Get<Sword>();
+            IWeapon weapon = this.kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();
-            kernel.Bind<Sword>().To<ShortSword>();
-            weapon = kernel.Get<Sword>();
+            this.kernel.Bind<Sword>().To<ShortSword>();
+            weapon = this.kernel.Get<Sword>();
             weapon.Should().BeOfType<ShortSword>();
         }
 
         [Fact]
         public void GivenBothImplicitAndExplicitConditionalBindings_ThenExplicitBindingWillResolve()
         {
-            kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
-            kernel.Bind<Sword>().To<ShortSword>().When(ctx => true);
+            this.kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
+            this.kernel.Bind<Sword>().To<ShortSword>().When(ctx => true);
 
-            var weapon = kernel.Get<Sword>();
+            var weapon = this.kernel.Get<Sword>();
             weapon.Should().BeOfType<ShortSword>();
         }
 
         [Fact]
         public void GivenADefaultAndAConditionalImplicitBinding_ThenConditionalBindingWillResolve()
         {
-            kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
-            kernel.Bind<Sword>().To<ShortSword>();
+            this.kernel.Bind<Sword>().ToSelf().When(ctx => true).BindingConfiguration.IsImplicit = true;
+            this.kernel.Bind<Sword>().To<ShortSword>();
 
-            var weapon = kernel.Get<Sword>();
+            var weapon = this.kernel.Get<Sword>();
             weapon.Should().BeOfType<Sword>();
         }
 
@@ -92,9 +92,9 @@ namespace Ninject.Tests.Integration
             var shortSword = new ShortSword();
             var shuriken = new Shuriken();
 
-            kernel.Bind<IWeapon>().ToConstant(shortSword);
-            kernel.Bind<IWeapon>().ToConstant(shuriken).When(_ => true);
-            var result = kernel.GetAll<IWeapon>();
+            this.kernel.Bind<IWeapon>().ToConstant(shortSword);
+            this.kernel.Bind<IWeapon>().ToConstant(shuriken).When(_ => true);
+            var result = this.kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(shuriken);
         }
@@ -106,10 +106,10 @@ namespace Ninject.Tests.Integration
             var sword = new Sword();
             var shuriken = new Shuriken();
 
-            kernel.Bind<IWeapon>().ToConstant(shortSword);
-            kernel.Bind<IWeapon>().ToConstant(sword);
-            kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
-            var result = kernel.GetAll<IWeapon>();
+            this.kernel.Bind<IWeapon>().ToConstant(shortSword);
+            this.kernel.Bind<IWeapon>().ToConstant(sword);
+            this.kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
+            var result = this.kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(sword);
             result.Should().NotContain(shuriken);
@@ -121,9 +121,9 @@ namespace Ninject.Tests.Integration
             var shortSword = new ShortSword();
             var shuriken = new Shuriken();
 
-            kernel.Bind<IWeapon>().ToConstant(shortSword).BindingConfiguration.IsImplicit = true;
-            kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
-            var result = kernel.GetAll<IWeapon>();
+            this.kernel.Bind<IWeapon>().ToConstant(shortSword).BindingConfiguration.IsImplicit = true;
+            this.kernel.Bind<IWeapon>().ToConstant(shuriken).BindingConfiguration.IsImplicit = true;
+            var result = this.kernel.GetAll<IWeapon>();
             result.Should().Contain(shortSword);
             result.Should().Contain(shuriken);
         }
@@ -131,10 +131,10 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoAppliesToBaseTypes()
         {
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedInto<IWarrior>();
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenInjectedInto<IWarrior>();
 
-            var warrior = kernel.Get<IWarrior>();
+            var warrior = this.kernel.Get<IWarrior>();
 
             warrior.Weapon.Should().BeOfType<Sword>();
         }
@@ -142,11 +142,11 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoAppliesToOpenGenerics()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(IGenericService<>));
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(IGenericService<>));
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<GenericService<int>>();
+            var service = this.kernel.Get<GenericService<int>>();
 
             service.Warrior.Should().BeOfType<Samurai>();
         }
@@ -154,12 +154,12 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenerics()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
             this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(new[] { typeof(IGenericService<>) });
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<GenericService<int>>();
-            var anotherService = kernel.Get<AnotherGenericService<int>>();
+            var service = this.kernel.Get<GenericService<int>>();
+            var anotherService = this.kernel.Get<AnotherGenericService<int>>();
 
             service.Warrior.Should().BeOfType<Samurai>();
             anotherService.Warrior.Should().BeOfType<Samurai>();
@@ -168,18 +168,18 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoAppliesToOneOfMultipleServiceType()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWarrior>().To<FootSoldier>();
-            kernel.Bind<IWeapon>().To<Shuriken>()
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWarrior>().To<FootSoldier>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>()
                 .WhenInjectedExactlyInto(typeof(Samurai), typeof(Barracks));
 
-            kernel.Bind<Samurai>().ToSelf();
-            kernel.Bind<Barracks>().ToSelf();
-            kernel.Bind<NinjaBarracks>().ToSelf();
+            this.kernel.Bind<Samurai>().ToSelf();
+            this.kernel.Bind<Barracks>().ToSelf();
+            this.kernel.Bind<NinjaBarracks>().ToSelf();
 
-            var warrior = kernel.Get<Samurai>();
-            var barracks = kernel.Get<Barracks>();
-            var ninja = kernel.Get<NinjaBarracks>();
+            var warrior = this.kernel.Get<Samurai>();
+            var barracks = this.kernel.Get<Barracks>();
+            var ninja = this.kernel.Get<NinjaBarracks>();
 
             warrior.Weapon.Should().BeOfType<Shuriken>();
             barracks.Weapon.Should().BeOfType<Shuriken>();
@@ -189,11 +189,11 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoAppliesToOpenGenericsWhenClosedGenericIsRequested()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>));
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>));
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<ClosedGenericService>();
+            var service = this.kernel.Get<ClosedGenericService>();
 
             service.Warrior.Should().BeOfType<Samurai>();
         }
@@ -201,12 +201,12 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedIntoOneOfMultipleTypesAppliesToOpenGenericsWhenClosedGenericIsRequested()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<ClosedGenericService>();
-            var anotherService = kernel.Get<ClosedAnotherGenericService>();
+            var service = this.kernel.Get<ClosedGenericService>();
+            var anotherService = this.kernel.Get<ClosedAnotherGenericService>();
 
             service.Warrior.Should().BeOfType<Samurai>();
             anotherService.Warrior.Should().BeOfType<Samurai>();
@@ -216,21 +216,21 @@ namespace Ninject.Tests.Integration
         public void WhenInjectedIntoOneOfMultipleDoesNotApplyForConcreteTypes()
         {
 
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
             this.kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedInto(new[] { typeof(Samurai) });
-            kernel.Bind<Samurai>().ToSelf();
-            var warrior = kernel.Get<Samurai>();
+            this.kernel.Bind<Samurai>().ToSelf();
+            var warrior = this.kernel.Get<Samurai>();
             warrior.Weapon.Should().BeOfType<Shuriken>();
         }
 
         [Fact]
         public void WhenInjectedExactlyIntoAppliesToOpenGenerics()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>));
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>));
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<GenericService<int>>();
+            var service = this.kernel.Get<GenericService<int>>();
 
             service.Warrior.Should().BeOfType<Samurai>();
         }
@@ -238,12 +238,12 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedExactlyIntoOneOfMultipleTypesAppliesToOpenGenerics()
         {
-            kernel.Bind(typeof(GenericService<>)).ToSelf();
-            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
-            kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind(typeof(GenericService<>)).ToSelf();
+            this.kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto(typeof(GenericService<>), typeof(AnotherGenericService<>));
+            this.kernel.Bind<IWeapon>().To<Sword>();
 
-            var service = kernel.Get<GenericService<int>>();
-            var anotherService = kernel.Get<AnotherGenericService<int>>();
+            var service = this.kernel.Get<GenericService<int>>();
+            var anotherService = this.kernel.Get<AnotherGenericService<int>>();
 
             service.Warrior.Should().BeOfType<Samurai>();
             anotherService.Warrior.Should().BeOfType<Samurai>();
@@ -252,10 +252,10 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedExactlyIntoAppliesNotToBaseTypes()
         {
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<IWarrior>();
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<IWarrior>();
 
-            Action getWarrior = () => kernel.Get<IWarrior>();
+            Action getWarrior = () => this.kernel.Get<IWarrior>();
 
             getWarrior.ShouldThrow<ActivationException>();
         }
@@ -263,10 +263,10 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedExactlyIntoAppliesToServiceType()
         {
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<Samurai>();
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenInjectedExactlyInto<Samurai>();
 
-            var warrior = kernel.Get<IWarrior>();
+            var warrior = this.kernel.Get<IWarrior>();
 
             warrior.Weapon.Should().BeOfType<Sword>();
         }
@@ -274,18 +274,18 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenInjectedExactlyIntoAppliesToOneOfMultipleServiceType()
         {
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWarrior>().To<FootSoldier>();
-            kernel.Bind<IWeapon>().To<Shuriken>()
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWarrior>().To<FootSoldier>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>()
                 .WhenInjectedExactlyInto(typeof(Samurai), typeof(Barracks));
 
-            kernel.Bind<Samurai>().ToSelf();
-            kernel.Bind<Barracks>().ToSelf();
-            kernel.Bind<NinjaBarracks>().ToSelf();
+            this.kernel.Bind<Samurai>().ToSelf();
+            this.kernel.Bind<Barracks>().ToSelf();
+            this.kernel.Bind<NinjaBarracks>().ToSelf();
 
-            var warrior = kernel.Get<Samurai>();
-            var barracks = kernel.Get<Barracks>();
-            var ninja = kernel.Get<NinjaBarracks>();
+            var warrior = this.kernel.Get<Samurai>();
+            var barracks = this.kernel.Get<Barracks>();
+            var ninja = this.kernel.Get<NinjaBarracks>();
 
             warrior.Weapon.Should().BeOfType<Shuriken>();
             barracks.Weapon.Should().BeOfType<Shuriken>();
@@ -296,12 +296,12 @@ namespace Ninject.Tests.Integration
         public void WhenAnyAncestorNamedAppliesToGrandParentAndParent()
         {
             const string Name = "SomeName";
-            kernel.Bind<Barracks>().ToSelf().Named(Name);
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorNamed(Name);
-            kernel.Bind<IWeapon>().To<Dagger>();
+            this.kernel.Bind<Barracks>().ToSelf().Named(Name);
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorNamed(Name);
+            this.kernel.Bind<IWeapon>().To<Dagger>();
 
-            var barack = kernel.Get<Barracks>();
+            var barack = this.kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Sword>();
             barack.Warrior.Weapon.Should().BeOfType<Sword>();
@@ -311,13 +311,13 @@ namespace Ninject.Tests.Integration
         public void WhenNoAncestorNamedAppliesToGrandParentAndParent()
         {
             const string Name = "SomeName";
-            kernel.Bind<Barracks>().ToSelf().Named(Name);
-            kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<Barracks>().ToSelf().Named(Name);
+            this.kernel.Bind<IWarrior>().To<Samurai>();
 
-            kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorNamed(Name);
-            kernel.Bind<IWeapon>().To<Dagger>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorNamed(Name);
+            this.kernel.Bind<IWeapon>().To<Dagger>();
 
-            var barack = kernel.Get<Barracks>();
+            var barack = this.kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Dagger>();
             barack.Warrior.Weapon.Should().BeOfType<Dagger>();
@@ -326,12 +326,12 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenAnyAncestorMatchesAppliesToGrandParentAndParent()
         {
-            kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
-            kernel.Bind<IWarrior>().To<Samurai>();
-            kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
-            kernel.Bind<IWeapon>().To<Dagger>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
+            this.kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
+            this.kernel.Bind<IWeapon>().To<Dagger>().WhenAnyAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
 
-            var barack = kernel.Get<Barracks>();
+            var barack = this.kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Sword>();
             barack.Warrior.Weapon.Should().BeOfType<Sword>();
@@ -340,13 +340,13 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenNoAncestorMatchesAppliesToGrandParentAndParent()
         {
-            kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
-            kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<Barracks>().ToSelf().WithMetadata("Id", 1);
+            this.kernel.Bind<IWarrior>().To<Samurai>();
 
-            kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
-            kernel.Bind<IWeapon>().To<Dagger>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 1);
+            this.kernel.Bind<IWeapon>().To<Dagger>().WhenNoAncestorMatches(ctx => ctx.Binding.Metadata.Get("Id", -1) == 2);
 
-            var barack = kernel.Get<Barracks>();
+            var barack = this.kernel.Get<Barracks>();
 
             barack.Weapon.Should().BeOfType<Dagger>();
             barack.Warrior.Weapon.Should().BeOfType<Dagger>();
@@ -355,33 +355,33 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void WhenMemberHasDoesNotConsiderAttributeOnTarget()
         {
-            kernel.Bind<Knight>().ToSelf();
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<ShortSword>().WhenMemberHas<WeakAttribute>();
+            this.kernel.Bind<Knight>().ToSelf();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<ShortSword>().WhenMemberHas<WeakAttribute>();
 
-            var knight = kernel.Get<Knight>();
+            var knight = this.kernel.Get<Knight>();
             knight.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void WhenMemberHasDoesConsiderAttributeOnMember()
         {
-            kernel.Bind<Knight>().ToSelf();
-            kernel.Bind<IWeapon>().To<Sword>().WhenMemberHas<StrongAttribute>();
-            kernel.Bind<IWeapon>().To<ShortSword>();
+            this.kernel.Bind<Knight>().ToSelf();
+            this.kernel.Bind<IWeapon>().To<Sword>().WhenMemberHas<StrongAttribute>();
+            this.kernel.Bind<IWeapon>().To<ShortSword>();
 
-            var knight = kernel.Get<Knight>();
+            var knight = this.kernel.Get<Knight>();
             knight.Weapon.Should().BeOfType<Sword>();
         }
 
         [Fact]
         public void WhenTargetHasDoesConsiderAttributeOnTarget()
         {
-            kernel.Bind<Knight>().ToSelf();
-            kernel.Bind<IWeapon>().To<Sword>();
-            kernel.Bind<IWeapon>().To<ShortSword>().WhenTargetHas<WeakAttribute>();
+            this.kernel.Bind<Knight>().ToSelf();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<ShortSword>().WhenTargetHas<WeakAttribute>();
 
-            var knight = kernel.Get<Knight>();
+            var knight = this.kernel.Get<Knight>();
             knight.Weapon.Should().BeOfType<ShortSword>();
         }
 

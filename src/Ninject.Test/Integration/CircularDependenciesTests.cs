@@ -28,30 +28,30 @@
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructors()
         {
-            kernel.Bind<TwoWayConstructorFoo>().ToSelf().InSingletonScope();
-            kernel.Bind<TwoWayConstructorBar>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayConstructorFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayConstructorBar>().ToSelf().InSingletonScope();
 
-            kernel.Bind<IDecoratorPattern>().To<Decorator1>().WhenInjectedInto<Decorator2>();
-            kernel.Bind<IDecoratorPattern>().To<Decorator2>();
+            this.kernel.Bind<IDecoratorPattern>().To<Decorator1>().WhenInjectedInto<Decorator2>();
+            this.kernel.Bind<IDecoratorPattern>().To<Decorator2>();
         }
 
         [Fact]
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
             var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
-            kernel.Resolve(request);
+            this.kernel.Resolve(request);
         }
 
         [Fact]
         public void DoesNotThrowExceptionIfConditionaDoesNotMatch()
         {
-            kernel.Get<IDecoratorPattern>();
+            this.kernel.Get<IDecoratorPattern>();
         }
 
         [Fact]
         public void ThrowsActivationExceptionWhenHookIsResolved()
         {
-            Assert.Throws<ActivationException>(() => kernel.Get<TwoWayConstructorFoo>());
+            Assert.Throws<ActivationException>(() => this.kernel.Get<TwoWayConstructorFoo>());
         }
     }
 
@@ -59,22 +59,22 @@
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenProperties()
         {
-            kernel.Bind<TwoWayPropertyFoo>().ToSelf().InSingletonScope();
-            kernel.Bind<TwoWayPropertyBar>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayPropertyFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayPropertyBar>().ToSelf().InSingletonScope();
         }
 
 
         [Fact]
         public void DoesNotThrowException()
         {
-            kernel.Get<TwoWayPropertyFoo>();
+            this.kernel.Get<TwoWayPropertyFoo>();
         }
 
         [Fact]
         public void ScopeIsRespected()
         {
-            var foo = kernel.Get<TwoWayPropertyFoo>();
-            var bar = kernel.Get<TwoWayPropertyBar>();
+            var foo = this.kernel.Get<TwoWayPropertyFoo>();
+            var bar = this.kernel.Get<TwoWayPropertyBar>();
 
             foo.Bar.Should().BeSameAs(bar);
             bar.Foo.Should().BeSameAs(foo);
@@ -85,9 +85,9 @@
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenConstructors()
         {
-            kernel.Bind<ThreeWayConstructorFoo>().ToSelf().InSingletonScope();
-            kernel.Bind<ThreeWayConstructorBar>().ToSelf().InSingletonScope();
-            kernel.Bind<ThreeWayConstructorBaz>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayConstructorFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayConstructorBar>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayConstructorBaz>().ToSelf().InSingletonScope();
         }
 
         [Fact]
@@ -95,13 +95,13 @@
         {
             var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
 
-            kernel.Resolve(request);
+            this.kernel.Resolve(request);
         }
 
         [Fact]
         public void ThrowsActivationExceptionWhenHookIsResolved()
         {
-            Assert.Throws<ActivationException>(() => kernel.Get<ThreeWayConstructorFoo>());
+            Assert.Throws<ActivationException>(() => this.kernel.Get<ThreeWayConstructorFoo>());
         }
     }
 
@@ -109,23 +109,23 @@
     {
         public WhenDependenciesHaveThreeWayCircularReferenceBetweenProperties()
         {
-            kernel.Bind<ThreeWayPropertyFoo>().ToSelf().InSingletonScope();
-            kernel.Bind<ThreeWayPropertyBar>().ToSelf().InSingletonScope();
-            kernel.Bind<ThreeWayPropertyBaz>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayPropertyFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayPropertyBar>().ToSelf().InSingletonScope();
+            this.kernel.Bind<ThreeWayPropertyBaz>().ToSelf().InSingletonScope();
         }
 
         [Fact]
         public void DoesNotThrowException()
         {
-            kernel.Get<ThreeWayPropertyFoo>();
+            this.kernel.Get<ThreeWayPropertyFoo>();
         }
 
         [Fact]
         public void ScopeIsRespected()
         {
-            var foo = kernel.Get<ThreeWayPropertyFoo>();
-            var bar = kernel.Get<ThreeWayPropertyBar>();
-            var baz = kernel.Get<ThreeWayPropertyBaz>();
+            var foo = this.kernel.Get<ThreeWayPropertyFoo>();
+            var bar = this.kernel.Get<ThreeWayPropertyBar>();
+            var baz = this.kernel.Get<ThreeWayPropertyBaz>();
 
             foo.Bar.Should().BeSameAs(bar);
             bar.Baz.Should().BeSameAs(baz);
@@ -137,33 +137,33 @@
     {
         public WhenDependenciesHaveOpenGenericCircularReferenceBetweenConstructors()
         {
-            kernel.Bind(typeof(IOptions<>)).To(typeof(OptionsManager<>));
+            this.kernel.Bind(typeof(IOptions<>)).To(typeof(OptionsManager<>));
 
-            kernel.Bind<IConfigureOptions<ClassA>>().To<ConfigureA1>();
-            kernel.Bind<IConfigureOptions<ClassB>>().To<ConfigureB1>();
-            kernel.Bind<IConfigureOptions<ClassC>>().To<HasCircularDependency1>();
-            kernel.Bind<IConfigureOptions<ClassD>>().To<HasCircularDependency2>();
+            this.kernel.Bind<IConfigureOptions<ClassA>>().To<ConfigureA1>();
+            this.kernel.Bind<IConfigureOptions<ClassB>>().To<ConfigureB1>();
+            this.kernel.Bind<IConfigureOptions<ClassC>>().To<HasCircularDependency1>();
+            this.kernel.Bind<IConfigureOptions<ClassD>>().To<HasCircularDependency2>();
 
         }
 
         [Fact]
         public void DoesNotThrowException()
         {
-            kernel.Get<IOptions<ClassA>>();
+            this.kernel.Get<IOptions<ClassA>>();
 
         }
 
         [Fact]
         public void DoesNotThrowException2()
         {
-            var o = kernel.Get<HasOptionsPropertyInjected>();
+            var o = this.kernel.Get<HasOptionsPropertyInjected>();
 
         }
 
         [Fact]
         public void DetectsCyclicDependenciesInPropertySetter()
         {
-            Action act = () => kernel.Get<IOptions<ClassC>>();
+            Action act = () => this.kernel.Get<IOptions<ClassC>>();
 
             act.ShouldThrow<ActivationException>();
         }
@@ -171,9 +171,9 @@
         [Fact]
         public void DetectsCyclicDependenciesForGenericServiceRegisteredViaOpenGenericType2()
         {
-            kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericServiceWithGenericConstructor<>));
+            this.kernel.Bind(typeof(IGeneric<>)).To(typeof(GenericServiceWithGenericConstructor<>));
 
-            Action act = () => kernel.Get<IGeneric<int>>();
+            Action act = () => this.kernel.Get<IGeneric<int>>();
 
             act.ShouldThrow<ActivationException>();
         }
@@ -184,27 +184,27 @@
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructorAndProperty()
         {
-            kernel.Bind<TwoWayConstructorPropertyFoo>().ToSelf().InSingletonScope();
-            kernel.Bind<TwoWayConstructorPropertyBar>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayConstructorPropertyFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayConstructorPropertyBar>().ToSelf().InSingletonScope();
         }
 
         [Fact]
         public void ThrowsActivationExceptionWhenHookIsResolved()
         {
-            Assert.Throws<ActivationException>(() => kernel.Get<TwoWayConstructorPropertyFoo>());
+            Assert.Throws<ActivationException>(() => this.kernel.Get<TwoWayConstructorPropertyFoo>());
         }
 
         [Fact]
         public void DoesNotThrowException()
         {
-            kernel.Get<TwoWayConstructorPropertyBar>();
+            this.kernel.Get<TwoWayConstructorPropertyBar>();
         }
 
         [Fact]
         public void ScopeIsRespected()
         {
-            var bar = kernel.Get<TwoWayConstructorPropertyBar>();
-            var foo = kernel.Get<TwoWayConstructorPropertyFoo>();
+            var bar = this.kernel.Get<TwoWayConstructorPropertyBar>();
+            var foo = this.kernel.Get<TwoWayConstructorPropertyFoo>();
             bar.Foo.Should().BeSameAs(foo);
         }
     }

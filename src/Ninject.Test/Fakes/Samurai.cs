@@ -9,26 +9,26 @@ namespace Ninject.Tests.Fakes
 
         public IWeapon Weapon
         {
-            get { return _weapon; }
-            set { _weapon = value; }
+            get { return this._weapon; }
+            set { this._weapon = value; }
         }
 
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return this._name; }
+            set { this._name = value; }
         }
 
         public bool IsBattleHardened { get; set; }
 
         public Samurai(IWeapon weapon)
         {
-            Weapon = weapon;
+            this.Weapon = weapon;
         }
 
         public void SetName(string name)
         {
-            _name = name;
+            this._name = name;
         }
 
         public void DoNothing()
@@ -37,8 +37,8 @@ namespace Ninject.Tests.Fakes
 
         public string Attack(string enemy)
         {
-            IsBattleHardened = true;
-            return String.Format("Attacked {0} with a {1}", enemy, Weapon.Name);
+            this.IsBattleHardened = true;
+            return String.Format("Attacked {0} with a {1}", enemy, this.Weapon.Name);
         }
     }
 }

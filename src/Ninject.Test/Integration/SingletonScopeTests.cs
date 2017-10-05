@@ -27,10 +27,10 @@
         [Fact]
         public void FirstActivatedInstanceIsReused()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
 
-            var instance1 = kernel.Get<IWeapon>();
-            var instance2 = kernel.Get<IWeapon>();
+            var instance1 = this.kernel.Get<IWeapon>();
+            var instance2 = this.kernel.Get<IWeapon>();
 
             instance1.Should().BeSameAs(instance2);
         }
@@ -38,9 +38,9 @@
         [Fact]
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
-            kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
+            this.kernel.Bind<IWeapon>().To<Sword>().InSingletonScope();
 
-            var instance = kernel.Get<IWeapon>();
+            var instance = this.kernel.Get<IWeapon>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -54,10 +54,10 @@
         [Fact]
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
-            kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().To<NotifiesWhenDisposed>().InSingletonScope();
 
-            var instance = kernel.Get<INotifyWhenDisposed>();
-            kernel.Dispose();
+            var instance = this.kernel.Get<INotifyWhenDisposed>();
+            this.kernel.Dispose();
 
             instance.IsDisposed.Should().BeTrue();
         }
@@ -68,10 +68,10 @@
         [Fact]
         public void FirstActivatedInstanceIsReused()
         {
-            kernel.Bind<Sword>().ToSelf().InSingletonScope();
+            this.kernel.Bind<Sword>().ToSelf().InSingletonScope();
 
-            var sword1 = kernel.Get<Sword>();
-            var sword2 = kernel.Get<Sword>();
+            var sword1 = this.kernel.Get<Sword>();
+            var sword2 = this.kernel.Get<Sword>();
 
             sword1.Should().BeSameAs(sword2);
         }
@@ -79,9 +79,9 @@
         [Fact]
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
-            kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
+            this.kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
 
-            var instance = kernel.Get<NotifiesWhenDisposed>();
+            var instance = this.kernel.Get<NotifiesWhenDisposed>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -95,10 +95,10 @@
         [Fact]
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
-            kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
+            this.kernel.Bind<NotifiesWhenDisposed>().ToSelf().InSingletonScope();
 
-            var instance = kernel.Get<NotifiesWhenDisposed>();
-            kernel.Dispose();
+            var instance = this.kernel.Get<NotifiesWhenDisposed>();
+            this.kernel.Dispose();
 
             instance.IsDisposed.Should().BeTrue();
         }
@@ -109,10 +109,10 @@
         [Fact]
         public void FirstActivatedInstanceIsReused()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
 
-            var instance1 = kernel.Get<INotifyWhenDisposed>();
-            var instance2 = kernel.Get<INotifyWhenDisposed>();
+            var instance1 = this.kernel.Get<INotifyWhenDisposed>();
+            var instance2 = this.kernel.Get<INotifyWhenDisposed>();
 
             instance1.Should().BeSameAs(instance2);
         }
@@ -120,9 +120,9 @@
         [Fact]
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
 
-            var instance = kernel.Get<INotifyWhenDisposed>();
+            var instance = this.kernel.Get<INotifyWhenDisposed>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -136,10 +136,10 @@
         [Fact]
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToProvider<NotifiesWhenDisposedProvider>().InSingletonScope();
 
-            var instance = kernel.Get<INotifyWhenDisposed>();
-            kernel.Dispose();
+            var instance = this.kernel.Get<INotifyWhenDisposed>();
+            this.kernel.Dispose();
 
             instance.IsDisposed.Should().BeTrue();
         }
@@ -150,10 +150,10 @@
         [Fact]
         public void FirstActivatedInstanceIsReused()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
 
-            var instance1 = kernel.Get<INotifyWhenDisposed>();
-            var instance2 = kernel.Get<INotifyWhenDisposed>();
+            var instance1 = this.kernel.Get<INotifyWhenDisposed>();
+            var instance2 = this.kernel.Get<INotifyWhenDisposed>();
 
             instance1.Should().BeSameAs(instance2);
         }
@@ -161,9 +161,9 @@
         [Fact]
         public void InstancesAreNotGarbageCollectedAsLongAsKernelRemainsAlive()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
 
-            var instance = kernel.Get<INotifyWhenDisposed>();
+            var instance = this.kernel.Get<INotifyWhenDisposed>();
             var reference = new WeakReference(instance);
 
             instance = null;
@@ -177,10 +177,10 @@
         [Fact]
         public void InstancesAreDeactivatedWhenKernelIsDisposed()
         {
-            kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
+            this.kernel.Bind<INotifyWhenDisposed>().ToMethod(x => new NotifiesWhenDisposed()).InSingletonScope();
 
-            var instance = kernel.Get<INotifyWhenDisposed>();
-            kernel.Dispose();
+            var instance = this.kernel.Get<INotifyWhenDisposed>();
+            this.kernel.Dispose();
 
             instance.IsDisposed.Should().BeTrue();
         }

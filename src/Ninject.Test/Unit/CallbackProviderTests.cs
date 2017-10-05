@@ -30,9 +30,9 @@ namespace Ninject.Tests.Unit.CallbackProviderTests
         public void ProviderInvokesCallbackToRetrieveValue()
         {
             var sword = new Sword();
-            provider = new CallbackProvider<Sword>(c => sword);
+            this.provider = new CallbackProvider<Sword>(c => sword);
 
-            var result = provider.Create(contextMock.Object);
+            var result = this.provider.Create(this.contextMock.Object);
 
             result.Should().BeSameAs(sword);
         }

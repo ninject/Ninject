@@ -8,19 +8,19 @@ namespace Ninject.Tests.Fakes
 
         public NinjaBarracks( IWarrior warrior )
         {
-            Warrior = warrior;
+            this.Warrior = warrior;
         }
 
         public NinjaBarracks( IWeapon weapon )
         {
-            Weapon = weapon;
+            this.Weapon = weapon;
         }
 
         [Inject]
         public NinjaBarracks( IWarrior warrior, IWeapon weapon )
         {
-            Warrior = warrior;
-            Weapon = weapon;
+            this.Warrior = warrior;
+            this.Weapon = weapon;
         }
     }
 }

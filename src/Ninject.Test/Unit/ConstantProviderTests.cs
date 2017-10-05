@@ -30,9 +30,9 @@ namespace Ninject.Tests.Unit.ConstantProviderTests
         public void ProviderReturnsConstantValue()
         {
             var sword = new Sword();
-            provider = new ConstantProvider<Sword>(sword);
+            this.provider = new ConstantProvider<Sword>(sword);
 
-            var result = provider.Create(contextMock.Object);
+            var result = this.provider.Create(this.contextMock.Object);
 
             result.Should().BeSameAs(sword);
         }

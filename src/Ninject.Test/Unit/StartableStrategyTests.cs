@@ -15,8 +15,8 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 
         public StartableStrategyContext()
         {
-            contextMock = new Mock<IContext>();
-            strategy = new StartableStrategy();
+            this.contextMock = new Mock<IContext>();
+            this.strategy = new StartableStrategy();
         }
     }
 
@@ -28,7 +28,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             var instance = new StartableObject();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, reference);
             instance.WasStarted.Should().BeTrue();
         }
 
@@ -38,7 +38,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             var instance = new object();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Activate(contextMock.Object, reference);
+            this.strategy.Activate(this.contextMock.Object, reference);
         }
     }
 
@@ -50,7 +50,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             var instance = new StartableObject();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Deactivate(contextMock.Object, reference);
+            this.strategy.Deactivate(this.contextMock.Object, reference);
 
             instance.WasStopped.Should().BeTrue();
         }
@@ -61,7 +61,7 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
             var instance = new object();
             var reference = new InstanceReference { Instance = instance };
 
-            strategy.Deactivate(contextMock.Object, reference);
+            this.strategy.Deactivate(this.contextMock.Object, reference);
         }
     }
 
@@ -72,12 +72,12 @@ namespace Ninject.Tests.Unit.StartableStrategyTests
 
         public void Start()
         {
-            WasStarted = true;
+            this.WasStarted = true;
         }
 
         public void Stop()
         {
-            WasStopped = true;
+            this.WasStopped = true;
         }
     }
 }

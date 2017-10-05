@@ -33,7 +33,7 @@
         [Fact]
         public void ObjectsThatHaveItAsScopeAreDisposed()
         {
-            var bar = kernel.Get<Bar>();
+            var bar = this.kernel.Get<Bar>();
 
             this.kernel.Release(this.foo);
 
