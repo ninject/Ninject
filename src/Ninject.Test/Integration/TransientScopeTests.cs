@@ -48,6 +48,7 @@
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             reference.IsAlive.Should().BeFalse();
         }
@@ -80,6 +81,7 @@
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             reference.IsAlive.Should().BeFalse();
 
@@ -117,6 +119,7 @@
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             reference.IsAlive.Should().BeFalse();
         }
@@ -149,6 +152,7 @@
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             reference.IsAlive.Should().BeFalse();
         }

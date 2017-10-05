@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ninject\Ninject.csproj" />
-    <ProjectReference Include="..\TestAssembly\TestAssembly.csproj" />
-    <ProjectReference Include="..\TestModules\TestModules.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +30,8 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\TestAssembly\TestAssembly.csproj" />
+    <ProjectReference Include="..\TestModules\TestModules.csproj" />
   </ItemGroup>
 
 </Project>

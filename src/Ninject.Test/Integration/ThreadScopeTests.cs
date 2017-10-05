@@ -90,6 +90,7 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             cache.Prune();
 

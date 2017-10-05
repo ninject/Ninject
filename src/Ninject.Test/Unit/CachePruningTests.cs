@@ -43,10 +43,17 @@ namespace Ninject.Tests.Unit.CacheTests
 
             sword = null;
             context = null;
+
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
             this.cache.Prune();
-            
+
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
             bool swordCollected = !swordWeakReference.IsAlive;
             swordCollected.Should().BeTrue();
         }
@@ -58,9 +65,12 @@ namespace Ninject.Tests.Unit.CacheTests
             var sword = new Sword();
             var swordWeakReference = new WeakReference(sword);
             var context = CreateContextMock(new TestObject(42), this.bindingConfigurationMock.Object);
-
             this.Remember(sword, context);
+
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
             bool swordCollected = !swordWeakReference.IsAlive;
 
             swordCollected.Should().BeFalse();

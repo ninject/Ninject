@@ -63,9 +63,13 @@ namespace Ninject.Tests.Unit
         {
             this.testee.AddActivatedInstance(new TestObject(42));
             this.testee.AddDeactivatedInstance(new TestObject(42));
+
             GC.Collect();
+            GC.WaitForPendingFinalizers();
             GC.Collect();
+
             this.testee.Prune();
+
             var activatedObjectCount = this.testee.ActivatedObjectCount;
             var deactivatedObjectCount = this.testee.DeactivatedObjectCount;
 

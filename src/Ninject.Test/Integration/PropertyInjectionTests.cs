@@ -93,6 +93,8 @@ namespace Ninject.Tests.Integration
             warrior.Weapon = null;
 
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
 
             weakReference.IsAlive.Should().BeFalse();
         }
