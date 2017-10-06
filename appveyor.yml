@@ -25,7 +25,7 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache'
 
 before_build:
-  - dotnet restore -Verbosity quiet
+  - dotnet restore --verbosity quiet
   - choco install opencover.portable
   - choco install codecov
 
