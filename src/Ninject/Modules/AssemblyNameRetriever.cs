@@ -11,6 +11,7 @@ namespace Ninject.Modules
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using Ninject.Components;
 
@@ -36,7 +37,7 @@ namespace Ninject.Modules
                     assemblyCheckerType.Assembly.FullName,
                     assemblyCheckerType.FullName ?? string.Empty);
 
-                return checker.GetAssemblyNames(filenames, filter);
+                return checker.GetAssemblyNames(filenames.ToArray(), filter);
             }
             finally
             {
