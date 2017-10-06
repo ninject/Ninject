@@ -1,5 +1,6 @@
 ﻿namespace Ninject.Tests.Integration
 {
+    using System;
     using System.Linq;
     using FluentAssertions;
 
@@ -8,7 +9,7 @@
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class ActivationStrategyTests
+    public class ActivationStrategyTests : IDisposable
     {
         private readonly StandardKernel kernel;
 

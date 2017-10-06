@@ -30,11 +30,12 @@ before_build:
   - choco install codecov
 
 build:
+  parallel: true
   verbosity: minimal
 
 test_script:
   - cd src\Ninject.Test
-  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"xunit -nobuild -quiet" -filter:"+[Ninject]*" -output:"..\..\Ninject_coverage.xml"
+  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"xunit -configuration Release -nobuild" -filter:"+[Ninject]*" -output:"Ninject_coverage.xml"
   - codecov -f "Ninject_coverage.xml"
 
 artifacts:

@@ -20,11 +20,12 @@
 //-------------------------------------------------------------------------------
 namespace Ninject.Tests.Integration
 {
+    using System;
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class ConstructorArgumentInBindingConfigurationBuilderTest
+    public class ConstructorArgumentInBindingConfigurationBuilderTest : IDisposable
     {
         private readonly StandardKernel kernel;
 

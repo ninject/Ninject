@@ -80,7 +80,7 @@ namespace Ninject.Tests.Integration
 
 
         [Theory]
-        [MemberData("ConstructorArguments")]
+        [MemberData(nameof(ConstructorArguments))]
         public void ConstructorArgumentsArePassedToFirstLevel(Func<bool, IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -103,7 +103,7 @@ namespace Ninject.Tests.Integration
         }
 
         [Theory]
-        [MemberData("ConstructorArgumentsWithoutShouldInheritArgument")]
+        [MemberData(nameof(ConstructorArgumentsWithoutShouldInheritArgument))]
         public void ConstructorArgumentsAreNotInheritedIfNotSpecified(Func<IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
@@ -114,7 +114,7 @@ namespace Ninject.Tests.Integration
         }
         
         [Theory]
-        [MemberData("ConstructorArguments")]
+        [MemberData(nameof(ConstructorArguments))]
         public void ConstructorArgumentsAreInheritedIfSpecified(Func<bool, IConstructorArgument> constructorArgument)
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();

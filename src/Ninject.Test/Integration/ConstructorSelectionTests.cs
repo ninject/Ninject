@@ -10,7 +10,7 @@ namespace Ninject.Tests.Integration
 
     using Xunit;
 
-    public class ConstructorSelectionTests
+    public class ConstructorSelectionTests : IDisposable
     {
         private readonly StandardKernel kernel;
 

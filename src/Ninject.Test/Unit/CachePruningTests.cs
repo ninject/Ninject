@@ -22,11 +22,6 @@ namespace Ninject.Tests.Unit.CacheTests
 
         public WhenPruneIsCalled()
         {
-            this.SetUp();
-        }
-
-        public void SetUp()
-        {
             this.cachePrunerMock = new Mock<ICachePruner>();
             this.bindingConfigurationMock = new Mock<IBindingConfiguration>();
             this.cache = new Cache(new PipelineMock(), this.cachePrunerMock.Object);

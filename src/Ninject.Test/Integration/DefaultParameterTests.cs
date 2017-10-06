@@ -1,11 +1,12 @@
 ﻿#if !SILVERLIGHT
 namespace Ninject.Tests.Integration
 {
+    using System;
     using FluentAssertions;
     using Ninject.Tests.Fakes;
     using Xunit;
 
-    public class DefaultParameterTests
+    public class DefaultParameterTests : IDisposable
     {
         private readonly StandardKernel kernel;
 
