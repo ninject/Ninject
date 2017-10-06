@@ -6,7 +6,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
     using System;
@@ -86,4 +85,3 @@ namespace Ninject.Modules
         }
     }
 }
-#endif //!NO_ASSEMBLY_SCANNING

@@ -1,5 +1,4 @@
 ﻿#if !NO_MOQ
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System;
@@ -116,5 +115,4 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         }
     }
 }
-#endif
 #endif

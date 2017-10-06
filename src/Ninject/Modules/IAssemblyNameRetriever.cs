@@ -6,7 +6,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
     using System;
@@ -29,4 +28,3 @@ namespace Ninject.Modules
         IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter);
     }
 }
-#endif

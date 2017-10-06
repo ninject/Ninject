@@ -52,7 +52,6 @@ namespace Ninject
         /// <param name="m">The modules to load.</param>
         void Load(IEnumerable<INinjectModule> m);
 
-#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
@@ -64,7 +63,6 @@ namespace Ninject
         /// </summary>
         /// <param name="assemblies">The assemblies to search.</param>
         void Load(IEnumerable<Assembly> assemblies);
-#endif
 
         /// <summary>
         /// Unloads the plugin with the specified name.

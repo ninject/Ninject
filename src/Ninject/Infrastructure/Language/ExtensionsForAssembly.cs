@@ -6,7 +6,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Infrastructure.Language
 {
     using System;
@@ -27,7 +26,7 @@ namespace Ninject.Infrastructure.Language
         /// <returns><c>True</c> if there's any loadable <see cref="INinjectModule"/>, otherwise <c>False</c>.</returns>
         public static bool HasNinjectModules(this Assembly assembly)
         {
-            return assembly.ExportedTypes.Any(IsLoadableModule);
+            return !assembly.IsDynamic && assembly.ExportedTypes.Any(IsLoadableModule);
         }
 
         /// <summary>
@@ -52,4 +51,3 @@ namespace Ninject.Infrastructure.Language
         }
     }
 }
-#endif //!NO_ASSEMBLY_SCANNING

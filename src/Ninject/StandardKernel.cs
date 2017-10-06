@@ -106,11 +106,9 @@ namespace Ninject
             this.Components.Add<IActivationCache, ActivationCache>();
             this.Components.Add<ICachePruner, GarbageCollectionCachePruner>();
 
-#if !NO_ASSEMBLY_SCANNING
             this.Components.Add<IModuleLoader, ModuleLoader>();
             this.Components.Add<IModuleLoaderPlugin, CompiledModuleLoaderPlugin>();
             this.Components.Add<IAssemblyNameRetriever, AssemblyNameRetriever>();
-#endif
         }
     }
 }

@@ -31,7 +31,6 @@ namespace Ninject
         /// </summary>
         Func<IContext, object> DefaultScopeCallback { get; }
 
-#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Gets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
@@ -41,7 +40,6 @@ namespace Ninject
         /// Gets the paths that should be searched for extensions.
         /// </summary>
         string[] ExtensionSearchPatterns { get; }
-#endif //!NO_ASSEMBLY_SCANNING
 
 #if !NO_LCG
         /// <summary>

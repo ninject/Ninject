@@ -26,15 +26,16 @@ cache:
 
 before_build:
   - nuget restore -Verbosity quiet
-  - choco install opencover.portable
-  - choco install codecov
+  - choco install opencover.portable --limitoutput
+  - choco install codecov --limitoutput
 
 build:
   verbosity: minimal
 
 test_script:
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage.xml"
-  - codecov -f "Ninject_coverage.xml
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage_net452.xml"
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\netcoreapp2.0\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage_netcoreapp2.0.xml"
+  - codecov -f "Ninject_coverage_net452.xml Ninject_coverage_netcoreapp2.0.xml" -v False
 
 artifacts:
   - path: '**\*.nupkg'

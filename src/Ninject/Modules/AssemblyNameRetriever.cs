@@ -6,15 +6,12 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
-
     using Ninject.Components;
 
     /// <summary>
@@ -30,6 +27,7 @@ namespace Ninject.Modules
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
         public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
+#if !NO_ASSEMBLY_SCANNING
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -38,14 +36,18 @@ namespace Ninject.Modules
                     assemblyCheckerType.Assembly.FullName,
                     assemblyCheckerType.FullName ?? string.Empty);
 
-                return checker.GetAssemblyNames(filenames.ToArray(), filter);
+                return checker.GetAssemblyNames(filenames, filter);
             }
             finally
             {
                 AppDomain.Unload(temporaryDomain);
             }
+#else
+            return new AssemblyChecker().GetAssemblyNames(filenames, filter);
+#endif
         }
 
+#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -57,6 +59,7 @@ namespace Ninject.Modules
                 AppDomain.CurrentDomain.Evidence,
                 AppDomain.CurrentDomain.SetupInformation);
         }
+#endif
 
         /// <summary>
         /// This class is loaded into the temporary appdomain to load and check if the assemblies match the filter.
@@ -109,4 +112,3 @@ namespace Ninject.Modules
         }
     }
 }
-#endif

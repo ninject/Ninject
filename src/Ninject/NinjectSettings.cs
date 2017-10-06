@@ -47,7 +47,6 @@ namespace Ninject
             set { this.Set("DefaultScopeCallback", value); }
         }
 
-#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
@@ -65,7 +64,6 @@ namespace Ninject
             get { return this.Get("ExtensionSearchPatterns", new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
             set { this.Set("ExtensionSearchPatterns", value); }
         }
-#endif //!NO_ASSEMBLY_SCANNING
 
 #if !NO_LCG
         /// <summary>

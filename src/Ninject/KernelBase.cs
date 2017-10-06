@@ -92,12 +92,11 @@ namespace Ninject
             this.Bind<IKernel>().ToConstant(this).InTransientScope();
             this.Bind<IResolutionRoot>().ToConstant(this).InTransientScope();
 
-#if !NO_ASSEMBLY_SCANNING
             if (this.Settings.LoadExtensions)
             {
                 this.Load(this.Settings.ExtensionSearchPatterns);
             }
-#endif
+
             this.Load(modules);
         }
 
@@ -227,7 +226,6 @@ namespace Ninject
             }
         }
 
-#if !NO_ASSEMBLY_SCANNING
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
@@ -246,7 +244,6 @@ namespace Ninject
         {
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
         }
-#endif //!NO_ASSEMBLY_SCANNING
 
         /// <summary>
         /// Unloads the plugin with the specified name.

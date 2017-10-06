@@ -6,7 +6,6 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#if !NO_ASSEMBLY_SCANNING
 namespace Ninject.Modules
 {
     using System.Collections.Generic;
@@ -69,4 +68,3 @@ namespace Ninject.Modules
         }
     }
 }
-#endif
