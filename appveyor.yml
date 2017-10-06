@@ -34,7 +34,7 @@ build:
 
 test_script:
   - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage.xml"
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\netcoreapp2.0\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -mergebyhash -mergeoutput -output:".\Ninject_coverage.xml"
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\netcoreapp2.0\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -mergebyhash -output:".\Ninject_coverage.xml"
   - codecov -f "Ninject_coverage.xml"
 
 artifacts:
