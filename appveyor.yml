@@ -22,7 +22,7 @@ dotnet_csproj:
 cache:
   - C:\ProgramData\chocolatey\bin -> appveyor.yml
   - C:\ProgramData\chocolatey\lib -> appveyor.yml
-  - '%LocalAppData%\NuGet\v3-cache'
+  - '%LocalAppData%\NuGet\v3-cache -> **\*.csproj'
 
 before_build:
   - dotnet restore --verbosity quiet
@@ -33,8 +33,8 @@ build:
   verbosity: minimal
 
 test_script:
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\net452\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -output:".\Ninject_coverage.xml"
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\src\Ninject.Test\bin\Release\netcoreapp2.0\Ninject.Test.dll -noshadow" -filter:"+[Ninject]*" -mergebyhash -output:".\Ninject_coverage.xml"
+  - cd src\Ninject.Test
+  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"xunit -nobuild -quiet" -filter:"+[Ninject]*" -output:"..\..\Ninject_coverage.xml"
   - codecov -f "Ninject_coverage.xml"
 
 artifacts:

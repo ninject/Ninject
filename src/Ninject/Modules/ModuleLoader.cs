@@ -12,6 +12,7 @@ namespace Ninject.Modules
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Ninject.Components;
     using Ninject.Infrastructure;
 
@@ -70,18 +71,21 @@ namespace Ninject.Modules
         {
             return Path.IsPathRooted(path)
                         ? new[] { Path.GetFullPath(path) }
-                        : GetBaseDirectories().Select(baseDirectory => Path.Combine(baseDirectory, path));
+                        : GetBaseDirectories().Select(baseDirectory => Path.Combine(baseDirectory, path))
+                                              .Where(Directory.Exists);
         }
 
         private static IEnumerable<string> GetBaseDirectories()
         {
+            var executingAssemblyDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
-            return string.IsNullOrEmpty(searchPath)
+            return (string.IsNullOrEmpty(searchPath)
                 ? new[] { baseDirectory }
                 : searchPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(path => Path.Combine(baseDirectory, path));
+                    .Select(path => Path.Combine(baseDirectory, path)))
+                .Concat(new[] { executingAssemblyDirectory }).Distinct();
         }
     }
 }

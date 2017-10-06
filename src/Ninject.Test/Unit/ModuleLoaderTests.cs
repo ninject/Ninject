@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Moq;
 using Ninject.Components;
 using Ninject.Modules;
@@ -12,6 +13,7 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
 {
     public class ModuleLoaderContext
     {
+        protected readonly string executingAssemblyDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
         protected readonly ModuleLoader moduleLoader;
         protected readonly Mock<IKernel> kernelMock;
         protected readonly Mock<IComponentContainer> componentsMock;
@@ -42,8 +44,8 @@ namespace Ninject.Tests.Unit.ModuleLoaderTests
         {
             this.moduleLoader.LoadModules(new[] { "TestModules/*" });
 
-            var fooFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.foo") };
-            var barFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestModules\test.bar") };
+            var fooFiles = new[] { Path.Combine(this.executingAssemblyDirectory, @"TestModules\test.foo") };
+            var barFiles = new[] { Path.Combine(this.executingAssemblyDirectory, @"TestModules\test.bar") };
 
             this.fooPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(fooFiles))));
             this.barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));

@@ -4,12 +4,13 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
     using System;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using FluentAssertions;
     using Xunit;
 
     public class WhenLoadIsCalledWithFileName : ModuleLoadingContext
     {
-        protected readonly string ModuleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
+        protected readonly string ModuleFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestModule.dll");
 
         [Fact]
         public void ModulesContainedInAssembliesAreLoaded()

@@ -96,6 +96,10 @@ namespace Ninject.Modules
                         {
                             assembly = Assembly.Load(filename);
                         }
+                        catch (FileLoadException)
+                        {
+                            continue;
+                        }
                         catch (FileNotFoundException)
                         {
                             continue;

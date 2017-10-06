@@ -15,8 +15,8 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
     {
         protected readonly CompiledModuleLoaderPlugin loaderPlugin;
         protected readonly Mock<IKernel> kernelMock;
-        protected readonly string moduleFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestModule.dll");
-        protected readonly string assemblyFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Ninject.Tests.TestAssembly.dll");
+        protected readonly string moduleFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestModule.dll");
+        protected readonly string assemblyFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestAssembly.dll");
 
         public CompiledModuleLoaderPluginContext()
         {
