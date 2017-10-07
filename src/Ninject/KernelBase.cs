@@ -464,11 +464,24 @@ namespace Ninject
 
         private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
         {
+            void UpdateRequest(Type service)
+            {
+                if (request.ParentRequest == null)
+                {
+                    request = this.CreateRequest(service, null, request.Parameters.Where(p => p.ShouldInherit), true, false);
+                }
+                else
+                {
+                    request = request.ParentRequest.CreateChild(service, request.ParentContext, request.Target);
+                    request.IsOptional = true;
+                }
+            }
+
             if (request.Service.IsArray)
             {
                 var service = request.Service.GetElementType();
 
-                CreateOrUpdateRequest(service);
+                UpdateRequest(service);
 
                 return new[] { this.Resolve(request, false).CastSlow(service).ToArraySlow(service) };
             }
@@ -481,7 +494,7 @@ namespace Ninject
                 {
                     var service = request.Service.GenericTypeArguments[0];
 
-                    CreateOrUpdateRequest(service);
+                    UpdateRequest(service);
 
                     return new[] { this.Resolve(request, false).CastSlow(service).ToListSlow(service) };
                 }
@@ -490,7 +503,7 @@ namespace Ninject
                 {
                     var service = request.Service.GenericTypeArguments[0];
 
-                    CreateOrUpdateRequest(service);
+                    UpdateRequest(service);
 
                     return new[] { this.Resolve(request, false).CastSlow(service) };
                 }
@@ -548,20 +561,6 @@ namespace Ninject
 
                 return satisfiedBindings
                     .Select(binding => this.CreateContext(request, binding).Resolve());
-            }
-
-            void CreateOrUpdateRequest(Type service)
-            {
-                if (request.ParentRequest == null)
-                {
-                    request = this.CreateRequest(service, null, request.Parameters.Where(p => p.ShouldInherit), true, false);
-                }
-                else
-                {
-                    request = request.ParentRequest.CreateChild(service, request.ParentContext, request.Target);
-                }
-
-                request.IsOptional = true;
             }
         }
 
