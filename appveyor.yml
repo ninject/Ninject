@@ -34,8 +34,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - cd src\Ninject.Test
-  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"xunit -configuration Release -nobuild" -filter:"+[Ninject]*" -output:"Ninject_coverage.xml"
+  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Test" -filter:"+[Ninject]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject_coverage.xml"
   - codecov -f "Ninject_coverage.xml"
 
 artifacts:
