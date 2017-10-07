@@ -21,6 +21,8 @@ namespace Ninject.Modules
     /// </summary>
     public class ModuleLoader : NinjectComponent, IModuleLoader
     {
+        private static readonly string CurrentAssemblyDirectory = Path.GetDirectoryName(new Uri(typeof(ModuleLoader).Assembly.CodeBase).LocalPath);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
@@ -77,15 +79,14 @@ namespace Ninject.Modules
 
         private static IEnumerable<string> GetBaseDirectories()
         {
-            var executingAssemblyDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var baseDirectory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
             var searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
             return (string.IsNullOrEmpty(searchPath)
                 ? new[] { baseDirectory }
                 : searchPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(path => Path.Combine(baseDirectory, path)))
-                .Concat(new[] { executingAssemblyDirectory }).Distinct();
+                .Concat(new[] { CurrentAssemblyDirectory }).Distinct();
         }
     }
 }
