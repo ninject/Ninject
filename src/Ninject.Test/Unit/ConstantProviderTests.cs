@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.ConstantProviderTests
+﻿namespace Ninject.Tests.Unit.ConstantProviderTests
 {
     using FluentAssertions;
     using Moq;
@@ -38,4 +37,3 @@ namespace Ninject.Tests.Unit.ConstantProviderTests
         }
     }
 }
-#endif

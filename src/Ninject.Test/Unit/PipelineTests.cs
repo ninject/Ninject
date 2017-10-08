@@ -1,7 +1,4 @@
-﻿
-
-#if !NO_MOQ
-namespace Ninject.Tests.Unit.PipelineTests
+﻿namespace Ninject.Tests.Unit.PipelineTests
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -95,4 +92,3 @@ namespace Ninject.Tests.Unit.PipelineTests
         }
     }
 }
-#endif

@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
+﻿namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
 {
     using System;
     using System.Collections.Generic;
@@ -50,4 +49,3 @@ namespace Ninject.Tests.Unit.CompiledModuleLoaderPluginTests
         }
     }
 }
-#endif //!NO_MOQ

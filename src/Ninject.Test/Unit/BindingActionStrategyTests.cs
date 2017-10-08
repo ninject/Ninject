@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.BindingActionStrategyTests
+﻿namespace Ninject.Tests.Unit.BindingActionStrategyTests
 {
     using System;
     using FluentAssertions;
@@ -65,4 +64,3 @@ namespace Ninject.Tests.Unit.BindingActionStrategyTests
         }
     }
 }
-#endif

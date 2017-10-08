@@ -1,21 +1,22 @@
 ﻿#if !NO_LCG
 using System.Reflection;
+using FluentAssertions;
 using Ninject.Injection;
 using Ninject.Tests.Fakes;
 using Xunit;
 
 namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 {
-    using FluentAssertions;
-
     public class DynamicMethodInjectorFactoryContext
     {
         protected DynamicMethodInjectorFactory injectorFactory;
 
         public DynamicMethodInjectorFactoryContext()
         {
-            this.injectorFactory = new DynamicMethodInjectorFactory();
-            this.injectorFactory.Settings = new NinjectSettings();
+            this.injectorFactory = new DynamicMethodInjectorFactory
+            {
+                Settings = new NinjectSettings()
+            };
         }
     }
 
@@ -122,4 +123,4 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
         }
     }
 }
-#endif //!NO_LCG
+#endif

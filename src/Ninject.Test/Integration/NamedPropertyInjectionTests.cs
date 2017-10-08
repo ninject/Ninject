@@ -1,6 +1,5 @@
 namespace Ninject.Tests.Integration
 {
-#if !SILVERLIGHT
     using System;
 
     using FluentAssertions;
@@ -91,5 +90,4 @@ namespace Ninject.Tests.Integration
             protected override IWeapon SecretWeapon { get; set; }
         }
     }
-#endif
 }

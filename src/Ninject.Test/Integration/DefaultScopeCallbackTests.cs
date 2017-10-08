@@ -60,7 +60,6 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Singleton);
         }
 
-#if !WINRT
         [Fact]
         public void CanOverrideDefaultScopeWithThreadInBinding()
         {
@@ -68,7 +67,6 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             var binding = this.kernel.GetBindings(typeof(IService)).FirstOrDefault();
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Thread);
         }
-#endif
 
         [Fact]
         public void ScopeShouldBeTransient()
@@ -144,13 +142,12 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             var binding = this.kernel.GetBindings(typeof(IService)).FirstOrDefault();
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Transient);
         }
-#if !WINRT
+
         [Fact]
         public void ScopeShouldBeThread()
         {
             this.kernel.Settings.DefaultScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Thread);
         }
-#endif
 
         [Fact]
         public void ImplicitSelfBindedTypeShouldBeTransient()
@@ -158,7 +155,6 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             TestSelfBindedTypesAreTransient();
         }
 
-#if !WINRT
         [Fact]
         public void ExplicitSelfBindedTypeShouldHaveThreadScope()
         {
@@ -166,15 +162,12 @@ namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
             var binding = this.kernel.GetBindings(typeof(SelfBindedType)).FirstOrDefault();
             binding.ScopeCallback.Should().BeSameAs(StandardScopeCallbacks.Thread);
         }
-#endif
 
         protected override void InitializeKernel()
         {
             var settings = new NinjectSettings
                            {
-#if !WINRT
                                DefaultScopeCallback = StandardScopeCallbacks.Thread
-#endif
                            };
             this.kernel = new StandardKernel(settings);
         }

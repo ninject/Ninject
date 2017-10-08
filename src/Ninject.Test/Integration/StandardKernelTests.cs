@@ -410,13 +410,12 @@
             service.Should().BeOfType<ClosedGenericService>();
         }
 
-#if NET_40
         [Fact]
         public void OpenGenericsWithCoAndContraVarianceCanBeResolved()
         {
-            kernel.Bind(typeof(IGenericCoContraVarianceService<,>)).To(typeof(OpenGenericCoContraVarianceService<,>));
+            this.kernel.Bind(typeof(IGenericCoContraVarianceService<,>)).To(typeof(OpenGenericCoContraVarianceService<,>));
 
-            var service = kernel.Get<IGenericCoContraVarianceService<string, int>>();
+            var service = this.kernel.Get<IGenericCoContraVarianceService<string, int>>();
 
             service.Should().BeOfType<OpenGenericCoContraVarianceService<string, int>>();
         }
@@ -424,13 +423,12 @@
         [Fact]
         public void ClosedGenericsWithCoAndContraVarianceCanBeResolved()
         {
-            kernel.Bind(typeof(IGenericCoContraVarianceService<string, int>)).To(typeof(ClosedGenericCoContraVarianceService));
+            this.kernel.Bind(typeof(IGenericCoContraVarianceService<string, int>)).To(typeof(ClosedGenericCoContraVarianceService));
 
-            var service = kernel.Get<IGenericCoContraVarianceService<string, int>>();
+            var service = this.kernel.Get<IGenericCoContraVarianceService<string, int>>();
 
             service.Should().BeOfType<ClosedGenericCoContraVarianceService>();
         }
-#endif
     }
 
     public class WhenGetAllIsCalledForUnboundService : StandardKernelContext
@@ -552,7 +550,6 @@
         }
     }
 
-#if !SILVERLIGHT
     public class WhenDerivedClassWithPrivateGetterIsResolved
     {
         [Fact]
@@ -570,7 +567,6 @@
             }
         }
     }
-#endif
     
     public class InitializableA : IInitializable
     {
@@ -607,11 +603,9 @@
     public class ClosedGenericService : IGeneric<int> { }
     public interface IGenericWithConstraints<T> where T : class { }
     public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
-#if NET_40
     public interface IGenericCoContraVarianceService<in T, out TK> {}
     public class ClosedGenericCoContraVarianceService : IGenericCoContraVarianceService<string, int> { }
     public class OpenGenericCoContraVarianceService<T, TK> : IGenericCoContraVarianceService<T, TK> { }
-#endif
 
 
     public class NullProvider : Ninject.Activation.Provider<Sword>

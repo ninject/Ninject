@@ -1,5 +1,4 @@
-﻿#if !WINRT
-namespace Ninject.Tests.Integration.ThreadScopeTests
+﻿namespace Ninject.Tests.Integration.ThreadScopeTests
 {
     using System;
     using System.Threading;
@@ -70,7 +69,6 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
             weapon1.Should().NotBeSameAs(weapon2);
         }
 
-#if !MONO
         [Fact]
         public void InstancesActivatedWithinScopeAreDeactivatedAfterThreadIsGarbageCollectedAndCacheIsPruned()
         {
@@ -97,7 +95,5 @@ namespace Ninject.Tests.Integration.ThreadScopeTests
             instance.Should().NotBeNull();
             instance.IsDisposed.Should().BeTrue();
         }
-#endif
     }
 }
-#endif

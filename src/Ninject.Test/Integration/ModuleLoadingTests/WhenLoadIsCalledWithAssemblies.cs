@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Integration.ModuleLoadingTests
+﻿namespace Ninject.Tests.Integration.ModuleLoadingTests
 {
     using System.Linq;
     using System.Reflection;
@@ -23,4 +22,3 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         }
     }
 }
-#endif

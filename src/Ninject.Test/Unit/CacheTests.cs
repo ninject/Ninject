@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.CacheTests
+﻿namespace Ninject.Tests.Unit.CacheTests
 {
     using System;
     using FluentAssertions;
@@ -245,4 +244,3 @@ namespace Ninject.Tests.Unit.CacheTests
         }
     }
 }
-#endif

@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.ActivationBlockTests
+﻿namespace Ninject.Tests.Unit.ActivationBlockTests
 {
     using Moq;
     using Ninject.Activation;
@@ -51,4 +50,3 @@ namespace Ninject.Tests.Unit.ActivationBlockTests
         }
     }
 }
-#endif

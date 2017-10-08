@@ -1,5 +1,4 @@
-﻿#if !NO_MOQ
-namespace Ninject.Tests.Unit.ComponentContainerTests
+﻿namespace Ninject.Tests.Unit.ComponentContainerTests
 {
     using System;
     using System.Collections.Generic;
@@ -189,4 +188,3 @@ namespace Ninject.Tests.Unit.ComponentContainerTests
 
     public interface ITestService : INinjectComponent, IDisposableObject { }
 }
-#endif

@@ -1,4 +1,3 @@
-#if !NO_MOQ
 namespace Ninject.Tests.Unit.CacheTests
 {
     using System;
@@ -27,7 +26,6 @@ namespace Ninject.Tests.Unit.CacheTests
             this.cache = new Cache(new PipelineMock(), this.cachePrunerMock.Object);
         }
 
-#if !MONO
         [Fact]
         public void CollectedScopeInstancesAreRemoved()
         {
@@ -52,7 +50,6 @@ namespace Ninject.Tests.Unit.CacheTests
             bool swordCollected = !swordWeakReference.IsAlive;
             swordCollected.Should().BeTrue();
         }
-#endif
 
         [Fact]
         public void UncollectedScopeInstancesAreNotRemoved()
@@ -168,4 +165,3 @@ namespace Ninject.Tests.Unit.CacheTests
         }
     }
 }
-#endif

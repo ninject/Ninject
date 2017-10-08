@@ -1,5 +1,4 @@
-﻿#if !SILVERLIGHT
-namespace Ninject.Tests.Integration
+﻿namespace Ninject.Tests.Integration
 {
     using System;
     using FluentAssertions;
@@ -68,4 +67,3 @@ namespace Ninject.Tests.Integration
         }
     }
 }
-#endif

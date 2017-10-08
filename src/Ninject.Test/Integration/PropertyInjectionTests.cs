@@ -28,7 +28,6 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
-#if !SILVERLIGHT
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
@@ -40,7 +39,6 @@ namespace Ninject.Tests.Integration
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
-#endif //!SILVERLIGHT
     }
 
     public class WithParameterTests : PropertyInjectionTests
@@ -63,7 +61,6 @@ namespace Ninject.Tests.Integration
             ValidateWarrior(warrior);
         }
 
-#if !SILVERLIGHT
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
@@ -75,9 +72,7 @@ namespace Ninject.Tests.Integration
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
-#endif //!SILVERLIGHT
 
-#if !MONO
         [Fact]
         public void WeakPropertyValue()
         {
@@ -98,7 +93,6 @@ namespace Ninject.Tests.Integration
 
             weakReference.IsAlive.Should().BeFalse();
         }
-#endif
 
         private WeakReference Process()
         {
@@ -110,7 +104,6 @@ namespace Ninject.Tests.Integration
 
     public class WhenNoPropertyOverridesAreSupplied : PropertyInjectionTests
     {
-#if !SILVERLIGHT
         [Fact]
         public void DefaultBindingsAreUsed()
         {
@@ -195,14 +188,13 @@ namespace Ninject.Tests.Integration
             {
             }
         }
-#endif //!SILVERLIGHT
     }
 
     public abstract class PropertyInjectionTests : DisposableObject
     {
         protected IKernel kernel;
 
-        public PropertyInjectionTests()
+        protected PropertyInjectionTests()
         {
             this.kernel = new StandardKernel();
             this.kernel.Bind<IWeapon>().To<Shuriken>();

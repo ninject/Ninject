@@ -1,4 +1,3 @@
-#if !NO_MOQ
 namespace Ninject.Tests.Unit
 {
     using System;
@@ -64,4 +63,3 @@ namespace Ninject.Tests.Unit
         }
     }
 }
-#endif //!NO_MOQ

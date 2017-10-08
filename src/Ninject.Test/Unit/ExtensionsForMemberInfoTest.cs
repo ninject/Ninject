@@ -7,7 +7,6 @@ namespace Ninject.Tests.Unit
     using Ninject.Infrastructure.Language;
     using Xunit;
 
-#if !SILVERLIGHT
     public class ExtensionsForMemberInfoTest
     {
         [Fact]
@@ -125,14 +124,8 @@ namespace Ninject.Tests.Unit
 
         private void TestHasAttribute(object testObject, string attributeName, Type attributeType, bool expectedValue)
         {
-#if !WINRT
             var propertyInfo = testObject.GetType()
                 .GetProperty(attributeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-#else
-            var propertyInfo = testObject.GetType()
-                                         .GetRuntimeProperties()
-                                         .Single(pi => pi.Name == attributeName);
-#endif
 
             bool hasAttribute = propertyInfo.HasAttribute(attributeType);
 
@@ -228,5 +221,4 @@ namespace Ninject.Tests.Unit
             }
         }
     }
-#endif
 }

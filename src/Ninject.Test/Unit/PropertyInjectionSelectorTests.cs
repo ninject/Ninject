@@ -1,3 +1,4 @@
+using System;
 using Ninject.Infrastructure.Disposal;
 using Ninject.Tests.Fakes;
 using Xunit;
@@ -33,7 +34,6 @@ namespace Ninject.Tests.Unit
 
     public class PropertyInjectionSelectorTests : PropertyInjectionSelectorContext
     {
-#if !SILVERLIGHT
         [Fact]
         public void NonPublicPropertiesCanBeInjectedWhenEnabled()
         {
@@ -49,7 +49,6 @@ namespace Ninject.Tests.Unit
             Assert.NotNull(instance.VerySecretWeaponAccessor);
             Assert.IsType<Shuriken>(instance.VerySecretWeaponAccessor);
         }
-#endif //!SILVERLIGHT
 
         [Fact]
         public void NonPublicPropertiesCannotBeCreatedByDefault()
