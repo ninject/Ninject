@@ -490,7 +490,7 @@ namespace Ninject
             {
                 var gtd = request.Service.GetGenericTypeDefinition();
 
-                if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>) || gtd == typeof(IEnumerable<>))
+                if (gtd == typeof(List<>) || gtd == typeof(IList<>) || gtd == typeof(ICollection<>))
                 {
                     var service = request.Service.GenericTypeArguments[0];
 
