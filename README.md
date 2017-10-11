@@ -76,7 +76,7 @@ Refer to [LICENSE.txt](https://github.com/ninject/ninject/blob/master/LICENSE.tx
 ## Changes history
 - [Changes in Ninject 3](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-3)
 - [Changes in Ninject 2](https://github.com/ninject/ninject/wiki/Changes-in-Ninject-2)
-- [Detailed release notes](https://github.com/ninject/ninject/blob/master/ReleaseNotes.md)
+- [Detailed change log](https://github.com/ninject/ninject/blob/master/CHANGELOG.md)
 
 ## Resources
 - [Project website](http://ninject.org/)
