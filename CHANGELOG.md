@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Ninject for .NET Core can now load extensions automatically
-- The executing assembly's directory is considered as one of the base directories
 
 ## [3.3.1] - 2017-10-05
 

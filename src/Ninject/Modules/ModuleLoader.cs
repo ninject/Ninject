@@ -12,7 +12,6 @@ namespace Ninject.Modules
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using Ninject.Components;
     using Ninject.Infrastructure;
 
@@ -21,8 +20,6 @@ namespace Ninject.Modules
     /// </summary>
     public class ModuleLoader : NinjectComponent, IModuleLoader
     {
-        private static readonly string CurrentAssemblyDirectory = Path.GetDirectoryName(new Uri(typeof(ModuleLoader).Assembly.CodeBase).LocalPath);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
@@ -56,8 +53,15 @@ namespace Ninject.Modules
                 var extension = fileGroup.Key;
                 var plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
+                Console.WriteLine(fileGroup.Key);
+
                 if (plugin != null)
                 {
+                    foreach (var f in fileGroup)
+                    {
+                        Console.WriteLine(f);
+                    }
+
                     plugin.LoadModules(fileGroup);
                 }
             }
@@ -79,14 +83,13 @@ namespace Ninject.Modules
 
         private static IEnumerable<string> GetBaseDirectories()
         {
-            var baseDirectory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var searchPath = AppDomain.CurrentDomain.RelativeSearchPath;
 
-            return (string.IsNullOrEmpty(searchPath)
+            return string.IsNullOrEmpty(searchPath)
                 ? new[] { baseDirectory }
                 : searchPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(path => Path.Combine(baseDirectory, path)))
-                .Concat(new[] { CurrentAssemblyDirectory }).Distinct();
+                    .Select(path => Path.Combine(baseDirectory, path));
         }
     }
 }
