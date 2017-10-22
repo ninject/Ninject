@@ -3,11 +3,14 @@
   "settings": {
     "documentationRules": {
       "companyName": "Ninject Project Contributors",
-      "copyrightText": "  Copyright (c) 2007-2010, Enkari, Ltd.\r\n  Copyright (c) 2010-2017, Ninject Project Contributors\r\n  Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).",
+      "copyrightText": "  Copyright (c) 2007-2010 Enkari, Ltd. All rights reserved.\r\n  Copyright (c) 2010-2017 Ninject Project Contributors. All rights reserved.\r\n\r\n  Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).\r\n  You may not use this file except in compliance with one of the Licenses.\r\n  You may obtain a copy of the License at\r\n\r\n      http://www.apache.org/licenses/LICENSE-2.0\r\n  or\r\n      http://www.microsoft.com/opensource/licenses.mspx\r\n\r\n  Unless required by applicable law or agreed to in writing, software\r\n  distributed under the License is distributed on an \"AS IS\" BASIS,\r\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n  See the License for the specific language governing permissions and\r\n  limitations under the License.",
       "headerDecoration": "-------------------------------------------------------------------------------------------------"
     },
     "layoutRules": {
       "newlineAtEndOfFile": "omit"
+    },
+    "orderingRules": {
+      "blankLinesBetweenUsingGroups": "require"
     }
   }
 }

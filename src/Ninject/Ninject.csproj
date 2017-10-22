@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <Version>0.0.0</Version>
-    <Authors>Nate Kohari (nate@enkari.com);Remo Gloor (remo.gloor@gmail.com);Ninject Contributors</Authors>
+    <Authors>Ninject Project Contributors</Authors>
     <Company>Ninject Project Contributors</Company>
     <Product>Ninject: Lightweight dependency injection for .NET</Product>
     <Description>Ninject is a lightning-fast, ultra-lightweight dependency injector for .NET applications.</Description>
-    <Copyright>2007-2010, Enkari, Ltd. 2010-2017, Ninject Contributors.</Copyright>
+    <Copyright>2007-2010 Enkari, Ltd. 2010-2017 Ninject Project Contributors.</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -44,11 +44,6 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
