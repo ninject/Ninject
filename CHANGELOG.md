@@ -8,8 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Ninject for .NET Core can now load extensions automatically.
+- Added back CLSCompliant(true)
 
 ## [3.3.2-rc1] - 2017-10-15
+
+### Added
+- Added back CLSCompliant(true)
 
 ### Removed
 - Removed executing assembly's directory from the base directories.
