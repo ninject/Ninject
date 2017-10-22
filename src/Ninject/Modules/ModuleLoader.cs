@@ -67,15 +67,8 @@ namespace Ninject.Modules
                 var extension = fileGroup.Key;
                 var plugin = plugins.Where(p => p.SupportedExtensions.Contains(extension)).FirstOrDefault();
 
-                Console.WriteLine(fileGroup.Key);
-
                 if (plugin != null)
                 {
-                    foreach (var f in fileGroup)
-                    {
-                        Console.WriteLine(f);
-                    }
-
                     plugin.LoadModules(fileGroup);
                 }
             }
