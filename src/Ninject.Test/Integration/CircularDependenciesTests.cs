@@ -33,6 +33,9 @@
 
             this.kernel.Bind<IDecoratorPattern>().To<Decorator1>().WhenInjectedInto<Decorator2>();
             this.kernel.Bind<IDecoratorPattern>().To<Decorator2>();
+
+            this.kernel.Bind<IDecoratorPattern>().To<Decorator3>().Named("Decorator3");
+            this.kernel.Bind<IDecoratorPattern>().To<Decorator4>().Named("Decorator4");
         }
 
         [Fact]
@@ -43,9 +46,15 @@
         }
 
         [Fact]
-        public void DoesNotThrowExceptionIfConditionaDoesNotMatch()
+        public void DoesNotThrowExceptionIfConditionDoesNotMatch()
         {
-            this.kernel.Get<IDecoratorPattern>();
+            this.kernel.Get<IDecoratorPattern>((string)null);
+        }
+
+        [Fact]
+        public void DoesNotThrowExceptionWithNamedBinding()
+        {
+            this.kernel.Get<IDecoratorPattern>("Decorator4");
         }
 
         [Fact]
@@ -189,19 +198,27 @@
         }
 
         [Fact]
-        public void ThrowsActivationExceptionWhenHookIsResolved()
+        public void DoesNotThrowExceptionWhenGetFoo()
         {
-            Assert.Throws<ActivationException>(() => this.kernel.Get<TwoWayConstructorPropertyFoo>());
+            this.kernel.Get<TwoWayConstructorPropertyFoo>();
         }
 
         [Fact]
-        public void DoesNotThrowException()
+        public void DoesNotThrowExceptionWhenGetBar()
         {
             this.kernel.Get<TwoWayConstructorPropertyBar>();
         }
 
         [Fact]
-        public void ScopeIsRespected()
+        public void ScopeIsRespectedWhenGetFooFirstly()
+        {
+            var foo = this.kernel.Get<TwoWayConstructorPropertyFoo>();
+            var bar = this.kernel.Get<TwoWayConstructorPropertyBar>();
+            foo.Bar.Should().BeSameAs(bar);
+        }
+
+        [Fact]
+        public void ScopeIsRespectedWhenGetBarFirstly()
         {
             var bar = this.kernel.Get<TwoWayConstructorPropertyBar>();
             var foo = this.kernel.Get<TwoWayConstructorPropertyFoo>();
@@ -343,5 +360,12 @@
     public class Decorator2 : IDecoratorPattern
     {
         public Decorator2(IDecoratorPattern decorator) { }
+    }
+
+    public class Decorator3 : IDecoratorPattern { }
+
+    public class Decorator4 : IDecoratorPattern
+    {
+        public Decorator4([Named("Decorator3")]IDecoratorPattern decorator) { }
     }
 }

@@ -148,7 +148,8 @@ namespace Ninject.Activation
         /// <returns>The resolved instance.</returns>
         public object Resolve()
         {
-            if (this.IsCyclical(this.Request.ParentContext))
+            if (this.Request.ActiveBindings.Contains(this.Binding) &&
+                this.IsCyclical(this.Request.ParentContext))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -227,7 +228,7 @@ namespace Ninject.Activation
                 return false;
             }
 
-            if (targetContext.Request.Service == this.Request.Service && targetContext.Binding.Condition == this.Binding.Condition)
+            if (targetContext.Request.Service == this.Request.Service)
             {
                 if ((this.Request.Target is ParameterTarget && targetContext.Request.Target is ParameterTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
                 {
