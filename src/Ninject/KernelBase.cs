@@ -211,13 +211,13 @@ namespace Ninject
         /// <summary>
         /// Loads the module(s) into the kernel.
         /// </summary>
-        /// <param name="m">The modules to load.</param>
-        public void Load(IEnumerable<INinjectModule> m)
+        /// <param name="modules">The modules to load.</param>
+        public void Load(IEnumerable<INinjectModule> modules)
         {
-            Ensure.ArgumentNotNull(m, "modules");
+            Ensure.ArgumentNotNull(modules, "modules");
 
-            m = m.ToList();
-            foreach (INinjectModule module in m)
+            modules = modules.ToList();
+            foreach (INinjectModule module in modules)
             {
                 if (string.IsNullOrEmpty(module.Name))
                 {
@@ -234,7 +234,7 @@ namespace Ninject
                 this.modules.Add(module.Name, module);
             }
 
-            foreach (INinjectModule module in m)
+            foreach (INinjectModule module in modules)
             {
                 module.OnVerifyRequiredModules();
             }
