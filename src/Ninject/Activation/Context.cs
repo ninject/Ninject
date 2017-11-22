@@ -206,16 +206,28 @@ namespace Ninject.Activation
                 return null;
             }
 
+            if (scope != null)
+            {
+                this.Cache.Remember(this, reference);
+            }
+
             if (this.Plan == null)
             {
                 this.Plan = this.Planner.GetPlan(reference.Instance.GetType());
             }
 
-            this.Pipeline.Activate(this, reference);
-
-            if (scope != null)
+            try
             {
-                this.Cache.Remember(this, reference);
+                this.Pipeline.Activate(this, reference);
+            }
+            catch (ActivationException)
+            {
+                if (scope != null)
+                {
+                    this.Cache.Release(reference.Instance);
+                }
+
+                throw;
             }
 
             return reference.Instance;
