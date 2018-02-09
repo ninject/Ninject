@@ -530,7 +530,7 @@ namespace Ninject
             {
                 satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
             }
-            
+
             var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
             if (!satisfiedBindingEnumerator.MoveNext())
