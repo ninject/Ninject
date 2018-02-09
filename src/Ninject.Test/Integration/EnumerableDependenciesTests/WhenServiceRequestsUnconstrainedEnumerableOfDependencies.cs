@@ -48,5 +48,14 @@
 
             children.Should().BeEmpty();
         }
+
+        [Fact]
+        public void EmptyEnumerableIsResolvedIfElementTypeIsMissingBindingEvenIsWasResoved()
+        {
+            var child = this.Kenel.Get<ChildA>();
+            var children = this.Kernel.Get<IEnumerable<ChildA>>();
+
+            children.Should().BeEmpty();
+        }
     }
 }
