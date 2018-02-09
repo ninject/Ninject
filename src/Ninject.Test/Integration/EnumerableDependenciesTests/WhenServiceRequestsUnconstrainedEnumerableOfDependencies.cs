@@ -52,7 +52,7 @@
         [Fact]
         public void EmptyEnumerableIsResolvedIfElementTypeIsMissingBindingEvenIsWasResoved()
         {
-            var child = this.Kenel.Get<ChildA>();
+            var child = this.Kernel.Get<ChildA>();
             var children = this.Kernel.Get<IEnumerable<ChildA>>();
 
             children.Should().BeEmpty();
