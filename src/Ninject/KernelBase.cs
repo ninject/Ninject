@@ -531,7 +531,7 @@ namespace Ninject
             {
                 if (handleMissingBindings && this.HandleMissingBinding(request))
                 {
-                    return this.Resolve(request, false);
+                    return this.Resolve(request);
                 }
 
                 if (request.IsOptional)
@@ -568,7 +568,7 @@ namespace Ninject
             }
             else
             {
-                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit) || !handleMissingBindings)
                 {
                     satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
                 }
