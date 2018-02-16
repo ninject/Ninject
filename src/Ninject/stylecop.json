@@ -7,7 +7,7 @@
       "headerDecoration": "-------------------------------------------------------------------------------------------------"
     },
     "layoutRules": {
-      "newlineAtEndOfFile": "allow"
+      "newlineAtEndOfFile": "omit"
     },
     "orderingRules": {
       "blankLinesBetweenUsingGroups": "require"
