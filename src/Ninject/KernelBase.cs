@@ -525,7 +525,6 @@ namespace Ninject
 
             var satisfiedBindings = this.GetBindings(request.Service)
                                         .Where(this.SatifiesRequest(request));
-
             var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
             if (!satisfiedBindingEnumerator.MoveNext())
