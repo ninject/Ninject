@@ -526,18 +526,13 @@ namespace Ninject
             var satisfiedBindings = this.GetBindings(request.Service)
                                         .Where(this.SatifiesRequest(request));
 
-            if (!handleMissingBindings)
-            {
-                satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
-            }
-
             var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
             if (!satisfiedBindingEnumerator.MoveNext())
             {
                 if (handleMissingBindings && this.HandleMissingBinding(request))
                 {
-                    return this.Resolve(request, false);
+                    return this.Resolve(request);
                 }
 
                 if (request.IsOptional)
@@ -574,6 +569,11 @@ namespace Ninject
             }
             else
             {
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit) || !handleMissingBindings)
+                {
+                    satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
+                }
+
                 return satisfiedBindings
                     .Select(binding => this.CreateContext(request, binding).Resolve());
             }
