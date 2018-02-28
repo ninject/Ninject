@@ -8,23 +8,37 @@
 // 
 #endregion
 #region Using Directives
+using Ninject;
 using System;
 using System.Collections.Generic;
-using Microsoft.Practices.ServiceLocation;
-using Ninject;
 #endregion
 
 namespace CommonServiceLocator.NinjectAdapter
 {
+    /// <summary>
+    /// Ninject Adapter for CommonServiceLocator
+    /// </summary>
+    /// <seealso cref="CommonServiceLocator.ServiceLocatorImplBase" />
     public class NinjectServiceLocator : ServiceLocatorImplBase
     {
-        public IReadOnlyKernel Kernel { get; private set; }
+        /// <summary>
+        /// Gets the kernel.
+        /// </summary>
+        /// <value>
+        /// The kernel.
+        /// </value>
+        public IKernel Kernel { get; private set; }
 
-        public NinjectServiceLocator(IReadOnlyKernel kernel)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectServiceLocator"/> class.
+        /// </summary>
+        /// <param name="kernel">The kernel.</param>
+        public NinjectServiceLocator(IKernel kernel)
         {
             Kernel = kernel;
         }
 
+        /// <inheritdoc />
         protected override object DoGetInstance(Type serviceType, string key)
         {
             // key == null must be specifically handled as not asking for a specific keyed instance
@@ -39,6 +53,7 @@ namespace CommonServiceLocator.NinjectAdapter
             return Kernel.Get(serviceType, key);
         }
 
+        /// <inheritdoc />
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
             return Kernel.GetAll(serviceType);

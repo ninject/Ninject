@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.Practices.ServiceLocation;
 using Ninject;
 using Ninject.Infrastructure.Disposal;
 using Xunit;
@@ -17,7 +16,7 @@ namespace CommonServiceLocator.NinjectAdapter.Tests
         public void DefaultInstanceIsResolvedWhenNoKeySpecified()
         {
             this.kernel = new StandardKernel();
-            ServiceLocator.SetLocatorProvider(() => new NinjectServiceLocator(kernel));
+            ServiceLocator.SetLocatorProvider(() => new NinjectServiceLocator(this.kernel));
 
             this.kernel.Bind<IFoo>().To<Foo>().Named("SomeFoo");
 
@@ -29,14 +28,14 @@ namespace CommonServiceLocator.NinjectAdapter.Tests
             instance.Should().BeOfType<Foo>();
         }
 
-        public override void Dispose( bool disposing )
+        public override void Dispose(bool disposing)
         {
-            if ( disposing && !IsDisposed )
+            if (disposing && !IsDisposed)
             {
                 this.kernel.Dispose();
                 this.kernel = null;
             }
-            base.Dispose( disposing );
+            base.Dispose(disposing);
         }
     }
 }
