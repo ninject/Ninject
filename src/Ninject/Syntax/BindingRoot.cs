@@ -116,7 +116,7 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
-            Ensure.ArgumentNotNull(services, "service");
+            Ensure.ArgumentNotNull(services, "services");
             if (services.Length == 0)
             {
                 throw new ArgumentException("The services must contain at least one type", "services");
