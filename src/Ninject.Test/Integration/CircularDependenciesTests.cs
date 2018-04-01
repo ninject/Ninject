@@ -174,7 +174,7 @@
         {
             Action act = () => this.kernel.Get<IOptions<ClassC>>();
 
-            act.ShouldThrow<ActivationException>();
+            act.Should().Throw<ActivationException>();
         }
 
         [Fact]
@@ -184,7 +184,7 @@
 
             Action act = () => this.kernel.Get<IGeneric<int>>();
 
-            act.ShouldThrow<ActivationException>();
+            act.Should().Throw<ActivationException>();
         }
 
     }

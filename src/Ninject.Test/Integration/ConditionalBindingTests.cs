@@ -257,7 +257,7 @@ namespace Ninject.Tests.Integration
 
             Action getWarrior = () => this.kernel.Get<IWarrior>();
 
-            getWarrior.ShouldThrow<ActivationException>();
+            getWarrior.Should().Throw<ActivationException>();
         }
     
         [Fact]

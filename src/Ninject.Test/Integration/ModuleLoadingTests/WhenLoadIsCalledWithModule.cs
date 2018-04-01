@@ -48,7 +48,7 @@
 
             Action moduleLoadingAction = () => this.Kernel.Load(module);
 
-            moduleLoadingAction.ShouldThrow<NotSupportedException>();
+            moduleLoadingAction.Should().Throw<NotSupportedException>();
         }
 
         [Fact]
@@ -58,7 +58,7 @@
 
             Action moduleLoadingAction = () => this.Kernel.Load(module);
 
-            moduleLoadingAction.ShouldThrow<NotSupportedException>();
+            moduleLoadingAction.Should().Throw<NotSupportedException>();
         }
 
         [Fact]
@@ -71,7 +71,7 @@
             this.Kernel.Load(module1);
             Action moduleLoadingAction = () => this.Kernel.Load(module2);
 
-            moduleLoadingAction.ShouldThrow<NotSupportedException>();
+            moduleLoadingAction.Should().Throw<NotSupportedException>();
         }
 
         [Fact]
@@ -93,7 +93,7 @@
         {
             Action moduleUnloadingAction = () => this.Kernel.Unload("NotLoadedModule");
 
-            moduleUnloadingAction.ShouldThrow<NotSupportedException>();
+            moduleUnloadingAction.Should().Throw<NotSupportedException>();
         }
     
         [Fact]

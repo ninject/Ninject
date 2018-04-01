@@ -209,7 +209,7 @@ namespace Ninject.Tests.Integration
 
             Action getClassWithTwoInjectAttributes = () => this.kernel.Get<ClassWithTwoInjectAttributes>();
 
-            getClassWithTwoInjectAttributes.ShouldThrow<ActivationException>();
+            getClassWithTwoInjectAttributes.Should().Throw<ActivationException>();
         }
 
         [Fact]

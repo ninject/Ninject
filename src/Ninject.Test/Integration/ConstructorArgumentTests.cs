@@ -102,7 +102,7 @@ namespace Ninject.Tests.Integration
 
             Action getAction = () => this.kernel.Get<Barracks>(constructorArgument());
 
-            getAction.ShouldThrow<ActivationException>();
+            getAction.Should().Throw<ActivationException>();
         }
         
         [Theory]

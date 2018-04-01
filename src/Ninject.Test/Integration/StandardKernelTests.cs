@@ -283,7 +283,7 @@
             this.kernel.Bind<IWarrior>().To<Samurai>();
 
             this.kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
-                .ShouldThrow<ActivationException>();
+                .Should().Throw<ActivationException>();
         }
 
         [Fact]
@@ -293,7 +293,7 @@
             this.kernel.Bind<IWeapon>().To<Shuriken>();
 
             this.kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWeapon>())
-                .ShouldThrow<ActivationException>();
+                .Should().Throw<ActivationException>();
         }
 
         [Fact]
@@ -304,7 +304,7 @@
             this.kernel.Bind<IWeapon>().To<Shuriken>();
 
             this.kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
-                .ShouldThrow<ActivationException>();
+                .Should().Throw<ActivationException>();
         }
 
         [Fact]
@@ -314,7 +314,7 @@
             this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
 
             this.kernel.Invoking(x => x.TryGetAndThrowOnInvalidBinding<IWarrior>())
-                .ShouldThrow<ActivationException>();
+                .Should().Throw<ActivationException>();
         }
     }
 
