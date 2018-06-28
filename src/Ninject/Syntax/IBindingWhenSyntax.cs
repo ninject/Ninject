@@ -85,7 +85,7 @@ namespace Ninject.Syntax
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match one of the specified types exactly. Types that derive from one of the specified types
         /// will not be considered as valid target.
-        /// Should match at least one of the specified targets
+        /// Should match at least one of the specified targets.
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>

@@ -35,42 +35,49 @@ namespace Ninject
         /// Creates a new instance of the module and loads it into the kernel.
         /// </summary>
         /// <typeparam name="TModule">The type of the module.</typeparam>
-        /// <param name="kernel">The kernel.</param>
-        public static void Load<TModule>(this IKernel kernel)
+        /// <param name="kernelConfiguration">The kernel configuration into which the module is loaded.</param>
+        public static void Load<TModule>(this IKernelConfiguration kernelConfiguration)
             where TModule : INinjectModule, new()
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            kernel.Load(new TModule());
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+
+            kernelConfiguration.Load(new TModule());
         }
 
         /// <summary>
         /// Loads the module(s) into the kernel.
         /// </summary>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="kernelConfiguration">The kernel configuration into which the module is loaded.</param>
         /// <param name="modules">The modules to load.</param>
-        public static void Load(this IKernel kernel, params INinjectModule[] modules)
+        public static void Load(this IKernelConfiguration kernelConfiguration, params INinjectModule[] modules)
         {
-            kernel.Load(modules);
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+
+            kernelConfiguration.Load(modules);
         }
 
         /// <summary>
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="kernelConfiguration">The kernel configuration into which the module is loaded.</param>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
-        public static void Load(this IKernel kernel, params string[] filePatterns)
+        public static void Load(this IKernelConfiguration kernelConfiguration, params string[] filePatterns)
         {
-            kernel.Load(filePatterns);
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+
+            kernelConfiguration.Load(filePatterns);
         }
 
         /// <summary>
         /// Loads modules defined in the specified assemblies.
         /// </summary>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="kernelConfiguration">The kernel configuration into which the module is loaded.</param>
         /// <param name="assemblies">The assemblies to search.</param>
-        public static void Load(this IKernel kernel, params Assembly[] assemblies)
+        public static void Load(this IKernelConfiguration kernelConfiguration, params Assembly[] assemblies)
         {
-            kernel.Load(assemblies);
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+
+            kernelConfiguration.Load(assemblies);
         }
     }
 }

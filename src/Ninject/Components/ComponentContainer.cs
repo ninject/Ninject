@@ -41,9 +41,9 @@ namespace Ninject.Components
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
 
         /// <summary>
-        /// Gets or sets the kernel that owns the component container.
+        /// Gets or sets the kernel configuration that owns the component container.
         /// </summary>
-        public IKernel Kernel { get; set; }
+        public IKernelConfiguration KernelConfiguration { get; set; }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -172,9 +172,9 @@ namespace Ninject.Components
         {
             Ensure.ArgumentNotNull(component, "component");
 
-            if (component == typeof(IKernel))
+            if (component == typeof(IKernelConfiguration))
             {
-                return this.Kernel;
+                return this.KernelConfiguration;
             }
 
             if (component.IsGenericType)
@@ -240,7 +240,7 @@ namespace Ninject.Components
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
 
-                instance.Settings = this.Kernel.Settings;
+                instance.Settings = this.KernelConfiguration.Settings;
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {

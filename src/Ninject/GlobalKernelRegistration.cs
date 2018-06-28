@@ -39,9 +39,9 @@ namespace Ninject
         /// <summary>
         /// Registers the kernel for the specified type.
         /// </summary>
-        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="kernel">The <see cref="IReadOnlyKernel"/>.</param>
         /// <param name="type">The service type.</param>
-        internal static void RegisterKernelForType(IKernel kernel, Type type)
+        internal static void RegisterKernelForType(IReadOnlyKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
 
@@ -60,9 +60,9 @@ namespace Ninject
         /// <summary>
         /// Un-registers the kernel for the specified type.
         /// </summary>
-        /// <param name="kernel">The <see cref="IKernel"/>.</param>
+        /// <param name="kernel">The <see cref="IReadOnlyKernel"/>.</param>
         /// <param name="type">The service type.</param>
-        internal static void UnregisterKernelForType(IKernel kernel, Type type)
+        internal static void UnregisterKernelForType(IReadOnlyKernel kernel, Type type)
         {
             var registration = GetRegistrationForType(type);
             RemoveKernels(registration, registration.Kernels.Where(reference => reference.Target == kernel || !reference.IsAlive));
@@ -72,7 +72,7 @@ namespace Ninject
         /// Performs an action on all registered kernels.
         /// </summary>
         /// <param name="action">The action.</param>
-        protected void MapKernels(Action<IKernel> action)
+        protected void MapKernels(Action<IReadOnlyKernel> action)
         {
             var requiresCleanup = false;
             var registration = GetRegistrationForType(this.GetType());
@@ -83,7 +83,7 @@ namespace Ninject
             {
                 foreach (var weakReference in registration.Kernels)
                 {
-                    if (weakReference.Target is IKernel kernel)
+                    if (weakReference.Target is IReadOnlyKernel kernel)
                     {
                         action(kernel);
                     }

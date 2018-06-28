@@ -102,7 +102,7 @@ namespace Ninject.Infrastructure.Introspection
         /// Generates a message saying that the binding could not be uniquely resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="formattedMatchingBindings">The matching bindings, already formatted as strings</param>
+        /// <param name="formattedMatchingBindings">The matching bindings, already formatted as strings.</param>
         /// <returns>The exception message.</returns>
         public static string CouldNotUniquelyResolveBinding(IRequest request, string[] formattedMatchingBindings)
         {

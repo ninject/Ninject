@@ -1,5 +1,5 @@
-// -------------------------------------------------------------------------------------------------
-// <copyright file="IHaveKernel.cs" company="Ninject Project Contributors">
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="IReadOnlyKernel.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010 Enkari, Ltd. All rights reserved.
 //   Copyright (c) 2010-2017 Ninject Project Contributors. All rights reserved.
 //
@@ -19,16 +19,24 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject.Infrastructure
+namespace Ninject
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+
     /// <summary>
-    /// Indicates that the object has a reference to an <see cref="IKernel"/>.
+    /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore.
     /// </summary>
-    public interface IHaveKernel
+    public interface IReadOnlyKernel : IResolutionRoot, IHaveNinjectSettings, IServiceProvider
     {
         /// <summary>
-        /// Gets the kernel.
+        /// Gets the bindings registered for the specified service.
         /// </summary>
-        IKernel Kernel { get; }
+        /// <param name="service">The service in question.</param>
+        /// <returns>A series of bindings that are registered for the service.</returns>
+        IEnumerable<IBinding> GetBindings(Type service);
     }
 }

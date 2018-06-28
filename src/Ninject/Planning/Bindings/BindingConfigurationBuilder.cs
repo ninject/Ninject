@@ -48,14 +48,11 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
-        /// <param name="kernel">The kernel.</param>
-        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames, IKernel kernel)
+        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
         {
             Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
-            Ensure.ArgumentNotNull(kernel, "kernel");
 
             this.BindingConfiguration = bindingConfiguration;
-            this.Kernel = kernel;
             this.serviceNames = serviceNames;
         }
 
@@ -63,11 +60,6 @@ namespace Ninject.Planning.Bindings
         /// Gets the binding being built.
         /// </summary>
         public IBindingConfiguration BindingConfiguration { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Indicates that the binding should be used only for requests that support the specified condition.
@@ -215,7 +207,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
         /// will not be considered as valid target.
-        /// Should match at least one of the specified targets
+        /// Should match at least one of the specified targets.
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>

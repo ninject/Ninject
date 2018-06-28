@@ -28,34 +28,46 @@ namespace Ninject.Planning.Bindings.Resolvers
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Components;
-    using Ninject.Infrastructure;
+    using Ninject.Selection.Heuristics;
 
     /// <summary>
     /// Represents a binding resolver that use the service in question itself as the target to activate.
     /// </summary>
     public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
     {
+        private readonly IConstructorScorer scorer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelfBindingResolver"/> class.
+        /// </summary>
+        /// <param name="scorer">The <see cref="IConstructorScorer"/>.</param>
+        public SelfBindingResolver(IConstructorScorer scorer)
+        {
+            this.scorer = scorer;
+        }
+
         /// <summary>
         /// Returns any bindings from the specified collection that match the specified service.
         /// </summary>
-        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+        public IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
+
             if (!this.TypeIsSelfBindable(service))
             {
                 return Enumerable.Empty<IBinding>();
             }
 
             return new[]
-                        {
-                            new Binding(service)
-                            {
-                                ProviderCallback = StandardProvider.GetCreationCallback(service),
-                            },
-                        };
+            {
+                new Binding(service)
+                {
+                    ProviderCallback = StandardProvider.GetCreationCallback(service, this.scorer),
+                },
+            };
         }
 
         /// <summary>

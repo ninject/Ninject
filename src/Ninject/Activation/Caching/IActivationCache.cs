@@ -24,7 +24,7 @@ namespace Ninject.Activation.Caching
     using Ninject.Components;
 
     /// <summary>
-    /// Stores the objects that were activated
+    /// Stores the objects that were activated.
     /// </summary>
     public interface IActivationCache : INinjectComponent
     {

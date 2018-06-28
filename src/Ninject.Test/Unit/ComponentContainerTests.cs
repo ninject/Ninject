@@ -24,7 +24,7 @@
             this.container = new ComponentContainer();
             this.kernelMock = new Mock<IKernel>();
 
-            this.container.Kernel = this.kernelMock.Object;
+            this.container.KernelConfiguration = this.kernelMock.Object;
         }
     }
 

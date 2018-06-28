@@ -211,9 +211,7 @@ namespace Ninject.Planning.Targets
         /// <returns>The resolution constraint.</returns>
         protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
         {
-            var attributes = this.GetCustomAttributes(typeof(ConstraintAttribute), true) as ConstraintAttribute[];
-
-            if (attributes == null || attributes.Length == 0)
+            if (!(this.GetCustomAttributes(typeof(ConstraintAttribute), true) is ConstraintAttribute[] attributes) || attributes.Length == 0)
             {
                 return null;
             }

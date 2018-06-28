@@ -114,22 +114,20 @@ namespace Ninject.Parameters
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
-        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c></returns>
+        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c>.</returns>
         public bool Equals(IParameter other)
         {
-            var argument = other as TypeMatchingConstructorArgument;
-            return argument != null && argument.type == this.type;
+            return other is TypeMatchingConstructorArgument argument && argument.type == this.type;
         }
 
         /// <summary>
         /// Determines whether the object equals the specified object.
         /// </summary>
         /// <param name="obj">An object to compare with this object.</param>
-        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c></returns>
+        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
-            var parameter = obj as IParameter;
-            return parameter != null ? this.Equals(parameter) : ReferenceEquals(this, obj);
+            return obj is IParameter parameter ? this.Equals(parameter) : ReferenceEquals(this, obj);
         }
 
         /// <summary>

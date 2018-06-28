@@ -9,15 +9,15 @@
     {
         public ModuleLoadingContext()
         {
-            this.Kernel = new StandardKernel();
+            this.KernelConfiguration = new KernelConfiguration();
         }
 
         public void Dispose()
         {
-            this.Kernel.Dispose();
+            this.KernelConfiguration.Dispose();
         }
 
-        protected IKernel Kernel { get; private set; }
+        protected IKernelConfiguration KernelConfiguration { get; private set; }
 
         protected string GetRegularMockModuleName()
         {

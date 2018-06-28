@@ -27,7 +27,6 @@ namespace Ninject.Planning.Bindings.Resolvers
 
     using Ninject.Activation;
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -38,22 +37,26 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <summary>
         /// Returns any bindings from the specified collection that match the specified service.
         /// </summary>
-        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+        public IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
-            return HasDefaultValue(request.Target)
-                       ? new[]
-                             {
-                                 new Binding(service)
-                                     {
-                                         Condition = r => HasDefaultValue(r.Target),
-                                         ProviderCallback = _ => new DefaultParameterValueProvider(service),
-                                     },
-                             }
-                       : Enumerable.Empty<IBinding>();
+
+            if (!HasDefaultValue(request.Target))
+            {
+                return Enumerable.Empty<IBinding>();
+            }
+
+            return new[]
+            {
+                new Binding(service)
+                {
+                    Condition = r => HasDefaultValue(r.Target),
+                    ProviderCallback = context => new DefaultParameterValueProvider(service),
+                },
+            };
         }
 
         private static bool HasDefaultValue(ITarget target)

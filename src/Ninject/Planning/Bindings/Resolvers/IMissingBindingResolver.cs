@@ -26,7 +26,6 @@ namespace Ninject.Planning.Bindings.Resolvers
 
     using Ninject.Activation;
     using Ninject.Components;
-    using Ninject.Infrastructure;
 
     /// <summary>
     /// Contains logic about which bindings to use for a given service request
@@ -37,9 +36,9 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <summary>
         /// Returns any bindings from the specified collection that match the specified request.
         /// </summary>
-        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="request">The request in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request);
+        IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request);
     }
 }

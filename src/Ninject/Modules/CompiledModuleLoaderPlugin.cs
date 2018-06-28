@@ -45,23 +45,23 @@ namespace Ninject.Modules
         private readonly IAssemblyNameRetriever assemblyNameRetriever;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
+        /// The kernel configuration.
         /// </summary>
-        /// <param name="kernel">The kernel into which modules will be loaded.</param>
-        /// <param name="assemblyNameRetriever">The assembly name retriever.</param>
-        public CompiledModuleLoaderPlugin(IKernel kernel, IAssemblyNameRetriever assemblyNameRetriever)
-        {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(assemblyNameRetriever, "assemblyNameRetriever");
-
-            this.Kernel = kernel;
-            this.assemblyNameRetriever = assemblyNameRetriever;
-        }
+        private readonly IKernelConfiguration kernelConfiguration;
 
         /// <summary>
-        /// Gets the kernel into which modules will be loaded.
+        /// Initializes a new instance of the <see cref="CompiledModuleLoaderPlugin"/> class.
         /// </summary>
-        public IKernel Kernel { get; private set; }
+        /// <param name="kernelConfiguration">The kernel configuration into which modules will be loaded.</param>
+        /// <param name="assemblyNameRetriever">The assembly name retriever.</param>
+        public CompiledModuleLoaderPlugin(IKernelConfiguration kernelConfiguration, IAssemblyNameRetriever assemblyNameRetriever)
+        {
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+            Ensure.ArgumentNotNull(assemblyNameRetriever, "assemblyNameRetriever");
+
+            this.kernelConfiguration = kernelConfiguration;
+            this.assemblyNameRetriever = assemblyNameRetriever;
+        }
 
         /// <summary>
         /// Gets the file extensions that the plugin understands how to load.
@@ -78,7 +78,7 @@ namespace Ninject.Modules
         public void LoadModules(IEnumerable<string> filenames)
         {
             var assembliesWithModules = this.assemblyNameRetriever.GetAssemblyNames(filenames, asm => asm.HasNinjectModules());
-            this.Kernel.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
+            this.kernelConfiguration.Load(assembliesWithModules.Select(asm => Assembly.Load(asm)));
         }
     }
 }

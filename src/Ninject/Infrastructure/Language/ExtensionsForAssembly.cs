@@ -47,7 +47,7 @@ namespace Ninject.Infrastructure.Language
         /// Gets loadable <see cref="INinjectModule"/>s from the <see cref="Assembly"/>.
         /// </summary>
         /// <param name="assembly">The <see cref="Assembly"/>.</param>
-        /// <returns>The loadable <see cref="INinjectModule"/>s</returns>
+        /// <returns>The loadable <see cref="INinjectModule"/>s.</returns>
         public static IEnumerable<INinjectModule> GetNinjectModules(this Assembly assembly)
         {
             return assembly.IsDynamic ?

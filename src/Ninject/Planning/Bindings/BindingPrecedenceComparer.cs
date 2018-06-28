@@ -28,7 +28,7 @@ namespace Ninject.Planning.Bindings
     using Ninject.Components;
 
     /// <summary>
-    /// Implements the binding precedence comparer interface
+    /// Implements the binding precedence comparer interface.
     /// </summary>
     public class BindingPrecedenceComparer : NinjectComponent, IBindingPrecedenceComparer
     {

@@ -30,10 +30,10 @@ namespace Ninject.Infrastructure.Language
     public static class ExtensionsForType
     {
         /// <summary>
-        /// Gets an enumerable containing the given type and all its base types
+        /// Gets an enumerable containing the given type and all its base types.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>An enumerable containing the given type and all its base types</returns>
+        /// <returns>An enumerable containing the given type and all its base types.</returns>
          public static IEnumerable<Type> GetAllBaseTypes(this Type type)
          {
              while (type != null)

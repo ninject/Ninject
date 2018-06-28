@@ -49,7 +49,7 @@ namespace Ninject.Activation
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IReadOnlyKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
             Ensure.ArgumentNotNull(request, "request");
@@ -77,7 +77,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets or sets the kernel that is driving the activation.
         /// </summary>
-        public IKernel Kernel { get; set; }
+        public IReadOnlyKernel Kernel { get; set; }
 
         /// <summary>
         /// Gets or sets the request.
@@ -140,6 +140,18 @@ namespace Ninject.Activation
         public IProvider GetProvider()
         {
             return this.Binding.GetProvider(this);
+        }
+
+        /// <summary>
+        /// Builds the plan for the specified type.
+        /// </summary>
+        /// <param name="type">The type used by the context.</param>
+        public void BuildPlan(Type type)
+        {
+            if (this.Plan == null)
+            {
+                this.Plan = this.Planner.GetPlan(type);
+            }
         }
 
         /// <summary>

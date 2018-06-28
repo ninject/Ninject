@@ -35,20 +35,20 @@ namespace Ninject.Modules
     public class ModuleLoader : NinjectComponent, IModuleLoader
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
+        /// The kernel configuration.
         /// </summary>
-        /// <param name="kernel">The kernel into which modules will be loaded.</param>
-        public ModuleLoader(IKernel kernel)
-        {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-
-            this.Kernel = kernel;
-        }
+        private readonly IKernelConfiguration kernelConfiguration;
 
         /// <summary>
-        /// Gets the kernel into which modules will be loaded.
+        /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
-        public IKernel Kernel { get; private set; }
+        /// <param name="kernelConfiguration">The kernel configuration into which modules will be loaded.</param>
+        public ModuleLoader(IKernelConfiguration kernelConfiguration)
+        {
+            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+
+            this.kernelConfiguration = kernelConfiguration;
+        }
 
         /// <summary>
         /// Loads any modules found in the files that match the specified patterns.
@@ -56,7 +56,7 @@ namespace Ninject.Modules
         /// <param name="patterns">The patterns to search.</param>
         public void LoadModules(IEnumerable<string> patterns)
         {
-            var plugins = this.Kernel.Components.GetAll<IModuleLoaderPlugin>();
+            var plugins = this.kernelConfiguration.Components.GetAll<IModuleLoaderPlugin>();
 
             var fileGroups = patterns
                 .SelectMany(pattern => GetFilesMatchingPattern(pattern))

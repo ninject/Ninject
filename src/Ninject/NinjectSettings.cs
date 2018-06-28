@@ -32,7 +32,27 @@ namespace Ninject
     /// </summary>
     public class NinjectSettings : INinjectSettings
     {
-        private readonly Dictionary<string, object> values = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> values;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
+        /// </summary>
+        public NinjectSettings()
+            : this(new Dictionary<string, object>())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
+        /// </summary>
+        /// <param name="values">Dependency injection for the settings values.</param>
+        private NinjectSettings(IDictionary<string, object> values)
+        {
+            this.values = values;
+#if NO_LCG
+            this.UseReflectionBasedInjection = false;
+#endif
+        }
 
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
@@ -118,7 +138,7 @@ namespace Ninject
         /// If the activation cache is disabled less memory is used. But in some cases
         /// instances are activated or deactivated multiple times. e.g. in the following scenario:
         /// Bind{A}().ToSelf();
-        /// Bind{IA}().ToMethod(ctx =&gt; kernel.Get{IA}();
+        /// Bind{IA}().ToMethod(ctx =&gt; kernel.Get{IA}();.
         /// </summary>
         /// <value>
         /// <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
@@ -162,6 +182,16 @@ namespace Ninject
         public void Set(string key, object value)
         {
             this.values[key] = value;
+        }
+
+        /// <summary>
+        /// Clones the ninject settings into a new instance.
+        /// </summary>
+        /// <returns>A new instance of the ninject settings.</returns>
+        public INinjectSettings Clone()
+        {
+            var clonedValues = new Dictionary<string, object>(this.values);
+            return new NinjectSettings(clonedValues);
         }
     }
 }

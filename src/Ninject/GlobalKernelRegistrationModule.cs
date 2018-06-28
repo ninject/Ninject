@@ -19,6 +19,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+/* Temporary disabled feature
 namespace Ninject
 {
     using Ninject.Modules;
@@ -48,3 +49,4 @@ namespace Ninject
         }
     }
 }
+*/

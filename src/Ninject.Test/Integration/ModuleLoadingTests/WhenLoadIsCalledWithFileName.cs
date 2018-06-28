@@ -14,12 +14,12 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
         [Fact]
         public void ModulesContainedInAssembliesAreLoaded()
         {
-            this.Kernel.Load(this.ModuleFilename);
+            this.KernelConfiguration.Load(this.ModuleFilename);
 
-            var modules = this.Kernel.GetModules().ToArray();
+            var modules = this.KernelConfiguration.GetModules().ToArray();
 
             modules.Select(m => m.GetType().FullName).Should().BeEquivalentTo(new[] { "Ninject.Tests.TestModules.TestModule" });
-            modules.All(m => m.Kernel == this.Kernel).Should().BeTrue();
+            modules.All(m => m.KernelConfiguration == this.KernelConfiguration).Should().BeTrue();
         }
     }
 }

@@ -35,16 +35,15 @@ namespace Ninject.Syntax
     public abstract class BindingRoot : DisposableObject, IBindingRoot
     {
         /// <summary>
-        /// Gets the kernel.
+        /// Gets the ninject settings.
         /// </summary>
-        /// <value>The kernel.</value>
-        protected abstract IKernel KernelInstance { get; }
+        public abstract INinjectSettings Settings { get; }
 
         /// <summary>
         /// Declares a binding for the specified service.
         /// </summary>
         /// <typeparam name="T">The service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
             var service = typeof(T);
@@ -52,7 +51,7 @@ namespace Ninject.Syntax
             var binding = new Binding(service);
             this.AddBinding(binding);
 
-            return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
+            return new BindingBuilder<T>(binding, this.Settings, service.Format());
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="T1">The first service to bind.</typeparam>
         /// <typeparam name="T2">The second service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
             var firstBinding = new Binding(typeof(T1));
@@ -68,7 +67,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T1">The first service to bind.</typeparam>
         /// <typeparam name="T2">The second service to bind.</typeparam>
         /// <typeparam name="T3">The third service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
             var firstBinding = new Binding(typeof(T1));
@@ -86,7 +85,7 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T2">The second service to bind.</typeparam>
         /// <typeparam name="T3">The third service to bind.</typeparam>
         /// <typeparam name="T4">The fourth service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
             var firstBinding = new Binding(typeof(T1));
@@ -106,20 +105,20 @@ namespace Ninject.Syntax
             this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
         }
 
         /// <summary>
         /// Declares a binding for the specified service.
         /// </summary>
         /// <param name="services">The services to bind.</param>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
             Ensure.ArgumentNotNull(services, "services");
             if (services.Length == 0)
             {
-                throw new ArgumentException("The services must contain at least one type", "services");
+                throw new ArgumentException("The services must contain at least one type", nameof(services));
             }
 
             var firstBinding = new Binding(services[0]);
@@ -130,7 +129,7 @@ namespace Ninject.Syntax
                 this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
             }
 
-            return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+            return new BindingBuilder<object>(firstBinding, this.Settings, string.Join(", ", services.Select(service => service.Format()).ToArray()));
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace Ninject.Syntax
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <typeparam name="T1">The first service to re-bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1> Rebind<T1>()
         {
             this.Unbind<T1>();
@@ -208,7 +207,7 @@ namespace Ninject.Syntax
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <param name="services">The services to re-bind.</param>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<object> Rebind(params Type[] services)
         {
             foreach (var service in services)

@@ -37,7 +37,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the kernel that is driving the activation.
         /// </summary>
-        IKernel Kernel { get; }
+        IReadOnlyKernel Kernel { get; }
 
         /// <summary>
         /// Gets the request.
@@ -85,6 +85,12 @@ namespace Ninject.Activation
         /// </summary>
         /// <returns>The object that acts as the scope.</returns>
         object GetScope();
+
+        /// <summary>
+        /// Builds the plan for the specified type.
+        /// </summary>
+        /// <param name="type">The type used by the context.</param>
+        void BuildPlan(Type type);
 
         /// <summary>
         /// Resolves this instance for this context.

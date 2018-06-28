@@ -102,7 +102,7 @@ namespace Ninject.Selection.Heuristics
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>Whether a binding exists for the target in the given context.</returns>
-        protected virtual bool BindingExists(IKernel kernel, IContext context, ITarget target)
+        protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
         {
             var targetType = this.GetTargetType(target);
             var request = context.Request.CreateChild(targetType, context, target);

@@ -8,16 +8,16 @@
 
     public class SpecialResolutionContext : IDisposable
     {
-        protected StandardKernel kernel;
+        protected IKernelConfiguration kernelConfiguration;
 
         public SpecialResolutionContext()
         {
-            this.kernel = new StandardKernel();
+            this.kernelConfiguration = new KernelConfiguration();
         }
 
         public void Dispose()
         {
-            this.kernel.Dispose();
+            this.kernelConfiguration.Dispose();
         }
     }
 
@@ -26,12 +26,14 @@
         [Fact]
         public void InstanceOfKernelIsInjected()
         {
-            this.kernel.Bind<RequestsKernel>().ToSelf();
-            var instance = this.kernel.Get<RequestsKernel>();
+            this.kernelConfiguration.Bind<RequestsKernel>().ToSelf();
+            var kernel = this.kernelConfiguration.BuildReadOnlyKernel();
+
+            var instance = kernel.Get<RequestsKernel>();
 
             instance.Should().NotBeNull();
             instance.Kernel.Should().NotBeNull();
-            instance.Kernel.Should().BeSameAs(this.kernel);
+            instance.Kernel.Should().BeSameAs(kernel);
         }
     }
 
@@ -40,12 +42,14 @@
         [Fact]
         public void InstanceOfKernelIsInjected()
         {
-            this.kernel.Bind<RequestsResolutionRoot>().ToSelf();
-            var instance = this.kernel.Get<RequestsResolutionRoot>();
+            this.kernelConfiguration.Bind<RequestsResolutionRoot>().ToSelf();
+            var kernel = this.kernelConfiguration.BuildReadOnlyKernel();
+
+            var instance = kernel.Get<RequestsResolutionRoot>();
 
             instance.Should().NotBeNull();
             instance.ResolutionRoot.Should().NotBeNull();
-            instance.ResolutionRoot.Should().BeSameAs(this.kernel);
+            instance.ResolutionRoot.Should().BeSameAs(kernel);
         }
     }
 
@@ -54,16 +58,18 @@
         [Fact]
         public void InstanceOfStringIsInjected()
         {
-            this.kernel.Bind<RequestsString>().ToSelf();
-            Assert.Throws<ActivationException>(() => this.kernel.Get<RequestsString>());
+            this.kernelConfiguration.Bind<RequestsString>().ToSelf();
+            var kernel = this.kernelConfiguration.BuildReadOnlyKernel();
+
+            Assert.Throws<ActivationException>(() => kernel.Get<RequestsString>());
         }
     }
 
     public class RequestsKernel
     {
-        public IKernel Kernel { get; set; }
+        public IReadOnlyKernel Kernel { get; set; }
 
-        public RequestsKernel(IKernel kernel)
+        public RequestsKernel(IReadOnlyKernel kernel)
         {
             this.Kernel = kernel;
         }
