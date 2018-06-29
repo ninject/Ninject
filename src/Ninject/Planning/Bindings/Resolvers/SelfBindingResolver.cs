@@ -28,6 +28,7 @@ namespace Ninject.Planning.Bindings.Resolvers
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Components;
+    using Ninject.Infrastructure;
     using Ninject.Selection.Heuristics;
 
     /// <summary>
@@ -35,14 +36,20 @@ namespace Ninject.Planning.Bindings.Resolvers
     /// </summary>
     public class SelfBindingResolver : NinjectComponent, IMissingBindingResolver
     {
+        private readonly IPlanner planner;
         private readonly IConstructorScorer scorer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelfBindingResolver"/> class.
         /// </summary>
-        /// <param name="scorer">The <see cref="IConstructorScorer"/>.</param>
-        public SelfBindingResolver(IConstructorScorer scorer)
+        /// <param name="planner">The <see cref="IPlanner"/> component.</param>
+        /// <param name="scorer">The <see cref="IConstructorScorer"/> component.</param>
+        public SelfBindingResolver(IPlanner planner, IConstructorScorer scorer)
         {
+            Ensure.ArgumentNotNull(planner, "planner");
+            Ensure.ArgumentNotNull(scorer, "scorer");
+
+            this.planner = planner;
             this.scorer = scorer;
         }
 
@@ -65,7 +72,7 @@ namespace Ninject.Planning.Bindings.Resolvers
             {
                 new Binding(service)
                 {
-                    ProviderCallback = StandardProvider.GetCreationCallback(service, this.scorer),
+                    ProviderCallback = StandardProvider.GetCreationCallback(service, this.planner, this.scorer),
                 },
             };
         }

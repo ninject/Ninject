@@ -22,11 +22,8 @@
 namespace Ninject
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Reflection;
 
     using Ninject.Activation;
     using Ninject.Activation.Caching;
@@ -48,6 +45,7 @@ namespace Ninject
     {
         private readonly ICache cache;
         private readonly IPlanner planner;
+        private readonly IConstructorScorer scorer;
         private readonly IPipeline pipeline;
         private readonly IBindingPrecedenceComparer bindingPrecedenceComparer;
         private readonly IEnumerable<IBindingResolver> bindingResolvers;
@@ -61,39 +59,40 @@ namespace Ninject
         /// Initializes a new instance of the <see cref="ReadOnlyKernel"/> class.
         /// </summary>
         /// <param name="bindings">The preconfigured bindings.</param>
-        /// <param name="cache">Dependency injection for <see cref="ICache"/>.</param>
-        /// <param name="planner">Dependency injection for <see cref="IPlanner"/>.</param>
-        /// <param name="pipeline">Dependency injection for <see cref="IPipeline"/>.</param>
-        /// <param name="bindingPrecedenceComparer">Dependency injection for <see cref="IBindingPrecedenceComparer"/>.</param>
-        /// <param name="bindingResolvers">Dependency injection for all binding resolvers.</param>
-        /// <param name="missingBindingResolvers">Dependency injection for all missng binding resolvers.</param>
-        /// <param name="settings">Dependency injection for for <see cref="INinjectSettings"/>.</param>
-        /// <param name="scorer">Dependency injection for <see cref="IConstructorScorer"/>.</param>
-        public ReadOnlyKernel(
+        /// <param name="cache">The <see cref="ICache"/> component.</param>
+        /// <param name="planner">The <see cref="IPlanner"/> component.</param>
+        /// <param name="scorer">The <see cref="IConstructorScorer"/> component.</param>
+        /// <param name="pipeline">The <see cref="IPipeline"/> component.</param>
+        /// <param name="bindingPrecedenceComparer">The <see cref="IBindingPrecedenceComparer"/> component.</param>
+        /// <param name="bindingResolvers">The binding resolvers.</param>
+        /// <param name="missingBindingResolvers">The missng binding resolvers.</param>
+        /// <param name="settings">The <see cref="INinjectSettings"/>.</param>
+        internal ReadOnlyKernel(
+            INinjectSettings settings,
             IDictionary<Type, ICollection<IBinding>> bindings,
             ICache cache,
             IPlanner planner,
+            IConstructorScorer scorer,
             IPipeline pipeline,
             IBindingPrecedenceComparer bindingPrecedenceComparer,
             IEnumerable<IBindingResolver> bindingResolvers,
-            IEnumerable<IMissingBindingResolver> missingBindingResolvers,
-            INinjectSettings settings,
-            IConstructorScorer scorer)
+            IEnumerable<IMissingBindingResolver> missingBindingResolvers)
         {
+            this.Settings = settings;
+
             this.bindingResolvers = bindingResolvers;
             this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
             this.planner = planner;
+            this.scorer = scorer;
             this.pipeline = pipeline;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
-
-            this.Settings = settings;
 
             this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
             this.AddReadOnlyKernelBinding<IResolutionRoot>(this, bindings);
 
             this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
-            this.InitializeBindings(scorer);
+            this.InitializeBindings();
         }
 
         /// <summary>
@@ -431,11 +430,11 @@ namespace Ninject
             bindings[typeof(T)] = new[] { binding };
         }
 
-        private void InitializeBindings(IConstructorScorer scorer)
+        private void InitializeBindings()
         {
             foreach (var binding in this.bindings.Values.SelectMany(b => b))
             {
-                binding.InitializeProviderCallback?.Invoke(scorer);
+                binding.InitializeProviderCallback?.Invoke(this.planner, this.scorer);
                 this.GetBindings(binding.Service);
             }
         }

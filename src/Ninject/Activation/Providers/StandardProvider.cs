@@ -29,6 +29,7 @@ namespace Ninject.Activation.Providers
     using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
+    using Ninject.Planning;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
     using Ninject.Selection.Heuristics;
@@ -42,13 +43,16 @@ namespace Ninject.Activation.Providers
         /// Initializes a new instance of the <see cref="StandardProvider"/> class.
         /// </summary>
         /// <param name="type">The type (or prototype) of instances the provider creates.</param>
+        /// <param name="planner">The planner component.</param>
         /// <param name="constructorScorer">The constructor scorer component.</param>
-        public StandardProvider(Type type, IConstructorScorer constructorScorer)
+        public StandardProvider(Type type, IPlanner planner, IConstructorScorer constructorScorer)
         {
             Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(planner, "planner");
             Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
 
             this.Type = type;
+            this.Planner = planner;
             this.ConstructorScorer = constructorScorer;
         }
 
@@ -56,6 +60,11 @@ namespace Ninject.Activation.Providers
         /// Gets the type (or prototype) of instances the provider creates.
         /// </summary>
         public Type Type { get; private set; }
+
+        /// <summary>
+        /// Gets the planner component.
+        /// </summary>
+        public IPlanner Planner { get; private set; }
 
         /// <summary>
         /// Gets the constructor scorer component.
@@ -67,14 +76,16 @@ namespace Ninject.Activation.Providers
         /// for the specified type.
         /// </summary>
         /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="planner">The planner component.</param>
         /// <param name="scorer">The constructor scorer.</param>
         /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, IConstructorScorer scorer)
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, IPlanner planner, IConstructorScorer scorer)
         {
             Ensure.ArgumentNotNull(prototype, "prototype");
+            Ensure.ArgumentNotNull(planner, "planner");
             Ensure.ArgumentNotNull(scorer, "scorer");
 
-            return ctx => new StandardProvider(prototype, scorer);
+            return ctx => new StandardProvider(prototype, planner, scorer);
         }
 
         /// <summary>
@@ -82,11 +93,16 @@ namespace Ninject.Activation.Providers
         /// for the specified type and constructor.
         /// </summary>
         /// <param name="prototype">The prototype the provider instance will create.</param>
+        /// <param name="planner">The planner component.</param>
         /// <param name="constructor">The constructor.</param>
         /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, ConstructorInfo constructor)
+        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, IPlanner planner, ConstructorInfo constructor)
         {
-            return GetCreationCallback(prototype, new SpecificConstructorSelector(constructor));
+            Ensure.ArgumentNotNull(prototype, "prototype");
+            Ensure.ArgumentNotNull(planner, "planner");
+            Ensure.ArgumentNotNull(constructor, "constructor");
+
+            return GetCreationCallback(prototype, planner, new SpecificConstructorSelector(constructor));
         }
 
         /// <summary>
@@ -98,7 +114,10 @@ namespace Ninject.Activation.Providers
         {
             Ensure.ArgumentNotNull(context, "context");
 
-            context.BuildPlan(this.GetImplementationType(context.Request.Service));
+            if (context.Plan == null)
+            {
+                context.Plan = this.Planner.GetPlan(this.GetImplementationType(context.Request.Service));
+            }
 
             var directive = this.DetermineConstructorInjectionDirective(context);
 

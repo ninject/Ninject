@@ -143,18 +143,6 @@ namespace Ninject.Activation
         }
 
         /// <summary>
-        /// Builds the plan for the specified type.
-        /// </summary>
-        /// <param name="type">The type used by the context.</param>
-        public void BuildPlan(Type type)
-        {
-            if (this.Plan == null)
-            {
-                this.Plan = this.Planner.GetPlan(type);
-            }
-        }
-
-        /// <summary>
         /// Resolves the instance associated with this hook.
         /// </summary>
         /// <returns>The resolved instance.</returns>

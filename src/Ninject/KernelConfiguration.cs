@@ -23,7 +23,6 @@ namespace Ninject
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -202,6 +201,8 @@ namespace Ninject
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
         public void Load(IEnumerable<string> filePatterns)
         {
+            Ensure.ArgumentNotNull(filePatterns, "filePatterns");
+
             var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
         }
@@ -212,6 +213,8 @@ namespace Ninject
         /// <param name="assemblies">The assemblies to search.</param>
         public void Load(IEnumerable<Assembly> assemblies)
         {
+            Ensure.ArgumentNotNull(assemblies, "assemblies");
+
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
         }
 
@@ -256,15 +259,15 @@ namespace Ninject
         public IReadOnlyKernel BuildReadOnlyKernel()
         {
             var readonlyKernel = new ReadOnlyKernel(
+                this.Settings,
                 this.bindings.Clone(),
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
+                this.Components.Get<IConstructorScorer>(),
                 this.Components.Get<IPipeline>(),
                 this.Components.Get<IBindingPrecedenceComparer>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
-                this.Components.GetAll<IMissingBindingResolver>().ToList(),
-                this.Settings.Clone(),
-                this.Components.Get<IConstructorScorer>());
+                this.Components.GetAll<IMissingBindingResolver>().ToList());
 
             return readonlyKernel;
         }
@@ -298,6 +301,7 @@ namespace Ninject
             this.Components.Add<IInjectionHeuristic, StandardInjectionHeuristic>();
 
             this.Components.Add<IPipeline, Pipeline>();
+
             if (!this.Settings.ActivationCacheDisabled)
             {
                 this.Components.Add<IActivationStrategy, ActivationCacheStrategy>();

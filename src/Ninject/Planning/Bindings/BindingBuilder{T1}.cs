@@ -61,7 +61,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToSelf()
         {
-            this.Binding.InitializeProviderCallback = scorer => this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service, scorer);
+            this.Binding.InitializeProviderCallback = (planner, scorer) => this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service, planner, scorer);
             this.Binding.Target = BindingTarget.Self;
 
             return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);

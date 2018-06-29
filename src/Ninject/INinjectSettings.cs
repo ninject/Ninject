@@ -79,11 +79,15 @@ namespace Ninject
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.
+        /// </summary>
+        /// <remarks>
         /// If the activation cache is disabled less memory is used. But in some cases
         /// instances are activated or deactivated multiple times. e.g. in the following scenario:
+        /// <code>
         /// Bind{A}().ToSelf();
-        /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();.
-        /// </summary>
+        /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();
+        /// </code>
+        /// </remarks>
         /// <value>
         ///     <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
         /// </value>
@@ -111,11 +115,5 @@ namespace Ninject
         /// <param name="key">The setting's key.</param>
         /// <param name="value">The setting's value.</param>
         void Set(string key, object value);
-
-        /// <summary>
-        /// Clones the ninject settings into a new instance.
-        /// </summary>
-        /// <returns>A new instance of the ninject settings.</returns>
-        INinjectSettings Clone();
     }
 }

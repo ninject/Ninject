@@ -209,7 +209,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the InitizalizeProviderCallback action.
         /// </summary>
-        public Action<IConstructorScorer> InitializeProviderCallback
+        public Action<IPlanner, IConstructorScorer> InitializeProviderCallback
         {
             get
             {

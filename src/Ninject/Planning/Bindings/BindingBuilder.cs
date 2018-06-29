@@ -80,7 +80,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> InternalTo<T>(Type implementation)
         {
-            this.BindingConfiguration.InitializeProviderCallback = scorer => this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation, scorer);
+            this.BindingConfiguration.InitializeProviderCallback = (planner, scorer) => this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(implementation, planner, scorer);
             this.BindingConfiguration.Target = BindingTarget.Type;
 
             return new BindingConfigurationBuilder<T>(this.BindingConfiguration, this.ServiceNames);
@@ -174,7 +174,7 @@ namespace Ninject.Planning.Bindings
                 throw new ArgumentException("The expression must be a constructor call.", nameof(newExpression));
             }
 
-            this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, ctorExpression.Constructor);
+            this.BindingConfiguration.InitializeProviderCallback = (planner, scorer) => this.BindingConfiguration.ProviderCallback = StandardProvider.GetCreationCallback(ctorExpression.Type, planner, ctorExpression.Constructor);
             this.BindingConfiguration.Target = BindingTarget.Type;
             this.AddConstructorArguments(ctorExpression, newExpression.Parameters[0]);
 

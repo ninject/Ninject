@@ -19,6 +19,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+#pragma warning disable CS0618 // Type or member is obsolete
 namespace Ninject
 {
     using System;
@@ -195,10 +196,10 @@ namespace Ninject
         /// <summary>
         /// Loads the module(s) into the kernel.
         /// </summary>
-        /// <param name="m">The modules to load.</param>
-        public void Load(IEnumerable<INinjectModule> m)
+        /// <param name="modules">The modules to load.</param>
+        public void Load(IEnumerable<INinjectModule> modules)
         {
-            this.kernelConfiguration.Load(m);
+            this.kernelConfiguration.Load(modules);
             this.isDirty = true;
         }
 
@@ -363,3 +364,4 @@ namespace Ninject
         }
     }
 }
+#pragma warning restore CS0618 // Type or member is obsolete

@@ -86,7 +86,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets or sets the InitizalizeProviderCallback action.
         /// </summary>
-        Action<IConstructorScorer> InitializeProviderCallback { get; set; }
+        Action<IPlanner, IConstructorScorer> InitializeProviderCallback { get; set; }
 
         /// <summary>
         /// Gets the provider for the binding.

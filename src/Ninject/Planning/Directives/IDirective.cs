@@ -22,8 +22,11 @@
 namespace Ninject.Planning.Directives
 {
     /// <summary>
-    /// A piece of information used in an <see cref="IPlan"/>. (Just a marker.).
+    /// A piece of information used in an <see cref="IPlan"/>.
     /// </summary>
+    /// <remarks>
+    /// Just a marker.
+    /// </remarks>
     public interface IDirective
     {
     }

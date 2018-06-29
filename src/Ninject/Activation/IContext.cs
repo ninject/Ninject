@@ -87,12 +87,6 @@ namespace Ninject.Activation
         object GetScope();
 
         /// <summary>
-        /// Builds the plan for the specified type.
-        /// </summary>
-        /// <param name="type">The type used by the context.</param>
-        void BuildPlan(Type type);
-
-        /// <summary>
         /// Resolves this instance for this context.
         /// </summary>
         /// <returns>The resolved instance.</returns>

@@ -90,9 +90,11 @@ namespace Ninject.Planning
 
         /// <summary>
         /// Creates a new plan for the specified type.
-        /// This method requires an active reader lock!.
         /// </summary>
         /// <param name="type">The type.</param>
+        /// <remarks>
+        /// This method requires an active write lock.
+        /// </remarks>
         /// <returns>The newly created plan.</returns>
         private IPlan CreateNewPlan(Type type)
         {
