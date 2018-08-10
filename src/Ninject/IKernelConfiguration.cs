@@ -25,6 +25,7 @@ namespace Ninject
     using System.Collections.Generic;
     using System.Reflection;
 
+    using Ninject.Components;
     using Ninject.Modules;
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
@@ -32,8 +33,13 @@ namespace Ninject
     /// <summary>
     /// Configuration for a Ninject kernel.
     /// </summary>
-    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IHaveNinjectComponents, IDisposable
+    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IDisposable
     {
+        /// <summary>
+        /// Gets the component container, which holds components that contribute to Ninject.
+        /// </summary>
+        IComponentContainer Components { get; }
+
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.
         /// </summary>
