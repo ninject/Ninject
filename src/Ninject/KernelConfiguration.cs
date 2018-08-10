@@ -57,7 +57,7 @@ namespace Ninject
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
         public KernelConfiguration(params INinjectModule[] modules)
-            : this(new ComponentContainer(), new NinjectSettings(), modules)
+            : this(new NinjectSettings(), modules)
         {
         }
 
@@ -67,7 +67,7 @@ namespace Ninject
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
         public KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(), settings, modules)
+            : this(new ComponentContainer(settings), settings, modules)
         {
         }
 
@@ -103,11 +103,6 @@ namespace Ninject
         /// Gets the component container, which holds components that contribute to Ninject.
         /// </summary>
         public IComponentContainer Components { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel settings.
-        /// </summary>
-        public override INinjectSettings Settings { get; }
 
         /// <summary>
         /// Unregisters all bindings for the specified service.
@@ -184,7 +179,7 @@ namespace Ninject
                     throw new NotSupportedException(ExceptionFormatter.ModuleWithSameNameIsAlreadyLoaded(module, existingModule));
                 }
 
-                module.OnLoad(this);
+                module.OnLoad(this, this.Settings);
 
                 this.modules.Add(module.Name, module);
             }

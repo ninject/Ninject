@@ -18,7 +18,7 @@ namespace Ninject.Tests.Unit
         {
             this.activationCacheMock = new Mock<IActivationCache>();
             this.settings = new NinjectSettings();
-            this.testee = new ActivationCacheStrategy(this.activationCacheMock.Object) { Settings = this.settings };
+            this.testee = new ActivationCacheStrategy(this.activationCacheMock.Object);
         }
 
         [Fact]

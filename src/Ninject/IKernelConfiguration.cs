@@ -33,7 +33,7 @@ namespace Ninject
     /// <summary>
     /// Configuration for a Ninject kernel.
     /// </summary>
-    public interface IKernelConfiguration : IBindingRoot, IHaveNinjectSettings, IDisposable
+    public interface IKernelConfiguration : IBindingRoot, IDisposable
     {
         /// <summary>
         /// Gets the component container, which holds components that contribute to Ninject.

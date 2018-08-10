@@ -26,23 +26,12 @@ namespace Ninject.Selection
     using System.Reflection;
 
     using Ninject.Components;
-    using Ninject.Selection.Heuristics;
 
     /// <summary>
     /// Selects members for injection.
     /// </summary>
     public interface ISelector : INinjectComponent
     {
-        /// <summary>
-        /// Gets the constructor scorer.
-        /// </summary>
-        IConstructorScorer ConstructorScorer { get; }
-
-        /// <summary>
-        /// Gets the heuristics used to determine which members should be injected.
-        /// </summary>
-        ICollection<IInjectionHeuristic> InjectionHeuristics { get; }
-
         /// <summary>
         /// Selects the constructor to call on the specified type, by using the constructor scorer.
         /// </summary>

@@ -37,28 +37,36 @@ namespace Ninject.Planning.Strategies
     public class ConstructorReflectionStrategy : NinjectComponent, IPlanningStrategy
     {
         /// <summary>
+        /// the <see cref="ISelector"/> component.
+        /// </summary>
+        private readonly ISelector selector;
+
+        /// <summary>
+        /// The <see cref="IInjectorFactory"/> component.
+        /// </summary>
+        private readonly IInjectorFactory injectorFactory;
+
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorReflectionStrategy"/> class.
         /// </summary>
         /// <param name="selector">The selector component.</param>
         /// <param name="injectorFactory">The injector factory component.</param>
-        public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
+        /// <param name="settings">The ninject settings.</param>
+        public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory, INinjectSettings settings)
         {
             Ensure.ArgumentNotNull(selector, "selector");
             Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+            Ensure.ArgumentNotNull(settings, "settings");
 
-            this.Selector = selector;
-            this.InjectorFactory = injectorFactory;
+            this.selector = selector;
+            this.injectorFactory = injectorFactory;
+            this.settings = settings;
         }
-
-        /// <summary>
-        /// Gets the selector component.
-        /// </summary>
-        public ISelector Selector { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the injector factory component.
-        /// </summary>
-        public IInjectorFactory InjectorFactory { get; set; }
 
         /// <summary>
         /// Adds a <see cref="ConstructorInjectionDirective"/> to the plan for the constructor
@@ -69,7 +77,7 @@ namespace Ninject.Planning.Strategies
         {
             Ensure.ArgumentNotNull(plan, "plan");
 
-            var constructors = this.Selector.SelectConstructorsForInjection(plan.Type);
+            var constructors = this.selector.SelectConstructorsForInjection(plan.Type);
             if (constructors == null)
             {
                 return;
@@ -77,9 +85,9 @@ namespace Ninject.Planning.Strategies
 
             foreach (ConstructorInfo constructor in constructors)
             {
-                var hasInjectAttribute = constructor.HasAttribute(this.Settings.InjectAttribute);
+                var hasInjectAttribute = constructor.HasAttribute(this.settings.InjectAttribute);
                 var hasObsoleteAttribute = constructor.HasAttribute(typeof(ObsoleteAttribute));
-                var directive = new ConstructorInjectionDirective(constructor, this.InjectorFactory.Create(constructor))
+                var directive = new ConstructorInjectionDirective(constructor, this.injectorFactory.Create(constructor))
                 {
                     HasInjectAttribute = hasInjectAttribute,
                     HasObsoleteAttribute = hasObsoleteAttribute,

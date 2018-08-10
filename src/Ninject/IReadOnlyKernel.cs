@@ -30,7 +30,7 @@ namespace Ninject
     /// <summary>
     /// A kernel that is used to resolve instances and has a configuration that can't be changed anymore.
     /// </summary>
-    public interface IReadOnlyKernel : IResolutionRoot, IHaveNinjectSettings, IServiceProvider
+    public interface IReadOnlyKernel : IResolutionRoot, IServiceProvider
     {
         /// <summary>
         /// Gets the bindings registered for the specified service.

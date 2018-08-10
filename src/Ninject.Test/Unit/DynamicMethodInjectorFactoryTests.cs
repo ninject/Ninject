@@ -13,10 +13,7 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
         public DynamicMethodInjectorFactoryContext()
         {
-            this.injectorFactory = new DynamicMethodInjectorFactory
-            {
-                Settings = new NinjectSettings()
-            };
+            this.injectorFactory = new DynamicMethodInjectorFactory(new NinjectSettings());
         }
     }
 

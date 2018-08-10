@@ -36,31 +36,42 @@ namespace Ninject.Selection
     /// </summary>
     public class Selector : NinjectComponent, ISelector
     {
+        /// <summary>
+        /// The default binding flags.
+        /// </summary>
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
+
+        /// <summary>
+        /// The constructor scorer.
+        /// </summary>
+        private readonly IConstructorScorer constructorScorer;
+
+        /// <summary>
+        /// The injection heuristics.
+        /// </summary>
+        private readonly ICollection<IInjectionHeuristic> injectionHeuristics;
+
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Selector"/> class.
         /// </summary>
         /// <param name="constructorScorer">The constructor scorer.</param>
         /// <param name="injectionHeuristics">The injection heuristics.</param>
-        public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
+        /// <param name="settings">The ninject settings.</param>
+        public Selector(INinjectSettings settings, IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
             Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
             Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
+            Ensure.ArgumentNotNull(settings, "settings");
 
-            this.ConstructorScorer = constructorScorer;
-            this.InjectionHeuristics = injectionHeuristics.ToList();
+            this.constructorScorer = constructorScorer;
+            this.injectionHeuristics = injectionHeuristics.ToList();
+            this.settings = settings;
         }
-
-        /// <summary>
-        /// Gets the constructor scorer.
-        /// </summary>
-        public IConstructorScorer ConstructorScorer { get; private set; }
-
-        /// <summary>
-        /// Gets the property injection heuristics.
-        /// </summary>
-        public ICollection<IInjectionHeuristic> InjectionHeuristics { get; private set; }
 
         /// <summary>
         /// Gets the default binding flags.
@@ -70,7 +81,7 @@ namespace Ninject.Selection
             get
             {
 #if !NO_LCG
-                return this.Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
+                return this.settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
 #else
                 return DefaultFlags;
 #endif
@@ -108,9 +119,9 @@ namespace Ninject.Selection
             properties.AddRange(
                 type.GetProperties(this.Flags)
                     .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
-                    .Where(p => this.InjectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
+                    .Where(p => this.injectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
 
-            if (this.Settings.InjectParentPrivateProperties)
+            if (this.settings.InjectParentPrivateProperties)
             {
                 for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
                 {
@@ -130,13 +141,13 @@ namespace Ninject.Selection
         {
             Ensure.ArgumentNotNull(type, "type");
 
-            return type.GetMethods(this.Flags).Where(m => this.InjectionHeuristics.Any(h => h.ShouldInject(m)));
+            return type.GetMethods(this.Flags).Where(m => this.injectionHeuristics.Any(h => h.ShouldInject(m)));
         }
 
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
-                .Where(p => this.InjectionHeuristics.Any(h => h.ShouldInject(p)));
+                .Where(p => this.injectionHeuristics.Any(h => h.ShouldInject(p)));
         }
     }
 }

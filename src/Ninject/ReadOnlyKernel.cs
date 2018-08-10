@@ -43,6 +43,7 @@ namespace Ninject
     /// </summary>
     public class ReadOnlyKernel : DisposableObject, IReadOnlyKernel
     {
+        private readonly INinjectSettings settings;
         private readonly ICache cache;
         private readonly IPlanner planner;
         private readonly IConstructorScorer scorer;
@@ -58,6 +59,7 @@ namespace Ninject
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyKernel"/> class.
         /// </summary>
+        /// <param name="settings">The <see cref="INinjectSettings"/>.</param>
         /// <param name="bindings">The preconfigured bindings.</param>
         /// <param name="cache">The <see cref="ICache"/> component.</param>
         /// <param name="planner">The <see cref="IPlanner"/> component.</param>
@@ -65,8 +67,7 @@ namespace Ninject
         /// <param name="pipeline">The <see cref="IPipeline"/> component.</param>
         /// <param name="bindingPrecedenceComparer">The <see cref="IBindingPrecedenceComparer"/> component.</param>
         /// <param name="bindingResolvers">The binding resolvers.</param>
-        /// <param name="missingBindingResolvers">The missng binding resolvers.</param>
-        /// <param name="settings">The <see cref="INinjectSettings"/>.</param>
+        /// <param name="missingBindingResolvers">The missing binding resolvers.</param>
         internal ReadOnlyKernel(
             INinjectSettings settings,
             IDictionary<Type, ICollection<IBinding>> bindings,
@@ -78,7 +79,7 @@ namespace Ninject
             IEnumerable<IBindingResolver> bindingResolvers,
             IEnumerable<IMissingBindingResolver> missingBindingResolvers)
         {
-            this.Settings = settings;
+            this.settings = settings;
 
             this.bindingResolvers = bindingResolvers;
             this.missingBindingResolvers = missingBindingResolvers;
@@ -94,11 +95,6 @@ namespace Ninject
             this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
             this.InitializeBindings();
         }
-
-        /// <summary>
-        /// Gets the kernel settings.
-        /// </summary>
-        public INinjectSettings Settings { get; private set; }
 
         /// <summary>
         /// Injects the specified existing instance, without managing its lifecycle.
@@ -306,7 +302,7 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
             Ensure.ArgumentNotNull(binding, "binding");
 
-            return new Context(this, request, binding, this.cache, this.planner, this.pipeline);
+            return new Context(this, this.settings, request, binding, this.cache, this.planner, this.pipeline);
         }
 
         private IEnumerable<object> ResolveWithMissingBindings(IRequest request, bool handleMissingBindings)
@@ -426,7 +422,7 @@ namespace Ninject
         private void AddReadOnlyKernelBinding<T>(T readonlyKernel, IDictionary<Type, ICollection<IBinding>> bindings)
         {
             var binding = new Binding(typeof(T));
-            new BindingBuilder<T>(binding, this.Settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            new BindingBuilder<T>(binding, this.settings, typeof(T).Format()).ToConstant(readonlyKernel);
             bindings[typeof(T)] = new[] { binding };
         }
 

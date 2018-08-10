@@ -31,5 +31,10 @@ namespace Ninject
     [Obsolete("Use IKernelConfiguration and IReadOnlyKernel")]
     public interface IKernel : IKernelConfiguration, IReadOnlyKernel
     {
+        /// <summary>
+        /// Gets the ninject settings.
+        /// </summary>
+        [Obsolete]
+        INinjectSettings Settings { get; }
     }
 }

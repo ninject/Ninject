@@ -28,9 +28,5 @@ namespace Ninject.Components
     /// </summary>
     public abstract class NinjectComponent : DisposableObject, INinjectComponent
     {
-        /// <summary>
-        /// Gets or sets the settings.
-        /// </summary>
-        public INinjectSettings Settings { get; set; }
     }
 }

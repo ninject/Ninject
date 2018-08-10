@@ -27,12 +27,29 @@ namespace Ninject.Injection
     using System.Reflection.Emit;
 
     using Ninject.Components;
+    using Ninject.Infrastructure;
 
     /// <summary>
     /// Creates injectors for members via <see cref="DynamicMethod"/>s.
     /// </summary>
     public class DynamicMethodInjectorFactory : NinjectComponent, IInjectorFactory
     {
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicMethodInjectorFactory"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        public DynamicMethodInjectorFactory(INinjectSettings settings)
+        {
+            Ensure.ArgumentNotNull(settings, "settings");
+
+            this.settings = settings;
+        }
+
         /// <summary>
         /// Gets or creates an injector for the specified constructor.
         /// </summary>
@@ -78,7 +95,7 @@ namespace Ninject.Injection
             il.Emit(OpCodes.Ldarg_1);
             EmitUnboxOrCast(il, property.PropertyType);
 
-            var injectNonPublic = this.Settings.InjectNonPublic;
+            var injectNonPublic = this.settings.InjectNonPublic;
 
             EmitMethodCall(il, property.GetSetMethod(injectNonPublic));
             il.Emit(OpCodes.Ret);

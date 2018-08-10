@@ -43,18 +43,6 @@ namespace Ninject.Modules
         }
 
         /// <summary>
-        /// Gets the ninject settings.
-        /// </summary>
-        /// <value>The ninject settings.</value>
-        public override INinjectSettings Settings
-        {
-            get
-            {
-                return this.KernelConfiguration.Settings;
-            }
-        }
-
-        /// <summary>
         /// Gets the kernel that the module is loaded into.
         /// </summary>
         [Obsolete]
@@ -83,11 +71,15 @@ namespace Ninject.Modules
         /// Called when the module is loaded into a kernel.
         /// </summary>
         /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
-        public void OnLoad(IKernelConfiguration kernelConfiguration)
+        /// <param name="settings">The ninject settings.</param>
+        public void OnLoad(IKernelConfiguration kernelConfiguration, INinjectSettings settings)
         {
             Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
+            Ensure.ArgumentNotNull(settings, "settings");
 
             this.KernelConfiguration = kernelConfiguration;
+            this.Settings = settings;
+
             this.Load();
         }
 

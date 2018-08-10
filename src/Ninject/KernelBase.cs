@@ -51,17 +51,9 @@ namespace Ninject
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
-        protected KernelBase()
-            : this(new ComponentContainer(), new NinjectSettings(), new INinjectModule[0])
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KernelBase"/> class.
-        /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(params INinjectModule[] modules)
-            : this(new ComponentContainer(), new NinjectSettings(), modules)
+            : this(new NinjectSettings(), modules)
         {
         }
 
@@ -71,7 +63,7 @@ namespace Ninject
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(), settings, modules)
+            : this(new ComponentContainer(settings), settings, modules)
         {
         }
 
@@ -87,6 +79,8 @@ namespace Ninject
             Ensure.ArgumentNotNull(settings, "settings");
             Ensure.ArgumentNotNull(modules, "modules");
 
+            base.Settings = settings;
+
             this.kernelConfiguration = new KernelConfiguration(components, settings, modules);
 
             this.kernelConfiguration.Bind<IKernel>().ToConstant(this).InTransientScope();
@@ -95,9 +89,10 @@ namespace Ninject
         /// <summary>
         /// Gets the kernel settings.
         /// </summary>
-        public override INinjectSettings Settings
+        [Obsolete]
+        public new INinjectSettings Settings
         {
-            get { return this.kernelConfiguration.Settings; }
+            get { return base.Settings; }
         }
 
         /// <summary>

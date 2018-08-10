@@ -35,9 +35,9 @@ namespace Ninject.Syntax
     public abstract class BindingRoot : DisposableObject, IBindingRoot
     {
         /// <summary>
-        /// Gets the ninject settings.
+        /// Gets or sets the ninject settings.
         /// </summary>
-        public abstract INinjectSettings Settings { get; }
+        protected internal INinjectSettings Settings { get; set; }
 
         /// <summary>
         /// Declares a binding for the specified service.

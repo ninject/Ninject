@@ -38,28 +38,38 @@ namespace Ninject.Activation.Strategies
     /// </summary>
     public class PropertyInjectionStrategy : ActivationStrategy
     {
+        /// <summary>
+        /// The default binding flags for the properties to inject.
+        /// </summary>
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
+
+        /// <summary>
+        /// The injector factory component.
+        /// </summary>
+        private readonly IInjectorFactory injectorFactory;
+
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyInjectionStrategy"/> class.
         /// </summary>
         /// <param name="injectorFactory">The injector factory component.</param>
-        public PropertyInjectionStrategy(IInjectorFactory injectorFactory)
+        /// <param name="settings">The ninject settings.</param>
+        public PropertyInjectionStrategy(IInjectorFactory injectorFactory, INinjectSettings settings)
         {
-            this.InjectorFactory = injectorFactory;
+            this.injectorFactory = injectorFactory;
+            this.settings = settings;
         }
-
-        /// <summary>
-        /// Gets or sets the injector factory component.
-        /// </summary>
-        public IInjectorFactory InjectorFactory { get; set; }
 
         private BindingFlags Flags
         {
             get
             {
 #if !NO_LCG
-                return this.Settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
+                return this.settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
 #else
                 return DefaultFlags;
 #endif
@@ -108,7 +118,7 @@ namespace Ninject.Activation.Strategies
                     throw new ActivationException(ExceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyName));
                 }
 
-                var target = new PropertyInjectionDirective(propertyInfo, this.InjectorFactory.Create(propertyInfo));
+                var target = new PropertyInjectionDirective(propertyInfo, this.injectorFactory.Create(propertyInfo));
                 var value = this.GetValue(context, target.Target, propertyValues);
                 target.Injector(reference.Instance, value);
             }

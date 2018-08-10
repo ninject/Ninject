@@ -9,13 +9,16 @@
     {
         public ModuleLoadingContext()
         {
-            this.KernelConfiguration = new KernelConfiguration();
+            this.NinjectSettings = new NinjectSettings();
+            this.KernelConfiguration = new KernelConfiguration(this.NinjectSettings);
         }
 
         public void Dispose()
         {
             this.KernelConfiguration.Dispose();
         }
+
+        protected INinjectSettings NinjectSettings { get; private set; }
 
         protected IKernelConfiguration KernelConfiguration { get; private set; }
 

@@ -41,7 +41,8 @@ namespace Ninject.Modules
         /// Called when the module is loaded into a kernel.
         /// </summary>
         /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
-        void OnLoad(IKernelConfiguration kernelConfiguration);
+        /// <param name="settings">The ninject settings.</param>
+        void OnLoad(IKernelConfiguration kernelConfiguration, INinjectSettings settings);
 
         /// <summary>
         /// Called when the module is unloaded from a kernel.

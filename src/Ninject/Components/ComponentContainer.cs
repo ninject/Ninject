@@ -39,6 +39,24 @@ namespace Ninject.Components
         private readonly Multimap<Type, Type> mappings = new Multimap<Type, Type>();
         private readonly Dictionary<Type, INinjectComponent> instances = new Dictionary<Type, INinjectComponent>();
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
+        private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
+        /// </summary>
+        public ComponentContainer()
+            : this(new NinjectSettings())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        public ComponentContainer(INinjectSettings settings)
+        {
+            this.settings = settings;
+        }
 
         /// <summary>
         /// Gets or sets the kernel configuration that owns the component container.
@@ -177,6 +195,11 @@ namespace Ninject.Components
                 return this.KernelConfiguration;
             }
 
+            if (component == typeof(INinjectSettings))
+            {
+                return this.settings;
+            }
+
             if (component.IsGenericType)
             {
                 var gtd = component.GetGenericTypeDefinition();
@@ -239,8 +262,6 @@ namespace Ninject.Components
             try
             {
                 var instance = constructor.Invoke(arguments) as INinjectComponent;
-
-                instance.Settings = this.KernelConfiguration.Settings;
 
                 if (!this.transients.Contains(new KeyValuePair<Type, Type>(component, implementation)))
                 {

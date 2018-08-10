@@ -24,7 +24,7 @@
 
             this.KernelConfiguration.Load(module);
 
-            moduleMock.Verify(x => x.OnLoad(this.KernelConfiguration), Times.Once());
+            moduleMock.Verify(x => x.OnLoad(this.KernelConfiguration, this.NinjectSettings), Times.Once());
             this.KernelConfiguration.GetModules().Should().BeEquivalentTo(module);
         }
 
@@ -33,7 +33,7 @@
         {
             var moduleMock = this.CreateModuleMock("SomeName");
             var module = moduleMock.Object;
-            
+
             this.KernelConfiguration.Load(module);
             this.KernelConfiguration.Unload(module.Name);
 
@@ -95,7 +95,7 @@
 
             moduleUnloadingAction.Should().Throw<NotSupportedException>();
         }
-    
+
         [Fact]
         public void ModulesAreVerifiedAfterAllModulesAreLoaded()
         {
@@ -103,8 +103,8 @@
             var moduleMock2 = this.CreateModuleMock("SomeName2");
             var orderStringBuilder = new StringBuilder();
 
-            moduleMock1.Setup(m => m.OnLoad(this.KernelConfiguration)).Callback(() => orderStringBuilder.Append("LoadModule1 "));
-            moduleMock2.Setup(m => m.OnLoad(this.KernelConfiguration)).Callback(() => orderStringBuilder.Append("LoadModule2 "));
+            moduleMock1.Setup(m => m.OnLoad(this.KernelConfiguration, this.NinjectSettings)).Callback(() => orderStringBuilder.Append("LoadModule1 "));
+            moduleMock2.Setup(m => m.OnLoad(this.KernelConfiguration, this.NinjectSettings)).Callback(() => orderStringBuilder.Append("LoadModule2 "));
             moduleMock1.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
             moduleMock2.Setup(m => m.OnVerifyRequiredModules()).Callback(() => orderStringBuilder.Append("VerifyModule "));
 

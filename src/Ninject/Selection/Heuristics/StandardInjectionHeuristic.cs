@@ -34,6 +34,22 @@ namespace Ninject.Selection.Heuristics
     public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
     {
         /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardInjectionHeuristic"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        public StandardInjectionHeuristic(INinjectSettings settings)
+        {
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+
+            this.settings = settings;
+        }
+
+        /// <summary>
         /// Returns a value indicating whether the specified member should be injected.
         /// </summary>
         /// <param name="member">The member in question.</param>
@@ -44,14 +60,14 @@ namespace Ninject.Selection.Heuristics
 
             if (member is PropertyInfo propertyInfo)
             {
-                var injectNonPublic = this.Settings.InjectNonPublic;
+                var injectNonPublic = this.settings.InjectNonPublic;
 
                 var setMethod = propertyInfo.GetSetMethod(injectNonPublic);
 
-                return member.HasAttribute(this.Settings.InjectAttribute) && setMethod != null;
+                return member.HasAttribute(this.settings.InjectAttribute) && setMethod != null;
             }
 
-            return member.HasAttribute(this.Settings.InjectAttribute);
+            return member.HasAttribute(this.settings.InjectAttribute);
         }
     }
 }

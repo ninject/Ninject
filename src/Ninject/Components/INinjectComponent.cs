@@ -28,9 +28,5 @@ namespace Ninject.Components
     /// </summary>
     public interface INinjectComponent : IDisposable
     {
-        /// <summary>
-        /// Gets or sets the settings.
-        /// </summary>
-        INinjectSettings Settings { get; set; }
     }
 }

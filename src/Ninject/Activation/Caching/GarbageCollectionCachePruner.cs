@@ -36,6 +36,11 @@ namespace Ninject.Activation.Caching
     public class GarbageCollectionCachePruner : NinjectComponent, ICachePruner
     {
         /// <summary>
+        /// The ninject settings.
+        /// </summary>
+        private readonly INinjectSettings settings;
+
+        /// <summary>
         /// indicator for if GC has been run.
         /// </summary>
         private readonly WeakReference indicator = new WeakReference(new object());
@@ -54,6 +59,17 @@ namespace Ninject.Activation.Caching
         /// The flag to indicate whether the cache pruning is stopped or not.
         /// </summary>
         private bool stop;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GarbageCollectionCachePruner"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        public GarbageCollectionCachePruner(INinjectSettings settings)
+        {
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+
+            this.settings = settings;
+        }
 
         /// <summary>
         /// Releases resources held by the object.
@@ -131,7 +147,7 @@ namespace Ninject.Activation.Caching
 
         private int GetTimeoutInMilliseconds()
         {
-            var interval = this.Settings.CachePruningInterval;
+            var interval = this.settings.CachePruningInterval;
             return interval == TimeSpan.MaxValue ? -1 : (int)interval.TotalMilliseconds;
         }
     }

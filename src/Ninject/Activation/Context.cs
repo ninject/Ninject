@@ -38,25 +38,30 @@ namespace Ninject.Activation
     /// </summary>
     public class Context : IContext
     {
+        private readonly INinjectSettings settings;
         private object cachedScope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Context"/> class.
         /// </summary>
         /// <param name="kernel">The kernel managing the resolution.</param>
+        /// <param name="settings">The ninject settings.</param>
         /// <param name="request">The context's request.</param>
         /// <param name="binding">The context's binding.</param>
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IReadOnlyKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        public Context(IReadOnlyKernel kernel, INinjectSettings settings, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(settings, "settings");
             Ensure.ArgumentNotNull(request, "request");
             Ensure.ArgumentNotNull(binding, "binding");
             Ensure.ArgumentNotNull(cache, "cache");
             Ensure.ArgumentNotNull(planner, "planner");
             Ensure.ArgumentNotNull(pipeline, "pipeline");
+
+            this.settings = settings;
 
             this.Kernel = kernel;
             this.Request = request;
@@ -193,7 +198,7 @@ namespace Ninject.Activation
 
             if (reference.Instance == null)
             {
-                if (!this.Kernel.Settings.AllowNullInjection)
+                if (!this.settings.AllowNullInjection)
                 {
                     throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
                 }
