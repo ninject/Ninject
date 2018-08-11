@@ -22,11 +22,16 @@
 namespace Ninject.Syntax
 {
     using Ninject.Infrastructure;
+    using Ninject.Planning.Bindings;
 
     /// <summary>
     /// Used to define a basic binding syntax builder.
     /// </summary>
-    public interface IBindingSyntax : IHaveBindingConfiguration, IFluentSyntax
+    public interface IBindingSyntax : IFluentSyntax
     {
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
+        IBindingConfiguration BindingConfiguration { get; }
     }
 }
