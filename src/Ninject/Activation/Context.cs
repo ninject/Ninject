@@ -38,7 +38,14 @@ namespace Ninject.Activation
     /// </summary>
     public class Context : IContext
     {
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
         private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// The cached scope object.
+        /// </summary>
         private object cachedScope;
 
         /// <summary>
@@ -154,7 +161,7 @@ namespace Ninject.Activation
         public object Resolve()
         {
             if (this.Request.ActiveBindings.Contains(this.Binding) &&
-                this.IsCyclical(this.Request.ParentContext))
+                this.IsCyclical(this.Request.ParentRequest))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -238,27 +245,19 @@ namespace Ninject.Activation
             return reference.Instance;
         }
 
-        private bool IsCyclical(IContext targetContext)
+        private bool IsCyclical(IRequest request)
         {
-            if (targetContext == null)
+            if (request == null)
             {
                 return false;
             }
 
-            if (targetContext.Request.Service == this.Request.Service)
-            {
-                if ((this.Request.Target is ParameterTarget && targetContext.Request.Target is ParameterTarget) || targetContext.GetScope() != this.GetScope() || this.GetScope() == null)
-                {
-                    return true;
-                }
-            }
-
-            if (this.IsCyclical(targetContext.Request.ParentContext))
+            if (request.Target == this.Request.Target)
             {
                 return true;
             }
 
-            return false;
+            return this.IsCyclical(request.ParentRequest);
         }
     }
 }

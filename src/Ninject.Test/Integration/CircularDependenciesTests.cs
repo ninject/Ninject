@@ -193,7 +193,7 @@
     {
         public WhenDependenciesHaveTwoWayCircularReferenceBetweenConstructorAndProperty()
         {
-            this.kernel.Bind<TwoWayConstructorPropertyFoo>().ToSelf().InSingletonScope();
+            this.kernel.Bind<TwoWayConstructorPropertyFoo>().ToSelf().InTransientScope();
             this.kernel.Bind<TwoWayConstructorPropertyBar>().ToSelf().InSingletonScope();
         }
 
@@ -210,19 +210,12 @@
         }
 
         [Fact]
-        public void ScopeIsRespectedWhenGetFooFirstly()
+        public void ScopeIsRespected()
         {
             var foo = this.kernel.Get<TwoWayConstructorPropertyFoo>();
             var bar = this.kernel.Get<TwoWayConstructorPropertyBar>();
             foo.Bar.Should().BeSameAs(bar);
-        }
-
-        [Fact]
-        public void ScopeIsRespectedWhenGetBarFirstly()
-        {
-            var bar = this.kernel.Get<TwoWayConstructorPropertyBar>();
-            var foo = this.kernel.Get<TwoWayConstructorPropertyFoo>();
-            bar.Foo.Should().BeSameAs(foo);
+            bar.Foo.Should().NotBeSameAs(foo);
         }
     }
 
