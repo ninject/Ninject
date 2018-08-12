@@ -21,7 +21,6 @@
 
 namespace Ninject.Syntax
 {
-    using Ninject.Infrastructure;
     using Ninject.Planning.Bindings;
 
     /// <summary>
