@@ -7,7 +7,7 @@ namespace Ninject.Tests.Integration
     using Ninject.Tests.Integration.StandardKernelTests;
     using Xunit;
 
-    public class ConditionalBindingTests: StandardKernelContext
+    public class ConditionalBindingTests : StandardKernelContext
     {
         [Fact]
         public void GivenADefaultAndSingleSatisfiedConditional_ThenTheConditionalIsUsed()
@@ -259,7 +259,7 @@ namespace Ninject.Tests.Integration
 
             getWarrior.Should().Throw<ActivationException>();
         }
-    
+
         [Fact]
         public void WhenInjectedExactlyIntoAppliesToServiceType()
         {
@@ -291,7 +291,7 @@ namespace Ninject.Tests.Integration
             barracks.Weapon.Should().BeOfType<Shuriken>();
             ninja.Weapon.Should().BeOfType<Sword>();
         }
-    
+
         [Fact]
         public void WhenAnyAncestorNamedAppliesToGrandParentAndParent()
         {
@@ -383,6 +383,7 @@ namespace Ninject.Tests.Integration
 
             var knight = this.kernel.Get<Knight>();
             knight.Weapon.Should().BeOfType<ShortSword>();
+            knight.Weapon2.Should().BeOfType<ShortSword>();
         }
 
         public interface IGenericService<T>
@@ -425,15 +426,24 @@ namespace Ninject.Tests.Integration
             public IWarrior Warrior { get; protected set; }
         }
 
-        public class Knight
+        public class Knight : BaseKnight
         {
             public IWeapon Weapon { get; private set; }
+
+            public override IWeapon Weapon2 { get; set; }
 
             [Strong]
             public Knight([Weak] IWeapon weapon)
             {
                 this.Weapon = weapon;
             }
+        }
+
+        public class BaseKnight
+        {
+            [Inject]
+            [Weak]
+            public virtual IWeapon Weapon2 { get; set; }
         }
     }
 }

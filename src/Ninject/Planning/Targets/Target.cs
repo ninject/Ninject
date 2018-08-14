@@ -145,7 +145,7 @@ namespace Ninject.Planning.Targets
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
 
-            return this.Site.IsDefined(attributeType, inherit);
+            return this.Site.HasAttribute(attributeType);
         }
 
         /// <summary>

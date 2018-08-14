@@ -92,10 +92,10 @@ namespace Ninject.Infrastructure.Language
         {
             if (member is PropertyInfo propertyInfo)
             {
-                return Attribute.GetCustomAttributes(propertyInfo, attributeType, true);
+                return Attribute.GetCustomAttributes(propertyInfo, attributeType, inherited);
             }
 
-            return member.GetCustomAttributes(attributeType, true);
+            return member.GetCustomAttributes(attributeType, inherited);
         }
     }
 }
