@@ -20,22 +20,19 @@ dotnet_csproj:
   package_version: '{version}'
 
 cache:
-  - C:\ProgramData\chocolatey\bin -> appveyor.yml
-  - C:\ProgramData\chocolatey\lib -> appveyor.yml
   - '%LocalAppData%\NuGet\v3-cache -> **\*.csproj'
 
 before_build:
   - dotnet restore --verbosity quiet
-  - choco install opencover.portable
-  - choco install codecov
 
 build:
   parallel: true
   verbosity: minimal
 
 test_script:
-  - OpenCover.Console.exe -oldstyle -register:user -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test --configuration Release --no-build src\Ninject.Test" -filter:"+[Ninject]*" -excludebyattribute:*.ExcludeFromCodeCoverage*;*.Obsolete* -output:"Ninject_coverage.xml"
-  - codecov -f "Ninject_coverage.xml"
+  - dotnet test --configuration Release --no-build --collect:"Code Coverage" src\Ninject.Test
+  - nuget install Codecov -x -Verbosity quiet
+  - for /f %a in ('dir /b /s *.coverage') do Codecov\tools\codecov -f "%a"
 
 artifacts:
   - path: '**\*.nupkg'
