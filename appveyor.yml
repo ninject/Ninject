@@ -35,7 +35,7 @@ test_script:
   - for /f %%a in ('dir /b /s *.coverage') do Codecov\tools\codecov -f "%%a"
 
 artifacts:
-  - path: '**\*.nupkg'
+  - path: 'src\**\*.nupkg'
 
 deploy:
   provider: NuGet
