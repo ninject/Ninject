@@ -19,6 +19,7 @@ namespace Ninject.Tests.Integration
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
+#if !NO_LCG
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCanBeInjectedWhenEnabled()
         {
@@ -33,6 +34,7 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.Should().NotBeNull();
             warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
+#endif
 
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCannotBeCreatedByDefault()
@@ -48,6 +50,7 @@ namespace Ninject.Tests.Integration
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {
+#if !NO_LCG
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyExceptPrivateCanBeInjectedWhenEnabled()
         {
@@ -62,6 +65,7 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.Should().NotBeNull();
             warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
+#endif
 
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyCannotBeCreatedByDefault()
@@ -93,7 +97,7 @@ namespace Ninject.Tests.Integration
         /// Gets or sets the <see cref="System.Object"/> at the specified index.
         /// Added to have properties with the same name.
         /// </summary>
-        /// <value>Allways null.</value>
+        /// <value>Always null.</value>
         public object this[int index]
         {
             get { return null; }
@@ -104,7 +108,7 @@ namespace Ninject.Tests.Integration
         /// Gets or sets the <see cref="System.Object"/> at the specified index.
         /// Added to have properties with the same name.
         /// </summary>
-        /// <value>Allways null.</value>
+        /// <value>Always null.</value>
         public object this[string index]
         {
             get { return null; }

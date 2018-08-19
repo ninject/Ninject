@@ -121,6 +121,7 @@ namespace Ninject.Selection
                     .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
                     .Where(p => this.injectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
 
+#if !NO_LCG
             if (this.settings.InjectParentPrivateProperties)
             {
                 for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
@@ -128,7 +129,7 @@ namespace Ninject.Selection
                     properties.AddRange(this.GetPrivateProperties(parentType));
                 }
             }
-
+#endif
             return properties;
         }
 
@@ -144,10 +145,12 @@ namespace Ninject.Selection
             return type.GetMethods(this.Flags).Where(m => this.injectionHeuristics.Any(h => h.ShouldInject(m)));
         }
 
+#if !NO_LCG
         private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
         {
             return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
                 .Where(p => this.injectionHeuristics.Any(h => h.ShouldInject(p)));
         }
+#endif
     }
 }

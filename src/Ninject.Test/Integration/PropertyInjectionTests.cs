@@ -31,11 +31,8 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
-            this.kernel.Settings.InjectNonPublic = true;
-            this.kernel.Settings.InjectParentPrivateProperties = true;
             this.kernel.Bind<IWarrior>().To<Ninja>()
-                .WithPropertyValue("SecondaryWeapon", context => new Sword())
-                .WithPropertyValue("VerySecretWeapon", context => new Sword());
+                .WithPropertyValue("OffHandWeapon", context => new Sword());
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
@@ -64,11 +61,8 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void PropertyValuesOverrideDefaultBinding()
         {
-            this.kernel.Settings.InjectNonPublic = true;
-            this.kernel.Settings.InjectParentPrivateProperties = true;
             this.kernel.Bind<IWarrior>().To<Ninja>()
-                .WithParameter(new PropertyValue("SecondaryWeapon", context => new Sword()))
-                .WithParameter(new PropertyValue("VerySecretWeapon", context => new Sword()));
+                .WithParameter(new PropertyValue("OffHandWeapon", context => new Sword()));
             var warrior = this.kernel.Get<IWarrior>();
             ValidateNinjaWarriorWithOverides(warrior);
         }
@@ -107,30 +101,40 @@ namespace Ninject.Tests.Integration
         [Fact]
         public void DefaultBindingsAreUsed()
         {
+#if !NO_LCG
             this.kernel.Settings.InjectNonPublic = true;
+#endif
             this.kernel.Bind<IWarrior>().To<Ninja>();
             var warrior = this.kernel.Get<IWarrior>();
             Assert.IsType<Ninja>(warrior);
             Assert.IsType<Shuriken>(warrior.Weapon);
             Ninja ninja = warrior as Ninja;
+            Assert.IsType<Shuriken>(ninja.OffHandWeapon);
+#if !NO_LCG
             Assert.IsType<Shuriken>(ninja.SecondaryWeapon);
             Assert.IsType<Shuriken>(ninja.VerySecretWeaponAccessor);
+#endif
         }
 
         [Fact]
         public void OverriddenPropertiesAreInjected()
         {
+#if !NO_LCG
             this.kernel.Settings.InjectNonPublic = true;
             this.kernel.Settings.InjectParentPrivateProperties = true;
+#endif
             var warrior = this.kernel.Get<OwnStyleNinja>();
 
             warrior.Should().NotBeNull();
             warrior.OffHandWeapon.Should().NotBeNull();
+#if !NO_LCG
             warrior.SecondaryWeapon.Should().NotBeNull();
             warrior.SecretWeaponAccessor.Should().NotBeNull();
             warrior.VerySecretWeaponAccessor.Should().NotBeNull();
+#endif
         }
 
+#if !NO_LCG
         [Fact]
         public void ParentPropertiesAreInjected()
         {
@@ -158,6 +162,7 @@ namespace Ninject.Tests.Integration
             warrior.SecretWeaponAccessor.Should().NotBeNull();
             warrior.VerySecretWeaponAccessor.Should().NotBeNull();
         }
+#endif
 
         private class OwnStyleNinja : Ninja
         {
@@ -212,8 +217,11 @@ namespace Ninject.Tests.Integration
             warrior.Should().BeOfType<Ninja>();
             warrior.Weapon.Should().BeOfType<Shuriken>();
             Ninja ninja = warrior as Ninja;
+            ninja.OffHandWeapon.Should().BeOfType<Sword>();
+#if !NO_LCG
             ninja.SecondaryWeapon.Should().BeOfType<Sword>();
             ninja.VerySecretWeaponAccessor.Should().BeOfType<Sword>();
+#endif
         }
 
         public override void Dispose(bool disposing)

@@ -48,9 +48,15 @@ namespace Ninject
     /// </summary>
     public class KernelConfiguration : BindingRoot, IKernelConfiguration
     {
+        /// <summary>
+        /// The service-bindings dictionary.
+        /// </summary>
         private readonly IDictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
 
-        private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
+        /// <summary>
+        /// The ninject modules.
+        /// </summary>
+        private readonly IDictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelConfiguration"/> class.
@@ -317,13 +323,15 @@ namespace Ninject
             this.Components.Add<IMissingBindingResolver, DefaultValueBindingResolver>();
             this.Components.Add<IMissingBindingResolver, SelfBindingResolver>();
 
-#if !NO_LCG
             if (!this.Settings.UseReflectionBasedInjection)
             {
+#if !NO_LCG
                 this.Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
+#else
+                this.Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
+#endif
             }
             else
-#endif
             {
                 this.Components.Add<IInjectorFactory, ReflectionInjectorFactory>();
             }

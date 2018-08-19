@@ -55,14 +55,13 @@ namespace Ninject
         /// </summary>
         string[] ExtensionSearchPatterns { get; }
 
-#if !NO_LCG
         /// <summary>
         /// Gets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) lightweight code generation system.
         /// </summary>
         bool UseReflectionBasedInjection { get; }
-#endif //!NO_LCG
 
+#if !NO_LCG
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
@@ -76,6 +75,7 @@ namespace Ninject
         /// to use this feature and use constructor injection instead.
         /// </remarks>
         bool InjectParentPrivateProperties { get; set; }
+#endif
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

@@ -12,7 +12,7 @@ namespace Ninject.Tests.Integration
 
         public NamedPropertyInjectionTests()
         {
-            this.kernel = new StandardKernel(new NinjectSettings() { InjectNonPublic = true, InjectParentPrivateProperties = true });
+            this.kernel = new StandardKernel();
             this.kernel.Bind<IWeapon>().To<Sword>().Named("Main");
             this.kernel.Bind<IWeapon>().To<ShortSword>().Named("Offhand");
             this.kernel.Bind<IWeapon>().To<Shuriken>().Named("Secret");
@@ -31,8 +31,8 @@ namespace Ninject.Tests.Integration
 
             ninja.MainWeapon.Should().BeOfType<Sword>();
             ninja.OffhandWeapon.Should().BeOfType<ShortSword>();
-            ninja.SecretWeaponAccessor.Should().BeOfType<Shuriken>();
-            ninja.VerySecretWeaponAccessor.Should().BeOfType<Dagger>();
+            ninja.SecretWeapon.Should().BeOfType<Shuriken>();
+            ninja.VerySecretWeapon.Should().BeOfType<Dagger>();
         }
 
         [Fact]
@@ -42,8 +42,8 @@ namespace Ninject.Tests.Integration
 
             ninja.MainWeapon.Should().BeOfType<Sword>();
             ninja.OffhandWeapon.Should().BeOfType<ShortSword>();
-            ninja.SecretWeaponAccessor.Should().BeOfType<Shuriken>();
-            ninja.VerySecretWeaponAccessor.Should().BeOfType<Dagger>();
+            ninja.SecretWeapon.Should().BeOfType<Shuriken>();
+            ninja.VerySecretWeapon.Should().BeOfType<Dagger>();
         }
         
         public class OwnStyleNinja
@@ -51,43 +51,27 @@ namespace Ninject.Tests.Integration
             [Inject]
             [Named("Main")]
             public virtual IWeapon MainWeapon { get; set; }
-
-            public IWeapon SecretWeaponAccessor
-            {
-                get
-                {
-                    return this.SecretWeapon;
-                }
-            }
-
-            public IWeapon VerySecretWeaponAccessor
-            {
-                get
-                {
-                    return this.VerySecretWeapon;
-                }
-            }
             
             [Inject]
             [Named("Offhand")]
-            internal virtual IWeapon OffhandWeapon { get; set; }
+            public virtual IWeapon OffhandWeapon { get; set; }
 
             [Inject]
             [Named("Secret")]
-            protected virtual IWeapon SecretWeapon { get; set; }
+            public virtual IWeapon SecretWeapon { get; set; }
 
             [Inject]
             [Named("VerySecret")]
-            private IWeapon VerySecretWeapon { get; set; }
+            public IWeapon VerySecretWeapon { get; set; }
         }
 
         public class NinjaWithSpecialMaster : OwnStyleNinja
         {
             public override IWeapon MainWeapon { get; set; }
 
-            internal override IWeapon OffhandWeapon { get; set; }
+            public override IWeapon OffhandWeapon { get; set; }
 
-            protected override IWeapon SecretWeapon { get; set; }
+            public override IWeapon SecretWeapon { get; set; }
         }
     }
 }

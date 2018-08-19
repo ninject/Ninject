@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);NO_LCG</DefineConstants>
     <IsPackable>false</IsPackable>
     <Optimize>true</Optimize>
   </PropertyGroup>
