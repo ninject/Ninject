@@ -325,11 +325,7 @@ namespace Ninject
 
             if (!this.Settings.UseReflectionBasedInjection)
             {
-#if !NO_LCG
-                this.Components.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
-#else
                 this.Components.Add<IInjectorFactory, ExpressionInjectorFactory>();
-#endif
             }
             else
             {

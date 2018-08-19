@@ -79,24 +79,16 @@ namespace Ninject
             set { this.Set("ExtensionSearchPatterns", value); }
         }
 
-#if !NO_LCG
-        /// <summary>
-        /// Gets or sets a value indicating whether Ninject should use reflection-based injection instead of
-        /// the (usually faster) lightweight code generation system.
-        /// </summary>
-#else
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should use reflection-based injection instead of
         /// the (usually faster) Expression build system.
         /// </summary>
-#endif
         public bool UseReflectionBasedInjection
         {
             get { return this.Get("UseReflectionBasedInjection", false); }
             set { this.Set("UseReflectionBasedInjection", value); }
         }
 
-#if !NO_LCG
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
@@ -118,7 +110,6 @@ namespace Ninject
             get { return this.Get("InjectParentPrivateProperties", false); }
             set { this.Set("InjectParentPrivateProperties", value); }
         }
-#endif
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

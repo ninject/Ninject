@@ -60,12 +60,7 @@ namespace Ninject.Selection.Heuristics
 
             if (member is PropertyInfo propertyInfo)
             {
-                var setMethod =
-#if !NO_LCG
-                    propertyInfo.GetSetMethod(this.settings.InjectNonPublic);
-#else
-                    propertyInfo.GetSetMethod();
-#endif
+                var setMethod = propertyInfo.GetSetMethod(this.settings.InjectNonPublic);
 
                 return member.HasAttribute(this.settings.InjectAttribute) && setMethod != null;
             }

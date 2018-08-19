@@ -68,11 +68,7 @@ namespace Ninject.Activation.Strategies
         {
             get
             {
-#if !NO_LCG
                 return this.settings.InjectNonPublic ? (DefaultFlags | BindingFlags.NonPublic) : DefaultFlags;
-#else
-                return DefaultFlags;
-#endif
             }
         }
 

@@ -19,7 +19,6 @@ namespace Ninject.Tests.Integration
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetter : PublicPropertyWithMoreRestrictiveSetterContext
     {
-#if !NO_LCG
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCanBeInjectedWhenEnabled()
         {
@@ -34,7 +33,6 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.Should().NotBeNull();
             warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
-#endif
 
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterCannotBeCreatedByDefault()
@@ -50,7 +48,6 @@ namespace Ninject.Tests.Integration
 
     public class WhenInjectOnPublicPropertyWithMoreRestrictiveSetterInHierarchy : PublicPropertyWithMoreRestrictiveSetterContext
     {
-#if !NO_LCG
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyExceptPrivateCanBeInjectedWhenEnabled()
         {
@@ -65,7 +62,6 @@ namespace Ninject.Tests.Integration
             warrior.UltraSecretWeapon.Should().NotBeNull();
             warrior.UltraSecretWeapon.Should().BeOfType<ShortSword>();
         }
-#endif
 
         [Fact]
         public void NonPublicPropertiesWithMoreRestrictiveSetterInHierarchyCannotBeCreatedByDefault()

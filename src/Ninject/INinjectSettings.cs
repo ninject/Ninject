@@ -61,7 +61,6 @@ namespace Ninject
         /// </summary>
         bool UseReflectionBasedInjection { get; }
 
-#if !NO_LCG
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
@@ -75,7 +74,6 @@ namespace Ninject
         /// to use this feature and use constructor injection instead.
         /// </remarks>
         bool InjectParentPrivateProperties { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.

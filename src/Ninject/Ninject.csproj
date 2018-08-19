@@ -23,7 +23,6 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
     <DebugType>pdbonly</DebugType>
-    <DefineConstants>$(DefineConstants);NO_LCG</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -40,11 +39,6 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' AND $([System.String]::Copy(%(DefineConstants)).Contains('NO_LCG'))">
-    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
