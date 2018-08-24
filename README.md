@@ -42,7 +42,7 @@ public class WarriorModule : NinjectModule
    single assembly with no dependencies outside the .NET base class library. This single assembly's footprint is approximately
    85KB when compiled for release.
    
-3. **Fast.** Instead of relying on reflection for invocation, Ninject takes advantage of lightweight code generation in the CLR.
+3. **Fast.** Instead of relying on reflection for invocation, Ninject takes advantage of lambda expression build system.
    This can result in a dramatic (8-50x) improvement in performance in many situations.
    
 4. **Precise.** Ninject helps developers get things right the first time around. Rather than relying on XML mapping files and

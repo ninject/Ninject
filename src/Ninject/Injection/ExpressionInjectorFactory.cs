@@ -21,8 +21,6 @@
 
 namespace Ninject.Injection
 {
-    using System;
-    using System.Collections.Concurrent;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -34,10 +32,6 @@ namespace Ninject.Injection
     /// </summary>
     public class ExpressionInjectorFactory : NinjectComponent, IInjectorFactory
     {
-        private readonly ConcurrentDictionary<ConstructorInfo, Delegate> constructorCache = new ConcurrentDictionary<ConstructorInfo, Delegate>();
-        private readonly ConcurrentDictionary<PropertyInfo, Delegate> propertyCache = new ConcurrentDictionary<PropertyInfo, Delegate>();
-        private readonly ConcurrentDictionary<MethodInfo, Delegate> methodCache = new ConcurrentDictionary<MethodInfo, Delegate>();
-
         /// <summary>
         /// Gets or creates an injector for the specified constructor.
         /// </summary>
@@ -45,14 +39,9 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
-            var delegation = this.constructorCache.GetOrAdd(
-                constructor,
-                c =>
-                {
-                    var parameterExpressions = c.GetParameters().Select(p => Expression.Parameter(p.ParameterType)).ToArray();
-                    var lambda = Expression.Lambda(Expression.New(c, parameterExpressions), parameterExpressions);
-                    return lambda.Compile();
-                });
+            var parameterExpressions = constructor.GetParameters().Select(p => Expression.Parameter(p.ParameterType)).ToArray();
+            var lambda = Expression.Lambda(Expression.New(constructor, parameterExpressions), parameterExpressions);
+            var delegation = lambda.Compile();
 
             return args => delegation.DynamicInvoke(args);
         }
@@ -64,15 +53,10 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public PropertyInjector Create(PropertyInfo property)
         {
-            var delegation = this.propertyCache.GetOrAdd(
-                property,
-                p =>
-                {
-                    var targetExpression = Expression.Parameter(p.ReflectedType);
-                    var valueExpression = Expression.Parameter(p.PropertyType);
-                    var lambda = Expression.Lambda(Expression.Assign(Expression.Property(targetExpression, p), valueExpression), targetExpression, valueExpression);
-                    return lambda.Compile();
-                });
+            var targetExpression = Expression.Parameter(property.ReflectedType);
+            var valueExpression = Expression.Parameter(property.PropertyType);
+            var lambda = Expression.Lambda(Expression.Assign(Expression.Property(targetExpression, property), valueExpression), targetExpression, valueExpression);
+            var delegation = lambda.Compile();
 
             return (target, value) => delegation.DynamicInvoke(target, value);
         }
@@ -84,15 +68,10 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public MethodInjector Create(MethodInfo method)
         {
-            var delegation = this.methodCache.GetOrAdd(
-                method,
-                m =>
-                {
-                    var parameterExpressions = m.GetParameters().Select(p => Expression.Parameter(p.ParameterType)).ToArray();
-                    var targetExpression = Expression.Parameter(m.ReflectedType);
-                    var lambda = Expression.Lambda(Expression.Call(targetExpression, m, parameterExpressions), new ParameterExpression[] { targetExpression }.Concat(parameterExpressions));
-                    return lambda.Compile();
-                });
+            var parameterExpressions = method.GetParameters().Select(p => Expression.Parameter(p.ParameterType)).ToArray();
+            var targetExpression = Expression.Parameter(method.ReflectedType);
+            var lambda = Expression.Lambda(Expression.Call(targetExpression, method, parameterExpressions), new ParameterExpression[] { targetExpression }.Concat(parameterExpressions));
+            var delegation = lambda.Compile();
 
             return (target, args) => delegation.DynamicInvoke(new object[] { target }.Concat(args).ToArray());
         }
