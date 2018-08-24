@@ -18,7 +18,6 @@
             var modules = this.KernelConfiguration.GetModules().ToArray();
 
             modules.Select(m => m.GetType()).Should().BeEquivalentTo(expectedModules);
-            modules.All(m => m.KernelConfiguration == this.KernelConfiguration).Should().BeTrue();
         }
     }
 }
