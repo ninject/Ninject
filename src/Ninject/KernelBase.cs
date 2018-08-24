@@ -19,7 +19,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618,SA1600 // Type or member is obsolete,Elements should be documented
 namespace Ninject
 {
     using System;
@@ -81,6 +81,8 @@ namespace Ninject
 
             base.Settings = settings;
 
+            this.Components = components;
+
             this.kernelConfiguration = new KernelConfiguration(components, settings, modules);
 
             this.kernelConfiguration.Bind<IKernel>().ToConstant(this).InTransientScope();
@@ -93,14 +95,6 @@ namespace Ninject
         public new INinjectSettings Settings
         {
             get { return base.Settings; }
-        }
-
-        /// <summary>
-        /// Gets the component container, which holds components that contribute to Ninject.
-        /// </summary>
-        public IComponentContainer Components
-        {
-            get { return this.kernelConfiguration.Components; }
         }
 
         private IReadOnlyKernel ReadOnlyKernel

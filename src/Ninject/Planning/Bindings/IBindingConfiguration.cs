@@ -26,7 +26,6 @@ namespace Ninject.Planning.Bindings
 
     using Ninject.Activation;
     using Ninject.Parameters;
-    using Ninject.Selection.Heuristics;
 
     /// <summary>
     /// The configuration of a binding.
@@ -82,11 +81,6 @@ namespace Ninject.Planning.Bindings
         /// Gets the actions that should be called before instances are deactivated via the binding.
         /// </summary>
         ICollection<Action<IContext, object>> DeactivationActions { get; }
-
-        /// <summary>
-        /// Gets or sets the InitizalizeProviderCallback action.
-        /// </summary>
-        Action<IPlanner, IConstructorScorer> InitializeProviderCallback { get; set; }
 
         /// <summary>
         /// Gets the provider for the binding.

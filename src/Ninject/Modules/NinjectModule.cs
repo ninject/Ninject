@@ -49,12 +49,6 @@ namespace Ninject.Modules
         public IKernel Kernel { get; private set; }
 
         /// <summary>
-        /// Gets the kernel configuration that the module is loaded into.
-        /// </summary>
-        /// <value>The kernel configuration that the module is loaded into.</value>
-        public IKernelConfiguration KernelConfiguration { get; private set; }
-
-        /// <summary>
         /// Gets the module's name. Only a single module with a given name can be loaded at one time.
         /// </summary>
         public virtual string Name
@@ -68,6 +62,12 @@ namespace Ninject.Modules
         public ICollection<IBinding> Bindings { get; private set; }
 
         /// <summary>
+        /// Gets the kernel configuration that the module is loaded into.
+        /// </summary>
+        /// <value>The kernel configuration that the module is loaded into.</value>
+        protected internal IKernelConfiguration KernelConfiguration { get; private set; }
+
+        /// <summary>
         /// Called when the module is loaded into a kernel.
         /// </summary>
         /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
@@ -78,6 +78,7 @@ namespace Ninject.Modules
             Ensure.ArgumentNotNull(settings, "settings");
 
             this.KernelConfiguration = kernelConfiguration;
+            this.Components = this.KernelConfiguration.Components;
             this.Settings = settings;
 
             this.Load();
@@ -90,6 +91,7 @@ namespace Ninject.Modules
         {
             this.Unload();
             this.Bindings.Map(this.KernelConfiguration.RemoveBinding);
+            this.Components = null;
             this.KernelConfiguration = null;
         }
 

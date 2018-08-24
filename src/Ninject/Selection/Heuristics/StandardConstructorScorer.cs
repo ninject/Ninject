@@ -28,6 +28,7 @@ namespace Ninject.Selection.Heuristics
     using Ninject.Activation;
     using Ninject.Components;
     using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
@@ -38,23 +39,34 @@ namespace Ninject.Selection.Heuristics
     /// </summary>
     public class StandardConstructorScorer : NinjectComponent, IConstructorScorer
     {
+        private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardConstructorScorer"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        public StandardConstructorScorer(INinjectSettings settings)
+        {
+            this.settings = settings;
+        }
+
         /// <summary>
         /// Gets the score for the specified constructor.
         /// </summary>
         /// <param name="context">The injection context.</param>
-        /// <param name="directive">The constructor.</param>
+        /// <param name="directive">The constructor injection directive.</param>
         /// <returns>The constructor's score.</returns>
         public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(directive, "directive");
 
-            if (directive.HasInjectAttribute)
+            if (directive.Constructor.HasAttribute(this.settings.InjectAttribute))
             {
                 return int.MaxValue;
             }
 
-            if (directive.HasObsoleteAttribute)
+            if (directive.Constructor.HasAttribute(typeof(ObsoleteAttribute)))
             {
                 return int.MinValue;
             }
@@ -85,7 +97,7 @@ namespace Ninject.Selection.Heuristics
         }
 
         /// <summary>
-        /// Checkes whether a binding exists for a given target.
+        /// Checks whether a binding exists for a given target.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
@@ -96,7 +108,7 @@ namespace Ninject.Selection.Heuristics
         }
 
         /// <summary>
-        /// Checkes whether a binding exists for a given target on the specified kernel.
+        /// Checks whether a binding exists for a given target on the specified kernel.
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         /// <param name="context">The context.</param>

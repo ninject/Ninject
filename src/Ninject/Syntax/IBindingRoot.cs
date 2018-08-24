@@ -23,6 +23,7 @@ namespace Ninject.Syntax
 {
     using System;
 
+    using Ninject.Components;
     using Ninject.Planning.Bindings;
 
     /// <summary>
@@ -30,6 +31,11 @@ namespace Ninject.Syntax
     /// </summary>
     public interface IBindingRoot : IFluentSyntax
     {
+        /// <summary>
+        /// Gets the component container, which holds components that contribute to Ninject.
+        /// </summary>
+        IComponentContainer Components { get; }
+
         /// <summary>
         /// Declares a binding for the specified service.
         /// </summary>

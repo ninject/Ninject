@@ -33,10 +33,10 @@ namespace Ninject.Selection
     public interface ISelector : INinjectComponent
     {
         /// <summary>
-        /// Selects the constructor to call on the specified type, by using the constructor scorer.
+        /// Selects the constructors that could be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
+        /// <returns>A series of the selected constructor.</returns>
         IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type);
 
         /// <summary>

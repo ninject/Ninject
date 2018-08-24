@@ -46,7 +46,7 @@ namespace Ninject
         private readonly INinjectSettings settings;
         private readonly ICache cache;
         private readonly IPlanner planner;
-        private readonly IConstructorScorer scorer;
+        private readonly IConstructorScorer constructorScorer;
         private readonly IPipeline pipeline;
         private readonly IBindingPrecedenceComparer bindingPrecedenceComparer;
         private readonly IEnumerable<IBindingResolver> bindingResolvers;
@@ -63,7 +63,7 @@ namespace Ninject
         /// <param name="bindings">The preconfigured bindings.</param>
         /// <param name="cache">The <see cref="ICache"/> component.</param>
         /// <param name="planner">The <see cref="IPlanner"/> component.</param>
-        /// <param name="scorer">The <see cref="IConstructorScorer"/> component.</param>
+        /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="pipeline">The <see cref="IPipeline"/> component.</param>
         /// <param name="bindingPrecedenceComparer">The <see cref="IBindingPrecedenceComparer"/> component.</param>
         /// <param name="bindingResolvers">The binding resolvers.</param>
@@ -73,7 +73,7 @@ namespace Ninject
             IDictionary<Type, ICollection<IBinding>> bindings,
             ICache cache,
             IPlanner planner,
-            IConstructorScorer scorer,
+            IConstructorScorer constructorScorer,
             IPipeline pipeline,
             IBindingPrecedenceComparer bindingPrecedenceComparer,
             IEnumerable<IBindingResolver> bindingResolvers,
@@ -85,7 +85,7 @@ namespace Ninject
             this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
             this.planner = planner;
-            this.scorer = scorer;
+            this.constructorScorer = constructorScorer;
             this.pipeline = pipeline;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
 
@@ -422,7 +422,7 @@ namespace Ninject
         private void AddReadOnlyKernelBinding<T>(T readonlyKernel, IDictionary<Type, ICollection<IBinding>> bindings)
         {
             var binding = new Binding(typeof(T));
-            new BindingBuilder<T>(binding, this.settings, typeof(T).Format()).ToConstant(readonlyKernel);
+            new BindingBuilder<T>(binding, this.planner, this.constructorScorer, typeof(T).Format()).ToConstant(readonlyKernel);
             bindings[typeof(T)] = new[] { binding };
         }
 
@@ -430,7 +430,6 @@ namespace Ninject
         {
             foreach (var binding in this.bindings.Values.SelectMany(b => b))
             {
-                binding.InitializeProviderCallback?.Invoke(this.planner, this.scorer);
                 this.GetBindings(binding.Service);
             }
         }

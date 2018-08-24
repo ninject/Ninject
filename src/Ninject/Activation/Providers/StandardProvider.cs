@@ -23,11 +23,9 @@ namespace Ninject.Activation.Providers
 {
     using System;
     using System.Linq;
-    using System.Reflection;
 
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
-    using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Directives;
@@ -70,40 +68,6 @@ namespace Ninject.Activation.Providers
         /// Gets the constructor scorer component.
         /// </summary>
         public IConstructorScorer ConstructorScorer { get; private set; }
-
-        /// <summary>
-        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
-        /// for the specified type.
-        /// </summary>
-        /// <param name="prototype">The prototype the provider instance will create.</param>
-        /// <param name="planner">The planner component.</param>
-        /// <param name="scorer">The constructor scorer.</param>
-        /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, IPlanner planner, IConstructorScorer scorer)
-        {
-            Ensure.ArgumentNotNull(prototype, "prototype");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(scorer, "scorer");
-
-            return ctx => new StandardProvider(prototype, planner, scorer);
-        }
-
-        /// <summary>
-        /// Gets a callback that creates an instance of the <see cref="StandardProvider"/>
-        /// for the specified type and constructor.
-        /// </summary>
-        /// <param name="prototype">The prototype the provider instance will create.</param>
-        /// <param name="planner">The planner component.</param>
-        /// <param name="constructor">The constructor.</param>
-        /// <returns>The created callback.</returns>
-        public static Func<IContext, IProvider> GetCreationCallback(Type prototype, IPlanner planner, ConstructorInfo constructor)
-        {
-            Ensure.ArgumentNotNull(prototype, "prototype");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructor, "constructor");
-
-            return GetCreationCallback(prototype, planner, new SpecificConstructorSelector(constructor));
-        }
 
         /// <summary>
         /// Creates an instance within the specified context.
@@ -165,7 +129,13 @@ namespace Ninject.Activation.Providers
 
         private ConstructorInjectionDirective DetermineConstructorInjectionDirective(IContext context)
         {
-            var directives = context.Plan.ConstructorInjectionDirectives;
+            var directives = context.Plan.GetAll<ConstructorInjectionDirective>().ToList();
+
+            if (directives.Count == 0)
+            {
+                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+            }
+
             if (directives.Count == 1)
             {
                 return directives[0];
@@ -173,16 +143,17 @@ namespace Ninject.Activation.Providers
 
             var bestDirectives =
                 directives
-                    .GroupBy(option => this.ConstructorScorer.Score(context, option))
+                    .GroupBy(directive => this.ConstructorScorer.Score(context, directive))
                     .OrderByDescending(g => g.Key)
-                    .FirstOrDefault();
-            if (bestDirectives == null)
+                    .First()
+                    .ToList();
+
+            if (bestDirectives.Count > 1)
             {
-                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
             }
 
-            return bestDirectives.SingleOrThrowException(
-                () => new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives)));
+            return bestDirectives[0];
         }
     }
 }

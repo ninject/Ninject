@@ -42,20 +42,8 @@ namespace Ninject.Planning.Directives
         }
 
         /// <summary>
-        /// Gets or sets the base .ctor definition.
+        /// Gets the base .ctor definition.
         /// </summary>
-        public ConstructorInfo Constructor { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this constructor has an inject attribute.
-        /// </summary>
-        /// <value><c>true</c> if this constructor has an inject attribute; otherwise, <c>false</c>.</value>
-        public bool HasInjectAttribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this contructor has an obsolete attribute.
-        /// </summary>
-        /// <value><c>true</c> if this constructor has an obsolete attribute; otherwise, <c>false</c>.</value>
-        public bool HasObsoleteAttribute { get; set; }
+        public ConstructorInfo Constructor { get; private set; }
     }
 }

@@ -19,7 +19,6 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
             var modules = this.KernelConfiguration.GetModules().ToArray();
 
             modules.Select(m => m.GetType().FullName).Should().BeEquivalentTo(new[] { "Ninject.Tests.TestModules.TestModule" });
-            modules.All(m => m.KernelConfiguration == this.KernelConfiguration).Should().BeTrue();
         }
     }
 }

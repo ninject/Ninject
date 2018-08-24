@@ -27,7 +27,6 @@ namespace Ninject.Planning.Bindings
     using Ninject.Activation;
     using Ninject.Infrastructure;
     using Ninject.Parameters;
-    using Ninject.Selection.Heuristics;
 
     /// <summary>
     /// Contains information about a service registration.
@@ -39,11 +38,8 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="service">The service that is controlled by the binding.</param>
         public Binding(Type service)
+            : this(service, new BindingConfiguration())
         {
-            Ensure.ArgumentNotNull(service, "service");
-
-            this.Service = service;
-            this.BindingConfiguration = new BindingConfiguration();
         }
 
         /// <summary>
@@ -203,22 +199,6 @@ namespace Ninject.Planning.Bindings
             get
             {
                 return this.BindingConfiguration.DeactivationActions;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the InitizalizeProviderCallback action.
-        /// </summary>
-        public Action<IPlanner, IConstructorScorer> InitializeProviderCallback
-        {
-            get
-            {
-                return this.BindingConfiguration.InitializeProviderCallback;
-            }
-
-            set
-            {
-                this.BindingConfiguration.InitializeProviderCallback = value;
             }
         }
 

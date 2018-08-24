@@ -24,16 +24,24 @@ namespace Ninject.Syntax
     using System;
     using System.Linq;
 
+    using Ninject.Components;
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
     using Ninject.Infrastructure.Introspection;
+    using Ninject.Planning;
     using Ninject.Planning.Bindings;
+    using Ninject.Selection.Heuristics;
 
     /// <summary>
     /// Provides a path to register bindings.
     /// </summary>
     public abstract class BindingRoot : DisposableObject, IBindingRoot
     {
+        /// <summary>
+        /// Gets or sets the component container, which holds components that contribute to Ninject.
+        /// </summary>
+        public IComponentContainer Components { get; internal protected set; }
+
         /// <summary>
         /// Gets or sets the ninject settings.
         /// </summary>
@@ -49,9 +57,11 @@ namespace Ninject.Syntax
             var service = typeof(T);
 
             var binding = new Binding(service);
+            binding.BindingConfiguration.ScopeCallback = this.Settings.DefaultScopeCallback;
+
             this.AddBinding(binding);
 
-            return new BindingBuilder<T>(binding, this.Settings, service.Format());
+            return new BindingBuilder<T>(binding, this.Components.Get<IPlanner>(), this.Components.Get<IConstructorScorer>(), service.Format());
         }
 
         /// <summary>
@@ -63,11 +73,13 @@ namespace Ninject.Syntax
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
             var firstBinding = new Binding(typeof(T1));
+            firstBinding.BindingConfiguration.ScopeCallback = this.Settings.DefaultScopeCallback;
+
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.Components.Get<IPlanner>(), this.Components.Get<IConstructorScorer>(), string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -80,12 +92,14 @@ namespace Ninject.Syntax
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
             var firstBinding = new Binding(typeof(T1));
+            firstBinding.BindingConfiguration.ScopeCallback = this.Settings.DefaultScopeCallback;
+
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.Components.Get<IPlanner>(), this.Components.Get<IConstructorScorer>(), string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -99,13 +113,15 @@ namespace Ninject.Syntax
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
             var firstBinding = new Binding(typeof(T1));
+            firstBinding.BindingConfiguration.ScopeCallback = this.Settings.DefaultScopeCallback;
+
             this.AddBinding(firstBinding);
             this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
             this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Settings, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.Components.Get<IPlanner>(), this.Components.Get<IConstructorScorer>(), string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -122,6 +138,8 @@ namespace Ninject.Syntax
             }
 
             var firstBinding = new Binding(services[0]);
+            firstBinding.BindingConfiguration.ScopeCallback = this.Settings.DefaultScopeCallback;
+
             this.AddBinding(firstBinding);
 
             foreach (var service in services.Skip(1))
@@ -129,7 +147,7 @@ namespace Ninject.Syntax
                 this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
             }
 
-            return new BindingBuilder<object>(firstBinding, this.Settings, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+            return new BindingBuilder<object>(firstBinding, this.Components.Get<IPlanner>(), this.Components.Get<IConstructorScorer>(), string.Join(", ", services.Select(service => service.Format()).ToArray()));
         }
 
         /// <summary>

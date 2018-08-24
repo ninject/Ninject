@@ -42,11 +42,6 @@ namespace Ninject.Selection
         private const BindingFlags DefaultFlags = BindingFlags.Public | BindingFlags.Instance;
 
         /// <summary>
-        /// The constructor scorer.
-        /// </summary>
-        private readonly IConstructorScorer constructorScorer;
-
-        /// <summary>
         /// The injection heuristics.
         /// </summary>
         private readonly ICollection<IInjectionHeuristic> injectionHeuristics;
@@ -59,16 +54,13 @@ namespace Ninject.Selection
         /// <summary>
         /// Initializes a new instance of the <see cref="Selector"/> class.
         /// </summary>
-        /// <param name="constructorScorer">The constructor scorer.</param>
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         /// <param name="settings">The ninject settings.</param>
-        public Selector(INinjectSettings settings, IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
+        public Selector(IEnumerable<IInjectionHeuristic> injectionHeuristics, INinjectSettings settings)
         {
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
             Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
             Ensure.ArgumentNotNull(settings, "settings");
 
-            this.constructorScorer = constructorScorer;
             this.injectionHeuristics = injectionHeuristics.ToList();
             this.settings = settings;
         }
@@ -85,21 +77,20 @@ namespace Ninject.Selection
         }
 
         /// <summary>
-        /// Selects the constructor to call on the specified type, by using the constructor scorer.
+        /// Selects the constructors that could be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
+        /// <returns>A series of the selected constructor.</returns>
         public virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
         {
             Ensure.ArgumentNotNull(type, "type");
 
             if (type.IsSubclassOf(typeof(MulticastDelegate)))
             {
-                return null;
+                return Enumerable.Empty<ConstructorInfo>();
             }
 
-            var constructors = type.GetConstructors(this.Flags);
-            return constructors.Length == 0 ? null : constructors;
+            return type.GetConstructors(this.Flags);
         }
 
         /// <summary>

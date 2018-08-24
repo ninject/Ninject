@@ -27,12 +27,6 @@ namespace Ninject.Modules
     public interface INinjectModule
     {
         /// <summary>
-        /// Gets the kernel configuration that the module is loaded into.
-        /// </summary>
-        /// <value>The kernel configuration that the module is loaded into.</value>
-        IKernelConfiguration KernelConfiguration { get; }
-
-        /// <summary>
         /// Gets the module's name.
         /// </summary>
         string Name { get; }

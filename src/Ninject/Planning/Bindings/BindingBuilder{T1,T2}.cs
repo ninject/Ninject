@@ -25,6 +25,7 @@ namespace Ninject.Planning.Bindings
     using System.Linq.Expressions;
 
     using Ninject.Activation;
+    using Ninject.Selection.Heuristics;
     using Ninject.Syntax;
 
     /// <summary>
@@ -37,11 +38,20 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingBuilder{T1, T2}"/> class.
         /// </summary>
-        /// <param name="bindingConfigurationConfiguration">The binding to build.</param>
-        /// <param name="settings">The ninject configuration settings.</param>
+        /// <param name="bindingConfiguration">The binding to build.</param>
+        /// <param name="planner">The <see cref="IPlanner"/> component.</param>
+        /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, INinjectSettings settings, string serviceNames)
-            : base(bindingConfigurationConfiguration, settings, serviceNames)
+        public BindingBuilder(
+            IBindingConfiguration bindingConfiguration,
+            IPlanner planner,
+            IConstructorScorer constructorScorer,
+            string serviceNames)
+            : base(
+                 bindingConfiguration,
+                 planner,
+                 constructorScorer,
+                 serviceNames)
         {
         }
 

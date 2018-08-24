@@ -27,6 +27,7 @@ namespace Ninject.Planning.Bindings
     using Ninject.Activation;
     using Ninject.Activation.Providers;
     using Ninject.Infrastructure;
+    using Ninject.Selection.Heuristics;
     using Ninject.Syntax;
 
     /// <summary>
@@ -39,13 +40,21 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder{T1}"/> class.
         /// </summary>
         /// <param name="binding">The binding to build.</param>
-        /// <param name="settings">The ninject configuration settings.</param>
+        /// <param name="planner">The <see cref="IPlanner"/> component.</param>
+        /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBinding binding, INinjectSettings settings, string serviceNames)
-            : base(binding.BindingConfiguration, settings, serviceNames)
+        public BindingBuilder(
+            IBinding binding,
+            IPlanner planner,
+            IConstructorScorer constructorScorer,
+            string serviceNames)
+            : base(
+                  binding.BindingConfiguration,
+                  planner,
+                  constructorScorer,
+                  serviceNames)
         {
             Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(settings, "settings");
 
             this.Binding = binding;
         }
@@ -61,7 +70,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>The fluent syntax.</returns>
         public IBindingWhenInNamedWithOrOnSyntax<T1> ToSelf()
         {
-            this.Binding.InitializeProviderCallback = (planner, scorer) => this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service, planner, scorer);
+            this.Binding.ProviderCallback = ctx => new StandardProvider(this.Binding.Service, this.Planner, this.ConstructorScorer);
             this.Binding.Target = BindingTarget.Self;
 
             return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);

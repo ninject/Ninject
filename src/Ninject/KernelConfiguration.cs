@@ -106,11 +106,6 @@ namespace Ninject
         }
 
         /// <summary>
-        /// Gets the component container, which holds components that contribute to Ninject.
-        /// </summary>
-        public IComponentContainer Components { get; private set; }
-
-        /// <summary>
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>

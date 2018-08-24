@@ -21,12 +21,8 @@
 
 namespace Ninject.Planning.Strategies
 {
-    using System;
-    using System.Reflection;
-
     using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Language;
     using Ninject.Injection;
     using Ninject.Planning.Directives;
     using Ninject.Selection;
@@ -69,8 +65,8 @@ namespace Ninject.Planning.Strategies
         }
 
         /// <summary>
-        /// Adds a <see cref="ConstructorInjectionDirective"/> to the plan for the constructor
-        /// that should be injected.
+        /// Adds a serial of <see cref="ConstructorInjectionDirective"/>s to the plan for the constructors
+        /// that could be injected.
         /// </summary>
         /// <param name="plan">The plan that is being generated.</param>
         public void Execute(IPlan plan)
@@ -78,21 +74,10 @@ namespace Ninject.Planning.Strategies
             Ensure.ArgumentNotNull(plan, "plan");
 
             var constructors = this.selector.SelectConstructorsForInjection(plan.Type);
-            if (constructors == null)
-            {
-                return;
-            }
 
-            foreach (ConstructorInfo constructor in constructors)
+            foreach (var constructor in constructors)
             {
-                var hasInjectAttribute = constructor.HasAttribute(this.settings.InjectAttribute);
-                var hasObsoleteAttribute = constructor.HasAttribute(typeof(ObsoleteAttribute));
-                var directive = new ConstructorInjectionDirective(constructor, this.injectorFactory.Create(constructor))
-                {
-                    HasInjectAttribute = hasInjectAttribute,
-                    HasObsoleteAttribute = hasObsoleteAttribute,
-                };
-
+                var directive = new ConstructorInjectionDirective(constructor, this.injectorFactory.Create(constructor));
                 plan.Add(directive);
             }
         }

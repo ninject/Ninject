@@ -34,7 +34,7 @@ namespace Ninject.Selection.Heuristics
         /// Gets the score for the specified constructor.
         /// </summary>
         /// <param name="context">The injection context.</param>
-        /// <param name="directive">The constructor.</param>
+        /// <param name="directive">The constructor injection directive.</param>
         /// <returns>The constructor's score.</returns>
         int Score(IContext context, ConstructorInjectionDirective directive);
     }

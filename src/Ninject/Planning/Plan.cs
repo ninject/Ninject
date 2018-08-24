@@ -43,7 +43,6 @@ namespace Ninject.Planning
 
             this.Type = type;
             this.Directives = new List<IDirective>();
-            this.ConstructorInjectionDirectives = new List<ConstructorInjectionDirective>();
         }
 
         /// <summary>
@@ -57,22 +56,12 @@ namespace Ninject.Planning
         public ICollection<IDirective> Directives { get; private set; }
 
         /// <summary>
-        /// Gets the constructor injection directives defined in the plan.
-        /// </summary>
-        public IList<ConstructorInjectionDirective> ConstructorInjectionDirectives { get; private set; }
-
-        /// <summary>
         /// Adds the specified directive to the plan.
         /// </summary>
         /// <param name="directive">The directive.</param>
         public void Add(IDirective directive)
         {
             Ensure.ArgumentNotNull(directive, "directive");
-
-            if (directive is ConstructorInjectionDirective constructorInjectionDirective)
-            {
-                this.ConstructorInjectionDirectives.Add(constructorInjectionDirective);
-            }
 
             this.Directives.Add(directive);
         }

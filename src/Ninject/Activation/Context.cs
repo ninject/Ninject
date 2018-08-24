@@ -31,7 +31,6 @@ namespace Ninject.Activation
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
-    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Contains information about the activation of a single instance.
