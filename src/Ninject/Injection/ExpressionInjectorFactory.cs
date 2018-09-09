@@ -34,7 +34,7 @@ namespace Ninject.Injection
     public class ExpressionInjectorFactory : NinjectComponent, IInjectorFactory
     {
         /// <summary>
-        /// Gets or creates an injector for the specified constructor.
+        /// Creates an injector for the specified constructor.
         /// </summary>
         /// <param name="constructor">The constructor.</param>
         /// <returns>The created injector.</returns>
@@ -61,7 +61,7 @@ namespace Ninject.Injection
         }
 
         /// <summary>
-        /// Gets or creates an injector for the specified property.
+        /// Creates an injector for the specified property.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <returns>The created injector.</returns>
@@ -86,7 +86,7 @@ namespace Ninject.Injection
         }
 
         /// <summary>
-        /// Gets or creates an injector for the specified method.
+        /// Creates an injector for the specified method.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>The created injector.</returns>
