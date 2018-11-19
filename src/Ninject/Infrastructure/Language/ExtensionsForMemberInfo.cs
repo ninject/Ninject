@@ -49,6 +49,19 @@ namespace Ninject.Infrastructure.Language
         }
 
         /// <summary>
+        /// Determines whether the specified constructor has attribute.
+        /// </summary>
+        /// <param name="constructor">The constructor.</param>
+        /// <param name="type">The type of the attribute.</param>
+        /// <returns>
+        /// <c>true</c> if the specified constructor has attribute; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasAttribute(this ConstructorInfo constructor, Type type)
+        {
+            return constructor.IsDefined(type, true);
+        }
+
+        /// <summary>
         /// Gets the property info from its declared type.
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
