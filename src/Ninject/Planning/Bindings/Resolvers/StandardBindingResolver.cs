@@ -23,9 +23,9 @@ namespace Ninject.Planning.Bindings.Resolvers
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Components;
+    using Ninject.Infrastructure;
 
     /// <summary>
     /// Resolves bindings that have been registered directly for the service.
@@ -38,11 +38,11 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service)
+        public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service)
         {
             if (!bindings.TryGetValue(service, out ICollection<IBinding> result))
             {
-                return Enumerable.Empty<IBinding>();
+                return Arrays.Empty<IBinding>();
             }
 
             return result;

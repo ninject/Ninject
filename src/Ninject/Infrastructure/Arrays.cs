@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="IBindingResolver.cs" company="Ninject Project Contributors">
+// <copyright file="Arrays.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010 Enkari, Ltd. All rights reserved.
 //   Copyright (c) 2010-2017 Ninject Project Contributors. All rights reserved.
 //
@@ -19,24 +19,28 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject.Planning.Bindings.Resolvers
+namespace Ninject.Infrastructure
 {
-    using System;
-    using System.Collections.Generic;
-
-    using Ninject.Components;
-
     /// <summary>
-    /// Contains logic about which bindings to use for a given service request.
+    /// Container for array related methods.
     /// </summary>
-    public interface IBindingResolver : INinjectComponent
+    internal static class Arrays
     {
         /// <summary>
-        /// Returns any bindings from the specified collection that match the specified service.
+        /// Returns an empty array of <typeparamref name="T"/>.
         /// </summary>
-        /// <param name="bindings">The dictionary of all registered bindings.</param>
-        /// <param name="service">The service in question.</param>
-        /// <returns>The series of matching bindings.</returns>
-        ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service);
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>
+        /// An empty array of <typeparamref name="T"/>.
+        /// </returns>
+        public static T[] Empty<T>()
+        {
+            return EmptyArray<T>.Value;
+        }
+
+        private static class EmptyArray<T>
+        {
+            internal static readonly T[] Value = new T[0];
+        }
     }
 }
