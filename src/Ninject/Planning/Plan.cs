@@ -107,7 +107,13 @@ namespace Ninject.Planning
         public IEnumerable<TDirective> GetAll<TDirective>()
             where TDirective : IDirective
         {
-            return this.Directives.OfType<TDirective>();
+            foreach (var directive in this.Directives)
+            {
+                if (directive is TDirective tdir)
+                {
+                    yield return tdir;
+                }
+            }
         }
     }
 }
