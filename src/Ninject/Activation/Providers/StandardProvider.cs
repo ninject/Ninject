@@ -142,6 +142,11 @@ namespace Ninject.Activation.Providers
 
         private static object[] GetValues(IContext context, ITarget[] targets)
         {
+            if (targets.Length == 0)
+            {
+                return Arrays.Empty<object>();
+            }
+
             object[] values = new object[targets.Length];
 
             for (var i = 0; i < targets.Length; i++)
