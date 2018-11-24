@@ -411,37 +411,37 @@ namespace Ninject.Test.Unit.Activation.Providers
 
         private static string CreateAmbiguousConstructorExceptionMessage(Type exceptionType)
         {
-            return $@"Error activating NinjaBarracks using self-binding of NinjaBarracks
-Several constructors have the same priority.
+            var newLine = Environment.NewLine;
 
-Constructors:
-MyService(IWeapon weaponIWarrior warrior)
-MyService(ICleric clericstring name)
-
-Activation path:
-  1) Request for NinjaBarracks
-
-Suggestions:
-  1) Specify the constructor using ToConstructor syntax.
-  2) Add an Inject attribute to the constructor.
-";
+            return "Error activating NinjaBarracks using self-binding of NinjaBarracks" + newLine +
+                   "Several constructors have the same priority." + newLine +
+                   newLine +
+                   "Constructors:" + newLine +
+                   "MyService(IWeapon weaponIWarrior warrior)" + newLine +
+                   "MyService(ICleric clericstring name)" + newLine +
+                   newLine +
+                   "Activation path:" + newLine +
+                   "  1) Request for NinjaBarracks" + newLine +
+                   newLine +
+                   "Suggestions:" + newLine +
+                   "  1) Specify the constructor using ToConstructor syntax." + newLine +
+                   "  2) Add an Inject attribute to the constructor." + newLine;
         }
 
         private static string CreateNoConstructorAvailableExceptionMessage()
         {
-            return @"Error activating NinjaBarracks using self-binding of NinjaBarracks
-No constructor was available to create an instance of the implementation type.
+            var newLine = Environment.NewLine;
 
-Activation path:
-  1) Request for NinjaBarracks
-
-Suggestions:
-  1) Ensure that the implementation type has a public constructor.
-  2) If you have implemented the Singleton pattern, use a binding with InSingletonScope() instead.
-";
+            return "Error activating NinjaBarracks using self-binding of NinjaBarracks" + newLine +
+                   "No constructor was available to create an instance of the implementation type." + newLine +
+                   newLine +
+                   "Activation path:" + newLine +
+                   "  1) Request for NinjaBarracks" + newLine +
+                   newLine +
+                   "Suggestions:" + newLine +
+                   "  1) Ensure that the implementation type has a public constructor." + newLine +
+                   "  2) If you have implemented the Singleton pattern, use a binding with InSingletonScope() instead." + newLine;
         }
-
-
 
         public class MyService
         {
