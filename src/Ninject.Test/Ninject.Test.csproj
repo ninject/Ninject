@@ -3,20 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <Optimize>true</Optimize>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  
   <ItemGroup>
     <None Update="TestModules\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -41,12 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TestAssembly\TestAssembly.csproj" />
     <ProjectReference Include="..\TestModules\TestModules.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System">
-      <HintPath>System</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
