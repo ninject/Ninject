@@ -62,7 +62,7 @@ namespace Ninject.Infrastructure.Language
                 flags,
                 null,
                 propertyDefinition.PropertyType,
-                propertyDefinition.GetIndexParameters().Select(parameter => parameter.ParameterType).ToArray(),
+                GetIndexParameterTypes(propertyDefinition),
                 null);
         }
 
@@ -96,6 +96,24 @@ namespace Ninject.Infrastructure.Language
             }
 
             return member.GetCustomAttributes(attributeType, inherited);
+        }
+
+        private static Type[] GetIndexParameterTypes(PropertyInfo property)
+        {
+            var indexParameters = property.GetIndexParameters();
+            if (indexParameters.Length == 0)
+            {
+                return Arrays.Empty<Type>();
+            }
+
+            var types = new Type[indexParameters.Length];
+
+            for (var i = 0; i < indexParameters.Length; i++)
+            {
+                types[i] = indexParameters[i].ParameterType;
+            }
+
+            return types;
         }
     }
 }
