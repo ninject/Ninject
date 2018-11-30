@@ -55,8 +55,8 @@ namespace Ninject.Planning.Targets
             this.Member = member;
             this.Site = site;
 
-            this.constraint = new Lazy<Func<IBindingMetadata, bool>>(this.ReadConstraintFromTarget);
-            this.isOptional = new Lazy<bool>(this.ReadOptionalFromTarget);
+            this.constraint = new Lazy<Func<IBindingMetadata, bool>>(() => this.ReadConstraintFromTarget());
+            this.isOptional = new Lazy<bool>(() => this.ReadOptionalFromTarget());
         }
 
         /// <summary>
@@ -121,6 +121,11 @@ namespace Ninject.Planning.Targets
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
+
+            if (typeof(T) == typeof(PropertyInfo))
+            {
+                return ((PropertyInfo)(object)this.Site).GetCustomAttributesExtended(attributeType, inherit);
+            }
 
             return this.Site.GetCustomAttributesExtended(attributeType, inherit);
         }
@@ -221,7 +226,23 @@ namespace Ninject.Planning.Targets
                 return attributes[0].Matches;
             }
 
-            return metadata => attributes.All(attribute => attribute.Matches(metadata));
+            return metadata => AllConstraintAttributesMatch(attributes, metadata);
+        }
+
+        private static bool AllConstraintAttributesMatch(ConstraintAttribute[] attributes, IBindingMetadata metadata)
+        {
+            var matches = true;
+
+            for (var i = 0; i < attributes.Length; i++)
+            {
+                if (!attributes[i].Matches(metadata))
+                {
+                    matches = false;
+                    break;
+                }
+            }
+
+            return matches;
         }
     }
 }
