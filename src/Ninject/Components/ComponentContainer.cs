@@ -36,9 +36,24 @@ namespace Ninject.Components
     /// </summary>
     public class ComponentContainer : DisposableObject, IComponentContainer
     {
+        /// <summary>
+        /// The mappings for ninject components.
+        /// </summary>
         private readonly Multimap<Type, Type> mappings = new Multimap<Type, Type>();
-        private readonly Dictionary<Type, INinjectComponent> instances = new Dictionary<Type, INinjectComponent>();
+
+        /// <summary>
+        /// The mappings for ninject components with transient scope.
+        /// </summary>
         private readonly HashSet<KeyValuePair<Type, Type>> transients = new HashSet<KeyValuePair<Type, Type>>();
+
+        /// <summary>
+        /// The ninject component instances.
+        /// </summary>
+        private readonly Dictionary<Type, INinjectComponent> instances = new Dictionary<Type, INinjectComponent>();
+
+        /// <summary>
+        /// The ninject settings.
+        /// </summary>
         private readonly INinjectSettings settings;
 
         /// <summary>
