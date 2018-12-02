@@ -31,8 +31,19 @@ namespace Ninject.Infrastructure.Language
     /// </summary>
     internal static class ExtensionsForIEnumerable
     {
+        /// <summary>
+        /// The Cast method of <see cref="Enumerable"/>.
+        /// </summary>
         private static readonly MethodInfo Cast = typeof(Enumerable).GetMethod(nameof(Cast));
+
+        /// <summary>
+        /// The ToArray method of <see cref="Enumerable"/>.
+        /// </summary>
         private static readonly MethodInfo ToArray = typeof(Enumerable).GetMethod(nameof(ToArray));
+
+        /// <summary>
+        /// The ToList method of <see cref="Enumerable"/>.
+        /// </summary>
         private static readonly MethodInfo ToList = typeof(Enumerable).GetMethod(nameof(ToList));
 
         /// <summary>

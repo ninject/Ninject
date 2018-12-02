@@ -21,8 +21,6 @@
 
 namespace Ninject.Injection
 {
-    using System;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -42,16 +40,7 @@ namespace Ninject.Injection
         {
             var parameterArrayExpression = Expression.Parameter(typeof(object[]));
             var parameters = constructor.GetParameters();
-            var typedParameterExpressions = parameters.Select(parameter =>
-            {
-                var parameterExpression = Expression.ArrayIndex(
-                    parameterArrayExpression,
-                    Expression.Constant(Array.IndexOf(parameters, parameter)));
-
-                return parameter.ParameterType.IsValueType ?
-                Expression.Unbox(parameterExpression, parameter.ParameterType) :
-                Expression.TypeAs(parameterExpression, parameter.ParameterType);
-            });
+            var typedParameterExpressions = CreateTypedParameterExpressions(parameters, parameterArrayExpression);
 
             var lambda = Expression.Lambda<ConstructorInjector>(
                 Expression.New(constructor, typedParameterExpressions),
@@ -99,16 +88,7 @@ namespace Ninject.Injection
 
             var parameterArrayExpression = Expression.Parameter(typeof(object[]));
             var parameters = method.GetParameters();
-            var typedParameterExpressions = parameters.Select(parameter =>
-            {
-                var parameterExpression = Expression.ArrayIndex(
-                    parameterArrayExpression,
-                    Expression.Constant(Array.IndexOf(parameters, parameter)));
-
-                return parameter.ParameterType.IsValueType ?
-                Expression.Unbox(parameterExpression, parameter.ParameterType) :
-                Expression.TypeAs(parameterExpression, parameter.ParameterType);
-            });
+            var typedParameterExpressions = CreateTypedParameterExpressions(parameters, parameterArrayExpression);
 
             var lambda = Expression.Lambda<MethodInjector>(
                 Expression.Call(typedTargetExpression, method, typedParameterExpressions),
@@ -116,6 +96,23 @@ namespace Ninject.Injection
                 parameterArrayExpression);
 
             return lambda.Compile();
+        }
+
+        private static UnaryExpression[] CreateTypedParameterExpressions(ParameterInfo[] parameters, ParameterExpression parameterArrayExpression)
+        {
+            var typedParameterExpressions = new UnaryExpression[parameters.Length];
+
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                var parameterType = parameters[i].ParameterType;
+
+                var parameterExpression = Expression.ArrayIndex(parameterArrayExpression, Expression.Constant(i));
+                typedParameterExpressions[i] = parameterType.IsValueType ?
+                                               Expression.Unbox(parameterExpression, parameterType) :
+                                               Expression.TypeAs(parameterExpression, parameterType);
+            }
+
+            return typedParameterExpressions;
         }
     }
 }
