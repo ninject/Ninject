@@ -32,7 +32,7 @@ namespace Ninject.Test.Unit.Infrastructure.Language
         [Fact]
         public void IsPrivate_PrivateGetterAndNoSetter()
         {
-            var property = typeof(MyService).GetProperty(nameof(MyService.PrivateGetterAndNoSetter), _bindingFlags);
+            var property = typeof(MyService).GetProperty("PrivateGetterAndNoSetter", _bindingFlags);
             Assert.True(property.IsPrivate());
         }
 
