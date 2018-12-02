@@ -25,35 +25,35 @@ namespace Ninject.Test.Unit.Infrastructure.Language
         [Fact]
         public void IsPrivate_PrivateGetterAndPublicSetter()
         {
-            var property = typeof(MyService).GetProperty("PrivateGetterAndPublicSetter", _bindingFlags);
+            var property = typeof(MyService).GetProperty(nameof(MyService.PrivateGetterAndPublicSetter), _bindingFlags);
             Assert.False(property.IsPrivate());
         }
 
         [Fact]
         public void IsPrivate_PrivateGetterAndNoSetter()
         {
-            var property = typeof(MyService).GetProperty("PrivateGetterAndNoSetter", _bindingFlags);
+            var property = typeof(MyService).GetProperty(nameof(MyService.PrivateGetterAndNoSetter), _bindingFlags);
             Assert.True(property.IsPrivate());
         }
 
         [Fact]
         public void IsPrivate_PublicGetterAndPrivateSetter()
         {
-            var property = typeof(MyService).GetProperty("PublicGetterAndPrivateSetter", _bindingFlags);
+            var property = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndPrivateSetter), _bindingFlags);
             Assert.False(property.IsPrivate());
         }
 
         [Fact]
         public void IsPrivate_PublicGetterAndPublicSetter()
         {
-            var property = typeof(MyService).GetProperty("PublicGetterAndPublicSetter", _bindingFlags);
+            var property = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndPublicSetter), _bindingFlags);
             Assert.False(property.IsPrivate());
         }
 
         [Fact]
         public void IsPrivate_PublicGetterAndNoSetter()
         {
-            var property = typeof(MyService).GetProperty("PublicGetterAndNoSetter", _bindingFlags);
+            var property = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndNoSetter), _bindingFlags);
             Assert.False(property.IsPrivate());
         }
 
@@ -61,7 +61,7 @@ namespace Ninject.Test.Unit.Infrastructure.Language
         public void GetPropertyFromDeclaredType_Indexer()
         {
             var indexer = typeof(MyService).GetProperty("Item", new[] { typeof(int), typeof(string) });
-            var noIndexerBase = typeof(MyServiceBase).GetProperty("NoIndexer");
+            var noIndexerBase = typeof(MyServiceBase).GetProperty(nameof(MyService.NoIndexer));
 
             var actual = noIndexerBase.GetPropertyFromDeclaredType(indexer, BindingFlags.Public | BindingFlags.Instance);
 
@@ -83,7 +83,7 @@ namespace Ninject.Test.Unit.Infrastructure.Language
         public void GetPropertyFromDeclaredType_NoIndexer()
         {
             var indexer = typeof(MyService).GetProperty("Item", new[] { typeof(int), typeof(string) });
-            var noIndexerBase = typeof(MyServiceBase).GetProperty("NoIndexer");
+            var noIndexerBase = typeof(MyServiceBase).GetProperty(nameof(MyService.NoIndexer));
 
             var actual = indexer.GetPropertyFromDeclaredType(noIndexerBase, BindingFlags.Public | BindingFlags.Instance);
 
