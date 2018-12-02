@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using BenchmarkDotNet.Attributes;
 
 using Ninject.Infrastructure.Language;
@@ -16,20 +17,38 @@ namespace Ninject.Benchmarks.Infrastructure.Language
         private PropertyInfo _property_PublicGetterAndNoSetter;
         private PropertyInfo _property_Indexer;
         private PropertyInfo _property_NoIndexer_Base;
+        private MethodInfo _method_Execute;
+        private ConstructorInfo _constructor_NoArgs;
+        private MemberInfo _member_property_Indexer;
+        private MemberInfo _member_property_NoIndexer_Base;
+        private MemberInfo _member_method_Execute;
+        private MemberInfo _member_constructor_NoArgs;
+        private Type _injectAttributeType;
+        private Type _obsoleteAttributeType;
 
         public ExtensionsForMemberInfoBenchmark()
         {
             var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             _property_PrivateGetterAndPrivateSetter = typeof(MyService).GetProperty("PrivateGetterAndPrivateSetter", bindingFlags);
-            _property_PrivateGetterAndPublicSetter = typeof(MyService).GetProperty("PrivateGetterAndPublicSetter", bindingFlags);
+            _property_PrivateGetterAndPublicSetter = typeof(MyService).GetProperty(nameof(MyService.PrivateGetterAndPublicSetter), bindingFlags);
             _property_PrivateGetterAndNoSetter = typeof(MyService).GetProperty("PrivateGetterAndNoSetter", bindingFlags);
-            _property_PublicGetterAndPrivateSetter = typeof(MyService).GetProperty("PublicGetterAndPrivateSetter", bindingFlags);
-            _property_PublicGetterAndPublicSetter = typeof(MyService).GetProperty("PublicGetterAndPublicSetter", bindingFlags);
-            _property_PublicGetterAndNoSetter = typeof(MyService).GetProperty("PublicGetterAndNoSetter", bindingFlags);
+            _property_PublicGetterAndPrivateSetter = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndPrivateSetter), bindingFlags);
+            _property_PublicGetterAndPublicSetter = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndPublicSetter), bindingFlags);
+            _property_PublicGetterAndNoSetter = typeof(MyService).GetProperty(nameof(MyService.PublicGetterAndNoSetter), bindingFlags);
 
             _property_Indexer = typeof(MyService).GetProperty("Item");
-            _property_NoIndexer_Base = typeof(MyServiceBase).GetProperty("NoIndexer");
+            _property_NoIndexer_Base = typeof(MyServiceBase).GetProperty(nameof(MyService.NoIndexer));
+            _method_Execute = typeof(MyService).GetMethod(nameof(MyService.Execute));
+            _constructor_NoArgs = typeof(MyService).GetConstructor(new Type[0]);
+
+            _member_property_Indexer = typeof(MyService).GetProperty("Item");
+            _member_property_NoIndexer_Base = typeof(MyServiceBase).GetProperty(nameof(MyService.NoIndexer));
+            _member_method_Execute = typeof(MyService).GetMethod(nameof(MyService.Execute));
+            _member_constructor_NoArgs = typeof(MyService).GetConstructor(new Type[0]);
+
+            _injectAttributeType = typeof(InjectAttribute);
+            _obsoleteAttributeType = typeof(ObsoleteAttribute);
         }
 
         [Benchmark]
@@ -80,6 +99,78 @@ namespace Ninject.Benchmarks.Infrastructure.Language
             _property_Indexer.GetPropertyFromDeclaredType(_property_NoIndexer_Base, BindingFlags.Public | BindingFlags.Instance);
         }
 
+        [Benchmark]
+        public void HasAttribute_PropertyInfo_Match()
+        {
+            _property_Indexer.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_PropertyInfo_NoMatch()
+        {
+            _property_Indexer.HasAttribute(_obsoleteAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MethodInfo_Match()
+        {
+            _method_Execute.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MethodInfo_NoMatch()
+        {
+            _method_Execute.HasAttribute(_obsoleteAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_ConstructorInfo_Match()
+        {
+            _constructor_NoArgs.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_ConstructorInfo_NoMatch()
+        {
+            _constructor_NoArgs.HasAttribute(_obsoleteAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_PropertyInfo_Match()
+        {
+            _member_property_Indexer.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_PropertyInfo_NoMatch()
+        {
+            _member_property_Indexer.HasAttribute(_obsoleteAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_MethodInfo_Match()
+        {
+            _member_method_Execute.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_MethodInfo_NoMatch()
+        {
+            _member_method_Execute.HasAttribute(_obsoleteAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_ConstructorInfo_Match()
+        {
+            _member_constructor_NoArgs.HasAttribute(_injectAttributeType);
+        }
+
+        [Benchmark]
+        public void HasAttribute_MemberInfo_ConstructorInfo_NoMatch()
+        {
+            _member_constructor_NoArgs.HasAttribute(_obsoleteAttributeType);
+        }
+
         public abstract class MyServiceBase
         {
             public virtual string this[int index, string name]
@@ -102,9 +193,20 @@ namespace Ninject.Benchmarks.Infrastructure.Language
             public string PublicGetterAndPublicSetter { private get; set; }
             public string PublicGetterAndNoSetter { private get; set; }
 
+            [Inject]
+            public MyService()
+            {
+            }
+
+            [Inject]
             public override string this[int index, string name]
             {
                 get { return null; }
+            }
+
+            [Inject]
+            public void Execute()
+            {
             }
         }
     }
