@@ -22,7 +22,6 @@
 namespace Ninject.Infrastructure.Language
 {
     using System;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -142,7 +141,11 @@ namespace Ninject.Infrastructure.Language
             var indexParameters = property.GetIndexParameters();
             if (indexParameters.Length == 0)
             {
+#if FEATURE_ARRAY_EMPTY
+                return Array.Empty<Type>();
+#else
                 return Arrays.Empty<Type>();
+#endif
             }
 
             var types = new Type[indexParameters.Length];

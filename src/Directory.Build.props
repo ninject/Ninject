@@ -1,0 +1,15 @@
+<Project>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+        <!-- Features System.Array.Empty<T> -->
+        <TargetFrameworkFeature Include="FEATURE_ARRAY_EMPTY"/>
+    </ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">
+        <!-- Features isolation using AppDomain -->
+        <TargetFrameworkFeature Include="FEATURE_APPDOMAIN_ISOLATION"/>
+        <!-- Features .NET remoting -->
+        <TargetFrameworkFeature Include="FEATURE_RUNTIME_REMOTING"/>
+    </ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);@(TargetFrameworkFeature)</DefineConstants>
+    </PropertyGroup>
+</Project>

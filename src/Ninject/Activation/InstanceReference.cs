@@ -42,13 +42,13 @@ namespace Ninject.Activation
         [SecuritySafeCritical]
         public bool Is<T>()
         {
-#if !NO_REMOTING
+#if FEATURE_RUNTIME_REMOTING
             if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(this.Instance)
                 && System.Runtime.Remoting.RemotingServices.GetRealProxy(this.Instance).GetType().Name == "RemotingProxy")
             {
                 return typeof(T).IsAssignableFrom(this.Instance.GetType());
             }
-#endif
+#endif // FEATURE_RUNTIME_REMOTING
             return this.Instance is T;
         }
 

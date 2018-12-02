@@ -19,6 +19,8 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
+#if !FEATURE_ARRAY_EMPTY
+
 namespace Ninject.Infrastructure
 {
     /// <summary>
@@ -44,3 +46,5 @@ namespace Ninject.Infrastructure
         }
     }
 }
+
+#endif // !FEATURE_ARRAY_EMPTY
