@@ -31,10 +31,17 @@ namespace Ninject.Selection.Heuristics
     public interface IInjectionHeuristic : INinjectComponent
     {
         /// <summary>
-        /// Returns a value indicating whether the specified member should be injected.
+        /// Returns a value indicating whether the specified property should be injected.
         /// </summary>
-        /// <param name="member">The member in question.</param>
-        /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
-        bool ShouldInject(MemberInfo member);
+        /// <param name="property">The property in question.</param>
+        /// <returns><c>true</c> if the property should be injected; otherwise <c>false</c>.</returns>
+        bool ShouldInject(PropertyInfo property);
+
+        /// <summary>
+        /// Returns a value indicating whether the specified method should be injected.
+        /// </summary>
+        /// <param name="method">The method in question.</param>
+        /// <returns><c>true</c> if the method should be injected; otherwise <c>false</c>.</returns>
+        bool ShouldInject(MethodInfo method);
     }
 }
