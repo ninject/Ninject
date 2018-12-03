@@ -24,7 +24,7 @@ namespace Ninject.Infrastructure.Language
     using System;
     using System.Reflection;
 
-#if !FEATURE_ARRAY_EMPTY
+#if NO_ARRAY_EMPTY
     using Array = Ninject.Infrastructure.Array;
 #endif
 
