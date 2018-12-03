@@ -109,7 +109,7 @@ namespace Ninject.Planning
             try
             {
                 // Ensure another thread hasn't already created plan for the type
-                // righht before we obtained the write lock
+                // right before we obtained the write lock.
                 if (this.plans.TryGetValue(type, out IPlan plan))
                 {
                     return plan;
@@ -124,7 +124,7 @@ namespace Ninject.Planning
             }
 
             // Execute strategies outside of write lock to ensure we're not
-            // blocking threads that want to create plans for other types
+            // blocking threads that want to create plans for other types.
             this.strategies.ForEach(s => s.Execute(newPlan));
             return newPlan;
         }
