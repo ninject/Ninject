@@ -70,6 +70,7 @@ namespace Ninject.Infrastructure.Language
         /// </returns>
         public static bool HasAttribute(this PropertyInfo property, Type type)
         {
+            // https://docs.microsoft.com/en-us/dotnet/api/system.reflection.memberinfo.isdefined?view=netframework-4.7.2#remarks
             return Attribute.IsDefined(property, type, true);
         }
 
