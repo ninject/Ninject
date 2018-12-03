@@ -24,6 +24,10 @@ namespace Ninject.Infrastructure.Language
     using System;
     using System.Reflection;
 
+#if !FEATURE_ARRAY_EMPTY
+    using Array = Ninject.Infrastructure.Array;
+#endif
+
     /// <summary>
     /// Provides extension methods for <see cref="MemberInfo"/>.
     /// </summary>
@@ -142,11 +146,7 @@ namespace Ninject.Infrastructure.Language
             var indexParameters = property.GetIndexParameters();
             if (indexParameters.Length == 0)
             {
-#if FEATURE_ARRAY_EMPTY
                 return Array.Empty<Type>();
-#else
-                return Arrays.Empty<Type>();
-#endif
             }
 
             var types = new Type[indexParameters.Length];

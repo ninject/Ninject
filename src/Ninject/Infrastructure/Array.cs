@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="Arrays.cs" company="Ninject Project Contributors">
+// <copyright file="Array.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010 Enkari, Ltd. All rights reserved.
 //   Copyright (c) 2010-2017 Ninject Project Contributors. All rights reserved.
 //
@@ -26,7 +26,7 @@ namespace Ninject.Infrastructure
     /// <summary>
     /// Container for array related methods.
     /// </summary>
-    internal static class Arrays
+    internal static class Array
     {
         /// <summary>
         /// Returns an empty array of <typeparamref name="T"/>.
