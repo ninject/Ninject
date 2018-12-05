@@ -5,9 +5,7 @@
         <!-- Does not support .NET remoting -->
         <TargetFrameworkFeature Include="NO_REMOTING"/>
 	</ItemGroup>
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">
-        <!-- Does not support System.Array.Empty<T> -->
-        <TargetFrameworkFeature Include="NO_ARRAY_EMPTY"/>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net46'">
     </ItemGroup>
     <PropertyGroup>
         <DefineConstants>$(DefineConstants);@(TargetFrameworkFeature)</DefineConstants>
