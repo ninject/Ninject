@@ -48,7 +48,7 @@ namespace Ninject.Activation
             {
                 return typeof(T).IsAssignableFrom(this.Instance.GetType());
             }
-#endif
+#endif // !NO_REMOTING
             return this.Instance is T;
         }
 
