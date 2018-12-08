@@ -28,7 +28,7 @@ namespace Ninject.Modules
     using Ninject.Components;
 
     /// <summary>
-    /// Retrieves assembly names from file paths with isolate.
+    /// Retrieves assembly names from file paths with isolation.
     /// </summary>
     public interface IAssemblyNameRetriever : INinjectComponent
     {
