@@ -30,17 +30,17 @@ namespace Ninject.Modules
     using Ninject.Components;
 
     /// <summary>
-    /// Retrieves assembly names from file names using a temporary app domain.
+    /// Retrieves assembly names from file paths with isolate.
     /// </summary>
     public class AssemblyNameRetriever : NinjectComponent, IAssemblyNameRetriever
     {
         /// <summary>
         /// Gets all assembly names of the assemblies in the given files that match the filter.
         /// </summary>
-        /// <param name="filenames">The filenames.</param>
+        /// <param name="filepaths">The file paths.</param>
         /// <param name="filter">The filter.</param>
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-        public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+        public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filepaths, Predicate<Assembly> filter)
         {
 #if !NO_APPDOMAIN_ISOLATION
             var assemblyCheckerType = typeof(AssemblyChecker);
@@ -51,14 +51,14 @@ namespace Ninject.Modules
                     assemblyCheckerType.Assembly.FullName,
                     assemblyCheckerType.FullName ?? string.Empty);
 
-                return checker.GetAssemblyNames(filenames.ToArray(), filter);
+                return checker.GetAssemblyNames(filepaths.ToArray(), filter);
             }
             finally
             {
                 AppDomain.Unload(temporaryDomain);
             }
 #else
-            return new AssemblyChecker().GetAssemblyNames(filenames, filter);
+            return new AssemblyChecker().GetAssemblyNames(filepaths, filter);
 #endif // !NO_APPDOMAIN_ISOLATION
         }
 
@@ -77,52 +77,39 @@ namespace Ninject.Modules
 #endif // !NO_APPDOMAIN_ISOLATION
 
         /// <summary>
-        /// This class is loaded into the temporary appdomain to load and check if the assemblies match the filter.
+        /// This class is to load and check if the assemblies match the filter.
         /// </summary>
         private class AssemblyChecker : MarshalByRefObject
         {
             /// <summary>
             /// Gets the assembly names of the assemblies matching the filter.
             /// </summary>
-            /// <param name="filenames">The filenames.</param>
+            /// <param name="filepaths">The file paths.</param>
             /// <param name="filter">The filter.</param>
             /// <returns>All assembly names of the assemblies matching the filter.</returns>
-            public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
+            public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filepaths, Predicate<Assembly> filter)
             {
                 var result = new List<AssemblyName>();
-                foreach (var filename in filenames)
+                foreach (var filepath in filepaths)
                 {
                     Assembly assembly;
-                    if (File.Exists(filename))
+                    if (File.Exists(filepath))
                     {
                         try
                         {
-                            assembly = Assembly.LoadFrom(filename);
+                            // .NET Core -> creates a new (anonymous) load context to load the assembly into.
+                            // https://github.com/dotnet/coreclr/blob/master/Documentation/design-docs/assemblyloadcontext.md#assembly-load-apis-and-loadcontext
+                            assembly = Assembly.LoadFile(filepath);
                         }
                         catch (BadImageFormatException)
                         {
                             continue;
                         }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            assembly = Assembly.Load(filename);
-                        }
-                        catch (FileLoadException)
-                        {
-                            continue;
-                        }
-                        catch (FileNotFoundException)
-                        {
-                            continue;
-                        }
-                    }
 
-                    if (filter(assembly))
-                    {
-                        result.Add(assembly.GetName(false));
+                        if (filter(assembly))
+                        {
+                            result.Add(assembly.GetName(false));
+                        }
                     }
                 }
 
