@@ -42,7 +42,7 @@ namespace Ninject.Modules
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
         public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
-#if NET46
+#if !NO_APPDOMAIN_ISOLATION
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -57,14 +57,12 @@ namespace Ninject.Modules
             {
                 AppDomain.Unload(temporaryDomain);
             }
-#endif // NET46
-
-#if NETSTANDARD2_0
+#else
             return new AssemblyChecker().GetAssemblyNames(filenames, filter);
-#endif // NETSTANDARD2_0
+#endif // !NO_APPDOMAIN_ISOLATION
         }
 
-#if NET46
+#if !NO_APPDOMAIN_ISOLATION
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -76,10 +74,10 @@ namespace Ninject.Modules
                 AppDomain.CurrentDomain.Evidence,
                 AppDomain.CurrentDomain.SetupInformation);
         }
-#endif // NET46
+#endif // !NO_APPDOMAIN_ISOLATION
 
         /// <summary>
-        /// This class is to load and check if the assemblies match the filter.
+        /// This class is loaded into the temporary appdomain to load and check if the assemblies match the filter.
         /// </summary>
         private class AssemblyChecker : MarshalByRefObject
         {

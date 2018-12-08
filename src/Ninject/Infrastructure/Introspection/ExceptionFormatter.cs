@@ -70,10 +70,10 @@ namespace Ninject.Infrastructure.Introspection
 
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that you have not accidentally loaded the same module twice.");
-#if NET46
+#if FEATURE_APPDOMAIN_ISOLATION
                 sw.WriteLine("  2) If you are using automatic module loading, ensure you have not manually loaded a module");
                 sw.WriteLine("     that may be found by the module loader.");
-#endif // NET46
+#endif // FEATURE_APPDOMAIN_ISOLATION
 
                 return sw.ToString();
             }
@@ -147,9 +147,9 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
                 sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
                 sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
-#if NET46
+#if FEATURE_APPDOMAIN_ISOLATION
                 sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
-#endif // NET46
+#endif // FEATURE_APPDOMAIN_ISOLATION
 
                 return sw.ToString();
             }
