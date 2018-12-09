@@ -380,8 +380,6 @@ namespace Ninject
         private static bool CanResolve(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
 
             var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             return root.CanResolve(request);
@@ -390,8 +388,6 @@ namespace Ninject
         private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
 
             var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             return root.Resolve(request);
@@ -400,8 +396,6 @@ namespace Ninject
         private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
         {
             Ensure.ArgumentNotNull(root, "root");
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
 
             var request = root.CreateRequest(service, constraint, parameters, isOptional, isUnique);
             request.ForceUnique = forceUnique;
