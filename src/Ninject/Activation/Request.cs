@@ -24,7 +24,7 @@ namespace Ninject.Activation
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;
@@ -46,6 +46,9 @@ namespace Ninject.Activation
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
+            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(parameters, "parameters");
+
             this.Service = service;
             this.Constraint = constraint;
             this.Parameters = parameters;
