@@ -114,16 +114,7 @@ namespace Ninject.Activation.Providers
             }
 
             var directive = this.DetermineConstructorInjectionDirective(context);
-
-            var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
-
-            var cachedInstance = context.Cache.TryGet(context);
-
-            if (cachedInstance != null)
-            {
-                return cachedInstance;
-            }
-
+            var arguments = GetValues(context, directive.Targets);
             return directive.Injector(arguments);
         }
 
@@ -138,10 +129,7 @@ namespace Ninject.Activation.Providers
             Ensure.ArgumentNotNull(context, "context");
             Ensure.ArgumentNotNull(target, "target");
 
-            var parameter = context
-                .Parameters.OfType<IConstructorArgument>()
-                .SingleOrDefault(p => p.AppliesToTarget(context, target));
-            return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
+            return GetValueCore(context, target);
         }
 
         /// <summary>
@@ -157,6 +145,48 @@ namespace Ninject.Activation.Providers
             return this.Type.ContainsGenericParameters ? this.Type.MakeGenericType(service.GetGenericArguments()) : this.Type;
         }
 
+        private static object GetValueCore(IContext context, ITarget target)
+        {
+            IConstructorArgument constructorArgument = null;
+
+            foreach (var parameter in context.Parameters)
+            {
+                if (parameter is IConstructorArgument ctorArg && ctorArg.AppliesToTarget(context, target))
+                {
+                    if (constructorArgument != null)
+                    {
+                        throw new InvalidOperationException("Sequence contains more than one matching element");
+                    }
+
+                    constructorArgument = ctorArg;
+                }
+            }
+
+            if (constructorArgument != null)
+            {
+                return constructorArgument.GetValue(context, target);
+            }
+
+            return target.ResolveWithin(context);
+        }
+
+        private static object[] GetValues(IContext context, ITarget[] targets)
+        {
+            if (targets.Length == 0)
+            {
+                return Array.Empty<object>();
+            }
+
+            object[] values = new object[targets.Length];
+
+            for (var i = 0; i < targets.Length; i++)
+            {
+                values[i] = GetValueCore(context, targets[i]);
+            }
+
+            return values;
+        }
+
         private ConstructorInjectionDirective DetermineConstructorInjectionDirective(IContext context)
         {
             var directives = context.Plan.ConstructorInjectionDirectives;
@@ -169,8 +199,10 @@ namespace Ninject.Activation.Providers
                 directives
                     .GroupBy(option => this.ConstructorScorer.Score(context, option))
                     .OrderByDescending(g => g.Key)
-                    .FirstOrDefault();
-            if (bestDirectives == null)
+                    .First()
+                    .ToArray();
+
+            if (bestDirectives.Length > 1)
             {
                 throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
             }
