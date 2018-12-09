@@ -144,7 +144,7 @@ namespace Ninject.Activation.Providers
         {
             if (targets.Length == 0)
             {
-                return Arrays.Empty<object>();
+                return Array.Empty<object>();
             }
 
             object[] values = new object[targets.Length];
