@@ -42,7 +42,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         {
             if (!bindings.TryGetValue(service, out ICollection<IBinding> result))
             {
-                return Arrays.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
 
             return result;

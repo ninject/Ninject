@@ -42,12 +42,12 @@ namespace Ninject.Planning.Bindings.Resolvers
         {
             if (!service.IsGenericType || service.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
             {
-                return Arrays.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
 
             if (!bindings.TryGetValue(service.GetGenericTypeDefinition(), out ICollection<IBinding> result))
             {
-                return Arrays.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
 
             return result;

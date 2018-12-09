@@ -434,7 +434,7 @@ namespace Ninject
             var bindingCount = bindingList.Count;
             if (bindingCount == 0)
             {
-                return Arrays.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
             else if (bindingCount == 1)
             {
