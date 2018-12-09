@@ -101,7 +101,6 @@ namespace Ninject
         public void Inject(object instance, params IParameter[] parameters)
         {
             Ensure.ArgumentNotNull(instance, "instance");
-            Ensure.ArgumentNotNull(parameters, "parameters");
 
             var service = instance.GetType();
 
@@ -167,9 +166,6 @@ namespace Ninject
         /// <returns>The request for the specified service.</returns>
         public IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
-
             return new Request(service, constraint, parameters, null, isOptional, isUnique);
         }
 
@@ -274,9 +270,6 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
-
             return new Context(this, this.settings, request, binding, this.cache, this.planner, this.pipeline);
         }
 

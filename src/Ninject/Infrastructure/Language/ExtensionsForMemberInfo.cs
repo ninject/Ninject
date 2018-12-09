@@ -22,7 +22,6 @@
 namespace Ninject.Infrastructure.Language
 {
     using System;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -62,6 +61,33 @@ namespace Ninject.Infrastructure.Language
         }
 
         /// <summary>
+        /// Determines whether the specified property has attribute.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="type">The type of the attribute.</param>
+        /// <returns>
+        /// <c>true</c> if the specified property has attribute; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasAttribute(this PropertyInfo property, Type type)
+        {
+            // https://docs.microsoft.com/en-us/dotnet/api/system.reflection.memberinfo.isdefined?view=netframework-4.7.2#remarks
+            return Attribute.IsDefined(property, type, true);
+        }
+
+        /// <summary>
+        /// Determines whether the specified method has attribute.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="type">The type of the attribute.</param>
+        /// <returns>
+        /// <c>true</c> if the specified method has attribute; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasAttribute(this MethodInfo method, Type type)
+        {
+            return method.IsDefined(type, true);
+        }
+
+        /// <summary>
         /// Gets the property info from its declared type.
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
@@ -75,7 +101,7 @@ namespace Ninject.Infrastructure.Language
                 flags,
                 null,
                 propertyDefinition.PropertyType,
-                propertyDefinition.GetIndexParameters().Select(parameter => parameter.ParameterType).ToArray(),
+                GetIndexParameterTypes(propertyDefinition),
                 null);
         }
 
@@ -109,6 +135,24 @@ namespace Ninject.Infrastructure.Language
             }
 
             return member.GetCustomAttributes(attributeType, inherited);
+        }
+
+        private static Type[] GetIndexParameterTypes(PropertyInfo property)
+        {
+            var indexParameters = property.GetIndexParameters();
+            if (indexParameters.Length == 0)
+            {
+                return Array.Empty<Type>();
+            }
+
+            var types = new Type[indexParameters.Length];
+
+            for (var i = 0; i < indexParameters.Length; i++)
+            {
+                types[i] = indexParameters[i].ParameterType;
+            }
+
+            return types;
         }
     }
 }
