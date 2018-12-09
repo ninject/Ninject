@@ -26,7 +26,6 @@ namespace Ninject.Planning.Bindings.Resolvers
 
     using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Language;
 
     /// <summary>
     /// Resolves bindings that have been registered directly for the service.
@@ -36,12 +35,17 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <summary>
         /// Returns any bindings from the specified collection that match the specified service.
         /// </summary>
-        /// <param name="bindings">The multimap of all registered bindings.</param>
+        /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
+        public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service)
         {
-            return bindings[service].ToEnumerable();
+            if (!bindings.TryGetValue(service, out ICollection<IBinding> result))
+            {
+                return Array.Empty<IBinding>();
+            }
+
+            return result;
         }
     }
 }
