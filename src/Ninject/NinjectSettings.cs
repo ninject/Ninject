@@ -92,6 +92,7 @@ namespace Ninject
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
+        [Obsolete("Injecting non public members is not recommended. Make the member(s) public instead.")]
         public bool InjectNonPublic
         {
             get { return this.Get("InjectNonPublic", false); }
@@ -105,6 +106,7 @@ namespace Ninject
         /// Activating this setting has an impact on the performance. It is recommended not
         /// to use this feature and use constructor injection instead.
         /// </remarks>
+        [Obsolete("Injecting parent private properties is not recommended. Use constructor injection instead.")]
         public bool InjectParentPrivateProperties
         {
             get { return this.Get("InjectParentPrivateProperties", false); }
