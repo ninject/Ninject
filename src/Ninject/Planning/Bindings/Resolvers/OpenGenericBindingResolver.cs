@@ -23,9 +23,9 @@ namespace Ninject.Planning.Bindings.Resolvers
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Components;
+    using Ninject.Infrastructure;
 
     /// <summary>
     /// Resolves bindings for open generic types.
@@ -38,16 +38,16 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service)
+        public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service)
         {
             if (!service.IsGenericType || service.IsGenericTypeDefinition || !bindings.ContainsKey(service.GetGenericTypeDefinition()))
             {
-                return Enumerable.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
 
             if (!bindings.TryGetValue(service.GetGenericTypeDefinition(), out ICollection<IBinding> result))
             {
-                return Enumerable.Empty<IBinding>();
+                return Array.Empty<IBinding>();
             }
 
             return result;

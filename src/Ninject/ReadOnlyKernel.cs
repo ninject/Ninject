@@ -53,7 +53,7 @@ namespace Ninject
         private readonly IEnumerable<IMissingBindingResolver> missingBindingResolvers;
         private readonly object missingBindingCacheLock = new object();
 
-        private Dictionary<Type, ICollection<IBinding>> bindingCache = new Dictionary<Type, ICollection<IBinding>>();
+        private Dictionary<Type, IBinding[]> bindingCache = new Dictionary<Type, IBinding[]>();
         private Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Ninject
         /// <param name="missingBindingResolvers">The missing binding resolvers.</param>
         internal ReadOnlyKernel(
             INinjectSettings settings,
-            IDictionary<Type, ICollection<IBinding>> bindings,
+            Dictionary<Type, ICollection<IBinding>> bindings,
             ICache cache,
             IPlanner planner,
             IConstructorScorer constructorScorer,
@@ -80,7 +80,7 @@ namespace Ninject
             IEnumerable<IMissingBindingResolver> missingBindingResolvers)
         {
             this.settings = settings;
-
+            this.bindings = bindings;
             this.bindingResolvers = bindingResolvers;
             this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
@@ -91,9 +91,6 @@ namespace Ninject
 
             this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
             this.AddReadOnlyKernelBinding<IResolutionRoot>(this, bindings);
-
-            this.bindings = bindings.Keys.ToDictionary(type => type, type => bindings[type]);
-            this.InitializeBindings();
         }
 
         /// <summary>
@@ -205,29 +202,7 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            if (this.bindingCache.TryGetValue(service, out ICollection<IBinding> result))
-            {
-                return result;
-            }
-
-            var newBindingCache = new Dictionary<Type, ICollection<IBinding>>(this.bindingCache);
-            if (newBindingCache.TryGetValue(service, out result))
-            {
-                return result;
-            }
-
-            result = this.bindingResolvers.SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                .OrderByDescending(b => b, this.bindingPrecedenceComparer)
-                .ToList();
-            if (result.Count > 0)
-            {
-                newBindingCache[service] = result;
-
-                // But this is no problem in this case they will be added later again.
-                this.bindingCache = newBindingCache;
-            }
-
-            return result;
+            return this.GetBindingsCore(service);
         }
 
         /// <summary>
@@ -268,19 +243,19 @@ namespace Ninject
                 bindings.GroupBy(b => b.Service, b => b, (service, b) => new { service, bindings = b })
                                     .Map(
                 serviceGroup =>
-                            {
-                                if (newBindings.TryGetValue(serviceGroup.service, out ICollection<IBinding> existingBindings))
-                                {
-                                    var newBindingList = new List<IBinding>(existingBindings);
-                                    newBindingList.AddRange(serviceGroup.bindings);
-                                    newBindings[serviceGroup.service] = newBindingList;
-                                }
-                                else
-                                {
-                                    newBindings[serviceGroup.service] =
-                                    new List<IBinding>(serviceGroup.bindings);
-                                }
-                            });
+                {
+                    if (newBindings.TryGetValue(serviceGroup.service, out ICollection<IBinding> existingBindings))
+                    {
+                        var newBindingList = new List<IBinding>(existingBindings);
+                        newBindingList.AddRange(serviceGroup.bindings);
+                        newBindings[serviceGroup.service] = newBindingList;
+                    }
+                    else
+                    {
+                        newBindings[serviceGroup.service] =
+                        new List<IBinding>(serviceGroup.bindings);
+                    }
+                });
                 this.bindings = newBindings;
             }
 
@@ -419,11 +394,50 @@ namespace Ninject
             bindings[typeof(T)] = new[] { binding };
         }
 
-        private void InitializeBindings()
+        private IBinding[] GetBindingsCore(Type service)
         {
-            foreach (var binding in this.bindings.Values.SelectMany(b => b))
+            if (this.bindingCache.TryGetValue(service, out IBinding[] result))
             {
-                this.GetBindings(binding.Service);
+                return result;
+            }
+
+            result = this.CreateBindings(service);
+            if (result.Length > 0)
+            {
+                var newBindingCache = new Dictionary<Type, IBinding[]>(this.bindingCache);
+                newBindingCache[service] = result;
+                this.bindingCache = newBindingCache;
+            }
+
+            return result;
+        }
+
+        private IBinding[] CreateBindings(Type service)
+        {
+            var bindingList = new List<IBinding>();
+            foreach (var bindingResolver in this.bindingResolvers)
+            {
+                var bindings = bindingResolver.Resolve(this.bindings, service);
+                if (bindings.Count > 0)
+                {
+                    bindingList.AddRange(bindings);
+                }
+            }
+
+            var bindingCount = bindingList.Count;
+            if (bindingCount == 0)
+            {
+                return Array.Empty<IBinding>();
+            }
+            else if (bindingCount == 1)
+            {
+                return new[] { bindingList[0] };
+            }
+            else
+            {
+                var bindingArray = bindingList.ToArray();
+                Array.Sort(bindingArray, new ReverseComparer<IBinding>(this.bindingPrecedenceComparer));
+                return bindingArray;
             }
         }
     }

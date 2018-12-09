@@ -146,21 +146,21 @@ namespace Ninject.Test.Unit
             Assert.Equal(nameof(parameters), actual.ParamName);
         }
 
-        private MyReadOnlyKernel CreateReadOnlyKernel(IDictionary<Type, ICollection<IBinding>> bindings)
+        private MyReadOnlyKernel CreateReadOnlyKernel(Dictionary<Type, ICollection<IBinding>> bindings)
         {
             var sequence = new MockSequence();
             _bindingResolverMock1.InSequence(sequence)
-                                 .Setup(p => p.Resolve(It.IsAny<IDictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
-                                 .Returns(Enumerable.Empty<IBinding>);
+                                 .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
+                                 .Returns(Array.Empty<IBinding>);
             _bindingResolverMock2.InSequence(sequence)
-                                 .Setup(p => p.Resolve(It.IsAny<IDictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
-                                 .Returns(Enumerable.Empty<IBinding>);
+                                 .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
+                                 .Returns(Array.Empty<IBinding>);
             _bindingResolverMock1.InSequence(sequence)
-                                 .Setup(p => p.Resolve(It.IsAny<IDictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
-                                 .Returns(Enumerable.Empty<IBinding>);
+                                 .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
+                                 .Returns(Array.Empty<IBinding>);
             _bindingResolverMock2.InSequence(sequence)
-                                 .Setup(p => p.Resolve(It.IsAny<IDictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
-                                 .Returns(Enumerable.Empty<IBinding>);
+                                 .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
+                                 .Returns(Array.Empty<IBinding>);
 
             return new MyReadOnlyKernel(_ninjectSettingsMock.Object,
                                         bindings,
@@ -176,7 +176,7 @@ namespace Ninject.Test.Unit
         public class MyReadOnlyKernel : ReadOnlyKernel
         {
             internal MyReadOnlyKernel(INinjectSettings settings,
-                                      IDictionary<Type, ICollection<IBinding>> bindings,
+                                      Dictionary<Type, ICollection<IBinding>> bindings,
                                       ICache cache,
                                       IPlanner planner,
                                       IConstructorScorer constructorScorer,
