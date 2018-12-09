@@ -33,6 +33,8 @@ namespace Ninject.Planning
     /// </summary>
     public class Plan : IPlan
     {
+        private readonly List<IDirective> directives;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Plan"/> class.
         /// </summary>
@@ -42,7 +44,7 @@ namespace Ninject.Planning
             Ensure.ArgumentNotNull(type, "type");
 
             this.Type = type;
-            this.Directives = new List<IDirective>();
+            this.directives = new List<IDirective>();
         }
 
         /// <summary>
@@ -53,7 +55,10 @@ namespace Ninject.Planning
         /// <summary>
         /// Gets the directives defined in the plan.
         /// </summary>
-        public ICollection<IDirective> Directives { get; private set; }
+        public ICollection<IDirective> Directives
+        {
+            get { return this.directives; }
+        }
 
         /// <summary>
         /// Adds the specified directive to the plan.
@@ -63,7 +68,7 @@ namespace Ninject.Planning
         {
             Ensure.ArgumentNotNull(directive, "directive");
 
-            this.Directives.Add(directive);
+            this.directives.Add(directive);
         }
 
         /// <summary>
@@ -96,9 +101,10 @@ namespace Ninject.Planning
         public IEnumerable<TDirective> GetAll<TDirective>()
             where TDirective : IDirective
         {
-            foreach (var directive in this.Directives)
+            var directiveCount = this.directives.Count;
+            for (var i = 0; i < directiveCount; i++)
             {
-                if (directive is TDirective tdir)
+                if (this.directives[i] is TDirective tdir)
                 {
                     yield return tdir;
                 }

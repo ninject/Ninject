@@ -28,7 +28,6 @@ namespace Ninject.Activation
     using Ninject.Activation.Strategies;
     using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Language;
 
     /// <summary>
     /// Drives the activation (injection, etc.) of an instance.
@@ -41,6 +40,11 @@ namespace Ninject.Activation
         private readonly IActivationCache activationCache;
 
         /// <summary>
+        /// The strategies that contribute to the activation and deactivation processes.
+        /// </summary>
+        private readonly List<IActivationStrategy> strategies;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Pipeline"/> class.
         /// </summary>
         /// <param name="strategies">The strategies to execute during activation and deactivation.</param>
@@ -50,14 +54,17 @@ namespace Ninject.Activation
             Ensure.ArgumentNotNull(strategies, "strategies");
             Ensure.ArgumentNotNull(activationCache, "activationCache");
 
-            this.Strategies = strategies.ToList();
+            this.strategies = strategies.ToList();
             this.activationCache = activationCache;
         }
 
         /// <summary>
         /// Gets the strategies that contribute to the activation and deactivation processes.
         /// </summary>
-        public IList<IActivationStrategy> Strategies { get; private set; }
+        public IList<IActivationStrategy> Strategies
+        {
+            get { return this.strategies; }
+        }
 
         /// <summary>
         /// Activates the instance in the specified context.
@@ -71,7 +78,7 @@ namespace Ninject.Activation
 
             if (!this.activationCache.IsActivated(reference.Instance))
             {
-                this.Strategies.Map(s => s.Activate(context, reference));
+                this.strategies.ForEach(s => s.Activate(context, reference));
             }
         }
 
@@ -87,7 +94,7 @@ namespace Ninject.Activation
 
             if (!this.activationCache.IsDeactivated(reference.Instance))
             {
-                this.Strategies.Map(s => s.Deactivate(context, reference));
+                this.strategies.ForEach(s => s.Deactivate(context, reference));
             }
         }
     }

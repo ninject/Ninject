@@ -39,7 +39,14 @@ namespace Ninject.Planning.Targets
     public abstract class Target<T> : ITarget
         where T : ICustomAttributeProvider
     {
+        /// <summary>
+        /// The constraint of the target.
+        /// </summary>
         private readonly Lazy<Func<IBindingMetadata, bool>> constraint;
+
+        /// <summary>
+        /// The optional decision of the target.
+        /// </summary>
         private readonly Lazy<bool> isOptional;
 
         /// <summary>

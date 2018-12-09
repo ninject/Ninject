@@ -1,0 +1,13 @@
+<Project>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+        <!-- Does not support isolation using AppDomain -->
+        <TargetFrameworkFeature Include="NO_APPDOMAIN_ISOLATION"/>
+        <!-- Does not support .NET remoting -->
+        <TargetFrameworkFeature Include="NO_REMOTING"/>
+	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net46'">
+    </ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);@(TargetFrameworkFeature)</DefineConstants>
+    </PropertyGroup>
+</Project>
