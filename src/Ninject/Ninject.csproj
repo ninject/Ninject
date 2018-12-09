@@ -22,6 +22,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
     <DebugType>pdbonly</DebugType>
+    <NoWarn>CS0618</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
