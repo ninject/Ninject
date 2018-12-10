@@ -103,7 +103,7 @@ namespace Ninject.Selection
             Ensure.ArgumentNotNull(type, "type");
 
             var bindingFlags = this.Flags;
-            var declaredPropertiesToInject = type.GetProperties(bindingFlags | BindingFlags.DeclaredOnly)
+            var declaredPropertiesToInject = type.GetProperties(bindingFlags)
                                                  .Select(p => p.GetPropertyFromDeclaredType(p, bindingFlags))
                                                  .Where(p => p != null && ShouldInject(this.injectionHeuristics, p));
 
