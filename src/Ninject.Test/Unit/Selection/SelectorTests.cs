@@ -4,6 +4,7 @@ using Ninject.Selection.Heuristics;
 using Ninject.Tests.Fakes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 
@@ -329,6 +330,9 @@ namespace Ninject.Test.Unit.Selection
             _settingsMock.InSequence(_sequence)
                          .Setup(p => p.InjectNonPublic)
                          .Returns(true);
+            _settingsMock.InSequence(_sequence)
+                         .Setup(p => p.InjectParentPrivateProperties)
+                         .Returns(false);
             _injectionHeuristicMock1.InSequence(_sequence)
                                     .Setup(p => p.ShouldInject(weaponProperty))
                                     .Returns(true);
@@ -359,9 +363,6 @@ namespace Ninject.Test.Unit.Selection
             _injectionHeuristicMock2.InSequence(_sequence)
                                     .Setup(p => p.ShouldInject(visibleProperty))
                                     .Returns(false);
-            _settingsMock.InSequence(_sequence)
-                         .Setup(p => p.InjectParentPrivateProperties)
-                         .Returns(false);
 
             #endregion Arrange
 
@@ -388,35 +389,22 @@ namespace Ninject.Test.Unit.Selection
             _settingsMock.InSequence(_sequence)
                          .Setup(p => p.InjectNonPublic)
                          .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(enabledProperty))
-                                    .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(enabledProperty))
-                                    .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(visibleProperty))
-                                    .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(visibleProperty))
-                                    .Returns(true);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(stopProperty))
-                                    .Returns(true);
             _settingsMock.InSequence(_sequence)
                          .Setup(p => p.InjectParentPrivateProperties)
                          .Returns(false);
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(enabledProperty)).Returns(false);
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(enabledProperty)).Returns(false);
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(stopProperty)).Returns(true);
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(visibleProperty)).Returns(false);
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(visibleProperty)).Returns(true);
 
             #endregion Arrange
 
-            var actual = _selector.SelectPropertiesForInjection(type);
+            var actual = _selector.SelectPropertiesForInjection(type).ToList();
 
-            Assert.Equal(new[]
-                            {
-                                visibleProperty,
-                                stopProperty
-                            },
-                        actual);
+            Assert.Equal(2, actual.Count);
+            Assert.Contains(stopProperty, actual);
+            Assert.Contains(visibleProperty, actual);
         }
 
         public class MyService
