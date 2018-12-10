@@ -57,14 +57,14 @@ namespace Ninject.Infrastructure
         {
             get
             {
-                Ensure.ArgumentNotNull(key, "key");
-
-                if (!this.items.ContainsKey(key))
+                if (this.items.TryGetValue(key, out var values))
                 {
-                    this.items[key] = new List<TValue>();
+                    return values;
                 }
 
-                return this.items[key];
+                values = new List<TValue>();
+                this.items[key] = values;
+                return values;
             }
         }
 
@@ -92,12 +92,12 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            if (!this.items.ContainsKey(key))
+            if (this.items.TryGetValue(key, out var values))
             {
-                return false;
+                return values.Remove(value);
             }
 
-            return this.items[key].Remove(value);
+            return false;
         }
 
         /// <summary>
@@ -107,7 +107,6 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
         public bool RemoveAll(TKey key)
         {
-            Ensure.ArgumentNotNull(key, "key");
             return this.items.Remove(key);
         }
 
@@ -126,7 +125,6 @@ namespace Ninject.Infrastructure
         /// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(TKey key)
         {
-            Ensure.ArgumentNotNull(key, "key");
             return this.items.ContainsKey(key);
         }
 
@@ -141,7 +139,7 @@ namespace Ninject.Infrastructure
             Ensure.ArgumentNotNull(key, "key");
             Ensure.ArgumentNotNull(value, "value");
 
-            return this.items.ContainsKey(key) && this.items[key].Contains(value);
+            return this.items.TryGetValue(key, out var values) && values.Contains(value);
         }
 
         /// <summary>

@@ -43,25 +43,17 @@ namespace Ninject.Planning.Strategies
         private readonly IInjectorFactory injectorFactory;
 
         /// <summary>
-        /// The ninject settings.
-        /// </summary>
-        private readonly INinjectSettings settings;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ConstructorReflectionStrategy"/> class.
         /// </summary>
         /// <param name="selector">The selector component.</param>
         /// <param name="injectorFactory">The injector factory component.</param>
-        /// <param name="settings">The ninject settings.</param>
-        public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory, INinjectSettings settings)
+        public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
             Ensure.ArgumentNotNull(selector, "selector");
             Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
-            Ensure.ArgumentNotNull(settings, "settings");
 
             this.selector = selector;
             this.injectorFactory = injectorFactory;
-            this.settings = settings;
         }
 
         /// <summary>

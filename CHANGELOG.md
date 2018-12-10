@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6 and .NET Standard 2.0 target frameworks.
+- Changed return value of IBindingResolver (and implementing classes) from `IEnumerable<IBinding>` to `ICollection<IBinding>`.
+
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)
 

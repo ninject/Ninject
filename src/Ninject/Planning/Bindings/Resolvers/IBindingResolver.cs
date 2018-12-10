@@ -37,6 +37,6 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="service">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service);
+        ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, Type service);
     }
 }

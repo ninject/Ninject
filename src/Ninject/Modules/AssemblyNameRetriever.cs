@@ -42,7 +42,7 @@ namespace Ninject.Modules
         /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
         public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter)
         {
-#if !NO_ASSEMBLY_SCANNING
+#if !NO_APPDOMAIN_ISOLATION
             var assemblyCheckerType = typeof(AssemblyChecker);
             var temporaryDomain = CreateTemporaryAppDomain();
             try
@@ -59,10 +59,10 @@ namespace Ninject.Modules
             }
 #else
             return new AssemblyChecker().GetAssemblyNames(filenames, filter);
-#endif
+#endif // !NO_APPDOMAIN_ISOLATION
         }
 
-#if !NO_ASSEMBLY_SCANNING
+#if !NO_APPDOMAIN_ISOLATION
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
@@ -74,7 +74,7 @@ namespace Ninject.Modules
                 AppDomain.CurrentDomain.Evidence,
                 AppDomain.CurrentDomain.SetupInformation);
         }
-#endif
+#endif // !NO_APPDOMAIN_ISOLATION
 
         /// <summary>
         /// This class is loaded into the temporary appdomain to load and check if the assemblies match the filter.

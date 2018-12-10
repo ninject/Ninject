@@ -72,7 +72,7 @@ namespace Ninject.Activation
             this.Kernel = kernel;
             this.Request = request;
             this.Binding = binding;
-            this.Parameters = request.Parameters.Union(binding.Parameters).ToList();
+            this.Parameters = request.Parameters.Union(binding.Parameters);
 
             this.Cache = cache;
             this.Planner = planner;
@@ -108,7 +108,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets or sets the parameters that were passed to manipulate the activation process.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; set; }
+        public IEnumerable<IParameter> Parameters { get; set; }
 
         /// <summary>
         /// Gets the generic arguments for the request, if any.

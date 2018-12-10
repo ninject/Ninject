@@ -66,19 +66,20 @@ namespace Ninject.Infrastructure.Language
         }
 
         /// <summary>
-        /// Clones the dictionary.
+        /// Clones the dictionary, and the list of values for each entry.
         /// </summary>
         /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TValue">The type of the value item.</typeparam>
         /// <param name="dictionary">The dictionary to clone.</param>
         /// <returns>The cloned dictionary.</returns>
-        public static IDictionary<TKey, ICollection<TValue>> Clone<TKey, TValue>(this IDictionary<TKey, ICollection<TValue>> dictionary)
+        public static Dictionary<TKey, ICollection<TValue>> Clone<TKey, TValue>(this Dictionary<TKey, ICollection<TValue>> dictionary)
         {
-            var clonedDictionary = new Dictionary<TKey, ICollection<TValue>>();
+            var clonedDictionary = new Dictionary<TKey, ICollection<TValue>>(dictionary.Count);
 
-            foreach (var key in dictionary.Keys)
+            foreach (var kvp in dictionary)
             {
-                clonedDictionary.Add(key, dictionary[key].ToList());
+                // Add the entry with a clone of the values
+                clonedDictionary.Add(kvp.Key, kvp.Value.ToList());
             }
 
             return clonedDictionary;

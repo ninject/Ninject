@@ -51,12 +51,12 @@ namespace Ninject
         /// <summary>
         /// The service-bindings dictionary.
         /// </summary>
-        private readonly IDictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
+        private readonly Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
 
         /// <summary>
         /// The ninject modules.
         /// </summary>
-        private readonly IDictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
+        private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelConfiguration"/> class.
