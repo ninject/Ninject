@@ -62,8 +62,8 @@ namespace Ninject.Planning.Targets
             this.Member = member;
             this.Site = site;
 
-            this.constraint = new Lazy<Func<IBindingMetadata, bool>>(() => this.ReadConstraintFromTarget());
-            this.isOptional = new Lazy<bool>(() => this.ReadOptionalFromTarget());
+            this.constraint = new Lazy<Func<IBindingMetadata, bool>>(this.ReadConstraintFromTarget);
+            this.isOptional = new Lazy<bool>(this.ReadOptionalFromTarget);
         }
 
         /// <summary>
@@ -128,11 +128,6 @@ namespace Ninject.Planning.Targets
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
             Ensure.ArgumentNotNull(attributeType, "attributeType");
-
-            if (typeof(T) == typeof(PropertyInfo))
-            {
-                return ((PropertyInfo)(object)this.Site).GetCustomAttributesExtended(attributeType, inherit);
-            }
 
             return this.Site.GetCustomAttributesExtended(attributeType, inherit);
         }
