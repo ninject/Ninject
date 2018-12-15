@@ -34,7 +34,10 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            reference.IfInstanceIs<IStartable>(x => x.Start());
+            if (reference.IsInstanceOf<IStartable>(out var startable))
+            {
+                startable.Start();
+            }
         }
 
         /// <summary>
@@ -44,7 +47,10 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being deactivated.</param>
         public override void Deactivate(IContext context, InstanceReference reference)
         {
-            reference.IfInstanceIs<IStartable>(x => x.Stop());
+            if (reference.IsInstanceOf<IStartable>(out var startable))
+            {
+                startable.Stop();
+            }
         }
     }
 }

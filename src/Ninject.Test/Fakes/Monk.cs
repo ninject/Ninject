@@ -1,6 +1,8 @@
+using System;
+
 namespace Ninject.Tests.Fakes
 {
-    public class Monk : IWarrior, ICleric, IHuman, ILifeform
+    public class Monk : MarshalByRefObject, IWarrior, ICleric, IHuman, ILifeform
     {
         public IWeapon Weapon
         {
