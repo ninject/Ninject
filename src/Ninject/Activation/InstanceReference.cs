@@ -74,5 +74,40 @@ namespace Ninject.Activation
                 action((T)this.Instance);
             }
         }
+
+        /// <summary>
+        /// Returns a value indicating whether the instance is of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type in question.</typeparam>
+        /// <param name="instance">When this method returns, contains the instance of the specified type, if <see cref="Instance"/> is of type <typeparamref name="T"/>; otherwise, the default value for <typeparamref name="T"/>.</param>
+        /// <returns>
+        /// <see langword="true"/> if the instance is of the specified type; otherwise, <see langword="false"/>.
+        /// </returns>
+        public bool IsInstanceOf<T>(out T instance)
+        {
+#if !NO_REMOTING
+            if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy(this.Instance)
+                && System.Runtime.Remoting.RemotingServices.GetRealProxy(this.Instance).GetType().Name == "RemotingProxy")
+            {
+                if (typeof(T).IsAssignableFrom(this.Instance.GetType()))
+                {
+                    instance = (T)this.Instance;
+                    return true;
+                }
+
+                instance = default(T);
+                return false;
+            }
+#endif // !NO_REMOTING
+
+            if (this.Instance is T instanceOfT)
+            {
+                instance = instanceOfT;
+                return true;
+            }
+
+            instance = default(T);
+            return false;
+        }
     }
 }
