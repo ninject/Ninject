@@ -228,7 +228,23 @@ namespace Ninject.Planning.Targets
                 return attributes[0].Matches;
             }
 
-            return metadata => attributes.All(attribute => attribute.Matches(metadata));
+            return metadata => AllConstraintAttributesMatch(attributes, metadata);
+        }
+
+        private static bool AllConstraintAttributesMatch(ConstraintAttribute[] attributes, IBindingMetadata metadata)
+        {
+            var matches = true;
+
+            for (var i = 0; i < attributes.Length; i++)
+            {
+                if (!attributes[i].Matches(metadata))
+                {
+                    matches = false;
+                    break;
+                }
+            }
+
+            return matches;
         }
     }
 }
