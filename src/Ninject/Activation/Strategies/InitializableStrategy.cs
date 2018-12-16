@@ -33,7 +33,10 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            reference.IfInstanceIs<IInitializable>(x => x.Initialize());
+            if (reference.IsInstanceOf<IInitializable>(out var initializable))
+            {
+                initializable.Initialize();
+            }
         }
     }
 }
