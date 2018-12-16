@@ -95,21 +95,5 @@ namespace Ninject
         /// </summary>
         /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
         bool AllowNullInjection { get; set; }
-
-        /// <summary>
-        /// Gets the value for the specified key.
-        /// </summary>
-        /// <typeparam name="T">The type of value to return.</typeparam>
-        /// <param name="key">The setting's key.</param>
-        /// <param name="defaultValue">The value to return if no setting is available.</param>
-        /// <returns>The value, or the default value if none was found.</returns>
-        T Get<T>(string key, T defaultValue);
-
-        /// <summary>
-        /// Sets the value for the specified key.
-        /// </summary>
-        /// <param name="key">The setting's key.</param>
-        /// <param name="value">The setting's value.</param>
-        void Set(string key, object value);
-    }
+   }
 }

@@ -22,7 +22,6 @@
 namespace Ninject
 {
     using System;
-    using System.Collections.Generic;
 
     using Ninject.Activation;
     using Ninject.Infrastructure;
@@ -32,136 +31,115 @@ namespace Ninject
     /// </summary>
     public class NinjectSettings : INinjectSettings
     {
-        private readonly Dictionary<string, object> values = new Dictionary<string, object>();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NinjectSettings"/> class.
+        /// </summary>
+        public NinjectSettings()
+        {
+            this.InjectAttribute = typeof(InjectAttribute);
+            this.CachePruningInterval = TimeSpan.FromSeconds(30);
+            this.DefaultScopeCallback = StandardScopeCallbacks.Transient;
+            this.LoadExtensions = true;
+            this.ExtensionSearchPatterns = new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" };
+        }
 
         /// <summary>
         /// Gets or sets the attribute that indicates that a member should be injected.
         /// </summary>
-        public Type InjectAttribute
-        {
-            get { return this.Get("InjectAttribute", typeof(InjectAttribute)); }
-            set { this.Set("InjectAttribute", value); }
-        }
+        /// <value>
+        /// The type of the attribute that indicates that a member should be injected. The default
+        /// is <see cref="InjectAttribute"/>.
+        /// </value>
+        public Type InjectAttribute { get; set; }
 
         /// <summary>
         /// Gets or sets the interval at which the GC should be polled.
         /// </summary>
-        public TimeSpan CachePruningInterval
-        {
-            get { return this.Get("CachePruningInterval", TimeSpan.FromSeconds(30)); }
-            set { this.Set("CachePruningInterval", value); }
-        }
+        /// <value>
+        /// The interval at which the GC should be polled. The default is <c>30</c> seconds.
+        /// </value>
+        public TimeSpan CachePruningInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the default scope callback.
         /// </summary>
-        public Func<IContext, object> DefaultScopeCallback
-        {
-            get { return this.Get("DefaultScopeCallback", StandardScopeCallbacks.Transient); }
-            set { this.Set("DefaultScopeCallback", value); }
-        }
+        public Func<IContext, object> DefaultScopeCallback { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
-        public bool LoadExtensions
-        {
-            get { return this.Get("LoadExtensions", true); }
-            set { this.Set("LoadExtensions", value); }
-        }
+        /// <value>
+        /// <c>true</c> if the kernel should automatically load extensions at startup; otherwise, <c>false</c>.
+        /// The default is <c>true</c>.
+        /// </value>
+        public bool LoadExtensions { get; set; }
 
         /// <summary>
         /// Gets or sets the paths that should be searched for extensions.
         /// </summary>
-        public string[] ExtensionSearchPatterns
-        {
-            get { return this.Get("ExtensionSearchPatterns", new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" }); }
-            set { this.Set("ExtensionSearchPatterns", value); }
-        }
+        /// <value>
+        /// The paths that should be searched for extensions. The default is &quot;Ninject.Extensions.*.dll&quot; and
+        /// &quot;Ninject.Web*.dll&quot;.
+        /// </value>
+        public string[] ExtensionSearchPatterns { get; set; }
 
-#if !NO_LCG
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should use reflection-based injection instead of
-        /// the (usually faster) lightweight code generation system.
+        /// the (usually faster) Expression build system.
         /// </summary>
-        public bool UseReflectionBasedInjection
-        {
-            get { return this.Get("UseReflectionBasedInjection", false); }
-            set { this.Set("UseReflectionBasedInjection", value); }
-        }
-#endif //!NO_LCG
+        /// <value>
+        /// <c>true</c> if Ninject should use reflection-based injection; otherwise, <c>false</c>. The default
+        /// is <c>false</c>.
+        /// </value>
+        public bool UseReflectionBasedInjection { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
-        public bool InjectNonPublic
-        {
-            get { return this.Get("InjectNonPublic", false); }
-            set { this.Set("InjectNonPublic", value); }
-        }
+        /// <value>
+        /// <c>true</c> if Ninject should inject non-public members; otherwise, <c>false</c>.
+        /// The default is <c>false</c>.
+        /// </value>
+        [Obsolete("Injecting non public members is not recommended. Make the member(s) public instead.")]
+        public bool InjectNonPublic { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
+        /// <value>
+        /// <c>true</c> if Ninject should inject into private properties of base classes; otherwise, <c>false</c>.
+        /// The default is <c>false</c>.
+        /// </value>
         /// <remarks>
         /// Activating this setting has an impact on the performance. It is recommended not
         /// to use this feature and use constructor injection instead.
         /// </remarks>
-        public bool InjectParentPrivateProperties
-        {
-            get { return this.Get("InjectParentPrivateProperties", false); }
-            set { this.Set("InjectParentPrivateProperties", value); }
-        }
+        [Obsolete("Injecting parent private properties is not recommended. Use constructor injection instead.")]
+        public bool InjectParentPrivateProperties { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation cache is disabled.
+        /// </summary>
+        /// <remarks>
         /// If the activation cache is disabled less memory is used. But in some cases
         /// instances are activated or deactivated multiple times. e.g. in the following scenario:
+        /// <code>
         /// Bind{A}().ToSelf();
-        /// Bind{IA}().ToMethod(ctx =&gt; kernel.Get{IA}();
-        /// </summary>
+        /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();
+        /// </code>
+        /// </remarks>
         /// <value>
-        /// <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
+        /// <c>true</c> if activation cache is disabled; otherwise, <c>false</c>. The default is <c>false</c>.
         /// </value>
-        public bool ActivationCacheDisabled
-        {
-            get { return this.Get("ActivationCacheDisabled", false); }
-            set { this.Set("ActivationCacheDisabled", value); }
-        }
+        public bool ActivationCacheDisabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Null is a valid value for injection.
         /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value>
-        /// <c>true</c> if null is allowed as injected value otherwise false.
+        /// <c>true</c> if null is allowed as injected value; otherwise, <c>false</c>. The default is <c>false</c>.
         /// </value>
-        public bool AllowNullInjection
-        {
-            get { return this.Get("AllowNullInjection", false); }
-            set { this.Set("AllowNullInjection", value); }
-        }
-
-        /// <summary>
-        /// Gets the value for the specified key.
-        /// </summary>
-        /// <typeparam name="T">The type of value to return.</typeparam>
-        /// <param name="key">The setting's key.</param>
-        /// <param name="defaultValue">The value to return if no setting is available.</param>
-        /// <returns>The value, or the default value if none was found.</returns>
-        public T Get<T>(string key, T defaultValue)
-        {
-            return this.values.TryGetValue(key, out object value) ? (T)value : defaultValue;
-        }
-
-        /// <summary>
-        /// Sets the value for the specified key.
-        /// </summary>
-        /// <param name="key">The setting's key.</param>
-        /// <param name="value">The setting's value.</param>
-        public void Set(string key, object value)
-        {
-            this.values[key] = value;
-        }
+        public bool AllowNullInjection { get; set; }
     }
 }
