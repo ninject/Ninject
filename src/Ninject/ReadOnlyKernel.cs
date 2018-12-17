@@ -98,9 +98,11 @@ namespace Ninject
         /// </summary>
         /// <param name="instance">The instance to inject.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public void Inject(object instance, params IParameter[] parameters)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
+            Ensure.ArgumentNotNull(instance, nameof(instance));
 
             var service = instance.GetType();
 
@@ -118,10 +120,13 @@ namespace Ninject
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
 
             return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
         }
@@ -132,11 +137,12 @@ namespace Ninject
         /// <param name="request">The request.</param>
         /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
         /// <returns>
-        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
 
             return this.GetBindings(request.Service)
                 .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
@@ -148,9 +154,10 @@ namespace Ninject
         /// </summary>
         /// <param name="request">The request to resolve.</param>
         /// <returns>An enumerator of instances that match the request.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
 
             return this.Resolve(request, true);
         }
@@ -164,6 +171,8 @@ namespace Ninject
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
         /// <returns>The request for the specified service.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
             return new Request(service, constraint, parameters, null, isOptional, isUnique);
@@ -173,10 +182,13 @@ namespace Ninject
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.
         /// </summary>
         /// <param name="instance">The instance to release.</param>
-        /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public bool Release(object instance)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
+            Ensure.ArgumentNotNull(instance, nameof(instance));
 
             return this.cache.Release(instance);
         }
@@ -186,6 +198,7 @@ namespace Ninject
         /// </summary>
         /// <param name="serviceType">The service type.</param>
         /// <returns>The service object.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="serviceType"/> is <see langword="null"/>.</exception>
         public object GetService(Type serviceType)
         {
             Ensure.ArgumentNotNull(serviceType, "serviceType");
@@ -198,6 +211,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public IEnumerable<IBinding> GetBindings(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");

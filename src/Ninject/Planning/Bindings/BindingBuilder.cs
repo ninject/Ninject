@@ -49,10 +49,10 @@ namespace Ninject.Planning.Bindings
             IConstructorScorer constructorScorer,
             string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-            Ensure.ArgumentNotNull(serviceNames, "serviceNames");
+            Ensure.ArgumentNotNull(bindingConfiguration, nameof(bindingConfiguration));
+            Ensure.ArgumentNotNull(planner, nameof(planner));
+            Ensure.ArgumentNotNull(constructorScorer, nameof(constructorScorer));
+            Ensure.ArgumentNotNull(serviceNames, nameof(serviceNames));
 
             this.BindingConfiguration = bindingConfiguration;
             this.Planner = planner;

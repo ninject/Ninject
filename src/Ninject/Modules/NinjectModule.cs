@@ -72,10 +72,12 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="kernelConfiguration">The kernel configuration that is loading the module.</param>
         /// <param name="settings">The ninject settings.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernelConfiguration"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         public void OnLoad(IKernelConfiguration kernelConfiguration, INinjectSettings settings)
         {
-            Ensure.ArgumentNotNull(kernelConfiguration, "kernelConfiguration");
-            Ensure.ArgumentNotNull(settings, "settings");
+            Ensure.ArgumentNotNull(kernelConfiguration, nameof(kernelConfiguration));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
 
             this.KernelConfiguration = kernelConfiguration;
             this.Components = this.KernelConfiguration.Components;
@@ -126,6 +128,7 @@ namespace Ninject.Modules
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public override void Unbind(Type service)
         {
             this.KernelConfiguration.Unbind(service);
@@ -135,10 +138,9 @@ namespace Ninject.Modules
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.KernelConfiguration.AddBinding(binding);
             this.Bindings.Add(binding);
         }
@@ -147,10 +149,9 @@ namespace Ninject.Modules
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.KernelConfiguration.RemoveBinding(binding);
             this.Bindings.Remove(binding);
         }

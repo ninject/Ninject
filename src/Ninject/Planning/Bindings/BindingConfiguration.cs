@@ -104,9 +104,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The provider to use.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public IProvider GetProvider(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             if (this.ProviderCallback == null)
             {
@@ -120,10 +121,13 @@ namespace Ninject.Planning.Bindings
         /// Gets the scope for the binding, if any.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
+        /// <returns>
+        /// The object that will act as the scope, or <see langword="null"/> if the service is transient.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public object GetScope(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return this.ScopeCallback(context);
         }
@@ -132,10 +136,13 @@ namespace Ninject.Planning.Bindings
         /// Determines whether the specified request satisfies the conditions defined on this binding.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the request satisfies the conditions; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the request satisfies the conditions; otherwise <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool Matches(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
 
             return this.Condition == null || this.Condition(request);
         }

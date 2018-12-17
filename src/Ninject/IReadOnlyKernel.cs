@@ -37,6 +37,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         IEnumerable<IBinding> GetBindings(Type service);
     }
 }

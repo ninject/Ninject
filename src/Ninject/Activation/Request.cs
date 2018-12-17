@@ -45,10 +45,12 @@ namespace Ninject.Activation
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
         /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
         /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Ensure.ArgumentNotNull(service, nameof(service));
+            Ensure.ArgumentNotNull(parameters, nameof(parameters));
 
             this.Service = service;
             this.Constraint = constraint;

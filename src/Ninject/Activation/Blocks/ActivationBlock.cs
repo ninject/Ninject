@@ -40,9 +40,10 @@ namespace Ninject.Activation.Blocks
         /// Initializes a new instance of the <see cref="ActivationBlock"/> class.
         /// </summary>
         /// <param name="parent">The parent resolution root.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
         public ActivationBlock(IResolutionRoot parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
+            Ensure.ArgumentNotNull(parent, nameof(parent));
 
             this.Parent = parent;
         }
@@ -57,6 +58,8 @@ namespace Ninject.Activation.Blocks
         /// </summary>
         /// <param name="instance">The instance to inject.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public void Inject(object instance, params IParameter[] parameters)
         {
             this.Parent.Inject(instance, parameters);
@@ -66,11 +69,12 @@ namespace Ninject.Activation.Blocks
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
-
             return this.Parent.CanResolve(request);
         }
 
@@ -78,14 +82,13 @@ namespace Ninject.Activation.Blocks
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <param name="ignoreImplicitBindings">if set to <see langword="true"/> implicit bindings are ignored.</param>
         /// <returns>
-        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
-
             return this.Parent.CanResolve(request, ignoreImplicitBindings);
         }
 
@@ -95,10 +98,9 @@ namespace Ninject.Activation.Blocks
         /// </summary>
         /// <param name="request">The request to resolve.</param>
         /// <returns>An enumerator of instances that match the request.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public IEnumerable<object> Resolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
-
             return this.Parent.Resolve(request);
         }
 
@@ -108,14 +110,13 @@ namespace Ninject.Activation.Blocks
         /// <param name="service">The service that is being requested.</param>
         /// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
         /// <param name="parameters">The parameters to pass to the resolution.</param>
-        /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-        /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
+        /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <returns>The created request.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
-
             return new Request(service, constraint, parameters, () => this, isOptional, isUnique);
         }
 
@@ -123,7 +124,10 @@ namespace Ninject.Activation.Blocks
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.
         /// </summary>
         /// <param name="instance">The instance to release.</param>
-        /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public bool Release(object instance)
         {
             return this.Parent.Release(instance);
