@@ -34,16 +34,11 @@ namespace Ninject.Selection
     public interface ISelector : INinjectComponent
     {
         /// <summary>
-        /// Gets the heuristics used to determine which members should be injected.
-        /// </summary>
-        ICollection<IInjectionHeuristic> InjectionHeuristics { get; }
-
-        /// <summary>
         /// Selects the constructor to call on the specified type, by using the constructor scorer.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>The selected constructor, or <see langword="null"/> if none were available.</returns>
-        IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type);
+        /// <returns>A series of the selected constructor.</returns>
+        ConstructorInfo[] SelectConstructorsForInjection(Type type);
 
         /// <summary>
         /// Selects properties that should be injected.
