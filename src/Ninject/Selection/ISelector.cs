@@ -37,7 +37,7 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A series of the selected constructor.</returns>
-        IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type);
+        ConstructorInfo[] SelectConstructorsForInjection(Type type);
 
         /// <summary>
         /// Selects properties that should be injected.
