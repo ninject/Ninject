@@ -8,7 +8,6 @@ using Ninject.Tests.Fakes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Ninject.Tests.Unit.Activation.Blocks
@@ -39,7 +38,7 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         }
 
         [Fact]
-        public void CanResolve_Request_ShouldInvokeCanResolveOnParentAndReturnResult()
+        public void CanResolve_Request_DelegatesCallToParent()
         {
             _parentMock.Setup(p => p.CanResolve(_requestMock.Object)).Returns(true);
 
@@ -66,7 +65,7 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         }
 
         [Fact]
-        public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldInvokeCanResolveOnParentAndReturnResult()
+        public void CanResolve_RequestAndIgnoreImplicitBindings_DelegatesCallToParent()
         {
             _parentMock.Setup(p => p.CanResolve(_requestMock.Object, true)).Returns(false);
 
@@ -156,7 +155,7 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         }
 
         [Fact]
-        public void Inject_ShouldInvokeInjectOnParent()
+        public void Inject_DelegatesCallToParent()
         {
             var instance = new object();
             var parameters = new IParameter[0];
@@ -182,9 +181,34 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         }
 
         [Fact]
-        public void Resolve_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        public void Resolve_DelegatesCallToParent()
         {
+            var instancesMock = new Mock<IEnumerable<object>>(MockBehavior.Strict);
 
+            _parentMock.Setup(p => p.Resolve(_requestMock.Object)).Returns(instancesMock.Object);
+
+            var actual = _activationBlock.Resolve(_requestMock.Object);
+
+            Assert.NotNull(actual);
+            Assert.Same(instancesMock.Object, actual);
+
+            _parentMock.Verify(p => p.Resolve(_requestMock.Object), Times.Once());
+        }
+
+        [Fact]
+        public void Resolve_ShouldNotPerformArgumentNullCheck()
+        {
+            const IRequest request = null;
+            var instancesMock = new Mock<IEnumerable<object>>(MockBehavior.Strict);
+
+            _parentMock.Setup(p => p.Resolve(request)).Returns(instancesMock.Object);
+
+            var actual = _activationBlock.Resolve(request);
+
+            Assert.NotNull(actual);
+            Assert.Same(instancesMock.Object, actual);
+
+            _parentMock.Verify(p => p.Resolve(request), Times.Once());
         }
     }
 }
