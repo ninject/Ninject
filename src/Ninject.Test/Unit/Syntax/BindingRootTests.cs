@@ -33,7 +33,7 @@ namespace Ninject.Tests.Unit.Syntax
             var actual = Assert.Throws<ArgumentException>(() => _bindingRoot.Bind(services));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"At least one type should be specified.{Environment.NewLine}Parameter name: {actual.ParamName}", actual.Message);
+            Assert.Equal($"Specify at least one type to bind.{Environment.NewLine}Parameter name: {actual.ParamName}", actual.Message);
             Assert.Equal(nameof(services), actual.ParamName);
         }
 
