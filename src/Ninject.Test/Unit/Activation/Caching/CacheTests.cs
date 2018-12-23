@@ -10,14 +10,22 @@ namespace Ninject.Tests.Unit.Activation.Caching
     {
         private Mock<IPipeline> _pipelineMock;
         private Mock<ICachePruner> _cachePrunerMock;
-        private Cache _cache;
 
         public CacheTest()
         {
             _pipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
             _cachePrunerMock = new Mock<ICachePruner>(MockBehavior.Strict);
+        }
 
-            _cache = new Cache(_pipelineMock.Object, _cachePrunerMock.Object);
+        [Fact]
+        public void Constructor_ShouldActiveCachePrunerForCache()
+        {
+            var cache = CreateCache();
+
+            Assert.NotNull(cache.Pipeline);
+            Assert.Same(_pipelineMock.Object, cache.Pipeline);
+
+            _cachePrunerMock.Verify(p => p.Start(cache), Times.Once());
         }
 
         [Fact]
@@ -49,8 +57,9 @@ namespace Ninject.Tests.Unit.Activation.Caching
         {
             const IContext context = null;
             var instanceReference = new InstanceReference { Instance = new object() };
+            var cache = CreateCache();
 
-            var actual = Assert.Throws<ArgumentNullException>(() => _cache.Remember(context, instanceReference));
+            var actual = Assert.Throws<ArgumentNullException>(() => cache.Remember(context, instanceReference));
 
             Assert.Null(actual.InnerException);
             Assert.Equal(nameof(context), actual.ParamName);
@@ -60,11 +69,19 @@ namespace Ninject.Tests.Unit.Activation.Caching
         public void TryGet_ShouldThrowArgumentNullExceptionWhenContextIsNull()
         {
             const IContext context = null;
+            var cache = CreateCache();
 
-            var actual = Assert.Throws<ArgumentNullException>(() => _cache.TryGet(context));
+            var actual = Assert.Throws<ArgumentNullException>(() => cache.TryGet(context));
 
             Assert.Null(actual.InnerException);
             Assert.Equal(nameof(context), actual.ParamName);
+        }
+
+        private Cache CreateCache()
+        {
+            _cachePrunerMock.Setup(p => p.Start(It.IsNotNull<IPruneable>()));
+
+            return new Cache(_pipelineMock.Object, _cachePrunerMock.Object);
         }
     }
 }
