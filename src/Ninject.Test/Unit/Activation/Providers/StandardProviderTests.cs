@@ -482,8 +482,7 @@ namespace Ninject.Test.Unit.Activation.Providers
                                       binding,
                                       kernelConfiguration.Components.Get<ICache>(),
                                       kernelConfiguration.Components.Get<IPlanner>(),
-                                      kernelConfiguration.Components.Get<IPipeline>(),
-                                      kernelConfiguration.Components.Get<IExceptionFormatter>());
+                                      kernelConfiguration.Components.Get<IPipeline>());
             context.Parameters = parameters.ToArray();
             return context;
         }
