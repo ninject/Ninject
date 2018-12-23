@@ -49,7 +49,7 @@ namespace Ninject.Planning.Bindings
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length string.</exception>
         public bool Has(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
             return this.values.ContainsKey(key);
         }
@@ -76,7 +76,7 @@ namespace Ninject.Planning.Bindings
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length string.</exception>
         public T Get<T>(string key, T defaultValue)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
             if (this.values.TryGetValue(key, out var value))
             {
@@ -94,7 +94,7 @@ namespace Ninject.Planning.Bindings
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length string.</exception>
         public void Set(string key, object value)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
             this.values[key] = value;
         }
