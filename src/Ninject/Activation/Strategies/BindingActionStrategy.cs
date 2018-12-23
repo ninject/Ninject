@@ -36,7 +36,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being activated.</param>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             context.Binding.ActivationActions.Map(action => action(context, reference.Instance));
         }
@@ -48,7 +48,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="reference">A reference to the instance being deactivated.</param>
         public override void Deactivate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             context.Binding.DeactivationActions.Map(action => action(context, reference.Instance));
         }

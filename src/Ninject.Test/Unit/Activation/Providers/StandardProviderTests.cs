@@ -2,6 +2,7 @@
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -25,10 +26,10 @@ namespace Ninject.Test.Unit.Activation.Providers
         private Mock<IRequest> _requestMock;
         private Mock<IPlanner> _plannerMock;
         private Mock<IPlan> _planMock;
-        private Mock<IBinding> _bindingMock;
         private Mock<Func<IContext, IProvider>> _providerCallbackMock;
         private Mock<IProvider> _providerMock;
         private Mock<IConstructorScorer> _constructorScorerMock;
+        private Mock<ITarget> _targetMock;
         private StandardProvider _standardProvider;
 
         public StandardProviderTests()
@@ -44,15 +45,55 @@ namespace Ninject.Test.Unit.Activation.Providers
             _contextMock = new Mock<IContext>(MockBehavior.Strict);
             _plannerMock = new Mock<IPlanner>(MockBehavior.Strict);
             _planMock = new Mock<IPlan>(MockBehavior.Strict);
-            _bindingMock = new Mock<IBinding>(MockBehavior.Strict);
             _providerCallbackMock = new Mock<Func<IContext, IProvider>>(MockBehavior.Strict);
             _providerMock = new Mock<IProvider>(MockBehavior.Strict);
             _constructorScorerMock = new Mock<IConstructorScorer>(MockBehavior.Strict);
+            _targetMock = new Mock<ITarget>(MockBehavior.Strict);
+
             _standardProvider = new StandardProvider(typeof(Monk), _plannerMock.Object, _constructorScorerMock.Object);
         }
 
         [Fact]
-        public void Ctor()
+        public void Constructor_ShouldThrowArgumentNullExceptionWhenTypeIsNull()
+        {
+            const Type type = null;
+            var planner = _plannerMock.Object;
+            var constructorScorer = _constructorScorerMock.Object;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => new StandardProvider(type, planner, constructorScorer));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(type), actual.ParamName);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowArgumentNullExceptionWhenPlannerIsNull()
+        {
+            var type = typeof(Monk);
+            const IPlanner planner = null;
+            var constructorScorer = _constructorScorerMock.Object;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => new StandardProvider(type, planner, constructorScorer));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(planner), actual.ParamName);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowArgumentNullExceptionWhenConstructorScorerIsNull()
+        {
+            var type = typeof(Monk);
+            var planner = _plannerMock.Object;
+            IConstructorScorer constructorScorer = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => new StandardProvider(type, planner, constructorScorer));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(constructorScorer), actual.ParamName);
+        }
+
+        [Fact]
+        public void Constructor()
         {
             var type = typeof(Ninja);
 
@@ -245,6 +286,8 @@ namespace Ninject.Test.Unit.Activation.Providers
             const IContext context = null;
 
             var actualException = Assert.Throws<ArgumentNullException>(() => _standardProvider.Create(context));
+
+            Assert.Null(actualException.InnerException);
             Assert.Equal(nameof(context), actualException.ParamName);
         }
 
@@ -361,6 +404,41 @@ namespace Ninject.Test.Unit.Activation.Providers
             Assert.Equal("Sequence contains more than one matching element", actualException.Message);
         }
 
+        [Fact]
+        public void GetImplementationType_ShouldThrowArgumentNullExceptionWhenServiceIsNull()
+        {
+            const Type service = null;
+
+            var actualException = Assert.Throws<ArgumentNullException>(() => _standardProvider.GetImplementationType(service));
+
+            Assert.Null(actualException.InnerException);
+            Assert.Equal(nameof(service), actualException.ParamName);
+        }
+
+        [Fact]
+        public void GetValue_ShouldThrowArgumentNullExceptionWhenContextIsNull()
+        {
+            const IContext context = null;
+            var target = _targetMock.Object;
+
+            var actualException = Assert.Throws<ArgumentNullException>(() => _standardProvider.GetValue(context, target));
+
+            Assert.Null(actualException.InnerException);
+            Assert.Equal(nameof(context), actualException.ParamName);
+        }
+
+        [Fact]
+        public void GetValue_ShouldThrowArgumentNullExceptionWhenTargetIsNull()
+        {
+            var context = _contextMock.Object;
+            const ITarget target = null;
+
+            var actualException = Assert.Throws<ArgumentNullException>(() => _standardProvider.GetValue(context, target));
+
+            Assert.Null(actualException.InnerException);
+            Assert.Equal(nameof(target), actualException.ParamName);
+        }
+
         private static ConstructorInfo GetWeaponAndWarriorConstructor()
         {
             return typeof(NinjaBarracks).GetConstructor(new[] { typeof(IWarrior), typeof(IWeapon) });
@@ -404,7 +482,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                                       binding,
                                       kernelConfiguration.Components.Get<ICache>(),
                                       kernelConfiguration.Components.Get<IPlanner>(),
-                                      kernelConfiguration.Components.Get<IPipeline>());
+                                      kernelConfiguration.Components.Get<IPipeline>(),
+                                      kernelConfiguration.Components.Get<IExceptionFormatter>());
             context.Parameters = parameters.ToArray();
             return context;
         }
