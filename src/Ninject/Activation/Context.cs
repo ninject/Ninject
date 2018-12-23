@@ -157,7 +157,7 @@ namespace Ninject.Activation
         public object Resolve()
         {
             if (this.Request.ActiveBindings.Contains(this.Binding) &&
-                this.IsCyclical(this.Request.ParentRequest))
+                IsCyclical(this.Request.ParentRequest, this.Request.Target))
             {
                 throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
             }
@@ -182,6 +182,21 @@ namespace Ninject.Activation
             {
                 this.cachedScope = null;
             }
+        }
+
+        private static bool IsCyclical(IRequest request, ITarget target)
+        {
+            if (request == null)
+            {
+                return false;
+            }
+
+            if (request.Target == target)
+            {
+                return true;
+            }
+
+            return IsCyclical(request.ParentRequest, target);
         }
 
         private object ResolveInternal(object scope)
@@ -239,21 +254,6 @@ namespace Ninject.Activation
             }
 
             return reference.Instance;
-        }
-
-        private bool IsCyclical(IRequest request)
-        {
-            if (request == null)
-            {
-                return false;
-            }
-
-            if (request.Target == this.Request.Target)
-            {
-                return true;
-            }
-
-            return this.IsCyclical(request.ParentRequest);
         }
     }
 }
