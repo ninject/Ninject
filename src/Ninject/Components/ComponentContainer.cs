@@ -265,19 +265,6 @@ namespace Ninject.Components
             }
 
             return constructor;
-
-            /*
-
-            using (var enumerator = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                {
-                    throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
-                }
-
-                return enumerator.Current;
-            }
-            */
         }
 
         private object ResolveInstance(Type component, Type implementation)
