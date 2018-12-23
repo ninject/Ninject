@@ -23,11 +23,11 @@ namespace Ninject.Benchmarks
         public void GlobalSetup()
         {
             var ninjectSettings = new NinjectSettings
-                {
-                    // Disable to reduce memory pressure
-                    ActivationCacheDisabled = true,
-                    LoadExtensions = false
-                };
+            {
+                // Disable to reduce memory pressure
+                ActivationCacheDisabled = true,
+                LoadExtensions = false
+            };
 
             _kernelConfiguration = new KernelConfiguration(ninjectSettings);
             _kernelConfiguration.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
@@ -40,6 +40,10 @@ namespace Ninject.Benchmarks
             _kernelConfiguration.Bind(typeof(ICollection<>)).To(typeof(List<>));
             _kernelConfiguration.Bind(typeof(IList<>)).To(typeof(List<>));
             _kernelConfiguration.Bind<ISingleton>().To<Singleton>().InSingletonScope();
+            _kernelConfiguration.Bind<IRouteProvider>().To<RouteProvider>();
+            _kernelConfiguration.Bind<IRouteRepository>().To<RouteRepository>();
+            _kernelConfiguration.Bind<ITrainPlanner>().To<TrainPlanner>();
+            _kernelConfiguration.Bind<IRealtimeEventSource>().To<RealtimeEventSource>();
 
             _readOnlyKernel = _kernelConfiguration.BuildReadOnlyKernel();
             ClearCache(_readOnlyKernel);
@@ -151,6 +155,36 @@ namespace Ninject.Benchmarks
             Task.WaitAll(tasks.ToArray());
         }
 
+        [Benchmark]
+        public void GetOfT_Complex_Singlethreaded()
+        {
+            _readOnlyKernel.Get<TrainService>();
+        }
+
+        [Benchmark(OperationsPerInvoke = MultithreadedLoopCount)]
+        public void GetOfT_Complex_Multithreaded()
+        {
+            const int numberOfThreads = 20;
+            int counter = 0;
+
+            var tasks = Enumerable.Range(0, numberOfThreads)
+                .Select(_ => Task.Factory.StartNew(() =>
+                {
+                    while (true)
+                    {
+                        var incremented = Interlocked.Increment(ref counter);
+                        if (incremented > MultithreadedLoopCount)
+                        {
+                            break;
+                        }
+
+                        _readOnlyKernel.Get<TrainService>();
+                    }
+                }, TaskCreationOptions.LongRunning));
+
+            Task.WaitAll(tasks.ToArray());
+        }
+
         private static void ClearCache(IReadOnlyKernel readOnlyKernel)
         {
             var bindingCacheField = typeof(ReadOnlyKernel).GetField("bindingCache", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -164,6 +198,54 @@ namespace Ninject.Benchmarks
         }
 
         public class Singleton : ISingleton
+        {
+        }
+
+        public class TrainService
+        {
+            public TrainService(ISingleton singleton, ICleric cleric, IRouteProvider routeProvider, ITrainPlanner trainPlanner)
+            {
+            }
+        }
+
+        public class RouteProvider : IRouteProvider
+        {
+            public RouteProvider(IRouteRepository routeRepository, IRealtimeEventSource realtimeEventSource)
+            {
+            }
+        }
+
+        public class RouteRepository : IRouteRepository
+        {
+            public RouteRepository(ISingleton singleton, ICleric cleric, IRealtimeEventSource realtimeEventSource)
+            {
+            }
+        }
+
+        public class TrainPlanner : ITrainPlanner
+        {
+            public TrainPlanner(ISingleton singleton, IRouteRepository routeRepository, IRealtimeEventSource realtimeEventSource)
+            {
+            }
+        }
+
+        public class RealtimeEventSource : IRealtimeEventSource
+        {
+        }
+
+        public interface IRouteProvider
+        {
+        }
+
+        public interface IRouteRepository
+        {
+        }
+
+        public interface ITrainPlanner
+        {
+        }
+
+        public interface IRealtimeEventSource
         {
         }
     }
