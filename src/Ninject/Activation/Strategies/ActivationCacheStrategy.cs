@@ -41,7 +41,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="activationCache">The activation cache.</param>
         public ActivationCacheStrategy(IActivationCache activationCache)
         {
-            Ensure.ArgumentNotNull(activationCache, "activationCache");
+            Ensure.ArgumentNotNull(activationCache, nameof(activationCache));
 
             this.activationCache = activationCache;
         }

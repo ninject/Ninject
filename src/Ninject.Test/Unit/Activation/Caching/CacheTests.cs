@@ -1,0 +1,70 @@
+﻿using Moq;
+using Ninject.Activation;
+using Ninject.Activation.Caching;
+using System;
+using Xunit;
+
+namespace Ninject.Tests.Unit.Activation.Caching
+{
+    public class CacheTest
+    {
+        private Mock<IPipeline> _pipelineMock;
+        private Mock<ICachePruner> _cachePrunerMock;
+        private Cache _cache;
+
+        public CacheTest()
+        {
+            _pipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
+            _cachePrunerMock = new Mock<ICachePruner>(MockBehavior.Strict);
+
+            _cache = new Cache(_pipelineMock.Object, _cachePrunerMock.Object);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowArgumentNullExceptionWhenPipelineIsNull()
+        {
+            const IPipeline pipeline = null;
+            var cachePruner = _cachePrunerMock.Object;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => new Cache(pipeline, cachePruner));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(pipeline), actual.ParamName);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrowArgumentNullExceptionWhenCachePrunerIsNull()
+        {
+            var pipeline = _pipelineMock.Object;
+            const ICachePruner cachePruner = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => new Cache(pipeline, cachePruner));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(cachePruner), actual.ParamName);
+        }
+
+        [Fact]
+        public void Remember_ShouldThrowArgumentNullExceptionWhenContextIsNull()
+        {
+            const IContext context = null;
+            var instanceReference = new InstanceReference { Instance = new object() };
+
+            var actual = Assert.Throws<ArgumentNullException>(() => _cache.Remember(context, instanceReference));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(context), actual.ParamName);
+        }
+
+        [Fact]
+        public void TryGet_ShouldThrowArgumentNullExceptionWhenContextIsNull()
+        {
+            const IContext context = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => _cache.TryGet(context));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(context), actual.ParamName);
+        }
+    }
+}
