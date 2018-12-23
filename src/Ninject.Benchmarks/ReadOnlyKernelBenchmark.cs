@@ -23,11 +23,11 @@ namespace Ninject.Benchmarks
         public void GlobalSetup()
         {
             var ninjectSettings = new NinjectSettings
-            {
-                // Disable to reduce memory pressure
-                ActivationCacheDisabled = true,
-                LoadExtensions = false
-            };
+                {
+                    // Disable to reduce memory pressure
+                    ActivationCacheDisabled = true,
+                    LoadExtensions = false
+                };
 
             _kernelConfiguration = new KernelConfiguration(ninjectSettings);
             _kernelConfiguration.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
