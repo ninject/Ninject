@@ -2,6 +2,7 @@
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -404,7 +405,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                                       binding,
                                       kernelConfiguration.Components.Get<ICache>(),
                                       kernelConfiguration.Components.Get<IPlanner>(),
-                                      kernelConfiguration.Components.Get<IPipeline>());
+                                      kernelConfiguration.Components.Get<IPipeline>(),
+                                      kernelConfiguration.Components.Get<IExceptionFormatter>());
             context.Parameters = parameters.ToArray();
             return context;
         }

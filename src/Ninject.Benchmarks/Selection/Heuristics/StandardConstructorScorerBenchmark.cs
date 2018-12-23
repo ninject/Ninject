@@ -5,6 +5,7 @@ using System.Reflection;
 using BenchmarkDotNet.Attributes;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -161,7 +162,8 @@ namespace Ninject.Benchmarks.Selection.Heuristics
                                new Binding(serviceType),
                                kernelConfiguration.Components.Get<ICache>(),
                                kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>());
+                               kernelConfiguration.Components.Get<IPipeline>(),
+                               kernelConfiguration.Components.Get<IExceptionFormatter>());
         }
 
         public class Monastery
