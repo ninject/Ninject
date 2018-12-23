@@ -57,10 +57,15 @@ namespace Ninject.Components
         private readonly INinjectSettings settings;
 
         /// <summary>
+        /// The <see cref="IExceptionFormatter"/> component.
+        /// </summary>
+        private readonly IExceptionFormatter exceptionFormatter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
         /// </summary>
         public ComponentContainer()
-            : this(new NinjectSettings())
+            : this(new NinjectSettings(), new ExceptionFormatter())
         {
         }
 
@@ -69,8 +74,20 @@ namespace Ninject.Components
         /// </summary>
         /// <param name="settings">The ninject settings.</param>
         public ComponentContainer(INinjectSettings settings)
+            : this(settings, new ExceptionFormatter())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
+        public ComponentContainer(INinjectSettings settings, IExceptionFormatter exceptionFormatter)
         {
             this.settings = settings;
+            this.exceptionFormatter = exceptionFormatter;
+            this.Add<IExceptionFormatter, IExceptionFormatter>(exceptionFormatter);
         }
 
         /// <summary>
@@ -230,7 +247,7 @@ namespace Ninject.Components
 
             if (implementation == null)
             {
-                throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
+                throw new InvalidOperationException(this.exceptionFormatter.NoSuchComponentRegistered(component));
             }
 
             return this.ResolveInstance(component, implementation);
@@ -251,14 +268,7 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
-
-            if (constructor == null)
-            {
-                throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
-            }
-
-            return constructor;
+            return implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
         }
 
         private object ResolveInstance(Type component, Type implementation)
@@ -272,6 +282,11 @@ namespace Ninject.Components
         private object CreateNewInstance(Type component, Type implementation)
         {
             var constructor = SelectConstructor(component, implementation);
+            if (constructor == null)
+            {
+                throw new InvalidOperationException(this.exceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
+            }
+
             var arguments = constructor.GetParameters().Select(parameter => this.Get(parameter.ParameterType)).ToArray();
 
             try
@@ -290,6 +305,20 @@ namespace Ninject.Components
                 ex.RethrowInnerException();
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Registers an instance of a component in the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The component's implementation type.</typeparam>
+        /// <param name="instance">THe instance of <typeparamref name="TImplementation"/> to register.</param>
+        private void Add<TComponent, TImplementation>(TImplementation instance)
+            where TComponent : INinjectComponent
+            where TImplementation : TComponent, INinjectComponent
+        {
+            this.mappings.Add(typeof(TComponent), typeof(TImplementation));
+            this.instances.Add(typeof(TImplementation), instance);
         }
     }
 }

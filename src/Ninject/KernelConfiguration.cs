@@ -73,7 +73,7 @@ namespace Ninject
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
         public KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(settings), settings, modules)
+            : this(new ComponentContainer(settings, new ExceptionFormatter()), settings, modules)
         {
         }
 
@@ -261,6 +261,7 @@ namespace Ninject
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IConstructorScorer>(),
                 this.Components.Get<IPipeline>(),
+                this.Components.Get<IExceptionFormatter>(),
                 this.Components.Get<IBindingPrecedenceComparer>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
                 this.Components.GetAll<IMissingBindingResolver>().ToList());

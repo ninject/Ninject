@@ -49,6 +49,7 @@ namespace Ninject
         private readonly IConstructorScorer constructorScorer;
         private readonly IPipeline pipeline;
         private readonly IBindingPrecedenceComparer bindingPrecedenceComparer;
+        private readonly IExceptionFormatter exceptionFormatter;
         private readonly IEnumerable<IBindingResolver> bindingResolvers;
         private readonly IEnumerable<IMissingBindingResolver> missingBindingResolvers;
         private readonly object missingBindingCacheLock = new object();
@@ -65,6 +66,7 @@ namespace Ninject
         /// <param name="planner">The <see cref="IPlanner"/> component.</param>
         /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="pipeline">The <see cref="IPipeline"/> component.</param>
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
         /// <param name="bindingPrecedenceComparer">The <see cref="IBindingPrecedenceComparer"/> component.</param>
         /// <param name="bindingResolvers">The binding resolvers.</param>
         /// <param name="missingBindingResolvers">The missing binding resolvers.</param>
@@ -75,6 +77,7 @@ namespace Ninject
             IPlanner planner,
             IConstructorScorer constructorScorer,
             IPipeline pipeline,
+            IExceptionFormatter exceptionFormatter,
             IBindingPrecedenceComparer bindingPrecedenceComparer,
             IEnumerable<IBindingResolver> bindingResolvers,
             IEnumerable<IMissingBindingResolver> missingBindingResolvers)
@@ -87,6 +90,7 @@ namespace Ninject
             this.planner = planner;
             this.constructorScorer = constructorScorer;
             this.pipeline = pipeline;
+            this.exceptionFormatter = exceptionFormatter;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
 
             this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
@@ -270,7 +274,7 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            return new Context(this, this.settings, request, binding, this.cache, this.planner, this.pipeline);
+            return new Context(this, this.settings, request, binding, this.cache, this.planner, this.pipeline, this.exceptionFormatter);
         }
 
         private IEnumerable<object> ResolveWithMissingBindings(IRequest request, bool handleMissingBindings)
@@ -285,7 +289,7 @@ namespace Ninject
                 return Enumerable.Empty<object>();
             }
 
-            throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+            throw new ActivationException(this.exceptionFormatter.CouldNotResolveBinding(request));
         }
 
         private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
