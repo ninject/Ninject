@@ -22,7 +22,6 @@
 namespace Ninject
 {
     using System;
-    using System.Collections.Generic;
 
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
@@ -37,6 +36,6 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        IEnumerable<IBinding> GetBindings(Type service);
+        IBinding[] GetBindings(Type service);
     }
 }

@@ -237,7 +237,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        public IEnumerable<IBinding> GetBindings(Type service)
+        public IBinding[] GetBindings(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");
 
@@ -245,7 +245,7 @@ namespace Ninject
 
             return resolvers.SelectMany(resolver => resolver.Resolve(
                 this.bindings.Keys.ToDictionary(type => type, type => this.bindings[type]),
-                service));
+                service)).ToArray();
         }
 
         /// <summary>
