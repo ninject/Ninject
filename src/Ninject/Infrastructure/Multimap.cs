@@ -29,9 +29,9 @@ namespace Ninject.Infrastructure
     /// </summary>
     /// <typeparam name="TKey">The type of key.</typeparam>
     /// <typeparam name="TValue">The type of value.</typeparam>
-    public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, ICollection<TValue>>>
+    public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IList<TValue>>>
     {
-        private readonly Dictionary<TKey, ICollection<TValue>> items = new Dictionary<TKey, ICollection<TValue>>();
+        private readonly Dictionary<TKey, IList<TValue>> items = new Dictionary<TKey, IList<TValue>>();
 
         /// <summary>
         /// Gets the collection of keys.
@@ -44,7 +44,7 @@ namespace Ninject.Infrastructure
         /// <summary>
         /// Gets the collection of collections of values.
         /// </summary>
-        public ICollection<ICollection<TValue>> Values
+        public ICollection<IList<TValue>> Values
         {
             get { return this.items.Values; }
         }
@@ -53,7 +53,7 @@ namespace Ninject.Infrastructure
         /// Gets the collection of values stored under the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public ICollection<TValue> this[TKey key]
+        public IList<TValue> this[TKey key]
         {
             get
             {
@@ -155,7 +155,7 @@ namespace Ninject.Infrastructure
         /// Returns an enumerator that iterates through a the multimap.
         /// </summary>
         /// <returns>An <see cref="IEnumerator{T}"/> object that can be used to iterate through the multimap.</returns>
-        IEnumerator<KeyValuePair<TKey, ICollection<TValue>>> IEnumerable<KeyValuePair<TKey, ICollection<TValue>>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TKey, IList<TValue>>> IEnumerable<KeyValuePair<TKey, IList<TValue>>>.GetEnumerator()
         {
             return this.items.GetEnumerator();
         }

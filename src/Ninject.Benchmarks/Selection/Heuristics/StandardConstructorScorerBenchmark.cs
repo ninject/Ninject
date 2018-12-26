@@ -17,6 +17,7 @@ using Ninject.Tests.Integration;
 
 namespace Ninject.Benchmarks.Selection.Heuristics
 {
+    [MemoryDiagnoser]
     public class StandardConstructorScorerBenchmark
     {
         private ConstructorInfo _injectCtor;
@@ -99,7 +100,7 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _standardConstructorScorer = new StandardConstructorScorer(ninjectSettings);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void Inject()
         {
             _standardConstructorScorer.Score(_contextWithParams, _injectCtorDirective);
@@ -123,25 +124,25 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _standardConstructorScorer.Score(_contextWithParams, _spartanNameAndAgeCtorDirective);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void OnlyBindings_DefaultValues()
         {
             _standardConstructorScorer.Score(_contextWithoutParams, _knifeDefaultsCtorDirective);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void OnlyBindings_Match()
         {
             _standardConstructorScorer.Score(_contextWithoutParams, _barracksCtorDirective);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void OnlyBindings_NoMatch()
         {
             _standardConstructorScorer.Score(_contextWithoutParams, _monasteryCtorDirective);
         }
 
-        //[Benchmark]
+        [Benchmark]
         public void ParametersAndBindings()
         {
             _standardConstructorScorer.Score(_contextWithParams, _spartanHeightAndWeaponCtorDirective);

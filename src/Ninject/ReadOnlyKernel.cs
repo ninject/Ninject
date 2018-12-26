@@ -202,7 +202,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        public IEnumerable<IBinding> GetBindings(Type service)
+        public IBinding[] GetBindings(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");
 
