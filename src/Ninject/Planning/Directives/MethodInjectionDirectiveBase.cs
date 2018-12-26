@@ -21,7 +21,7 @@
 
 namespace Ninject.Planning.Directives
 {
-    using System.Linq;
+    using System;
     using System.Reflection;
 
     using Ninject.Infrastructure;
@@ -66,7 +66,19 @@ namespace Ninject.Planning.Directives
         /// <returns>The targets for the method's parameters.</returns>
         protected virtual ITarget[] CreateTargetsFromParameters(TMethod method)
         {
-            return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
+            var parameters = method.GetParameters();
+            if (parameters.Length == 0)
+            {
+                return Array.Empty<ITarget>();
+            }
+
+            var targets = new ITarget[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                targets[i] = new ParameterTarget(method, parameters[i]);
+            }
+
+            return targets;
         }
     }
 }
