@@ -41,6 +41,8 @@ namespace Ninject
             this.DefaultScopeCallback = StandardScopeCallbacks.Transient;
             this.LoadExtensions = true;
             this.ExtensionSearchPatterns = new[] { "Ninject.Extensions.*.dll", "Ninject.Web*.dll" };
+            this.MethodInjection = true;
+            this.PropertyInjection = true;
         }
 
         /// <summary>
@@ -141,5 +143,23 @@ namespace Ninject
         /// <c>true</c> if null is allowed as injected value; otherwise, <c>false</c>. The default is <c>false</c>.
         /// </value>
         public bool AllowNullInjection { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether method injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if method injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        public bool MethodInjection { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether property injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if property injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        public bool PropertyInjection { get; set; }
     }
 }

@@ -99,5 +99,23 @@ namespace Ninject
         /// </summary>
         /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
         bool AllowNullInjection { get; set; }
-   }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether method injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if method injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        bool MethodInjection { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether property injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if property injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        bool PropertyInjection { get; set; }
+    }
 }
