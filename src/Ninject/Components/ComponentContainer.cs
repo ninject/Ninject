@@ -110,12 +110,12 @@ namespace Ninject.Components
             where TImplementation : T
         {
             var implementation = typeof(TImplementation);
-            if (this.instances.ContainsKey(implementation))
-            {
-                this.instances[implementation].Dispose();
-            }
 
-            this.instances.Remove(implementation);
+            if (this.instances.TryGetValue(implementation, out var instance))
+            {
+                instance.Dispose();
+                this.instances.Remove(implementation);
+            }
 
             this.mappings.Remove(typeof(T), typeof(TImplementation));
         }
@@ -130,12 +130,11 @@ namespace Ninject.Components
 
             foreach (Type implementation in this.mappings[component])
             {
-                if (this.instances.ContainsKey(implementation))
+                if (this.instances.TryGetValue(implementation, out var instance))
                 {
-                    this.instances[implementation].Dispose();
+                    instance.Dispose();
+                    this.instances.Remove(implementation);
                 }
-
-                this.instances.Remove(implementation);
             }
 
             this.mappings.RemoveAll(component);
@@ -149,7 +148,15 @@ namespace Ninject.Components
         public T Get<T>()
             where T : INinjectComponent
         {
-            return (T)this.Get(typeof(T));
+            var component = typeof(T);
+
+            var implementations = this.mappings[component];
+            if (implementations.Count == 0)
+            {
+                throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
+            }
+
+            return (T)this.ResolveInstance(component, implementations[0]);
         }
 
         /// <summary>
@@ -188,14 +195,13 @@ namespace Ninject.Components
                 }
             }
 
-            var implementation = this.mappings[component].FirstOrDefault();
-
-            if (implementation == null)
+            var implementations = this.mappings[component];
+            if (implementations.Count == 0)
             {
                 throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
             }
 
-            return this.ResolveInstance(component, implementation);
+            return this.ResolveInstance(component, implementations[0]);
         }
 
         /// <summary>
@@ -227,14 +233,19 @@ namespace Ninject.Components
         {
             lock (this.instances)
             {
-                return this.instances.ContainsKey(implementation) ? this.instances[implementation] : this.CreateNewInstance(component, implementation);
+                if (this.instances.TryGetValue(implementation, out var instance))
+                {
+                    return instance;
+                }
+
+                return this.CreateNewInstance(component, implementation);
             }
         }
 
         private object CreateNewInstance(Type component, Type implementation)
         {
             var constructor = SelectConstructor(component, implementation);
-            var arguments = constructor.GetParameters().Select(parameter => this.Get(parameter.ParameterType)).ToArray();
+            var arguments = this.GetConstructorArguments(constructor.GetParameters());
 
             try
             {
@@ -254,6 +265,22 @@ namespace Ninject.Components
                 ex.RethrowInnerException();
                 return null;
             }
+        }
+
+        private object[] GetConstructorArguments(ParameterInfo[] parameters)
+        {
+            if (parameters.Length == 0)
+            {
+                return Array.Empty<object>();
+            }
+
+            var arguments = new object[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                arguments[i] = this.Get(parameters[i].ParameterType);
+            }
+
+            return arguments;
         }
     }
 }
