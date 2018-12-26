@@ -304,7 +304,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        public virtual IEnumerable<IBinding> GetBindings(Type service)
+        public virtual IBinding[] GetBindings(Type service)
         {
             return this.kernelConfiguration.GetBindings(service);
         }
