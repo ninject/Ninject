@@ -36,22 +36,6 @@ namespace Ninject.Tests.Unit
         }
     }
 
-    public class WhenGetAssemblyNamesIsCalledWithAssemblyName : AssemblyNameRetrieverContext
-    {
-        [Fact]
-        public void AssemblyNamesOfMatchingAssembliesAreReturned()
-        {
-            var expected = Assembly.LoadFrom(this.ModuleFilename).GetName();
-
-            var actualNames = this.AssemblyNameRetriever.GetAssemblyNames(
-                new[] { expected.FullName },
-                asm => true);
-
-            var assemblyFullNames = actualNames.Select(a => a.FullName).ToList();
-            assemblyFullNames.Should().BeEquivalentTo(new[] { expected.FullName });
-        }
-    }
-
     public class WhenGetAssemblyNamesIsCalledWithUnknownAssemblyName : AssemblyNameRetrieverContext
     {
         [Fact]
