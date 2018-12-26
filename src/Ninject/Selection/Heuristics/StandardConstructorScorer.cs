@@ -149,8 +149,7 @@ namespace Ninject.Selection.Heuristics
         {
             foreach (var parameter in context.Parameters)
             {
-                var ctorArgument = parameter as IConstructorArgument;
-                if (ctorArgument != null && ctorArgument.AppliesToTarget(context, target))
+                if (parameter is IConstructorArgument ctorArgument && ctorArgument.AppliesToTarget(context, target))
                 {
                     return true;
                 }
