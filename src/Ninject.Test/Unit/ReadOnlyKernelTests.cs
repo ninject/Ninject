@@ -10,167 +10,251 @@ using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
 using Ninject.Selection.Heuristics;
 using Ninject.Syntax;
+using Ninject.Tests.Fakes;
 using Xunit;
 
 namespace Ninject.Test.Unit
 {
     public class ReadOnlyKernelTests
     {
-        private Mock<INinjectSettings> _ninjectSettingsMock;
-        private Mock<ICache> _cacheMock;
-        private Mock<IPlanner> _plannerMock;
-        private Mock<IConstructorScorer> _constructorScorerMock;
-        private Mock<IPipeline> _pipelineMock;
-        private Mock<IBindingPrecedenceComparer> _bindingPrecedenceComparerMock;
-        private Mock<IBindingResolver> _bindingResolverMock1;
-        private Mock<IBindingResolver> _bindingResolverMock2;
-        private Mock<IMissingBindingResolver> _missingBindingResolverMock1;
-        private Mock<IMissingBindingResolver> _missingBindingResolverMock2;
-        private IEnumerable<IBindingResolver> _bindingResolvers;
-        private IEnumerable<IMissingBindingResolver> _missingBindingResolvers;
+        protected Mock<INinjectSettings> NinjectSettingsMock { get; }
+        protected Mock<ICache> CacheMock { get; }
+        protected Mock<IPlanner> PlannerMock { get; }
+        protected Mock<IConstructorScorer> ConstructorScorerMock { get; }
+        protected Mock<IPipeline> PipelineMock { get; }
+        protected Mock<IBindingPrecedenceComparer> BindingPrecedenceComparerMock { get; }
+        protected Mock<IBindingResolver> BindingResolverMock1 { get; }
+        protected Mock<IBindingResolver> BindingResolverMock2 { get; }
+        protected Mock<IMissingBindingResolver> MissingBindingResolverMock1 { get; }
+        protected Mock<IMissingBindingResolver> MissingBindingResolverMock2 { get; }
+        protected IEnumerable<IBindingResolver> BindingResolvers { get; }
+        protected IEnumerable<IMissingBindingResolver> MissingBindingResolvers { get; }
 
         public ReadOnlyKernelTests()
         {
-            _ninjectSettingsMock = new Mock<INinjectSettings>(MockBehavior.Strict);
-            _cacheMock = new Mock<ICache>(MockBehavior.Strict);
-            _plannerMock = new Mock<IPlanner>(MockBehavior.Strict);
-            _constructorScorerMock = new Mock<IConstructorScorer>(MockBehavior.Strict);
-            _pipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
-            _bindingPrecedenceComparerMock = new Mock<IBindingPrecedenceComparer>(MockBehavior.Strict);
-            _bindingResolverMock1 = new Mock<IBindingResolver>(MockBehavior.Strict);
-            _bindingResolverMock2 = new Mock<IBindingResolver>(MockBehavior.Strict);
-            _missingBindingResolverMock1 = new Mock<IMissingBindingResolver>(MockBehavior.Strict);
-            _missingBindingResolverMock2 = new Mock<IMissingBindingResolver>(MockBehavior.Strict);
+            NinjectSettingsMock = new Mock<INinjectSettings>(MockBehavior.Strict);
+            CacheMock = new Mock<ICache>(MockBehavior.Strict);
+            PlannerMock = new Mock<IPlanner>(MockBehavior.Strict);
+            ConstructorScorerMock = new Mock<IConstructorScorer>(MockBehavior.Strict);
+            PipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
+            BindingPrecedenceComparerMock = new Mock<IBindingPrecedenceComparer>(MockBehavior.Strict);
+            BindingResolverMock1 = new Mock<IBindingResolver>(MockBehavior.Strict);
+            BindingResolverMock2 = new Mock<IBindingResolver>(MockBehavior.Strict);
+            MissingBindingResolverMock1 = new Mock<IMissingBindingResolver>(MockBehavior.Strict);
+            MissingBindingResolverMock2 = new Mock<IMissingBindingResolver>(MockBehavior.Strict);
 
-            _bindingResolvers = new List<IBindingResolver>
+            BindingResolvers = new List<IBindingResolver>
                 {
-                    _bindingResolverMock1.Object,
-                    _bindingResolverMock2.Object
+                    BindingResolverMock1.Object,
+                    BindingResolverMock2.Object
                 };
-            _missingBindingResolvers = new List<IMissingBindingResolver>
+            MissingBindingResolvers = new List<IMissingBindingResolver>
                 {
-                    _missingBindingResolverMock1.Object,
-                    _missingBindingResolverMock2.Object
+                    MissingBindingResolverMock1.Object,
+                    MissingBindingResolverMock2.Object
                 };
         }
 
-        [Fact]
-        public void CreateContext_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        public class WhenCanResolveIsCalled : ReadOnlyKernelTests
         {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+            private MyReadOnlyKernel _readOnlyKernel;
 
-            const IRequest request = null;
-            var bindingMock = new Mock<IBinding>(MockBehavior.Strict);
+            public WhenCanResolveIsCalled()
+            {
+                var bindingsForSword = new List<IBinding>
+                    {
+                        CreateBinding(typeof(Sword), true)
+                    };
 
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateContext(request, bindingMock.Object));
+                var bindings = new Dictionary<Type, ICollection<IBinding>>
+                    {
+                        { typeof(Sword), bindingsForSword }
+                    };
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(request), actual.ParamName);
+                BindingResolverMock1.Setup(p => p.Resolve(bindings, typeof(Sword))).Returns(bindingsForSword);
+                BindingResolverMock2.Setup(p => p.Resolve(bindings, typeof(Sword))).Returns(Array.Empty<IBinding>());
+
+                _readOnlyKernel = CreateReadOnlyKernel(bindings);
+            }
+
+            [Fact]
+            public void CanResolve_Request_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+            {
+                const IRequest request = null;
+
+                var actualException = Assert.Throws<ArgumentNullException>(() => _readOnlyKernel.CanResolve(request));
+
+                Assert.Null(actualException.InnerException);
+                Assert.Equal(nameof(request), actualException.ParamName);
+            }
+
+            [Fact]
+            public void CanResolve_Request_ShouldNotIgnoreImplicitBindings()
+            {
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+
+                Assert.True(_readOnlyKernel.CanResolve(request));
+            }
+
+            [Fact]
+            public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+            {
+                const IRequest request = null;
+
+                var actualException = Assert.Throws<ArgumentNullException>(() => _readOnlyKernel.CanResolve(request, false));
+
+                Assert.Null(actualException.InnerException);
+                Assert.Equal(nameof(request), actualException.ParamName);
+            }
+
+            [Fact]
+            public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldIgnoreImplicitBindingsWhenIgnoreImplicitBindingsIsTrue()
+            {
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+
+                Assert.False(_readOnlyKernel.CanResolve(request, true));
+            }
+
+            [Fact]
+            public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldNotIgnoreImplicitBindingsWhenIgnoreImplicitBindingsIsFalse()
+            {
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+
+                Assert.True(_readOnlyKernel.CanResolve(request, false));
+            }
+
+            private static IBinding CreateBinding(Type service, bool isImplicit)
+            {
+                return new Binding(service)
+                    {
+                        IsImplicit = isImplicit
+                    };
+            }
         }
 
-        [Fact]
-        public void CreateContext_ShouldThrowArgumentNullExceptionWhenBindingIsNull()
+        public class WhenCreateContextIsCalled : ReadOnlyKernelTests
         {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+            [Fact]
+            public void CreateContext_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
 
-            var requestMock = new Mock<IRequest>(MockBehavior.Strict);
-            const IBinding binding = null;
+                const IRequest request = null;
+                var bindingMock = new Mock<IBinding>(MockBehavior.Strict);
 
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateContext(requestMock.Object, binding));
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateContext(request, bindingMock.Object));
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(binding), actual.ParamName);
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(request), actual.ParamName);
+            }
+
+            [Fact]
+            public void CreateContext_ShouldThrowArgumentNullExceptionWhenBindingIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+                var requestMock = new Mock<IRequest>(MockBehavior.Strict);
+                const IBinding binding = null;
+
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateContext(requestMock.Object, binding));
+
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(binding), actual.ParamName);
+            }
+
+            [Fact]
+            public void CreateRequest_ShouldThrowArgumentNullExceptionWhenServiceIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+                const Type service = null;
+                Func<IBindingMetadata, bool> constraint = bindingMetadata => true;
+                var parameters = new IParameter[0];
+
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateRequest(service, constraint, parameters, true, false));
+
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(service), actual.ParamName);
+            }
+
+            [Fact]
+            public void CreateRequest_ShouldThrowArgumentNullExceptionWhenParametersIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+                var service = typeof(string);
+                Func<IBindingMetadata, bool> constraint = bindingMetadata => true;
+                IParameter[] parameters = null;
+
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateRequest(service, constraint, parameters, true, false));
+
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(parameters), actual.ParamName);
+            }
         }
 
-        [Fact]
-        public void CreateRequest_ShouldThrowArgumentNullExceptionWhenServiceIsNull()
+        public class WhenInjectIsCalled : ReadOnlyKernelTests
         {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+            [Fact]
+            public void Inject_ShouldThrowArgumentNullExceptionWhenInstanceIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
 
-            const Type service = null;
-            Func<IBindingMetadata, bool> constraint = bindingMetadata => true;
-            var parameters = new IParameter[0];
+                const object instance = null;
+                var parameters = new IParameter[0];
 
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateRequest(service, constraint, parameters, true, false));
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Inject(instance, parameters));
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(service), actual.ParamName);
-        }
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(instance), actual.ParamName);
+            }
 
-        [Fact]
-        public void CreateRequest_ShouldThrowArgumentNullExceptionWhenParametersIsNull()
-        {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+            [Fact]
+            public void Inject_ShouldThrowArgumentNullExceptionWhenParametersIsNull()
+            {
+                var bindings = new Dictionary<Type, ICollection<IBinding>>();
+                var readOnlyKernel = CreateReadOnlyKernel(bindings);
 
-            var service = typeof(string);
-            Func<IBindingMetadata, bool> constraint = bindingMetadata => true;
-            IParameter[] parameters = null;
+                var instance = new object();
+                IParameter[] parameters = null;
 
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateRequest(service, constraint, parameters, true, false));
+                var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Inject(instance, parameters));
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(parameters), actual.ParamName);
-        }
-
-        [Fact]
-        public void Inject_ShouldThrowArgumentNullExceptionWhenInstanceIsNull()
-        {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
-
-            const object instance = null;
-            var parameters = new IParameter[0];
-
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Inject(instance, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(instance), actual.ParamName);
-        }
-
-        [Fact]
-        public void Inject_ShouldThrowArgumentNullExceptionWhenParametersIsNull()
-        {
-            var bindings = new Dictionary<Type, ICollection<IBinding>>();
-            var readOnlyKernel = CreateReadOnlyKernel(bindings);
-
-            var instance = new object();
-            IParameter[] parameters = null;
-
-            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Inject(instance, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal(nameof(parameters), actual.ParamName);
+                Assert.Null(actual.InnerException);
+                Assert.Equal(nameof(parameters), actual.ParamName);
+            }
         }
 
         private MyReadOnlyKernel CreateReadOnlyKernel(Dictionary<Type, ICollection<IBinding>> bindings)
         {
             var sequence = new MockSequence();
-            _bindingResolverMock1.InSequence(sequence)
+            BindingResolverMock1.InSequence(sequence)
                                  .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
                                  .Returns(Array.Empty<IBinding>);
-            _bindingResolverMock2.InSequence(sequence)
+            BindingResolverMock2.InSequence(sequence)
                                  .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IReadOnlyKernel)))
                                  .Returns(Array.Empty<IBinding>);
-            _bindingResolverMock1.InSequence(sequence)
+            BindingResolverMock1.InSequence(sequence)
                                  .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
                                  .Returns(Array.Empty<IBinding>);
-            _bindingResolverMock2.InSequence(sequence)
+            BindingResolverMock2.InSequence(sequence)
                                  .Setup(p => p.Resolve(It.IsAny<Dictionary<Type, ICollection<IBinding>>>(), typeof(IResolutionRoot)))
                                  .Returns(Array.Empty<IBinding>);
 
-            return new MyReadOnlyKernel(_ninjectSettingsMock.Object,
+            return new MyReadOnlyKernel(NinjectSettingsMock.Object,
                                         bindings,
-                                        _cacheMock.Object,
-                                        _plannerMock.Object,
-                                        _constructorScorerMock.Object,
-                                        _pipelineMock.Object,
-                                        _bindingPrecedenceComparerMock.Object,
-                                        _bindingResolvers,
-                                        _missingBindingResolvers);
+                                        CacheMock.Object,
+                                        PlannerMock.Object,
+                                        ConstructorScorerMock.Object,
+                                        PipelineMock.Object,
+                                        BindingPrecedenceComparerMock.Object,
+                                        BindingResolvers,
+                                        MissingBindingResolvers);
         }
 
         public class MyReadOnlyKernel : ReadOnlyKernel

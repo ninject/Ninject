@@ -117,10 +117,26 @@ namespace Ninject.Selection.Heuristics
         protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
         {
             var targetType = this.GetTargetType(target);
-            var request = context.Request.CreateChild(targetType, context, target);
 
-            return kernel.GetBindings(targetType).Any(b => !b.IsImplicit && b.Matches(request))
-                   || target.HasDefaultValue;
+            if (target.HasDefaultValue)
+            {
+                return true;
+            }
+
+            var bindings = kernel.GetBindings(targetType);
+            if (bindings.Length > 0)
+            {
+                var request = context.Request.CreateChild(targetType, context, target);
+                foreach (var binding in bindings)
+                {
+                    if (!binding.IsImplicit && binding.Matches(request))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -131,9 +147,15 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a parameter exists for the target in the given context.</returns>
         protected virtual bool ParameterExists(IContext context, ITarget target)
         {
-            return context
-                .Parameters.OfType<IConstructorArgument>()
-                .Any(parameter => parameter.AppliesToTarget(context, target));
+            foreach (var parameter in context.Parameters)
+            {
+                if (parameter is IConstructorArgument ctorArgument && ctorArgument.AppliesToTarget(context, target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private Type GetTargetType(ITarget target)
