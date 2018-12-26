@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Introspection;
+using Ninject.Components;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;

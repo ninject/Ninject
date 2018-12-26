@@ -19,12 +19,11 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject.Infrastructure.Introspection
+namespace Ninject.Components
 {
     using System;
 
     using Ninject.Activation;
-    using Ninject.Components;
 
     /// <summary>
     /// Provides meaningful exception messages.

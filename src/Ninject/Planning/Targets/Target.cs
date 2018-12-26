@@ -27,8 +27,8 @@ namespace Ninject.Planning.Targets
     using System.Reflection;
 
     using Ninject.Activation;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
     using Ninject.Planning.Bindings;
 

@@ -28,7 +28,6 @@ namespace Ninject.Components
 
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
 
     /// <summary>

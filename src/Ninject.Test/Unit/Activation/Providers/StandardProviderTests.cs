@@ -2,6 +2,7 @@
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
+using Ninject.Components;
 using Ninject.Infrastructure.Introspection;
 using Ninject.Injection;
 using Ninject.Parameters;

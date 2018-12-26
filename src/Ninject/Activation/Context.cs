@@ -26,8 +26,8 @@ namespace Ninject.Activation
     using System.Linq;
 
     using Ninject.Activation.Caching;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;

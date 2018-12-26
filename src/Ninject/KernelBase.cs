@@ -30,7 +30,6 @@ namespace Ninject
     using Ninject.Activation.Blocks;
     using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Modules;
     using Ninject.Parameters;
     using Ninject.Planning.Bindings;

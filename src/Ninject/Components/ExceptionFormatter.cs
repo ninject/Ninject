@@ -19,7 +19,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject.Infrastructure.Introspection
+namespace Ninject.Components
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Ninject.Infrastructure.Introspection
     using System.Reflection;
 
     using Ninject.Activation;
-    using Ninject.Components;
+    using Ninject.Infrastructure.Introspection;
     using Ninject.Modules;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;

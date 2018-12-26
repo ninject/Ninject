@@ -5,7 +5,7 @@ using System.Reflection;
 using BenchmarkDotNet.Attributes;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Introspection;
+using Ninject.Components;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
