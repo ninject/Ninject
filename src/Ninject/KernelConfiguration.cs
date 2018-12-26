@@ -289,11 +289,8 @@ namespace Ninject
         {
             this.Components.Add<IPlanner, Planner>();
             this.Components.Add<IPlanningStrategy, ConstructorReflectionStrategy>();
-
-            /*
             this.Components.Add<IPlanningStrategy, PropertyReflectionStrategy>();
             this.Components.Add<IPlanningStrategy, MethodReflectionStrategy>();
-            */
 
             this.Components.Add<ISelector, Selector>();
             this.Components.Add<IConstructorScorer, StandardConstructorScorer>();
@@ -306,12 +303,10 @@ namespace Ninject
                 this.Components.Add<IActivationStrategy, ActivationCacheStrategy>();
             }
 
-            /*
             this.Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
             this.Components.Add<IActivationStrategy, MethodInjectionStrategy>();
             this.Components.Add<IActivationStrategy, InitializableStrategy>();
             this.Components.Add<IActivationStrategy, StartableStrategy>();
-            */
             this.Components.Add<IActivationStrategy, BindingActionStrategy>();
             this.Components.Add<IActivationStrategy, DisposableStrategy>();
 
