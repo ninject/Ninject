@@ -76,7 +76,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        IEnumerable<IBinding> GetBindings(Type service);
+        IBinding[] GetBindings(Type service);
 
         /// <summary>
         /// Creates the readonly kernel.
