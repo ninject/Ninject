@@ -49,7 +49,7 @@ namespace Ninject
 
         private readonly Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
 
-        private readonly Dictionary<Type, ICollection<IBinding>> bindingCache = new Dictionary<Type, ICollection<IBinding>>();
+        private readonly Dictionary<Type, IBinding[]> bindingCache = new Dictionary<Type, IBinding[]>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
@@ -382,7 +382,7 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
-        public virtual IEnumerable<IBinding> GetBindings(Type service)
+        public virtual IBinding[] GetBindings(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");
 
@@ -394,7 +394,7 @@ namespace Ninject
 
                     var compiledBindings = resolvers
                         .SelectMany(resolver => resolver.Resolve(this.bindings, service))
-                        .OrderByDescending(b => b, this.bindingPrecedenceComparer).ToList();
+                        .OrderByDescending(b => b, this.bindingPrecedenceComparer).ToArray();
                     this.bindingCache.Add(service, compiledBindings);
 
                     return compiledBindings;
