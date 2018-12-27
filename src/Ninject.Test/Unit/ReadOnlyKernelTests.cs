@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Components;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -21,6 +21,7 @@ namespace Ninject.Test.Unit
         private Mock<IPlanner> _plannerMock;
         private Mock<IConstructorScorer> _constructorScorerMock;
         private Mock<IPipeline> _pipelineMock;
+        private Mock<IExceptionFormatter> _exceptionFormatterMock;
         private Mock<IBindingPrecedenceComparer> _bindingPrecedenceComparerMock;
         private Mock<IBindingResolver> _bindingResolverMock1;
         private Mock<IBindingResolver> _bindingResolverMock2;
@@ -36,6 +37,7 @@ namespace Ninject.Test.Unit
             _plannerMock = new Mock<IPlanner>(MockBehavior.Strict);
             _constructorScorerMock = new Mock<IConstructorScorer>(MockBehavior.Strict);
             _pipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
+            _exceptionFormatterMock = new Mock<IExceptionFormatter>(MockBehavior.Strict);
             _bindingPrecedenceComparerMock = new Mock<IBindingPrecedenceComparer>(MockBehavior.Strict);
             _bindingResolverMock1 = new Mock<IBindingResolver>(MockBehavior.Strict);
             _bindingResolverMock2 = new Mock<IBindingResolver>(MockBehavior.Strict);
@@ -52,6 +54,34 @@ namespace Ninject.Test.Unit
                     _missingBindingResolverMock1.Object,
                     _missingBindingResolverMock2.Object
                 };
+        }
+
+        [Fact]
+        public void CanResolve_Request_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const IRequest request = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CanResolve(request));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(request), actual.ParamName);
+        }
+
+        [Fact]
+        public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const IRequest request = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CanResolve(request, true));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(request), actual.ParamName);
         }
 
         [Fact]
@@ -108,12 +138,40 @@ namespace Ninject.Test.Unit
 
             var service = typeof(string);
             Func<IBindingMetadata, bool> constraint = bindingMetadata => true;
-            IParameter[] parameters = null;
+            const IParameter[] parameters = null;
 
             var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.CreateRequest(service, constraint, parameters, true, false));
 
             Assert.Null(actual.InnerException);
             Assert.Equal(nameof(parameters), actual.ParamName);
+        }
+
+        [Fact]
+        public void GetBindings_ShouldThrowArgumentNullExceptionWhenServiceIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const Type service = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.GetBindings(service));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(service), actual.ParamName);
+        }
+
+        [Fact]
+        public void GetService_ShouldThrowArgumentNullExceptionWhenServiceTypeIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const Type serviceType = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.GetService(serviceType));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(serviceType), actual.ParamName);
         }
 
         [Fact]
@@ -138,12 +196,40 @@ namespace Ninject.Test.Unit
             var readOnlyKernel = CreateReadOnlyKernel(bindings);
 
             var instance = new object();
-            IParameter[] parameters = null;
+            const IParameter[] parameters = null;
 
             var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Inject(instance, parameters));
 
             Assert.Null(actual.InnerException);
             Assert.Equal(nameof(parameters), actual.ParamName);
+        }
+
+        [Fact]
+        public void Release_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const object instance = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Release(instance));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(instance), actual.ParamName);
+        }
+
+        [Fact]
+        public void Resolve_ShouldThrowArgumentNullExceptionWhenRequestIsNull()
+        {
+            var bindings = new Dictionary<Type, ICollection<IBinding>>();
+            var readOnlyKernel = CreateReadOnlyKernel(bindings);
+
+            const IRequest request = null;
+
+            var actual = Assert.Throws<ArgumentNullException>(() => readOnlyKernel.Resolve(request));
+
+            Assert.Null(actual.InnerException);
+            Assert.Equal(nameof(request), actual.ParamName);
         }
 
         private MyReadOnlyKernel CreateReadOnlyKernel(Dictionary<Type, ICollection<IBinding>> bindings)
@@ -168,6 +254,7 @@ namespace Ninject.Test.Unit
                                         _plannerMock.Object,
                                         _constructorScorerMock.Object,
                                         _pipelineMock.Object,
+                                        _exceptionFormatterMock.Object,
                                         _bindingPrecedenceComparerMock.Object,
                                         _bindingResolvers,
                                         _missingBindingResolvers);
@@ -181,6 +268,7 @@ namespace Ninject.Test.Unit
                                       IPlanner planner,
                                       IConstructorScorer constructorScorer,
                                       IPipeline pipeline,
+                                      IExceptionFormatter exceptionFormatter,
                                       IBindingPrecedenceComparer bindingPrecedenceComparer,
                                       IEnumerable<IBindingResolver> bindingResolvers,
                                       IEnumerable<IMissingBindingResolver> missingBindingResolvers)
@@ -190,6 +278,7 @@ namespace Ninject.Test.Unit
                        planner,
                        constructorScorer,
                        pipeline,
+                       exceptionFormatter,
                        bindingPrecedenceComparer,
                        bindingResolvers,
                        missingBindingResolvers)

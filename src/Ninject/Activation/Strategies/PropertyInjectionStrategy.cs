@@ -26,8 +26,8 @@ namespace Ninject.Activation.Strategies
     using System.Linq;
     using System.Reflection;
 
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Injection;
     using Ninject.Parameters;
     using Ninject.Planning.Directives;

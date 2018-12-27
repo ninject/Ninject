@@ -63,7 +63,7 @@ namespace Ninject
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
         protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(settings), settings, modules)
+            : this(new ComponentContainer(settings, new ExceptionFormatter()), settings, modules)
         {
         }
 
