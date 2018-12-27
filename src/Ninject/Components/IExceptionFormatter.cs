@@ -24,6 +24,7 @@ namespace Ninject.Components
     using System;
 
     using Ninject.Activation;
+    using Ninject.Parameters;
 
     /// <summary>
     /// Provides meaningful exception messages.
@@ -36,6 +37,14 @@ namespace Ninject.Components
         /// <param name="request">The request.</param>
         /// <returns>The exception message.</returns>
         string CouldNotResolveBinding(IRequest request);
+
+        /// <summary>
+        /// Generates a message saying that the specified property could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The exception message.</returns>
+        string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName);
 
         /// <summary>
         /// Generates a message saying that the specified context has cyclic dependencies.
