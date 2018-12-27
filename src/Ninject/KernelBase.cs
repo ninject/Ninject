@@ -473,7 +473,7 @@ namespace Ninject
             Ensure.ArgumentNotNull(request, "request");
             Ensure.ArgumentNotNull(binding, "binding");
 
-            return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>());
+            return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>(), this.Components.Get<IExceptionFormatter>());
         }
 
         private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
@@ -539,7 +539,9 @@ namespace Ninject
                     return Enumerable.Empty<object>();
                 }
 
-                throw new ActivationException(ExceptionFormatter.CouldNotResolveBinding(request));
+                var exceptionFormatter = this.Components.Get<IExceptionFormatter>();
+
+                throw new ActivationException(exceptionFormatter.CouldNotResolveBinding(request));
             }
 
             if (request.IsUnique)

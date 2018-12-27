@@ -48,11 +48,12 @@ namespace Ninject.Syntax
         public IBindingToSyntax<T> Bind<T>()
         {
             var service = typeof(T);
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
 
-            var binding = new Binding(service);
+            var binding = new Binding(service, bindingConfiguration);
             this.AddBinding(binding);
 
-            return new BindingBuilder<T>(binding, this.KernelInstance, service.Format());
+            return new BindingBuilder<T>(binding, service.Format());
         }
 
         /// <summary>
@@ -63,12 +64,16 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
-            var firstBinding = new Binding(typeof(T1));
-            this.AddBinding(firstBinding);
-            this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
-            var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format() };
+            var service1 = typeof(T1);
+            var service2 = typeof(T2);
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
 
-            return new BindingBuilder<T1, T2>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            this.AddBinding(new Binding(service1, bindingConfiguration));
+            this.AddBinding(new Binding(service2, bindingConfiguration));
+
+            var serviceNames = new[] { service1.Format(), service2.Format() };
+
+            return new BindingBuilder<T1, T2>(bindingConfiguration, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -80,13 +85,18 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
-            var firstBinding = new Binding(typeof(T1));
-            this.AddBinding(firstBinding);
-            this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
-            this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
+            var service1 = typeof(T1);
+            var service2 = typeof(T2);
+            var service3 = typeof(T3);
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
+
+            this.AddBinding(new Binding(service1, bindingConfiguration));
+            this.AddBinding(new Binding(service2, bindingConfiguration));
+            this.AddBinding(new Binding(service3, bindingConfiguration));
+
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format() };
 
-            return new BindingBuilder<T1, T2, T3>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3>(bindingConfiguration, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -99,14 +109,20 @@ namespace Ninject.Syntax
         /// <returns>The fluent syntax</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
-            var firstBinding = new Binding(typeof(T1));
-            this.AddBinding(firstBinding);
-            this.AddBinding(new Binding(typeof(T2), firstBinding.BindingConfiguration));
-            this.AddBinding(new Binding(typeof(T3), firstBinding.BindingConfiguration));
-            this.AddBinding(new Binding(typeof(T4), firstBinding.BindingConfiguration));
+            var service1 = typeof(T1);
+            var service2 = typeof(T2);
+            var service3 = typeof(T3);
+            var service4 = typeof(T4);
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
+
+            this.AddBinding(new Binding(service1, bindingConfiguration));
+            this.AddBinding(new Binding(service2, bindingConfiguration));
+            this.AddBinding(new Binding(service3, bindingConfiguration));
+            this.AddBinding(new Binding(service4, bindingConfiguration));
+
             var serviceNames = new[] { typeof(T1).Format(), typeof(T2).Format(), typeof(T3).Format(), typeof(T4).Format() };
 
-            return new BindingBuilder<T1, T2, T3, T4>(firstBinding.BindingConfiguration, this.KernelInstance, string.Join(", ", serviceNames));
+            return new BindingBuilder<T1, T2, T3, T4>(bindingConfiguration, string.Join(", ", serviceNames));
         }
 
         /// <summary>
@@ -122,15 +138,33 @@ namespace Ninject.Syntax
                 throw new ArgumentException("The services must contain at least one type", "services");
             }
 
-            var firstBinding = new Binding(services[0]);
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
+
+            var firstBinding = new Binding(services[0], bindingConfiguration);
             this.AddBinding(firstBinding);
 
             foreach (var service in services.Skip(1))
             {
-                this.AddBinding(new Binding(service, firstBinding.BindingConfiguration));
+                this.AddBinding(new Binding(service, bindingConfiguration));
             }
 
-            return new BindingBuilder<object>(firstBinding, this.KernelInstance, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+            return new BindingBuilder<object>(firstBinding, string.Join(", ", services.Select(service => service.Format()).ToArray()));
+        }
+
+        /// <summary>
+        /// Declares a binding for the specified service.
+        /// </summary>
+        /// <param name="service">The service to bind.</param>
+        /// <returns>The fluent syntax.</returns>
+        public IBindingToSyntax<object> Bind(Type service)
+        {
+            Ensure.ArgumentNotNull(service, "service");
+            var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
+
+            var binding = new Binding(service, bindingConfiguration);
+            this.AddBinding(binding);
+
+            return new BindingBuilder<object>(binding, service.Format());
         }
 
         /// <summary>
@@ -208,7 +242,7 @@ namespace Ninject.Syntax
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <param name="services">The services to re-bind.</param>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<object> Rebind(params Type[] services)
         {
             foreach (var service in services)

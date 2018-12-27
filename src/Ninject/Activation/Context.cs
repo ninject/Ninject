@@ -26,8 +26,8 @@ namespace Ninject.Activation
     using System.Linq;
 
     using Ninject.Activation.Caching;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
@@ -44,6 +44,11 @@ namespace Ninject.Activation
         private readonly INinjectSettings settings;
 
         /// <summary>
+        /// The <see cref="IExceptionFormatter"/> component.
+        /// </summary>
+        private readonly IExceptionFormatter exceptionFormatter;
+
+        /// <summary>
         /// The cached scope object.
         /// </summary>
         private object cachedScope;
@@ -57,7 +62,9 @@ namespace Ninject.Activation
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
-        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="exceptionFormatter"/> is <see langword="null"/>.</exception>
+        public Context(IKernel kernel, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline, IExceptionFormatter exceptionFormatter)
         {
             Ensure.ArgumentNotNull(kernel, "kernel");
             Ensure.ArgumentNotNull(request, "request");
@@ -65,6 +72,7 @@ namespace Ninject.Activation
             Ensure.ArgumentNotNull(cache, "cache");
             Ensure.ArgumentNotNull(planner, "planner");
             Ensure.ArgumentNotNull(pipeline, "pipeline");
+            Ensure.ArgumentNotNull(exceptionFormatter, nameof(exceptionFormatter));
 
             this.Kernel = kernel;
             this.Request = request;
@@ -74,6 +82,7 @@ namespace Ninject.Activation
             this.Cache = cache;
             this.Planner = planner;
             this.Pipeline = pipeline;
+            this.exceptionFormatter = exceptionFormatter;
 
             if (binding.Service.IsGenericTypeDefinition)
             {
@@ -159,7 +168,7 @@ namespace Ninject.Activation
             if (this.Request.ActiveBindings.Contains(this.Binding) &&
                 IsCyclical(this.Request.ParentRequest, this.Request.Target))
             {
-                throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+                throw new ActivationException(this.exceptionFormatter.CyclicalDependenciesDetected(this));
             }
 
             try
@@ -218,7 +227,7 @@ namespace Ninject.Activation
             {
                 if (!this.Kernel.Settings.AllowNullInjection)
                 {
-                    throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                    throw new ActivationException(this.exceptionFormatter.ProviderReturnedNull(this));
                 }
 
                 if (this.Plan == null)

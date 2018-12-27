@@ -39,13 +39,11 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="BindingBuilder{T1}"/> class.
         /// </summary>
         /// <param name="binding">The binding to build.</param>
-        /// <param name="kernel">The kernel.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBinding binding, IKernel kernel, string serviceNames)
-            : base(binding.BindingConfiguration, kernel, serviceNames)
+        public BindingBuilder(IBinding binding, string serviceNames)
+            : base(binding.BindingConfiguration, serviceNames)
         {
             Ensure.ArgumentNotNull(binding, "binding");
-            Ensure.ArgumentNotNull(kernel, "kernel");
 
             this.Binding = binding;
         }
@@ -64,7 +62,7 @@ namespace Ninject.Planning.Bindings
             this.Binding.ProviderCallback = StandardProvider.GetCreationCallback(this.Binding.Service);
             this.Binding.Target = BindingTarget.Self;
 
-            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames, this.Kernel);
+            return new BindingConfigurationBuilder<T1>(this.Binding.BindingConfiguration, this.ServiceNames);
         }
 
         /// <summary>

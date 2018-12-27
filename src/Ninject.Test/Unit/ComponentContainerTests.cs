@@ -7,6 +7,7 @@
     using Moq;
     using Ninject.Components;
     using Ninject.Infrastructure.Disposal;
+    using Ninject.Infrastructure.Introspection;
     using Xunit;
 
     public class ComponentContainerContext
@@ -25,6 +26,42 @@
             this.kernelMock = new Mock<IKernel>();
 
             this.container.Kernel = this.kernelMock.Object;
+        }
+    }
+
+    public class WhenInstanceIsCreated
+    {
+        private Mock<INinjectSettings> _settingsMock;
+        private Mock<IExceptionFormatter> _exceptionFormatterMock;
+
+        public WhenInstanceIsCreated()
+        {
+            _settingsMock = new Mock<INinjectSettings>(MockBehavior.Strict);
+            _exceptionFormatterMock = new Mock<IExceptionFormatter>();
+        }
+
+        [Fact]
+        public void DefaultConstructor()
+        {
+            var container = new ComponentContainer();
+
+            var exceptionFormatter = container.Get<IExceptionFormatter>();
+
+            Assert.NotNull(exceptionFormatter);
+            Assert.Same(exceptionFormatter, container.Get<IExceptionFormatter>());
+        }
+
+
+        [Fact]
+        public void Constructor_ExceptionFormatter()
+        {
+            var container = new ComponentContainer(_exceptionFormatterMock.Object);
+
+            var exceptionFormatter = container.Get<IExceptionFormatter>();
+
+            Assert.NotNull(exceptionFormatter);
+            Assert.Same(_exceptionFormatterMock.Object, exceptionFormatter);
+            Assert.Same(exceptionFormatter, container.Get<IExceptionFormatter>());
         }
     }
 

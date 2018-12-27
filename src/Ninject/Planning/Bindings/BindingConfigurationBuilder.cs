@@ -25,8 +25,8 @@ namespace Ninject.Planning.Bindings
     using System.Linq;
 
     using Ninject.Activation;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning.Targets;
@@ -48,14 +48,11 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
-        /// <param name="kernel">The kernel.</param>
-        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames, IKernel kernel)
+        public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
         {
             Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
-            Ensure.ArgumentNotNull(kernel, "kernel");
 
             this.BindingConfiguration = bindingConfiguration;
-            this.Kernel = kernel;
             this.serviceNames = serviceNames;
         }
 
@@ -63,11 +60,6 @@ namespace Ninject.Planning.Bindings
         /// Gets the binding being built.
         /// </summary>
         public IBindingConfiguration BindingConfiguration { get; private set; }
-
-        /// <summary>
-        /// Gets the kernel.
-        /// </summary>
-        public IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Indicates that the binding should be used only for requests that support the specified condition.
