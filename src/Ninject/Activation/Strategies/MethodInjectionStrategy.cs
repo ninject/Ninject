@@ -21,10 +21,9 @@
 
 namespace Ninject.Activation.Strategies
 {
-    using System.Linq;
-
     using Ninject.Infrastructure;
     using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Injects methods on an instance during activation.
@@ -44,9 +43,20 @@ namespace Ninject.Activation.Strategies
 
             foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
             {
-                var arguments = directive.Targets.Select(target => target.ResolveWithin(context));
-                directive.Injector(reference.Instance, arguments.ToArray());
+                directive.Injector(reference.Instance, GetMethodArguments(directive.Targets, context));
             }
+        }
+
+        private static object[] GetMethodArguments(ITarget[] targets, IContext context)
+        {
+            var arguments = new object[targets.Length];
+
+            for (var i = 0; i < targets.Length; i++)
+            {
+                arguments[i] = targets[i].ResolveWithin(context);
+            }
+
+            return arguments;
         }
     }
 }
