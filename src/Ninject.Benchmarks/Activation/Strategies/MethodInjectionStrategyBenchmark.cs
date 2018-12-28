@@ -5,6 +5,7 @@ using BenchmarkDotNet.Attributes;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
+using Ninject.Components;
 using Ninject.Injection;
 using Ninject.Parameters;
 using Ninject.Planning;
@@ -62,7 +63,8 @@ namespace Ninject.Benchmarks.Activation.Strategies
                                binding,
                                kernelConfiguration.Components.Get<ICache>(),
                                kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>());
+                               kernelConfiguration.Components.Get<IPipeline>(),
+                               kernelConfiguration.Components.Get<IExceptionFormatter>());
         }
 
         public class MyService

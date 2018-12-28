@@ -176,29 +176,6 @@ namespace Ninject.Components
         }
 
         /// <summary>
-        /// Generates a message saying that the specified property could not be resolved on the specified request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>The exception message.</returns>
-        public static string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error activating {0}", request.Service.Format());
-                sw.WriteLine("No matching property {0}.", propertyName);
-
-                sw.WriteLine("Activation path:");
-                sw.WriteLine(request.FormatActivationPath());
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that you have the correct property name.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
         /// Generates a message saying that the provider callback on the specified context is null.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -274,6 +251,29 @@ namespace Ninject.Components
                 sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
                 sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
                 sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the specified property could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The exception message.</returns>
+        public string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0}", request.Service.Format());
+                sw.WriteLine("No matching property {0}.", propertyName);
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that you have the correct property name.");
 
                 return sw.ToString();
             }
