@@ -21,6 +21,8 @@
 
 namespace Ninject.Activation.Strategies
 {
+    using System;
+
     using Ninject.Activation.Caching;
     using Ninject.Components;
     using Ninject.Infrastructure;
@@ -39,9 +41,10 @@ namespace Ninject.Activation.Strategies
         /// Initializes a new instance of the <see cref="ActivationCacheStrategy"/> class.
         /// </summary>
         /// <param name="activationCache">The activation cache.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="activationCache"/> is <see langword="null"/>.</exception>
         public ActivationCacheStrategy(IActivationCache activationCache)
         {
-            Ensure.ArgumentNotNull(activationCache, "activationCache");
+            Ensure.ArgumentNotNull(activationCache, nameof(activationCache));
 
             this.activationCache = activationCache;
         }

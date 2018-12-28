@@ -43,11 +43,14 @@ namespace Ninject.Activation.Providers
         /// <param name="type">The type (or prototype) of instances the provider creates.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="constructorScorer">The constructor scorer component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="planner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="constructorScorer"/> is <see langword="null"/>.</exception>
         public StandardProvider(Type type, IPlanner planner, IConstructorScorer constructorScorer)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
+            Ensure.ArgumentNotNull(type, nameof(type));
+            Ensure.ArgumentNotNull(planner, nameof(planner));
+            Ensure.ArgumentNotNull(constructorScorer, nameof(constructorScorer));
 
             this.Type = type;
             this.Planner = planner;
@@ -57,26 +60,27 @@ namespace Ninject.Activation.Providers
         /// <summary>
         /// Gets the type (or prototype) of instances the provider creates.
         /// </summary>
-        public Type Type { get; private set; }
+        public Type Type { get; }
 
         /// <summary>
         /// Gets the planner component.
         /// </summary>
-        public IPlanner Planner { get; private set; }
+        public IPlanner Planner { get; }
 
         /// <summary>
         /// Gets the constructor scorer component.
         /// </summary>
-        public IConstructorScorer ConstructorScorer { get; private set; }
+        public IConstructorScorer ConstructorScorer { get; }
 
         /// <summary>
         /// Creates an instance within the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The created instance.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public virtual object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             if (context.Plan == null)
             {
@@ -94,10 +98,12 @@ namespace Ninject.Activation.Providers
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>The value to inject into the specified target.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(target, nameof(target));
 
             return GetValueCore(context, target);
         }
@@ -108,9 +114,10 @@ namespace Ninject.Activation.Providers
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>The implementation type that will be activated.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public Type GetImplementationType(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(service, nameof(service));
 
             return this.Type.ContainsGenericParameters ? this.Type.MakeGenericType(service.GetGenericArguments()) : this.Type;
         }

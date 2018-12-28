@@ -37,7 +37,9 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="x">The first binding.</param>
         /// <param name="y">The second binding.</param>
-        /// <returns>Less than zero if x is less than y; Zero is x equals y; Greater than zero if x is greater than y.</returns>
+        /// <returns>
+        /// Less than zero if <paramref name="x"/> is less than <paramref name="y"/>; Zero if <paramref name="x"/> equals <paramref name="y"/>; Greater than zero if <paramref name="x"/> is greater than <paramref name="y"/>.
+        /// </returns>
         public int Compare(IBinding x, IBinding y)
         {
             if (x == y)

@@ -35,9 +35,10 @@ namespace Ninject.Activation.Providers
         /// Initializes a new instance of the <see cref="CallbackProvider{T}"/> class.
         /// </summary>
         /// <param name="method">The callback method that will be called to create instances.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/>.</exception>
         public CallbackProvider(Func<IContext, T> method)
         {
-            Ensure.ArgumentNotNull(method, "method");
+            Ensure.ArgumentNotNull(method, nameof(method));
 
             this.Method = method;
         }
@@ -51,7 +52,9 @@ namespace Ninject.Activation.Providers
         /// Invokes the callback method to create an instance.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>The created instance.</returns>
+        /// <returns>
+        /// The created instance.
+        /// </returns>
         protected override T CreateInstance(IContext context)
         {
             return this.Method(context);

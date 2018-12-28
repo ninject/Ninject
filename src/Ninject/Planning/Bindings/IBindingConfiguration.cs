@@ -87,13 +87,17 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The provider to use.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         IProvider GetProvider(IContext context);
 
         /// <summary>
         /// Gets the scope for the binding, if any.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>The object that will act as the scope, or <see langword="null"/> if the service is transient.</returns>
+        /// <returns>
+        /// The object that will act as the scope, or <see langword="null"/> if the service is transient.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         object GetScope(IContext context);
 
         /// <summary>
@@ -101,7 +105,10 @@ namespace Ninject.Planning.Bindings
         /// if one was defined.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the request satisfies the condition; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the request satisfies the conditions; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         bool Matches(IRequest request);
     }
 }

@@ -44,9 +44,10 @@ namespace Ninject.Activation
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The created instance.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public object Create(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return this.CreateInstance(context);
         }

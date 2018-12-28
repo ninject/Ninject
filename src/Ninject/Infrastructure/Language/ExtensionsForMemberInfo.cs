@@ -35,7 +35,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="member">The member.</param>
         /// <param name="type">The type of the attribute.</param>
         /// <returns>
-        /// <c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified member has attribute; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool HasAttribute(this MemberInfo member, Type type)
         {
@@ -53,7 +53,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="constructor">The constructor.</param>
         /// <param name="type">The type of the attribute.</param>
         /// <returns>
-        /// <c>true</c> if the specified constructor has attribute; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified constructor has attribute; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool HasAttribute(this ConstructorInfo constructor, Type type)
         {
@@ -66,7 +66,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="property">The property.</param>
         /// <param name="type">The type of the attribute.</param>
         /// <returns>
-        /// <c>true</c> if the specified property has attribute; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified property has attribute; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool HasAttribute(this PropertyInfo property, Type type)
         {
@@ -80,7 +80,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="method">The method.</param>
         /// <param name="type">The type of the attribute.</param>
         /// <returns>
-        /// <c>true</c> if the specified method has attribute; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified method has attribute; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool HasAttribute(this MethodInfo method, Type type)
         {
@@ -93,7 +93,9 @@ namespace Ninject.Infrastructure.Language
         /// <param name="memberInfo">The member info.</param>
         /// <param name="propertyDefinition">The property definition.</param>
         /// <param name="flags">The flags.</param>
-        /// <returns>The property info from the declared type of the property.</returns>
+        /// <returns>
+        /// The property info from the declared type of the property.
+        /// </returns>
         public static PropertyInfo GetPropertyFromDeclaredType(this MemberInfo memberInfo, PropertyInfo propertyDefinition, BindingFlags flags)
         {
             return memberInfo.DeclaringType.GetProperty(
@@ -110,7 +112,7 @@ namespace Ninject.Infrastructure.Language
         /// </summary>
         /// <param name="propertyInfo">The property info.</param>
         /// <returns>
-        /// <c>true</c> if the specified property info is private; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified property info is private; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool IsPrivate(this PropertyInfo propertyInfo)
         {
@@ -125,8 +127,10 @@ namespace Ninject.Infrastructure.Language
         /// </summary>
         /// <param name="member">The member.</param>
         /// <param name="attributeType">Type of the attribute.</param>
-        /// <param name="inherited">if set to <c>true</c> [inherited].</param>
-        /// <returns>The custom attributes.</returns>
+        /// <param name="inherited">if set to <see langword="true"/> [inherited].</param>
+        /// <returns>
+        /// The custom attributes.
+        /// </returns>
         public static object[] GetCustomAttributesExtended(this MemberInfo member, Type attributeType, bool inherited)
         {
             if (member is PropertyInfo propertyInfo)

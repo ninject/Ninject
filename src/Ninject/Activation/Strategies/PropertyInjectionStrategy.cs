@@ -63,8 +63,15 @@ namespace Ninject.Activation.Strategies
         /// <param name="injectorFactory">The injector factory component.</param>
         /// <param name="settings">The ninject settings.</param>
         /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="injectorFactory"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="exceptionFormatter"/> is <see langword="null"/>.</exception>
         public PropertyInjectionStrategy(IInjectorFactory injectorFactory, INinjectSettings settings, IExceptionFormatter exceptionFormatter)
         {
+            Ensure.ArgumentNotNull(injectorFactory, nameof(injectorFactory));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+            Ensure.ArgumentNotNull(exceptionFormatter, nameof(exceptionFormatter));
+
             this.injectorFactory = injectorFactory;
             this.settings = settings;
             this.exceptionFormatter = exceptionFormatter;
@@ -84,10 +91,12 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(reference, nameof(reference));
 
             var propertyValues = GetPropertyValues(context.Parameters);
 
@@ -157,6 +166,7 @@ namespace Ninject.Activation.Strategies
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
         /// <param name="propertyValues">The parameter override value accessors.</param>
+        /// <exception cref="ActivationException">A given <see cref="IPropertyValue"/> cannot be resolved to a property of the specified instance.</exception>
         private void AssignPropertyOverrides(IContext context, InstanceReference reference, List<IPropertyValue> propertyValues)
         {
             var properties = reference.Instance.GetType().GetProperties(this.Flags);

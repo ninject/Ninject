@@ -34,7 +34,9 @@ namespace Ninject.Infrastructure.Language
         /// </summary>
         /// <param name="member">The <see cref="ICustomAttributeProvider"/>.</param>
         /// <param name="type">The attribute type.</param>
-        /// <returns><c>True</c> if the <see cref="ICustomAttributeProvider"/> has the attribute, otherwise <c>False</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the <see cref="ICustomAttributeProvider"/> has the attribute, otherwise <see langword="false"/>.
+        /// </returns>
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {
             if (member is MemberInfo memberInfo)

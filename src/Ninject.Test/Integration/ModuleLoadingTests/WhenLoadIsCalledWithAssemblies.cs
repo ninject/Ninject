@@ -4,6 +4,7 @@
     using System.Reflection;
     using FluentAssertions;
     using Ninject.Tests.Integration.ModuleLoadingTests.Fakes;
+    using Ninject.Tests.Unit.Modules;
     using Xunit;
 
     public class WhenLoadIsCalledWithAssemblies : ModuleLoadingContext
@@ -11,7 +12,7 @@
         [Fact]
         public void ModulesContainedInAssembliesAreLoaded()
         {
-            var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule) };
+            var expectedModules = new[] { typeof(TestModule), typeof(TestModule2), typeof(OtherFakes.TestModule), typeof(NinjectModuleTests.MyNinjectModule) };
             var assembly = Assembly.GetExecutingAssembly();
             
             this.KernelConfiguration.Load(assembly);

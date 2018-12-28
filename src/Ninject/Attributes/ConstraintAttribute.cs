@@ -35,7 +35,9 @@ namespace Ninject
         /// Determines whether the specified binding metadata matches the constraint.
         /// </summary>
         /// <param name="metadata">The metadata in question.</param>
-        /// <returns><c>True</c> if the metadata matches; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the metadata matches; otherwise, <see langword="false"/>.
+        /// </returns>
         public abstract bool Matches(IBindingMetadata metadata);
     }
 }

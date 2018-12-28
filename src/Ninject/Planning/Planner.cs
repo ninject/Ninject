@@ -43,9 +43,10 @@ namespace Ninject.Planning
         /// Initializes a new instance of the <see cref="Planner"/> class.
         /// </summary>
         /// <param name="strategies">The strategies to execute during planning.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="strategies"/> is <see langword="null"/>.</exception>
         public Planner(IEnumerable<IPlanningStrategy> strategies)
         {
-            Ensure.ArgumentNotNull(strategies, "strategies");
+            Ensure.ArgumentNotNull(strategies, nameof(strategies));
 
             this.strategies = strategies.ToList();
         }
@@ -62,10 +63,13 @@ namespace Ninject.Planning
         /// Gets or creates an activation plan for the specified type.
         /// </summary>
         /// <param name="type">The type for which a plan should be created.</param>
-        /// <returns>The type's activation plan.</returns>
+        /// <returns>
+        /// The type's activation plan.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         public IPlan GetPlan(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
             this.plannerLock.EnterUpgradeableReadLock();
 
@@ -88,7 +92,10 @@ namespace Ninject.Planning
         /// Creates an empty plan for the specified type.
         /// </summary>
         /// <param name="type">The type for which a plan should be created.</param>
-        /// <returns>The created plan.</returns>
+        /// <returns>
+        /// The created plan.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         protected virtual IPlan CreateEmptyPlan(Type type)
         {
             return new Plan(type);
@@ -101,7 +108,9 @@ namespace Ninject.Planning
         /// <remarks>
         /// This method requires an active write lock.
         /// </remarks>
-        /// <returns>The newly created plan.</returns>
+        /// <returns>
+        /// The newly created plan.
+        /// </returns>
         private IPlan CreateNewPlan(Type type)
         {
             this.plannerLock.EnterWriteLock();

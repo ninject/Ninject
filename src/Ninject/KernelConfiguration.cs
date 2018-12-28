@@ -61,6 +61,7 @@ namespace Ninject
         /// Initializes a new instance of the <see cref="KernelConfiguration"/> class.
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public KernelConfiguration(params INinjectModule[] modules)
             : this(new NinjectSettings(), modules)
         {
@@ -71,6 +72,8 @@ namespace Ninject
         /// </summary>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
             : this(new ComponentContainer(settings, new ExceptionFormatter()), settings, modules)
         {
@@ -82,11 +85,14 @@ namespace Ninject
         /// <param name="components">The component container to use.</param>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="components"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public KernelConfiguration(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
-            Ensure.ArgumentNotNull(components, "components");
-            Ensure.ArgumentNotNull(settings, "settings");
-            Ensure.ArgumentNotNull(modules, "modules");
+            Ensure.ArgumentNotNull(components, nameof(components));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+            Ensure.ArgumentNotNull(modules, nameof(modules));
 
             this.Settings = settings;
 
@@ -108,9 +114,10 @@ namespace Ninject
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public override void Unbind(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(service, nameof(service));
 
             this.bindings.Remove(service);
         }
@@ -119,9 +126,10 @@ namespace Ninject
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.bindings.Add(binding.Service, binding);
         }
@@ -130,9 +138,10 @@ namespace Ninject
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.bindings.Remove(binding.Service, binding);
         }
@@ -150,10 +159,13 @@ namespace Ninject
         /// Determines whether a module with the specified name has been loaded in the kernel.
         /// </summary>
         /// <param name="name">The name of the module.</param>
-        /// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the specified module has been loaded; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public bool HasModule(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNullOrEmpty(name, nameof(name));
 
             return this.modules.ContainsKey(name);
         }
@@ -162,9 +174,10 @@ namespace Ninject
         /// Loads the module(s) into the kernel.
         /// </summary>
         /// <param name="modules">The modules to load.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<INinjectModule> modules)
         {
-            Ensure.ArgumentNotNull(modules, "modules");
+            Ensure.ArgumentNotNull(modules, nameof(modules));
 
             modules = modules.ToList();
             foreach (INinjectModule module in modules)
@@ -194,9 +207,10 @@ namespace Ninject
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="filePatterns"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<string> filePatterns)
         {
-            Ensure.ArgumentNotNull(filePatterns, "filePatterns");
+            Ensure.ArgumentNotNull(filePatterns, nameof(filePatterns));
 
             var moduleLoader = this.Components.Get<IModuleLoader>();
             moduleLoader.LoadModules(filePatterns);
@@ -206,9 +220,10 @@ namespace Ninject
         /// Loads modules defined in the specified assemblies.
         /// </summary>
         /// <param name="assemblies">The assemblies to search.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="assemblies"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<Assembly> assemblies)
         {
-            Ensure.ArgumentNotNull(assemblies, "assemblies");
+            Ensure.ArgumentNotNull(assemblies, nameof(assemblies));
 
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
         }
@@ -217,9 +232,10 @@ namespace Ninject
         /// Unloads the plugin with the specified name.
         /// </summary>
         /// <param name="name">The plugin's name.</param>
+        /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public void Unload(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNullOrEmpty(name, nameof(name));
 
             if (!this.modules.TryGetValue(name, out INinjectModule module))
             {
@@ -235,10 +251,13 @@ namespace Ninject
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <returns>
+        /// A series of bindings that are registered for the service.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public IBinding[] GetBindings(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(service, nameof(service));
 
             var resolvers = this.Components.GetAll<IBindingResolver>();
 
@@ -271,7 +290,7 @@ namespace Ninject
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (!this.IsDisposed && disposing)
