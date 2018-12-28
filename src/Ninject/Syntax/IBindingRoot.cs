@@ -69,6 +69,8 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="services">The services to bind.</param>
         /// <returns>The fluent syntax.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="services"/> contains zero items.</exception>
         IBindingToSyntax<object> Bind(params Type[] services);
 
         /// <summary>
@@ -81,6 +83,7 @@ namespace Ninject.Syntax
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         void Unbind(Type service);
 
         /// <summary>
@@ -122,18 +125,22 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="services">The services to re-bind.</param>
         /// <returns>The fluent syntax.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="services"/> contains zero items.</exception>
         IBindingToSyntax<object> Rebind(params Type[] services);
 
         /// <summary>
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         void AddBinding(IBinding binding);
 
         /// <summary>
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         void RemoveBinding(IBinding binding);
     }
 }

@@ -34,7 +34,9 @@ namespace Ninject.Injection
         /// Gets or creates an injector for the specified constructor.
         /// </summary>
         /// <param name="constructor">The constructor.</param>
-        /// <returns>The created injector.</returns>
+        /// <returns>
+        /// The created injector.
+        /// </returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
             return args => constructor.Invoke(args);
@@ -44,7 +46,9 @@ namespace Ninject.Injection
         /// Gets or creates an injector for the specified property.
         /// </summary>
         /// <param name="property">The property.</param>
-        /// <returns>The created injector.</returns>
+        /// <returns>
+        /// The created injector.
+        /// </returns>
         public PropertyInjector Create(PropertyInfo property)
         {
             return (target, value) => property.SetValue(target, value, null);
@@ -54,7 +58,9 @@ namespace Ninject.Injection
         /// Gets or creates an injector for the specified method.
         /// </summary>
         /// <param name="method">The method.</param>
-        /// <returns>The created injector.</returns>
+        /// <returns>
+        /// The created injector.
+        /// </returns>
         public MethodInjector Create(MethodInfo method)
         {
             return (target, args) => method.Invoke(target, args);

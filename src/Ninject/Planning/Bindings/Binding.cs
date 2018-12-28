@@ -37,6 +37,7 @@ namespace Ninject.Planning.Bindings
         /// Initializes a new instance of the <see cref="Binding"/> class.
         /// </summary>
         /// <param name="service">The service that is controlled by the binding.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public Binding(Type service)
         {
             Ensure.ArgumentNotNull(service, "service");
@@ -50,10 +51,12 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="service">The service that is controlled by the binding.</param>
         /// <param name="configuration">The binding configuration.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="configuration"/> is <see langword="null"/>.</exception>
         public Binding(Type service, IBindingConfiguration configuration)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(configuration, "configuration");
+            Ensure.ArgumentNotNull(service, nameof(service));
+            Ensure.ArgumentNotNull(configuration, nameof(configuration));
 
             this.Service = service;
             this.BindingConfiguration = configuration;
@@ -210,6 +213,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The provider to use.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public IProvider GetProvider(IContext context)
         {
             return this.BindingConfiguration.GetProvider(context);
@@ -222,6 +226,7 @@ namespace Ninject.Planning.Bindings
         /// <returns>
         /// The object that will act as the scope, or <see langword="null"/> if the service is transient.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public object GetScope(IContext context)
         {
             return this.BindingConfiguration.GetScope(context);
@@ -233,8 +238,9 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>
-        ///     <c>True</c> if the request satisfies the condition; otherwise <c>false</c>.
+        /// <see langword="true"/> if the request satisfies the condition; otherwise <see langword="false"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool Matches(IRequest request)
         {
             return this.BindingConfiguration.Matches(request);

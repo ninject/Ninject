@@ -21,6 +21,8 @@
 
 namespace Ninject.Activation.Strategies
 {
+    using System;
+
     using Ninject.Infrastructure;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
@@ -36,10 +38,12 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(reference, nameof(reference));
 
             foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
             {

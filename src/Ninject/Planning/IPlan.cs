@@ -46,13 +46,16 @@ namespace Ninject.Planning
         /// Adds the specified directive to the plan.
         /// </summary>
         /// <param name="directive">The directive.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="directive"/> is <see langword="null"/>.</exception>
         void Add(IDirective directive);
 
         /// <summary>
         /// Determines whether the plan contains one or more directives of the specified type.
         /// </summary>
         /// <typeparam name="TDirective">The type of directive.</typeparam>
-        /// <returns><c>True</c> if the plan has one or more directives of the type; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the plan has one or more directives of the type; otherwise, <see langword="false"/>.
+        /// </returns>
         bool Has<TDirective>()
             where TDirective : IDirective;
 
@@ -60,7 +63,9 @@ namespace Ninject.Planning
         /// Gets the first directive of the specified type from the plan.
         /// </summary>
         /// <typeparam name="TDirective">The type of directive.</typeparam>
-        /// <returns>The first directive, or <see langword="null"/> if no matching directives exist.</returns>
+        /// <returns>
+        /// The first directive, or <see langword="null"/> if no matching directives exist.
+        /// </returns>
         TDirective GetOne<TDirective>()
             where TDirective : IDirective;
 
@@ -68,7 +73,9 @@ namespace Ninject.Planning
         /// Gets all directives of the specified type that exist in the plan.
         /// </summary>
         /// <typeparam name="TDirective">The type of directive.</typeparam>
-        /// <returns>A series of directives of the specified type.</returns>
+        /// <returns>
+        /// A series of directives of the specified type.
+        /// </returns>
         IEnumerable<TDirective> GetAll<TDirective>()
             where TDirective : IDirective;
     }

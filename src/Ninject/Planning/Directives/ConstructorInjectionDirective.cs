@@ -21,6 +21,7 @@
 
 namespace Ninject.Planning.Directives
 {
+    using System;
     using System.Reflection;
 
     using Ninject.Injection;
@@ -35,6 +36,8 @@ namespace Ninject.Planning.Directives
         /// </summary>
         /// <param name="constructor">The constructor described by the directive.</param>
         /// <param name="injector">The injector that will be triggered.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="constructor"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="injector"/> is <see langword="null"/>.</exception>
         public ConstructorInjectionDirective(ConstructorInfo constructor, ConstructorInjector injector)
             : base(constructor, injector)
         {

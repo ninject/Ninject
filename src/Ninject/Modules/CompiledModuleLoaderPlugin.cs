@@ -21,6 +21,7 @@
 
 namespace Ninject.Modules
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -49,10 +50,12 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="kernel">The kernel into which modules will be loaded.</param>
         /// <param name="assemblyNameRetriever">The assembly name retriever.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="assemblyNameRetriever"/> is <see langword="null"/>.</exception>
         public CompiledModuleLoaderPlugin(IKernel kernel, IAssemblyNameRetriever assemblyNameRetriever)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
-            Ensure.ArgumentNotNull(assemblyNameRetriever, "assemblyNameRetriever");
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
+            Ensure.ArgumentNotNull(assemblyNameRetriever, nameof(assemblyNameRetriever));
 
             this.Kernel = kernel;
             this.assemblyNameRetriever = assemblyNameRetriever;

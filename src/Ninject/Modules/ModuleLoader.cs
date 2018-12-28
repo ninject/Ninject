@@ -38,9 +38,10 @@ namespace Ninject.Modules
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
         /// <param name="kernel">The kernel into which modules will be loaded.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
         public ModuleLoader(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
 
             this.Kernel = kernel;
         }

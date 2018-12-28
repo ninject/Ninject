@@ -85,16 +85,20 @@ namespace Ninject.Activation
 
         /// <summary>
         /// Gets or sets a value indicating whether the request should force to return a unique value even if the request is optional.
-        /// If this value is set true the request will throw an ActivationException if there are multiple satisfying bindings rather
-        /// than returning null for the request is optional. For none optional requests this parameter does not change anything.
         /// </summary>
+        /// <remarks>
+        /// If this value is <see langword="true"/>, the request will throw an <see cref="ActivationException"/> if there are multiple satisfying bindings rather
+        /// than returning <see langword="null"/> for the request is optional. For non-optional requests this parameter does not change anything.
+        /// </remarks>
         bool ForceUnique { get; set; }
 
         /// <summary>
         /// Determines whether the specified binding satisfies the constraint defined on this request.
         /// </summary>
         /// <param name="binding">The binding.</param>
-        /// <returns><c>True</c> if the binding satisfies the constraint; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the binding satisfies the constraint; otherwise, <see langword="false"/>.
+        /// </returns>
         bool Matches(IBinding binding);
 
         /// <summary>
@@ -109,7 +113,9 @@ namespace Ninject.Activation
         /// <param name="service">The service that is being requested.</param>
         /// <param name="parentContext">The context in which the request was made.</param>
         /// <param name="target">The target that will receive the injection.</param>
-        /// <returns>The child request.</returns>
+        /// <returns>
+        /// The child request.
+        /// </returns>
         IRequest CreateChild(Type service, IContext parentContext, ITarget target);
     }
 }

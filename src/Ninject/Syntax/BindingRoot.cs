@@ -129,13 +129,16 @@ namespace Ninject.Syntax
         /// Declares a binding for the specified service.
         /// </summary>
         /// <param name="services">The services to bind.</param>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="services"/> contains zero types to bind.</exception>
         public IBindingToSyntax<object> Bind(params Type[] services)
         {
-            Ensure.ArgumentNotNull(services, "services");
+            Ensure.ArgumentNotNull(services, nameof(services));
+
             if (services.Length == 0)
             {
-                throw new ArgumentException("The services must contain at least one type", "services");
+                throw new ArgumentException("Specify at least one type to bind.", nameof(services));
             }
 
             var bindingConfiguration = new BindingConfiguration { ScopeCallback = this.KernelInstance.Settings.DefaultScopeCallback };
@@ -243,8 +246,12 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="services">The services to re-bind.</param>
         /// <returns>The fluent syntax.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="services"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="services"/> contains zero items.</exception>
         public IBindingToSyntax<object> Rebind(params Type[] services)
         {
+            Ensure.ArgumentNotNull(services, nameof(services));
+
             foreach (var service in services)
             {
                 this.Unbind(service);
@@ -257,12 +264,14 @@ namespace Ninject.Syntax
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public abstract void AddBinding(IBinding binding);
 
         /// <summary>
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public abstract void RemoveBinding(IBinding binding);
     }
 }

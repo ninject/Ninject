@@ -41,10 +41,12 @@ namespace Ninject.Planning.Strategies
         /// </summary>
         /// <param name="selector">The selector component.</param>
         /// <param name="injectorFactory">The injector factory component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="injectorFactory"/> is <see langword="null"/>.</exception>
         public ConstructorReflectionStrategy(ISelector selector, IInjectorFactory injectorFactory)
         {
-            Ensure.ArgumentNotNull(selector, "selector");
-            Ensure.ArgumentNotNull(injectorFactory, "injectorFactory");
+            Ensure.ArgumentNotNull(selector, nameof(selector));
+            Ensure.ArgumentNotNull(injectorFactory, nameof(injectorFactory));
 
             this.Selector = selector;
             this.InjectorFactory = injectorFactory;
@@ -65,9 +67,10 @@ namespace Ninject.Planning.Strategies
         /// that should be injected.
         /// </summary>
         /// <param name="plan">The plan that is being generated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="plan"/> is <see langword="null"/>.</exception>
         public void Execute(IPlan plan)
         {
-            Ensure.ArgumentNotNull(plan, "plan");
+            Ensure.ArgumentNotNull(plan, nameof(plan));
 
             var constructors = this.Selector.SelectConstructorsForInjection(plan.Type);
             if (constructors == null)

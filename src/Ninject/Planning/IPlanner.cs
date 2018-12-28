@@ -41,7 +41,10 @@ namespace Ninject.Planning
         /// Gets or creates an activation plan for the specified type.
         /// </summary>
         /// <param name="type">The type for which a plan should be created.</param>
-        /// <returns>The type's activation plan.</returns>
+        /// <returns>
+        /// The type's activation plan.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         IPlan GetPlan(Type type);
     }
 }

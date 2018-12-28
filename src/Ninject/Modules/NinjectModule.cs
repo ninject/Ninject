@@ -81,9 +81,10 @@ namespace Ninject.Modules
         /// Called when the module is loaded into a kernel.
         /// </summary>
         /// <param name="kernel">The kernel that is loading the module.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
         public void OnLoad(IKernel kernel)
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
 
             this.Kernel = kernel;
             this.Load();
@@ -133,6 +134,7 @@ namespace Ninject.Modules
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public override void Unbind(Type service)
         {
             this.Kernel.Unbind(service);
@@ -142,10 +144,9 @@ namespace Ninject.Modules
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.Kernel.AddBinding(binding);
             this.bindings.Add(binding);
         }
@@ -154,10 +155,9 @@ namespace Ninject.Modules
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
-
             this.Kernel.RemoveBinding(binding);
             this.bindings.Remove(binding);
         }

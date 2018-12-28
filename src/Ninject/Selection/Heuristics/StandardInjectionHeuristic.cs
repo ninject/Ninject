@@ -34,24 +34,33 @@ namespace Ninject.Selection.Heuristics
     public class StandardInjectionHeuristic : NinjectComponent, IInjectionHeuristic
     {
         /// <summary>
-        /// Returns a value indicating whether the specified member should be injected.
+        /// Returns a value indicating whether the specified property should be injected.
         /// </summary>
-        /// <param name="member">The member in question.</param>
-        /// <returns><c>True</c> if the member should be injected; otherwise <c>false</c>.</returns>
-        public virtual bool ShouldInject(MemberInfo member)
+        /// <param name="property">The property in question.</param>
+        /// <returns>
+        /// <see langword="true"/> if the property should be injected; otherwise, <see langword="false"/>.
+        /// </returns>
+        public virtual bool ShouldInject(PropertyInfo property)
         {
-            Ensure.ArgumentNotNull(member, "member");
+            Ensure.ArgumentNotNull(property, nameof(property));
 
-            if (member is PropertyInfo propertyInfo)
-            {
-                var injectNonPublic = this.Settings.InjectNonPublic;
+            var setMethod = property.GetSetMethod(this.Settings.InjectNonPublic);
 
-                var setMethod = propertyInfo.GetSetMethod(injectNonPublic);
+            return setMethod != null && property.HasAttribute(this.Settings.InjectAttribute);
+        }
 
-                return member.HasAttribute(this.Settings.InjectAttribute) && setMethod != null;
-            }
+        /// <summary>
+        /// Returns a value indicating whether the specified method should be injected.
+        /// </summary>
+        /// <param name="method">The method in question.</param>
+        /// <returns>
+        /// <see langword="true"/> if the method should be injected; otherwise, <see langword="false"/>.
+        /// </returns>
+        public virtual bool ShouldInject(MethodInfo method)
+        {
+            Ensure.ArgumentNotNull(method, nameof(method));
 
-            return member.HasAttribute(this.Settings.InjectAttribute);
+            return method.HasAttribute(this.Settings.InjectAttribute);
         }
     }
 }

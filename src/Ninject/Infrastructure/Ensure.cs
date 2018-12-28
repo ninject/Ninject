@@ -33,6 +33,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="argument">The argument value.</param>
         /// <param name="name">The argument name.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="argument"/> is <see langword="null"/>.</exception>
         internal static void ArgumentNotNull(object argument, string name)
         {
             if (argument == null)
@@ -46,6 +47,7 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="argument">The argument value.</param>
         /// <param name="name">The argument name.</param>
+        /// <exception cref="ArgumentException"><paramref name="argument"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         internal static void ArgumentNotNullOrEmpty(string argument, string name)
         {
             if (string.IsNullOrEmpty(argument))

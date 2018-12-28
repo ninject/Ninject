@@ -23,11 +23,9 @@ namespace Ninject.Planning.Bindings.Resolvers
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Activation;
     using Ninject.Components;
-    using Ninject.Infrastructure;
     using Ninject.Planning.Targets;
 
     /// <summary>
@@ -41,7 +39,7 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
         /// <returns>The series of matching bindings.</returns>
-        public ICollection<IBinding> Resolve(IDictionary<Type,ICollection< IBinding>> bindings, IRequest request)
+        public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
             return HasDefaultValue(request.Target)

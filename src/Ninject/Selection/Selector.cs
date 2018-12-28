@@ -47,9 +47,10 @@ namespace Ninject.Selection
         /// Initializes a new instance of the <see cref="Selector"/> class.
         /// </summary>
         /// <param name="injectionHeuristics">The injection heuristics.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="injectionHeuristics"/> is <see langword="null"/>.</exception>
         public Selector(IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
-            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
+            Ensure.ArgumentNotNull(injectionHeuristics, nameof(injectionHeuristics));
 
             this.injectionHeuristics = injectionHeuristics.ToList();
         }
@@ -73,10 +74,13 @@ namespace Ninject.Selection
         /// Selects the constructor to call on the specified type, by using the constructor scorer.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>A series of the selected constructor.</returns>
+        /// <returns>
+        /// A series of the selected constructor.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         public virtual ConstructorInfo[] SelectConstructorsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
             if (type.IsSubclassOf(typeof(MulticastDelegate)))
             {
@@ -93,7 +97,7 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
             var bindingFlags = this.Flags;
             var declaredPropertiesToInject = type.GetProperties(bindingFlags)
@@ -120,9 +124,10 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A series of the selected methods.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
             return type.GetMethods(this.Flags).Where(m => ShouldInject(this.injectionHeuristics, m));
         }

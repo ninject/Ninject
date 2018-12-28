@@ -40,10 +40,12 @@ namespace Ninject.Planning.Directives
         /// </summary>
         /// <param name="method">The method this directive represents.</param>
         /// <param name="injector">The injector that will be triggered.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="injector"/> is <see langword="null"/>.</exception>
         protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
         {
-            Ensure.ArgumentNotNull(method, "method");
-            Ensure.ArgumentNotNull(injector, "injector");
+            Ensure.ArgumentNotNull(method, nameof(method));
+            Ensure.ArgumentNotNull(injector, nameof(injector));
 
             this.Injector = injector;
             this.Targets = this.CreateTargetsFromParameters(method);

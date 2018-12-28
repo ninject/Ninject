@@ -48,9 +48,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="bindingConfiguration">The binding configuration to build.</param>
         /// <param name="serviceNames">The names of the configured services.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="bindingConfiguration"/> is <see langword="null"/>.</exception>
         public BindingConfigurationBuilder(IBindingConfiguration bindingConfiguration, string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
+            Ensure.ArgumentNotNull(bindingConfiguration, nameof(bindingConfiguration));
 
             this.BindingConfiguration = bindingConfiguration;
             this.serviceNames = serviceNames;

@@ -113,6 +113,32 @@
         }
 
         [Fact]
+        public void Remove_ShouldThrowArgumentNullExceptionWhenKeyIsNull()
+        {
+            const string key = null;
+            const string value = "ABC";
+            var target = new Multimap<string, string>();
+
+            var actualException = Assert.Throws<ArgumentNullException>(() => target.Remove(key, value));
+
+            Assert.Null(actualException.InnerException);
+            Assert.Equal(nameof(key), actualException.ParamName);
+        }
+
+        [Fact]
+        public void Remove_ShouldThrowArgumentNullExceptionWhenValueIsNull()
+        {
+            const string key = "SVC";
+            const string value = null;
+            var target = new Multimap<string, string>();
+
+            var actualException = Assert.Throws<ArgumentNullException>(() => target.Remove(key, value));
+
+            Assert.Null(actualException.InnerException);
+            Assert.Equal(nameof(value), actualException.ParamName);
+        }
+
+        [Fact]
         public void Remove_ShouldReturnFalseWhenNoValuesExistForSpecifiedKey()
         {
             const string key = "SVC";

@@ -67,6 +67,7 @@ namespace Ninject
         /// Initializes a new instance of the <see cref="KernelBase"/> class.
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         protected KernelBase(params INinjectModule[] modules)
             : this(new ComponentContainer(), new NinjectSettings(), modules)
         {
@@ -77,6 +78,8 @@ namespace Ninject
         /// </summary>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
             : this(new ComponentContainer(), settings, modules)
         {
@@ -88,11 +91,14 @@ namespace Ninject
         /// <param name="components">The component container to use.</param>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="components"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         protected KernelBase(IComponentContainer components, INinjectSettings settings, params INinjectModule[] modules)
         {
-            Ensure.ArgumentNotNull(components, "components");
-            Ensure.ArgumentNotNull(settings, "settings");
-            Ensure.ArgumentNotNull(modules, "modules");
+            Ensure.ArgumentNotNull(components, nameof(components));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+            Ensure.ArgumentNotNull(modules, nameof(modules));
 
             this.Settings = settings;
 
@@ -127,7 +133,7 @@ namespace Ninject
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed)
@@ -149,9 +155,10 @@ namespace Ninject
         /// Unregisters all bindings for the specified service.
         /// </summary>
         /// <param name="service">The service to unbind.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public override void Unbind(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(service, nameof(service));
 
             this.bindings.Remove(service);
 
@@ -165,9 +172,10 @@ namespace Ninject
         /// Registers the specified binding.
         /// </summary>
         /// <param name="binding">The binding to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void AddBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.AddBindings(new[] { binding });
         }
@@ -176,9 +184,10 @@ namespace Ninject
         /// Unregisters the specified binding.
         /// </summary>
         /// <param name="binding">The binding to remove.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
         public override void RemoveBinding(IBinding binding)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.bindings.Remove(binding.Service, binding);
 
@@ -192,10 +201,13 @@ namespace Ninject
         /// Determines whether a module with the specified name has been loaded in the kernel.
         /// </summary>
         /// <param name="name">The name of the module.</param>
-        /// <returns><c>True</c> if the specified module has been loaded; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the specified module has been loaded; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public bool HasModule(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNullOrEmpty(name, nameof(name));
             return this.modules.ContainsKey(name);
         }
 
@@ -212,9 +224,10 @@ namespace Ninject
         /// Loads the module(s) into the kernel.
         /// </summary>
         /// <param name="modules">The modules to load.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<INinjectModule> modules)
         {
-            Ensure.ArgumentNotNull(modules, "modules");
+            Ensure.ArgumentNotNull(modules, nameof(modules));
 
             modules = modules.ToList();
             foreach (INinjectModule module in modules)
@@ -244,6 +257,7 @@ namespace Ninject
         /// Loads modules from the files that match the specified pattern(s).
         /// </summary>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="filePatterns"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<string> filePatterns)
         {
             var moduleLoader = this.Components.Get<IModuleLoader>();
@@ -254,6 +268,7 @@ namespace Ninject
         /// Loads modules defined in the specified assemblies.
         /// </summary>
         /// <param name="assemblies">The assemblies to search.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="assemblies"/> is <see langword="null"/>.</exception>
         public void Load(IEnumerable<Assembly> assemblies)
         {
             this.Load(assemblies.SelectMany(asm => asm.GetNinjectModules()));
@@ -263,9 +278,10 @@ namespace Ninject
         /// Unloads the plugin with the specified name.
         /// </summary>
         /// <param name="name">The plugin's name.</param>
+        /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public void Unload(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNullOrEmpty(name, nameof(name));
 
             if (!this.modules.TryGetValue(name, out INinjectModule module))
             {
@@ -282,10 +298,12 @@ namespace Ninject
         /// </summary>
         /// <param name="instance">The instance to inject.</param>
         /// <param name="parameters">The parameters to pass to the request.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public virtual void Inject(object instance, params IParameter[] parameters)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Ensure.ArgumentNotNull(instance, nameof(instance));
+            Ensure.ArgumentNotNull(parameters, nameof(parameters));
 
             Type service = instance.GetType();
 
@@ -306,10 +324,13 @@ namespace Ninject
         /// Deactivates and releases the specified instance if it is currently managed by Ninject.
         /// </summary>
         /// <param name="instance">The instance to release.</param>
-        /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public virtual bool Release(object instance)
         {
-            Ensure.ArgumentNotNull(instance, "instance");
+            Ensure.ArgumentNotNull(instance, nameof(instance));
             var cache = this.Components.Get<ICache>();
             return cache.Release(instance);
         }
@@ -318,10 +339,13 @@ namespace Ninject
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the request can be resolved; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public virtual bool CanResolve(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
             return this.GetBindings(request.Service).Any(this.SatifiesRequest(request));
         }
 
@@ -329,13 +353,14 @@ namespace Ninject
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <param name="ignoreImplicitBindings">if set to <see langword="true"/> implicit bindings are ignored.</param>
         /// <returns>
-        ///     <c>True</c> if the request can be resolved; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public virtual bool CanResolve(IRequest request, bool ignoreImplicitBindings)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
             return this.GetBindings(request.Service)
                 .Any(binding => (!ignoreImplicitBindings || !binding.IsImplicit) && this.SatifiesRequest(request)(binding));
         }
@@ -346,6 +371,7 @@ namespace Ninject
         /// </summary>
         /// <param name="request">The request to resolve.</param>
         /// <returns>An enumerator of instances that match the request.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
             return this.Resolve(request, true);
@@ -357,13 +383,15 @@ namespace Ninject
         /// <param name="service">The service that is being requested.</param>
         /// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
         /// <param name="parameters">The parameters to pass to the resolution.</param>
-        /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-        /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
+        /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <returns>The created request.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parameters, "parameters");
+            Ensure.ArgumentNotNull(service, nameof(service));
+            Ensure.ArgumentNotNull(parameters, nameof(parameters));
 
             return new Request(service, constraint, parameters, null, isOptional, isUnique);
         }
@@ -382,9 +410,10 @@ namespace Ninject
         /// </summary>
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public virtual IBinding[] GetBindings(Type service)
         {
-            Ensure.ArgumentNotNull(service, "service");
+            Ensure.ArgumentNotNull(service, nameof(service));
 
             lock (this.bindingCache)
             {
@@ -436,7 +465,7 @@ namespace Ninject
         /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
         protected virtual bool HandleMissingBinding(IRequest request)
         {
-            Ensure.ArgumentNotNull(request, "request");
+            Ensure.ArgumentNotNull(request, nameof(request));
 
             var components = this.Components.GetAll<IMissingBindingResolver>();
 
@@ -470,8 +499,8 @@ namespace Ninject
         /// <returns>The created context.</returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
-            Ensure.ArgumentNotNull(request, "request");
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(request, nameof(request));
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>(), this.Components.Get<IExceptionFormatter>());
         }

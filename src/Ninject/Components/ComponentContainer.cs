@@ -81,7 +81,7 @@ namespace Ninject.Components
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed)
@@ -157,9 +157,10 @@ namespace Ninject.Components
         /// Removes all registrations for the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public void RemoveAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             foreach (Type implementation in this.mappings[component])
             {
@@ -196,7 +197,9 @@ namespace Ninject.Components
         /// Gets all available instances of the specified component.
         /// </summary>
         /// <typeparam name="T">The component type.</typeparam>
-        /// <returns>A series of instances of the specified component.</returns>
+        /// <returns>
+        /// A series of instances of the specified component.
+        /// </returns>
         public IEnumerable<T> GetAll<T>()
             where T : INinjectComponent
         {
@@ -207,10 +210,13 @@ namespace Ninject.Components
         /// Gets one instance of the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
-        /// <returns>The instance of the component.</returns>
+        /// <returns>
+        /// The instance of the component.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public object Get(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             if (component == typeof(IKernel))
             {
@@ -241,10 +247,13 @@ namespace Ninject.Components
         /// Gets all available instances of the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
-        /// <returns>A series of instances of the specified component.</returns>
+        /// <returns>
+        /// A series of instances of the specified component.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public IEnumerable<object> GetAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             return this.mappings[component]
                 .Select(implementation => this.ResolveInstance(component, implementation));

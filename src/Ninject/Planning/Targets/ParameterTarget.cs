@@ -34,6 +34,8 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="method">The method that defines the parameter.</param>
         /// <param name="site">The parameter that this target represents.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="site"/> is <see langword="null"/>.</exception>
         public ParameterTarget(MethodBase method, ParameterInfo site)
             : base(method, site)
         {

@@ -47,10 +47,12 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="member">The member that contains the target.</param>
         /// <param name="site">The site represented by the target.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="member"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="site"/> is <see langword="null"/>.</exception>
         protected Target(MemberInfo member, T site)
         {
-            Ensure.ArgumentNotNull(member, "member");
-            Ensure.ArgumentNotNull(site, "site");
+            Ensure.ArgumentNotNull(member, nameof(member));
+            Ensure.ArgumentNotNull(site, nameof(site));
 
             this.Member = member;
             this.Site = site;
@@ -106,7 +108,7 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Gets the default value for the target.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">If the item does not have a default value.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="Target{T}"/> does not have a default value.</exception>
         public virtual object DefaultValue
         {
             get { throw new InvalidOperationException(ExceptionFormatter.TargetDoesNotHaveADefaultValue(this)); }
@@ -117,10 +119,13 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="attributeType">The type of attribute to search for.</param>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
-        /// <returns>An array of custom attributes of the specified type.</returns>
+        /// <returns>
+        /// An array of custom attributes of the specified type.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="attributeType"/> is <see langword="null"/>.</exception>
         public object[] GetCustomAttributes(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
+            Ensure.ArgumentNotNull(attributeType, nameof(attributeType));
 
             return this.Site.GetCustomAttributesExtended(attributeType, inherit);
         }
@@ -129,7 +134,9 @@ namespace Ninject.Planning.Targets
         /// Returns an array of custom attributes defined on the target.
         /// </summary>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
-        /// <returns>An array of custom attributes.</returns>
+        /// <returns>
+        /// An array of custom attributes.
+        /// </returns>
         public object[] GetCustomAttributes(bool inherit)
         {
             return this.Site.GetCustomAttributes(inherit);
@@ -140,10 +147,13 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="attributeType">The type of attribute to search for.</param>
         /// <param name="inherit">Whether to look up the hierarchy chain for inherited custom attributes.</param>
-        /// <returns><c>True</c> if such an attribute is defined; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if such an attribute is defined; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="attributeType"/> is <see langword="null"/>.</exception>
         public bool IsDefined(Type attributeType, bool inherit)
         {
-            Ensure.ArgumentNotNull(attributeType, "attributeType");
+            Ensure.ArgumentNotNull(attributeType, nameof(attributeType));
 
             return this.Site.HasAttribute(attributeType);
         }
@@ -152,10 +162,13 @@ namespace Ninject.Planning.Targets
         /// Resolves a value for the target within the specified parent context.
         /// </summary>
         /// <param name="parent">The parent context.</param>
-        /// <returns>The resolved value.</returns>
+        /// <returns>
+        /// The resolved value.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
         public object ResolveWithin(IContext parent)
         {
-            Ensure.ArgumentNotNull(parent, "parent");
+            Ensure.ArgumentNotNull(parent, nameof(parent));
 
             var request = parent.Request.CreateChild(this.Type, parent, this);
             request.IsUnique = true;
@@ -167,12 +180,16 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="service">The service that the target is requesting.</param>
         /// <param name="parent">The parent context in which the target is being injected.</param>
-        /// <returns>A series of values that are available for injection.</returns>
+        /// <returns>
+        /// A series of values that are available for injection.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
         [Obsolete]
         protected virtual IEnumerable<object> GetValues(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
+            Ensure.ArgumentNotNull(service, nameof(service));
+            Ensure.ArgumentNotNull(parent, nameof(parent));
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsOptional = true;
@@ -184,12 +201,16 @@ namespace Ninject.Planning.Targets
         /// </summary>
         /// <param name="service">The service that the target is requesting.</param>
         /// <param name="parent">The parent context in which the target is being injected.</param>
-        /// <returns>The value that is to be injected.</returns>
+        /// <returns>
+        /// The value that is to be injected.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
         [Obsolete]
         protected virtual object GetValue(Type service, IContext parent)
         {
-            Ensure.ArgumentNotNull(service, "service");
-            Ensure.ArgumentNotNull(parent, "parent");
+            Ensure.ArgumentNotNull(service, nameof(service));
+            Ensure.ArgumentNotNull(parent, nameof(parent));
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;

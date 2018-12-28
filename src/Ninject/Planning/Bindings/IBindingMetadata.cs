@@ -36,7 +36,9 @@ namespace Ninject.Planning.Bindings
         /// Determines whether a piece of metadata with the specified key has been defined.
         /// </summary>
         /// <param name="key">The metadata key.</param>
-        /// <returns><c>True</c> if such a piece of metadata exists; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if such a piece of metadata exists; otherwise, <see langword="false"/>.
+        /// </returns>
         bool Has(string key);
 
         /// <summary>
@@ -44,7 +46,9 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <typeparam name="T">The type of value to expect.</typeparam>
         /// <param name="key">The metadata key.</param>
-        /// <returns>The metadata value.</returns>
+        /// <returns>
+        /// The metadata value.
+        /// </returns>
         T Get<T>(string key);
 
         /// <summary>
@@ -53,7 +57,9 @@ namespace Ninject.Planning.Bindings
         /// <typeparam name="T">The type of value to expect.</typeparam>
         /// <param name="key">The metadata key.</param>
         /// <param name="defaultValue">The value to return if the binding has no metadata set with the specified key.</param>
-        /// <returns>The metadata value, or the default value if none was set.</returns>
+        /// <returns>
+        /// The metadata value, or the default value if none was set.
+        /// </returns>
         T Get<T>(string key, T defaultValue);
 
         /// <summary>

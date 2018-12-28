@@ -85,15 +85,21 @@ namespace Ninject
         /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();
         /// </summary>
         /// <value>
-        ///     <c>true</c> if activation cache is disabled; otherwise, <c>false</c>.
+        /// <see langword="true"/> if activation cache is disabled; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         bool ActivationCacheDisabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Null is a valid value for injection.
-        /// By default this is disabled and whenever a provider returns null an exception is thrown.
+        /// Gets or sets a value indicating whether <see langword="null"/> is a valid value for injection.
         /// </summary>
-        /// <value><c>true</c> if null is allowed as injected value otherwise false.</value>
+        /// <value>
+        /// <see langword="true"/> if <see langword="null"/> is allowed as injected value; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// When <see langword="false"/>, an <see cref="ActivationException"/> is thrown whenever a provider returns <see langword="null"/>.
+        /// </remarks>
         bool AllowNullInjection { get; set; }
    }
 }

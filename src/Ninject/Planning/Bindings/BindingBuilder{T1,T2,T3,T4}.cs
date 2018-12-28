@@ -39,10 +39,16 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingBuilder{T1, T2, T3, T4}"/> class.
         /// </summary>
-        /// <param name="bindingConfigurationConfiguration">The binding to build.</param>
+        /// <param name="bindingConfiguration">The binding to build.</param>
         /// <param name="serviceNames">The names of the services.</param>
-        public BindingBuilder(IBindingConfiguration bindingConfigurationConfiguration, string serviceNames)
-            : base(bindingConfigurationConfiguration, serviceNames)
+        /// <exception cref="ArgumentNullException"><paramref name="bindingConfiguration"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="serviceNames"/> is <see langword="null"/>.</exception>
+        public BindingBuilder(
+            IBindingConfiguration bindingConfiguration,
+            string serviceNames)
+            : base(
+                 bindingConfiguration,
+                 serviceNames)
         {
         }
 

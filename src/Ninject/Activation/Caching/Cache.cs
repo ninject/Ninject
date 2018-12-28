@@ -21,6 +21,8 @@
 
 namespace Ninject.Activation.Caching
 {
+    using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -46,10 +48,12 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="pipeline">The pipeline component.</param>
         /// <param name="cachePruner">The cache pruner component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="cachePruner"/> is <see langword="null"/>.</exception>
         public Cache(IPipeline pipeline, ICachePruner cachePruner)
         {
-            Ensure.ArgumentNotNull(pipeline, "pipeline");
-            Ensure.ArgumentNotNull(cachePruner, "cachePruner");
+            Ensure.ArgumentNotNull(pipeline, nameof(pipeline));
+            Ensure.ArgumentNotNull(cachePruner, nameof(cachePruner));
 
             this.Pipeline = pipeline;
             cachePruner.Start(this);
@@ -71,7 +75,7 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed)
@@ -87,9 +91,10 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="context">The context to store.</param>
         /// <param name="reference">The instance reference.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public void Remember(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             var scope = context.GetScope();
             var entry = new CacheEntry(context, reference);
@@ -114,10 +119,13 @@ namespace Ninject.Activation.Caching
         /// Tries to retrieve an instance to re-use in the specified context.
         /// </summary>
         /// <param name="context">The context that is being activated.</param>
-        /// <returns>The instance for re-use, or <see langword="null"/> if none has been stored.</returns>
+        /// <returns>
+        /// The instance for re-use, or <see langword="null"/> if none has been stored.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public object TryGet(IContext context)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             var scope = context.GetScope();
             if (scope == null)
@@ -156,7 +164,9 @@ namespace Ninject.Activation.Caching
         /// Deactivates and releases the specified instance from the cache.
         /// </summary>
         /// <param name="instance">The instance to release.</param>
-        /// <returns><see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the instance was found and released; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool Release(object instance)
         {
             lock (this.entries)
