@@ -43,8 +43,8 @@ namespace Ninject.Activation
         /// <param name="constraint">The constraint that will be applied to filter the bindings used for the request.</param>
         /// <param name="parameters">The parameters that affect the resolution.</param>
         /// <param name="scopeCallback">The scope callback, if an external scope was specified.</param>
-        /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-        /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
+        /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
@@ -149,7 +149,9 @@ namespace Ninject.Activation
         /// Determines whether the specified binding satisfies the constraints defined on this request.
         /// </summary>
         /// <param name="binding">The binding.</param>
-        /// <returns><c>True</c> if the binding satisfies the constraints; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/>  if the binding satisfies the constraints; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool Matches(IBinding binding)
         {
             return this.Constraint == null || this.Constraint(binding.Metadata);
@@ -158,7 +160,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the scope if one was specified in the request.
         /// </summary>
-        /// <returns>The object that acts as the scope.</returns>
+        /// <returns>
+        /// The object that acts as the scope.
+        /// </returns>
         public object GetScope()
         {
             return this.ScopeCallback == null ? null : this.ScopeCallback();
@@ -170,7 +174,9 @@ namespace Ninject.Activation
         /// <param name="service">The service that is being requested.</param>
         /// <param name="parentContext">The context in which the request was made.</param>
         /// <param name="target">The target that will receive the injection.</param>
-        /// <returns>The child request.</returns>
+        /// <returns>
+        /// The child request.
+        /// </returns>
         public IRequest CreateChild(Type service, IContext parentContext, ITarget target)
         {
             return new Request(parentContext, service, target, this.ScopeCallback);
@@ -179,7 +185,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Formats this object into a meaningful string representation.
         /// </summary>
-        /// <returns>The request formatted as string.</returns>
+        /// <returns>
+        /// The request formatted as string.
+        /// </returns>
         public override string ToString()
         {
             return this.Format();

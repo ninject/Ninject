@@ -64,6 +64,7 @@ namespace Ninject.Activation.Caching
         /// Initializes a new instance of the <see cref="GarbageCollectionCachePruner"/> class.
         /// </summary>
         /// <param name="settings">The ninject settings.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         public GarbageCollectionCachePruner(INinjectSettings settings)
         {
             Ensure.ArgumentNotNull(settings, nameof(settings));
@@ -74,7 +75,7 @@ namespace Ninject.Activation.Caching
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed && this.timer != null)
@@ -89,14 +90,15 @@ namespace Ninject.Activation.Caching
         /// Starts pruning the specified pruneable based on the rules of the pruner.
         /// </summary>
         /// <param name="pruneable">The pruneable that will be pruned.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="pruneable"/> is <see langword="null"/>.</exception>
         public void Start(IPruneable pruneable)
         {
-            Ensure.ArgumentNotNull(pruneable, "pruneable");
+            Ensure.ArgumentNotNull(pruneable, nameof(pruneable));
 
             this.caches.Add(pruneable);
             if (this.timer == null)
             {
-                this.timer = new Timer(this.PruneCacheIfGarbageCollectorHasRun, null, this.GetTimeoutInMilliseconds(), Timeout.Infinite);
+                this.timer = new Timer((state) => this.PruneCacheIfGarbageCollectorHasRun(state), null, this.GetTimeoutInMilliseconds(), Timeout.Infinite);
             }
         }
 
@@ -135,7 +137,7 @@ namespace Ninject.Activation.Caching
                         return;
                     }
 
-                    this.caches.Map(cache => cache.Prune());
+                    this.caches.ForEach(cache => cache.Prune());
                     this.indicator.Target = new object();
                 }
                 finally

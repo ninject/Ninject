@@ -26,11 +26,12 @@ namespace Ninject.Activation
     using System.Linq;
 
     using Ninject.Activation.Caching;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
+    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Contains information about the activation of a single instance.
@@ -41,6 +42,11 @@ namespace Ninject.Activation
         /// The ninject settings.
         /// </summary>
         private readonly INinjectSettings settings;
+
+        /// <summary>
+        /// The <see cref="IExceptionFormatter"/> component.
+        /// </summary>
+        private readonly IExceptionFormatter exceptionFormatter;
 
         /// <summary>
         /// The cached scope object.
@@ -57,6 +63,7 @@ namespace Ninject.Activation
         /// <param name="cache">The cache component.</param>
         /// <param name="planner">The planner component.</param>
         /// <param name="pipeline">The pipeline component.</param>
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
         /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
@@ -64,7 +71,8 @@ namespace Ninject.Activation
         /// <exception cref="ArgumentNullException"><paramref name="cache"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="planner"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
-        public Context(IReadOnlyKernel kernel, INinjectSettings settings, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline)
+        /// <exception cref="ArgumentNullException"><paramref name="exceptionFormatter"/> is <see langword="null"/>.</exception>
+        public Context(IReadOnlyKernel kernel, INinjectSettings settings, IRequest request, IBinding binding, ICache cache, IPlanner planner, IPipeline pipeline, IExceptionFormatter exceptionFormatter)
         {
             Ensure.ArgumentNotNull(kernel, nameof(kernel));
             Ensure.ArgumentNotNull(settings, nameof(settings));
@@ -73,17 +81,17 @@ namespace Ninject.Activation
             Ensure.ArgumentNotNull(cache, nameof(cache));
             Ensure.ArgumentNotNull(planner, nameof(planner));
             Ensure.ArgumentNotNull(pipeline, nameof(pipeline));
+            Ensure.ArgumentNotNull(exceptionFormatter, nameof(exceptionFormatter));
 
             this.settings = settings;
-
             this.Kernel = kernel;
             this.Request = request;
             this.Binding = binding;
             this.Parameters = request.Parameters.Union(binding.Parameters);
-
             this.Cache = cache;
             this.Planner = planner;
             this.Pipeline = pipeline;
+            this.exceptionFormatter = exceptionFormatter;
 
             if (binding.Service.IsGenericTypeDefinition)
             {
@@ -167,9 +175,9 @@ namespace Ninject.Activation
         public object Resolve()
         {
             if (this.Request.ActiveBindings.Contains(this.Binding) &&
-                this.IsCyclical(this.Request.ParentRequest))
+                IsCyclical(this.Request.ParentRequest, this.Request.Target))
             {
-                throw new ActivationException(ExceptionFormatter.CyclicalDependenciesDetected(this));
+                throw new ActivationException(this.exceptionFormatter.CyclicalDependenciesDetected(this));
             }
 
             try
@@ -194,6 +202,21 @@ namespace Ninject.Activation
             }
         }
 
+        private static bool IsCyclical(IRequest request, ITarget target)
+        {
+            if (request == null)
+            {
+                return false;
+            }
+
+            if (request.Target == target)
+            {
+                return true;
+            }
+
+            return IsCyclical(request.ParentRequest, target);
+        }
+
         private object ResolveInternal(object scope)
         {
             var cachedInstance = this.Cache.TryGet(this);
@@ -213,7 +236,7 @@ namespace Ninject.Activation
             {
                 if (!this.settings.AllowNullInjection)
                 {
-                    throw new ActivationException(ExceptionFormatter.ProviderReturnedNull(this));
+                    throw new ActivationException(this.exceptionFormatter.ProviderReturnedNull(this));
                 }
 
                 if (this.Plan == null)
@@ -249,21 +272,6 @@ namespace Ninject.Activation
             }
 
             return reference.Instance;
-        }
-
-        private bool IsCyclical(IRequest request)
-        {
-            if (request == null)
-            {
-                return false;
-            }
-
-            if (request.Target == this.Request.Target)
-            {
-                return true;
-            }
-
-            return this.IsCyclical(request.ParentRequest);
         }
     }
 }

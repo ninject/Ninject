@@ -21,6 +21,7 @@
 
 namespace Ninject.Planning.Bindings
 {
+    using System;
     using System.Collections.Generic;
 
     using Ninject.Infrastructure;
@@ -42,10 +43,13 @@ namespace Ninject.Planning.Bindings
         /// Determines whether a piece of metadata with the specified key has been defined.
         /// </summary>
         /// <param name="key">The metadata key.</param>
-        /// <returns><c>True</c> if such a piece of metadata exists; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if such a piece of metadata exists; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public bool Has(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
             return this.values.ContainsKey(key);
         }
@@ -56,10 +60,9 @@ namespace Ninject.Planning.Bindings
         /// <typeparam name="T">The type of value to expect.</typeparam>
         /// <param name="key">The metadata key.</param>
         /// <returns>The metadata value.</returns>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public T Get<T>(string key)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
-
             return this.Get(key, default(T));
         }
 
@@ -70,11 +73,17 @@ namespace Ninject.Planning.Bindings
         /// <param name="key">The metadata key.</param>
         /// <param name="defaultValue">The value to return if the binding has no metadata set with the specified key.</param>
         /// <returns>The metadata value, or the default value if none was set.</returns>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public T Get<T>(string key, T defaultValue)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
-            return this.values.ContainsKey(key) ? (T)this.values[key] : defaultValue;
+            if (this.values.TryGetValue(key, out var value))
+            {
+                return (T)value;
+            }
+
+            return defaultValue;
         }
 
         /// <summary>
@@ -82,9 +91,10 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="key">The metadata key.</param>
         /// <param name="value">The metadata value.</param>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public void Set(string key, object value)
         {
-            Ensure.ArgumentNotNullOrEmpty(key, "key");
+            Ensure.ArgumentNotNullOrEmpty(key, nameof(key));
 
             this.values[key] = value;
         }

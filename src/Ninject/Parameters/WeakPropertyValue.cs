@@ -36,6 +36,7 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
         /// <param name="value">The value to inject into the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public WeakPropertyValue(string name, object value)
             : base(name, (object)null, false)
         {

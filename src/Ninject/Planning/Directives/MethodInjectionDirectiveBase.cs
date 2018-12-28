@@ -21,7 +21,7 @@
 
 namespace Ninject.Planning.Directives
 {
-    using System.Linq;
+    using System;
     using System.Reflection;
 
     using Ninject.Infrastructure;
@@ -40,10 +40,12 @@ namespace Ninject.Planning.Directives
         /// </summary>
         /// <param name="method">The method this directive represents.</param>
         /// <param name="injector">The injector that will be triggered.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="injector"/> is <see langword="null"/>.</exception>
         protected MethodInjectionDirectiveBase(TMethod method, TInjector injector)
         {
-            Ensure.ArgumentNotNull(method, "method");
-            Ensure.ArgumentNotNull(injector, "injector");
+            Ensure.ArgumentNotNull(method, nameof(method));
+            Ensure.ArgumentNotNull(injector, nameof(injector));
 
             this.Injector = injector;
             this.Targets = this.CreateTargetsFromParameters(method);
@@ -66,7 +68,19 @@ namespace Ninject.Planning.Directives
         /// <returns>The targets for the method's parameters.</returns>
         protected virtual ITarget[] CreateTargetsFromParameters(TMethod method)
         {
-            return method.GetParameters().Select(parameter => new ParameterTarget(method, parameter)).ToArray();
+            var parameters = method.GetParameters();
+            if (parameters.Length == 0)
+            {
+                return Array.Empty<ITarget>();
+            }
+
+            var targets = new ITarget[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                targets[i] = new ParameterTarget(method, parameters[i]);
+            }
+
+            return targets;
         }
     }
 }

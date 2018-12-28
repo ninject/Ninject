@@ -21,6 +21,7 @@
 
 namespace Ninject.Infrastructure
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -29,9 +30,9 @@ namespace Ninject.Infrastructure
     /// </summary>
     /// <typeparam name="TKey">The type of key.</typeparam>
     /// <typeparam name="TValue">The type of value.</typeparam>
-    public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, ICollection<TValue>>>
+    public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IList<TValue>>>
     {
-        private readonly Dictionary<TKey, ICollection<TValue>> items = new Dictionary<TKey, ICollection<TValue>>();
+        private readonly Dictionary<TKey, IList<TValue>> items = new Dictionary<TKey, IList<TValue>>();
 
         /// <summary>
         /// Gets the collection of keys.
@@ -44,7 +45,7 @@ namespace Ninject.Infrastructure
         /// <summary>
         /// Gets the collection of collections of values.
         /// </summary>
-        public ICollection<ICollection<TValue>> Values
+        public ICollection<IList<TValue>> Values
         {
             get { return this.items.Values; }
         }
@@ -53,7 +54,8 @@ namespace Ninject.Infrastructure
         /// Gets the collection of values stored under the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        public ICollection<TValue> this[TKey key]
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
+        public IList<TValue> this[TKey key]
         {
             get
             {
@@ -73,10 +75,12 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         public void Add(TKey key, TValue value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Ensure.ArgumentNotNull(key, nameof(key));
+            Ensure.ArgumentNotNull(value, nameof(value));
 
             this[key].Add(value);
         }
@@ -86,11 +90,15 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        /// <returns><c>True</c> if such a value existed and was removed; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if such a value existed and was removed; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         public bool Remove(TKey key, TValue value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Ensure.ArgumentNotNull(key, nameof(key));
+            Ensure.ArgumentNotNull(value, nameof(value));
 
             if (this.items.TryGetValue(key, out var values))
             {
@@ -104,7 +112,10 @@ namespace Ninject.Infrastructure
         /// Removes all values for the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns><c>True</c> if any such values existed; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if any such values existed; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
         public bool RemoveAll(TKey key)
         {
             return this.items.Remove(key);
@@ -122,7 +133,10 @@ namespace Ninject.Infrastructure
         /// Determines whether the multimap contains any values for the specified key.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns><c>True</c> if the multimap has one or more values for the specified key; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the multimap has one or more values for the specified key; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
         public bool ContainsKey(TKey key)
         {
             return this.items.ContainsKey(key);
@@ -133,7 +147,11 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="value">The value.</param>
-        /// <returns><c>True</c> if the multimap contains such a value; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the multimap contains such a value; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         public bool ContainsValue(TKey key, TValue value)
         {
             Ensure.ArgumentNotNull(key, "key");
@@ -155,7 +173,7 @@ namespace Ninject.Infrastructure
         /// Returns an enumerator that iterates through a the multimap.
         /// </summary>
         /// <returns>An <see cref="IEnumerator{T}"/> object that can be used to iterate through the multimap.</returns>
-        IEnumerator<KeyValuePair<TKey, ICollection<TValue>>> IEnumerable<KeyValuePair<TKey, ICollection<TValue>>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TKey, IList<TValue>>> IEnumerable<KeyValuePair<TKey, IList<TValue>>>.GetEnumerator()
         {
             return this.items.GetEnumerator();
         }

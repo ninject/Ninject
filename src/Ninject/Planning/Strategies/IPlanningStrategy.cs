@@ -21,6 +21,8 @@
 
 namespace Ninject.Planning.Strategies
 {
+    using System;
+
     using Ninject.Components;
 
     /// <summary>
@@ -32,6 +34,7 @@ namespace Ninject.Planning.Strategies
         /// Contributes to the specified plan.
         /// </summary>
         /// <param name="plan">The plan that is being generated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="plan"/> is <see langword="null"/>.</exception>
         void Execute(IPlan plan);
     }
 }

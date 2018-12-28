@@ -36,21 +36,30 @@ namespace Ninject.Selection
         /// Selects the constructors that could be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>A series of the selected constructor.</returns>
-        IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type);
+        /// <returns>
+        /// A series of the selected constructor.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
+        ConstructorInfo[] SelectConstructorsForInjection(Type type);
 
         /// <summary>
         /// Selects properties that should be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>A series of the selected properties.</returns>
+        /// <returns>
+        /// A series of the selected properties.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type);
 
         /// <summary>
         /// Selects methods that should be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>A series of the selected methods.</returns>
+        /// <returns>
+        /// A series of the selected methods.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         IEnumerable<MethodInfo> SelectMethodsForInjection(Type type);
     }
 }

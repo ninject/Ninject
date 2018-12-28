@@ -77,7 +77,7 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
-        /// <param name="shouldInherit">if set to <c>true</c> [should inherit].</param>
+        /// <param name="shouldInherit">if set to <see langword="true"/> [should inherit].</param>
         public ConstructorArgument(string name, Func<IContext, object> valueCallback, bool shouldInherit)
             : base(name, valueCallback, shouldInherit)
         {
@@ -88,7 +88,7 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
-        /// <param name="shouldInherit">if set to <c>true</c> [should inherit].</param>
+        /// <param name="shouldInherit">if set to <see langword="true"/> [should inherit].</param>
         public ConstructorArgument(string name, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
             : base(name, valueCallback, shouldInherit)
         {
@@ -100,10 +100,11 @@ namespace Ninject.Parameters
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>
-        /// True if the parameter applies in the specified context to the specified target.
+        /// <see langword="true"/> if the parameter applies in the specified context to the specified target;
+        /// otherwise, <see langword="false"/>.
         /// </returns>
         /// <remarks>
-        /// Only one parameter may return true.
+        /// Only one parameter may return <see langword="true"/>.
         /// </remarks>
         public bool AppliesToTarget(IContext context, ITarget target)
         {

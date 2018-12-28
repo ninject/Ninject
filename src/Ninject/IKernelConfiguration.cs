@@ -37,7 +37,9 @@ namespace Ninject
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.
         /// </summary>
-        /// <returns>A series of loaded modules.</returns>
+        /// <returns>
+        /// A series of loaded modules.
+        /// </returns>
         IEnumerable<INinjectModule> GetModules();
 
         /// <summary>
@@ -82,14 +84,18 @@ namespace Ninject
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <returns>
+        /// A series of bindings that are registered for the service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
-        IEnumerable<IBinding> GetBindings(Type service);
+        IBinding[] GetBindings(Type service);
 
         /// <summary>
         /// Creates the readonly kernel.
         /// </summary>
-        /// <returns>The readonly kernel.</returns>
+        /// <returns>
+        /// The readonly kernel.
+        /// </returns>
         IReadOnlyKernel BuildReadOnlyKernel();
     }
 }

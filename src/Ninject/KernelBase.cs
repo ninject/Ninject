@@ -66,7 +66,7 @@ namespace Ninject
         /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         protected KernelBase(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(settings), settings, modules)
+            : this(new ComponentContainer(settings, new ExceptionFormatter()), settings, modules)
         {
         }
 
@@ -128,7 +128,7 @@ namespace Ninject
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed)
@@ -280,7 +280,7 @@ namespace Ninject
         /// Determines whether the specified request can be resolved.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="ignoreImplicitBindings">if set to <c>true</c> implicit bindings are ignored.</param>
+        /// <param name="ignoreImplicitBindings">if set to <see langword="true"/> implicit bindings are ignored.</param>
         /// <returns>
         /// <see langword="true"/> if the request can be resolved; otherwise, <see langword="false"/>.
         /// </returns>
@@ -308,8 +308,8 @@ namespace Ninject
         /// <param name="service">The service that is being requested.</param>
         /// <param name="constraint">The constraint to apply to the bindings to determine if they match the request.</param>
         /// <param name="parameters">The parameters to pass to the resolution.</param>
-        /// <param name="isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-        /// <param name="isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
+        /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
+        /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <returns>The created request.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
@@ -333,7 +333,7 @@ namespace Ninject
         /// <param name="service">The service in question.</param>
         /// <returns>A series of bindings that are registered for the service.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
-        public virtual IEnumerable<IBinding> GetBindings(Type service)
+        public virtual IBinding[] GetBindings(Type service)
         {
             return this.kernelConfiguration.GetBindings(service);
         }

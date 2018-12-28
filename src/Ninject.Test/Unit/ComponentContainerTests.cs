@@ -7,6 +7,7 @@
     using Moq;
     using Ninject.Components;
     using Ninject.Infrastructure.Disposal;
+    using Ninject.Infrastructure.Introspection;
     using Xunit;
 
     public class ComponentContainerContext
@@ -25,6 +26,57 @@
             this.kernelMock = new Mock<IKernel>();
 
             this.container.KernelConfiguration = this.kernelMock.Object;
+        }
+    }
+
+    public class WhenInstanceIsCreated
+    {
+        private Mock<INinjectSettings> _settingsMock;
+        private Mock<IExceptionFormatter> _exceptionFormatterMock;
+
+        public WhenInstanceIsCreated()
+        {
+            _settingsMock = new Mock<INinjectSettings>(MockBehavior.Strict);
+            _exceptionFormatterMock = new Mock<IExceptionFormatter>();
+        }
+
+        [Fact]
+        public void DefaultConstructor()
+        {
+            var container = new ComponentContainer();
+
+            var exceptionFormatter = container.Get<IExceptionFormatter>();
+
+            Assert.NotNull(exceptionFormatter);
+            Assert.Same(exceptionFormatter, container.Get<IExceptionFormatter>());
+        }
+
+        [Fact]
+        public void Constructor_Settings()
+        {
+            var container = new ComponentContainer(_settingsMock.Object);
+
+            var exceptionFormatter = container.Get<IExceptionFormatter>();
+
+            Assert.NotNull(exceptionFormatter);
+            Assert.Same(exceptionFormatter, container.Get<IExceptionFormatter>());
+        }
+
+        [Fact]
+        public void Constructor_SettingsAndExceptionFormatter()
+        {
+            var container = new ComponentContainer(_settingsMock.Object, _exceptionFormatterMock.Object);
+
+            var exceptionFormatter = container.Get<IExceptionFormatter>();
+            var settings = container.Get(typeof(INinjectSettings));
+
+            Assert.NotNull(exceptionFormatter);
+            Assert.Same(_exceptionFormatterMock.Object, exceptionFormatter);
+            Assert.Same(exceptionFormatter, container.Get<IExceptionFormatter>());
+
+            Assert.NotNull(settings);
+            Assert.Same(_settingsMock.Object, settings);
+            Assert.Same(settings, container.Get(typeof(INinjectSettings)));
         }
     }
 

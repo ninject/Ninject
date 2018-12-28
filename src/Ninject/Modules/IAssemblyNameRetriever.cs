@@ -28,16 +28,18 @@ namespace Ninject.Modules
     using Ninject.Components;
 
     /// <summary>
-    /// Retrieves assembly names from file names using a temporary app domain.
+    /// Retrieves assembly names from file paths with isolation.
     /// </summary>
     public interface IAssemblyNameRetriever : INinjectComponent
     {
         /// <summary>
         /// Gets all assembly names of the assemblies in the given files that match the filter.
         /// </summary>
-        /// <param name="filenames">The filenames.</param>
+        /// <param name="filepaths">The file paths.</param>
         /// <param name="filter">The filter.</param>
-        /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
-        IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filenames, Predicate<Assembly> filter);
+        /// <returns>
+        /// All assembly names of the assemblies in the given files that match the filter.
+        /// </returns>
+        IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filepaths, Predicate<Assembly> filter);
     }
 }

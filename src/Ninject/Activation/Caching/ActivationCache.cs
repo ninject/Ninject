@@ -120,7 +120,7 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified instance is activated; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified instance is activated; otherwise, <see langword="false"/>.
         /// </returns>
         public bool IsActivated(object instance)
         {
@@ -132,7 +132,7 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified instance is deactivated; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified instance is deactivated; otherwise, <see langword="false"/>.
         /// </returns>
         public bool IsDeactivated(object instance)
         {

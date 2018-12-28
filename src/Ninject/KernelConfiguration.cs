@@ -31,7 +31,6 @@ namespace Ninject
     using Ninject.Activation.Strategies;
     using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
     using Ninject.Injection;
     using Ninject.Modules;
@@ -76,7 +75,7 @@ namespace Ninject
         /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public KernelConfiguration(INinjectSettings settings, params INinjectModule[] modules)
-            : this(new ComponentContainer(settings), settings, modules)
+            : this(new ComponentContainer(settings, new ExceptionFormatter()), settings, modules)
         {
         }
 
@@ -252,9 +251,11 @@ namespace Ninject
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <returns>
+        /// A series of bindings that are registered for the service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
-        public IEnumerable<IBinding> GetBindings(Type service)
+        public IBinding[] GetBindings(Type service)
         {
             Ensure.ArgumentNotNull(service, nameof(service));
 
@@ -262,7 +263,7 @@ namespace Ninject
 
             return resolvers.SelectMany(resolver => resolver.Resolve(
                 this.bindings.Keys.ToDictionary(type => type, type => this.bindings[type]),
-                service));
+                service)).ToArray();
         }
 
         /// <summary>
@@ -278,6 +279,7 @@ namespace Ninject
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IConstructorScorer>(),
                 this.Components.Get<IPipeline>(),
+                this.Components.Get<IExceptionFormatter>(),
                 this.Components.Get<IBindingPrecedenceComparer>(),
                 this.Components.GetAll<IBindingResolver>().ToList(),
                 this.Components.GetAll<IMissingBindingResolver>().ToList());
@@ -288,7 +290,7 @@ namespace Ninject
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (!this.IsDisposed && disposing)

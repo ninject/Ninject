@@ -35,6 +35,7 @@ namespace Ninject
         /// Initializes a new instance of the <see cref="StandardKernel"/> class.
         /// </summary>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public StandardKernel(params INinjectModule[] modules)
             : base(modules)
         {
@@ -45,6 +46,8 @@ namespace Ninject
         /// </summary>
         /// <param name="settings">The configuration to use.</param>
         /// <param name="modules">The modules to load into the kernel.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public StandardKernel(INinjectSettings settings, params INinjectModule[] modules)
             : base(settings, modules)
         {

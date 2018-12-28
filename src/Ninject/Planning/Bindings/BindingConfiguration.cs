@@ -25,8 +25,8 @@ namespace Ninject.Planning.Bindings
     using System.Collections.Generic;
 
     using Ninject.Activation;
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
 
     /// <summary>

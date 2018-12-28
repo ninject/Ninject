@@ -21,6 +21,7 @@
 
 namespace Ninject.Activation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -49,6 +50,8 @@ namespace Ninject.Activation
         /// </summary>
         /// <param name="strategies">The strategies to execute during activation and deactivation.</param>
         /// <param name="activationCache">The activation cache.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="strategies"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="activationCache"/> is <see langword="null"/>.</exception>
         public Pipeline(IEnumerable<IActivationStrategy> strategies, IActivationCache activationCache)
         {
             Ensure.ArgumentNotNull(strategies, nameof(strategies));
@@ -71,6 +74,8 @@ namespace Ninject.Activation
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">The instance reference.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public void Activate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
@@ -87,6 +92,8 @@ namespace Ninject.Activation
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">The instance reference.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public void Deactivate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, nameof(context));

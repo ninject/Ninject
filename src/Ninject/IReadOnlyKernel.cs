@@ -22,7 +22,6 @@
 namespace Ninject
 {
     using System;
-    using System.Collections.Generic;
 
     using Ninject.Planning.Bindings;
     using Ninject.Syntax;
@@ -36,8 +35,10 @@ namespace Ninject
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <returns>
+        /// A series of bindings that are registered for the service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
-        IEnumerable<IBinding> GetBindings(Type service);
+        IBinding[] GetBindings(Type service);
     }
 }

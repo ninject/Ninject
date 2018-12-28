@@ -34,12 +34,14 @@ namespace Ninject.Modules
     /// </summary>
     public abstract class NinjectModule : BindingRoot, INinjectModule
     {
+        private readonly List<IBinding> bindings;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NinjectModule"/> class.
         /// </summary>
         protected NinjectModule()
         {
-            this.Bindings = new List<IBinding>();
+            this.bindings = new List<IBinding>();
         }
 
         /// <summary>
@@ -59,7 +61,10 @@ namespace Ninject.Modules
         /// <summary>
         /// Gets the bindings that were registered by the module.
         /// </summary>
-        public ICollection<IBinding> Bindings { get; private set; }
+        public ICollection<IBinding> Bindings
+        {
+            get { return this.bindings; }
+        }
 
         /// <summary>
         /// Gets the kernel configuration that the module is loaded into.
@@ -92,7 +97,7 @@ namespace Ninject.Modules
         public void OnUnload()
         {
             this.Unload();
-            this.Bindings.Map(this.KernelConfiguration.RemoveBinding);
+            this.bindings.ForEach(binding => this.KernelConfiguration.RemoveBinding(binding));
             this.Components = null;
             this.KernelConfiguration = null;
         }
@@ -142,7 +147,7 @@ namespace Ninject.Modules
         public override void AddBinding(IBinding binding)
         {
             this.KernelConfiguration.AddBinding(binding);
-            this.Bindings.Add(binding);
+            this.bindings.Add(binding);
         }
 
         /// <summary>
@@ -153,7 +158,7 @@ namespace Ninject.Modules
         public override void RemoveBinding(IBinding binding)
         {
             this.KernelConfiguration.RemoveBinding(binding);
-            this.Bindings.Remove(binding);
+            this.bindings.Remove(binding);
         }
     }
 }

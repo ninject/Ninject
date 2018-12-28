@@ -44,7 +44,7 @@ namespace Ninject.Selection
         /// <summary>
         /// The injection heuristics.
         /// </summary>
-        private readonly ICollection<IInjectionHeuristic> injectionHeuristics;
+        private readonly List<IInjectionHeuristic> injectionHeuristics;
 
         /// <summary>
         /// The ninject settings.
@@ -56,10 +56,12 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="injectionHeuristics">The injection heuristics.</param>
         /// <param name="settings">The ninject settings.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="injectionHeuristics"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
         public Selector(IEnumerable<IInjectionHeuristic> injectionHeuristics, INinjectSettings settings)
         {
-            Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
-            Ensure.ArgumentNotNull(settings, "settings");
+            Ensure.ArgumentNotNull(injectionHeuristics, nameof(injectionHeuristics));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
 
             this.injectionHeuristics = injectionHeuristics.ToList();
             this.settings = settings;
@@ -80,14 +82,17 @@ namespace Ninject.Selection
         /// Selects the constructors that could be injected.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>A series of the selected constructor.</returns>
-        public virtual IEnumerable<ConstructorInfo> SelectConstructorsForInjection(Type type)
+        /// <returns>
+        /// A series of the selected constructor.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
+        public virtual ConstructorInfo[] SelectConstructorsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
             if (type.IsSubclassOf(typeof(MulticastDelegate)))
             {
-                return Enumerable.Empty<ConstructorInfo>();
+                return Array.Empty<ConstructorInfo>();
             }
 
             return type.GetConstructors(this.Flags);
@@ -100,23 +105,26 @@ namespace Ninject.Selection
         /// <returns>A series of the selected properties.</returns>
         public virtual IEnumerable<PropertyInfo> SelectPropertiesForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
-            var properties = new List<PropertyInfo>();
-            properties.AddRange(
-                type.GetProperties(this.Flags)
-                    .Select(p => p.GetPropertyFromDeclaredType(p, this.Flags))
-                    .Where(p => this.injectionHeuristics.Any(h => p != null && h.ShouldInject(p))));
+            var bindingFlags = this.Flags;
+            var declaredPropertiesToInject = type.GetProperties(bindingFlags)
+                                                 .Select(p => p.GetPropertyFromDeclaredType(p, bindingFlags))
+                                                 .Where(p => p != null && ShouldInject(this.injectionHeuristics, p));
 
             if (this.settings.InjectParentPrivateProperties)
             {
+                var properties = new List<PropertyInfo>(declaredPropertiesToInject);
+
                 for (Type parentType = type.BaseType; parentType != null; parentType = parentType.BaseType)
                 {
-                    properties.AddRange(this.GetPrivateProperties(parentType));
+                    properties.AddRange(GetPrivateProperties(this.injectionHeuristics, parentType, bindingFlags));
                 }
+
+                return properties;
             }
 
-            return properties;
+            return declaredPropertiesToInject;
         }
 
         /// <summary>
@@ -124,17 +132,50 @@ namespace Ninject.Selection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A series of the selected methods.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         public virtual IEnumerable<MethodInfo> SelectMethodsForInjection(Type type)
         {
-            Ensure.ArgumentNotNull(type, "type");
+            Ensure.ArgumentNotNull(type, nameof(type));
 
-            return type.GetMethods(this.Flags).Where(m => this.injectionHeuristics.Any(h => h.ShouldInject(m)));
+            return type.GetMethods(this.Flags).Where(m => ShouldInject(this.injectionHeuristics, m));
         }
 
-        private IEnumerable<PropertyInfo> GetPrivateProperties(Type type)
+        private static bool ShouldInject(List<IInjectionHeuristic> injectionHeuristics, PropertyInfo property)
         {
-            return type.GetProperties(this.Flags).Where(p => p.DeclaringType == type && p.IsPrivate())
-                .Where(p => this.injectionHeuristics.Any(h => h.ShouldInject(p)));
+            var shouldInject = false;
+
+            foreach (var injectionHeuristic in injectionHeuristics)
+            {
+                if (injectionHeuristic.ShouldInject(property))
+                {
+                    shouldInject = true;
+                    break;
+                }
+            }
+
+            return shouldInject;
+        }
+
+        private static bool ShouldInject(List<IInjectionHeuristic> injectionHeuristics, MethodInfo method)
+        {
+            var shouldInject = false;
+
+            foreach (var injectionHeuristic in injectionHeuristics)
+            {
+                if (injectionHeuristic.ShouldInject(method))
+                {
+                    shouldInject = true;
+                    break;
+                }
+            }
+
+            return shouldInject;
+        }
+
+        private static IEnumerable<PropertyInfo> GetPrivateProperties(List<IInjectionHeuristic> injectionHeuristics, Type type, BindingFlags bindingFlags)
+        {
+            return type.GetProperties(bindingFlags)
+                       .Where(p => p.DeclaringType == type && p.IsPrivate() && ShouldInject(injectionHeuristics, p));
         }
     }
 }

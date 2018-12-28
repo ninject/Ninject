@@ -106,7 +106,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>
-        /// <see langword="true"/> if the request satisfies the conditions; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the request satisfies the conditions; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         bool Matches(IRequest request);

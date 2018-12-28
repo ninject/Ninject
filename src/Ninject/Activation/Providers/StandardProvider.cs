@@ -24,8 +24,8 @@ namespace Ninject.Activation.Providers
     using System;
     using System.Linq;
 
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Directives;

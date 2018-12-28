@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6 and .NET Standard 2.0 target frameworks.
 - Changed return value of IBindingResolver (and implementing classes) from `IEnumerable<IBinding>` to `ICollection<IBinding>`.
+- Changed return value of `ISelector.SelectConstructorsForInjection(Type type)` (and implementing classes) from `IEnumerable<ConstructorInfo>` to `ConstructorInfo[]`.
 - The `T Get<T>(string key, T defaultValue)` and `void Set(string key, object value)` methods have been removed from **(I)NinjectSettings**.
+- The `GetBindings(Type service)` method in **(I)KernelConfiguration**, **(I)ReadOnlyKernel** and **KernelBase** now returns `IBinding[]` instead of `IEnumerable<IBinding>`.
 
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)

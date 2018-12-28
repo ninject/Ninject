@@ -21,6 +21,8 @@
 
 namespace Ninject.Activation.Strategies
 {
+    using System;
+
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Language;
 
@@ -34,6 +36,7 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public override void Activate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, nameof(context));
@@ -46,6 +49,7 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being deactivated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public override void Deactivate(IContext context, InstanceReference reference)
         {
             Ensure.ArgumentNotNull(context, nameof(context));

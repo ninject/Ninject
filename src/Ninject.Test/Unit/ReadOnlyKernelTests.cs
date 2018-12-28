@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
+using Ninject.Components;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -21,6 +21,7 @@ namespace Ninject.Test.Unit
         private Mock<IPlanner> _plannerMock;
         private Mock<IConstructorScorer> _constructorScorerMock;
         private Mock<IPipeline> _pipelineMock;
+        private Mock<IExceptionFormatter> _exceptionFormatterMock;
         private Mock<IBindingPrecedenceComparer> _bindingPrecedenceComparerMock;
         private Mock<IBindingResolver> _bindingResolverMock1;
         private Mock<IBindingResolver> _bindingResolverMock2;
@@ -36,6 +37,7 @@ namespace Ninject.Test.Unit
             _plannerMock = new Mock<IPlanner>(MockBehavior.Strict);
             _constructorScorerMock = new Mock<IConstructorScorer>(MockBehavior.Strict);
             _pipelineMock = new Mock<IPipeline>(MockBehavior.Strict);
+            _exceptionFormatterMock = new Mock<IExceptionFormatter>(MockBehavior.Strict);
             _bindingPrecedenceComparerMock = new Mock<IBindingPrecedenceComparer>(MockBehavior.Strict);
             _bindingResolverMock1 = new Mock<IBindingResolver>(MockBehavior.Strict);
             _bindingResolverMock2 = new Mock<IBindingResolver>(MockBehavior.Strict);
@@ -252,6 +254,7 @@ namespace Ninject.Test.Unit
                                         _plannerMock.Object,
                                         _constructorScorerMock.Object,
                                         _pipelineMock.Object,
+                                        _exceptionFormatterMock.Object,
                                         _bindingPrecedenceComparerMock.Object,
                                         _bindingResolvers,
                                         _missingBindingResolvers);
@@ -265,6 +268,7 @@ namespace Ninject.Test.Unit
                                       IPlanner planner,
                                       IConstructorScorer constructorScorer,
                                       IPipeline pipeline,
+                                      IExceptionFormatter exceptionFormatter,
                                       IBindingPrecedenceComparer bindingPrecedenceComparer,
                                       IEnumerable<IBindingResolver> bindingResolvers,
                                       IEnumerable<IMissingBindingResolver> missingBindingResolvers)
@@ -274,6 +278,7 @@ namespace Ninject.Test.Unit
                        planner,
                        constructorScorer,
                        pipeline,
+                       exceptionFormatter,
                        bindingPrecedenceComparer,
                        bindingResolvers,
                        missingBindingResolvers)
