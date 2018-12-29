@@ -227,7 +227,9 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Reads whether the target represents an optional dependency.
         /// </summary>
-        /// <returns><see langword="True"/> if it is optional; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if it is optional; otherwise, <see langword="false"/>.
+        /// </returns>
         protected virtual bool ReadOptionalFromTarget()
         {
             return this.Site.HasAttribute(typeof(OptionalAttribute));
@@ -236,7 +238,9 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Reads the resolution constraint from target.
         /// </summary>
-        /// <returns>The resolution constraint.</returns>
+        /// <returns>
+        /// The resolution constraint.
+        /// </returns>
         protected virtual Func<IBindingMetadata, bool> ReadConstraintFromTarget()
         {
             if (!(this.GetCustomAttributes(typeof(ConstraintAttribute), true) is ConstraintAttribute[] attributes) || attributes.Length == 0)

@@ -58,7 +58,7 @@ namespace Ninject.Planning.Bindings
                   constructorScorer,
                   serviceNames)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.Binding = binding;
         }

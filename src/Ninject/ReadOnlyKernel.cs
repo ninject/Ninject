@@ -177,7 +177,9 @@ namespace Ninject
         /// <param name="parameters">The parameters to pass to the resolution.</param>
         /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
         /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
-        /// <returns>The request for the specified service.</returns>
+        /// <returns>
+        /// The request for the specified service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
@@ -190,7 +192,7 @@ namespace Ninject
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns>
-        /// <see langword="True"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the instance was found and released; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public bool Release(object instance)
@@ -247,7 +249,7 @@ namespace Ninject
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>
-        /// <see langword="true"/> if the missing binding can be handled; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the missing binding can be handled; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         protected virtual bool HandleMissingBinding(IRequest request)

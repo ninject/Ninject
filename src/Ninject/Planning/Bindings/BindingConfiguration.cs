@@ -103,7 +103,9 @@ namespace Ninject.Planning.Bindings
         /// Gets the provider for the binding.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>The provider to use.</returns>
+        /// <returns>
+        /// The provider to use.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public IProvider GetProvider(IContext context)
         {
@@ -137,7 +139,7 @@ namespace Ninject.Planning.Bindings
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>
-        /// <see langword="true"/> if the request satisfies the conditions; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the request satisfies the conditions; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public bool Matches(IRequest request)

@@ -68,7 +68,9 @@ namespace Ninject.Syntax
         /// until a consumer iterates over the enumerator.
         /// </summary>
         /// <param name="request">The request to resolve.</param>
-        /// <returns>An enumerator of instances that match the request.</returns>
+        /// <returns>
+        /// An enumerator of instances that match the request.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         IEnumerable<object> Resolve(IRequest request);
 
@@ -80,7 +82,9 @@ namespace Ninject.Syntax
         /// <param name="parameters">The parameters to pass to the resolution.</param>
         /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
         /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
-        /// <returns>The created request.</returns>
+        /// <returns>
+        /// The created request.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique);
@@ -90,7 +94,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns>
-        /// <see langword="true"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the instance was found and released; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         bool Release(object instance);
