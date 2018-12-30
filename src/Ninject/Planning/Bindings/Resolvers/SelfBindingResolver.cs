@@ -46,8 +46,8 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         public SelfBindingResolver(IPlanner planner, IConstructorScorer constructorScorer)
         {
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
+            Ensure.ArgumentNotNull(planner, nameof(planner));
+            Ensure.ArgumentNotNull(constructorScorer, nameof(constructorScorer));
 
             this.planner = planner;
             this.constructorScorer = constructorScorer;
@@ -58,7 +58,9 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// </summary>
         /// <param name="bindings">The dictionary of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
-        /// <returns>The series of matching bindings.</returns>
+        /// <returns>
+        /// The series of matching bindings.
+        /// </returns>
         public IEnumerable<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
@@ -81,7 +83,9 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// Returns a value indicating whether the specified service is self-bindable.
         /// </summary>
         /// <param name="service">The service.</param>
-        /// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the type is self-bindable; otherwise, <see langword="false"/>.
+        /// </returns>
         protected virtual bool TypeIsSelfBindable(Type service)
         {
             return !service.IsInterface

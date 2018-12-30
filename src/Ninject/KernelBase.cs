@@ -255,7 +255,7 @@ namespace Ninject
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns>
-        /// <see langword="true"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the instance was found and released; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public virtual bool Release(object instance)

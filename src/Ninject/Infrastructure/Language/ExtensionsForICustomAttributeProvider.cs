@@ -35,7 +35,7 @@ namespace Ninject.Infrastructure.Language
         /// <param name="member">The <see cref="ICustomAttributeProvider"/>.</param>
         /// <param name="type">The attribute type.</param>
         /// <returns>
-        /// <see langword="true"/> if the <see cref="ICustomAttributeProvider"/> has the attribute, otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the <see cref="ICustomAttributeProvider"/> has the attribute, otherwise, <see langword="false"/>.
         /// </returns>
         public static bool HasAttribute(this ICustomAttributeProvider member, Type type)
         {
@@ -53,7 +53,9 @@ namespace Ninject.Infrastructure.Language
         /// <param name="member">The <see cref="ICustomAttributeProvider"/>.</param>
         /// <param name="attributeType">The attribute type.</param>
         /// <param name="inherit">When true, look up the hierarchy chain for the inherited custom attribute.</param>
-        /// <returns>The attributes.</returns>
+        /// <returns>
+        /// The attributes.
+        /// </returns>
         public static object[] GetCustomAttributesExtended(this ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             if (member is MemberInfo memberInfo)
