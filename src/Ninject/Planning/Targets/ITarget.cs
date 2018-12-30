@@ -65,14 +65,16 @@ namespace Ninject.Planning.Targets
         /// <summary>
         /// Gets the default value for the target.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">If the item does not have a default value.</exception>
+        /// <exception cref="InvalidOperationException">The <see cref="ITarget"/> does not have a default value.</exception>
         object DefaultValue { get; }
 
         /// <summary>
         /// Resolves a value for the target within the specified parent context.
         /// </summary>
         /// <param name="parent">The parent context.</param>
-        /// <returns>The resolved value.</returns>
+        /// <returns>
+        /// The resolved value.
+        /// </returns>
         object ResolveWithin(IContext parent);
     }
 }

@@ -21,6 +21,8 @@
 
 namespace Ninject
 {
+    using System;
+
     using Ninject.Infrastructure;
     using Ninject.Planning.Bindings;
 
@@ -34,9 +36,10 @@ namespace Ninject
         /// Initializes a new instance of the <see cref="NamedAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of the binding(s) to use.</param>
+        /// <exception cref="ArgumentException"><paramref name="name"/> is <see langword="null"/> or a zero-length <see cref="string"/>.</exception>
         public NamedAttribute(string name)
         {
-            Ensure.ArgumentNotNullOrEmpty(name, "name");
+            Ensure.ArgumentNotNullOrEmpty(name, nameof(name));
 
             this.Name = name;
         }
@@ -50,10 +53,13 @@ namespace Ninject
         /// Determines whether the specified binding metadata matches the constraint.
         /// </summary>
         /// <param name="metadata">The metadata in question.</param>
-        /// <returns><c>True</c> if the metadata matches; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the metadata matches; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="metadata"/> is <see langword="null"/>.</exception>
         public override bool Matches(IBindingMetadata metadata)
         {
-            Ensure.ArgumentNotNull(metadata, "metadata");
+            Ensure.ArgumentNotNull(metadata, nameof(metadata));
 
             return metadata.Name == this.Name;
         }

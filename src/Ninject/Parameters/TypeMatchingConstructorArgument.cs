@@ -50,10 +50,12 @@ namespace Ninject.Parameters
         /// <param name="type">The type of the argument to override.</param>
         /// <param name="valueCallback">The callback that will be triggered to get the parameter's value.</param>
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="valueCallback"/> is <see langword="null"/>.</exception>
         public TypeMatchingConstructorArgument(Type type, Func<IContext, ITarget, object> valueCallback, bool shouldInherit)
         {
-            Ensure.ArgumentNotNull(type, "type");
-            Ensure.ArgumentNotNull(valueCallback, "valueCallback");
+            Ensure.ArgumentNotNull(type, nameof(type));
+            Ensure.ArgumentNotNull(valueCallback, nameof(valueCallback));
 
             this.ValueCallback = valueCallback;
             this.ShouldInherit = shouldInherit;
@@ -87,10 +89,11 @@ namespace Ninject.Parameters
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>
-        /// True if the parameter applies in the specified context to the specified target.
+        /// <see langword="true"/> if the parameter applies in the specified context to the specified target;
+        /// otherwise, <see langword="false"/>.
         /// </returns>
         /// <remarks>
-        /// Only one parameter may return true.
+        /// Only one parameter may return <see langword="true"/>.
         /// </remarks>
         public bool AppliesToTarget(IContext context, ITarget target)
         {
@@ -102,10 +105,13 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>The value for the parameter.</returns>
+        /// <returns>
+        /// The value for the parameter.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         public object GetValue(IContext context, ITarget target)
         {
-            Ensure.ArgumentNotNull(context, "context");
+            Ensure.ArgumentNotNull(context, nameof(context));
 
             return this.ValueCallback(context, target);
         }
@@ -114,7 +120,9 @@ namespace Ninject.Parameters
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
-        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the objects are equal; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool Equals(IParameter other)
         {
             return other is TypeMatchingConstructorArgument argument && argument.type == this.type;
@@ -124,7 +132,9 @@ namespace Ninject.Parameters
         /// Determines whether the object equals the specified object.
         /// </summary>
         /// <param name="obj">An object to compare with this object.</param>
-        /// <returns><c>True</c> if the objects are equal; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the objects are equal; otherwise, <see langword="false"/>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             return obj is IParameter parameter ? this.Equals(parameter) : ReferenceEquals(this, obj);
@@ -133,7 +143,9 @@ namespace Ninject.Parameters
         /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
-        /// <returns>A hash code for the object.</returns>
+        /// <returns>
+        /// A hash code for the object.
+        /// </returns>
         public override int GetHashCode()
         {
             return this.GetType().GetHashCode() ^ this.type.GetHashCode();

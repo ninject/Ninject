@@ -39,7 +39,9 @@ namespace Ninject.Modules
         /// </summary>
         /// <param name="filepaths">The file paths.</param>
         /// <param name="filter">The filter.</param>
-        /// <returns>All assembly names of the assemblies in the given files that match the filter.</returns>
+        /// <returns>
+        /// All assembly names of the assemblies in the given files that match the filter.
+        /// </returns>
         public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filepaths, Predicate<Assembly> filter)
         {
 #if !NO_APPDOMAIN_ISOLATION
@@ -66,7 +68,9 @@ namespace Ninject.Modules
         /// <summary>
         /// Creates a temporary app domain.
         /// </summary>
-        /// <returns>The created app domain.</returns>
+        /// <returns>
+        /// The created app domain.
+        /// </returns>
         private static AppDomain CreateTemporaryAppDomain()
         {
             return AppDomain.CreateDomain(
@@ -86,7 +90,9 @@ namespace Ninject.Modules
             /// </summary>
             /// <param name="filepaths">The file paths.</param>
             /// <param name="filter">The filter.</param>
-            /// <returns>All assembly names of the assemblies matching the filter.</returns>
+            /// <returns>
+            /// All assembly names of the assemblies matching the filter.
+            /// </returns>
             public IEnumerable<AssemblyName> GetAssemblyNames(IEnumerable<string> filepaths, Predicate<Assembly> filter)
             {
                 var result = new List<AssemblyName>();

@@ -21,10 +21,11 @@
 
 namespace Ninject.Activation.Strategies
 {
-    using System.Linq;
+    using System;
 
     using Ninject.Infrastructure;
     using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
 
     /// <summary>
     /// Injects methods on an instance during activation.
@@ -37,16 +38,29 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(reference, nameof(reference));
 
             foreach (var directive in context.Plan.GetAll<MethodInjectionDirective>())
             {
-                var arguments = directive.Targets.Select(target => target.ResolveWithin(context));
-                directive.Injector(reference.Instance, arguments.ToArray());
+                directive.Injector(reference.Instance, GetMethodArguments(directive.Targets, context));
             }
+        }
+
+        private static object[] GetMethodArguments(ITarget[] targets, IContext context)
+        {
+            var arguments = new object[targets.Length];
+
+            for (var i = 0; i < targets.Length; i++)
+            {
+                arguments[i] = targets[i].ResolveWithin(context);
+            }
+
+            return arguments;
         }
     }
 }

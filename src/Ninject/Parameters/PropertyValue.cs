@@ -36,6 +36,7 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
         /// <param name="value">The value to inject into the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public PropertyValue(string name, object value)
             : base(name, value, false)
         {
@@ -46,6 +47,8 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="valueCallback"/> is <see langword="null"/>.</exception>
         public PropertyValue(string name, Func<IContext, object> valueCallback)
             : base(name, valueCallback, false)
         {
@@ -56,6 +59,8 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the property to override.</param>
         /// <param name="valueCallback">The callback to invoke to get the value that should be injected.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="valueCallback"/> is <see langword="null"/>.</exception>
         public PropertyValue(string name, Func<IContext, ITarget, object> valueCallback)
             : base(name, valueCallback, false)
         {

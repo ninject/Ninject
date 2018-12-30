@@ -46,7 +46,7 @@ namespace Ninject.Infrastructure
         /// Initializes a new instance of the <see cref="ReferenceEqualWeakReference"/> class.
         /// </summary>
         /// <param name="target">The target.</param>
-        /// <param name="trackResurrection">if set to <c>true</c> [track resurrection].</param>
+        /// <param name="trackResurrection">if set to <see langword="true"/> [track resurrection].</param>
         public ReferenceEqualWeakReference(object target, bool trackResurrection)
             : base(target, trackResurrection)
         {
@@ -58,11 +58,9 @@ namespace Ninject.Infrastructure
         /// </summary>
         /// <param name="obj">The <see cref="object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified <see cref="object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <exception cref="T:System.NullReferenceException">
-        /// The <paramref name="obj"/> parameter is null.
-        /// </exception>
+        /// <exception cref="NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
         public override bool Equals(object obj)
         {
             var thisInstance = this.IsAlive ? this.Target : this;

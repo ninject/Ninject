@@ -45,7 +45,9 @@ namespace Ninject.Activation.Providers
         /// Creates an instance within the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>The constant value this provider returns.</returns>
+        /// <returns>
+        /// The constant value this provider returns.
+        /// </returns>
         protected override T CreateInstance(IContext context)
         {
             return this.Value;

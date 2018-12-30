@@ -34,14 +34,18 @@ namespace Ninject.Selection.Heuristics
         /// Returns a value indicating whether the specified property should be injected.
         /// </summary>
         /// <param name="property">The property in question.</param>
-        /// <returns><c>true</c> if the property should be injected; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the property should be injected; otherwise, <see langword="false"/>.
+        /// </returns>
         bool ShouldInject(PropertyInfo property);
 
         /// <summary>
         /// Returns a value indicating whether the specified method should be injected.
         /// </summary>
         /// <param name="method">The method in question.</param>
-        /// <returns><c>true</c> if the method should be injected; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the method should be injected; otherwise, <see langword="false"/>.
+        /// </returns>
         bool ShouldInject(MethodInfo method);
     }
 }

@@ -71,8 +71,8 @@ namespace Ninject
         /// Gets or sets a value indicating whether the kernel should automatically load extensions at startup.
         /// </summary>
         /// <value>
-        /// <c>true</c> if the kernel should automatically load extensions at startup; otherwise, <c>false</c>.
-        /// The default is <c>true</c>.
+        /// <see langword="true"/> if the kernel should automatically load extensions at startup; otherwise, <see langword="false"/>.
+        /// The default is <see langword="true"/>.
         /// </value>
         public bool LoadExtensions { get; set; }
 
@@ -90,8 +90,8 @@ namespace Ninject
         /// the (usually faster) Expression build system.
         /// </summary>
         /// <value>
-        /// <c>true</c> if Ninject should use reflection-based injection; otherwise, <c>false</c>. The default
-        /// is <c>false</c>.
+        /// <see langword="true"/> if Ninject should use reflection-based injection; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         public bool UseReflectionBasedInjection { get; set; }
 
@@ -99,8 +99,8 @@ namespace Ninject
         /// Gets or sets a value indicating whether Ninject should inject non public members.
         /// </summary>
         /// <value>
-        /// <c>true</c> if Ninject should inject non-public members; otherwise, <c>false</c>.
-        /// The default is <c>false</c>.
+        /// <see langword="true"/> if Ninject should inject non-public members; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         [Obsolete("Injecting non public members is not recommended. Make the member(s) public instead.")]
         public bool InjectNonPublic { get; set; }
@@ -109,8 +109,8 @@ namespace Ninject
         /// Gets or sets a value indicating whether Ninject should inject private properties of base classes.
         /// </summary>
         /// <value>
-        /// <c>true</c> if Ninject should inject into private properties of base classes; otherwise, <c>false</c>.
-        /// The default is <c>false</c>.
+        /// <see langword="true"/> if Ninject should inject into private properties of base classes; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         /// <remarks>
         /// Activating this setting has an impact on the performance. It is recommended not
@@ -131,17 +131,22 @@ namespace Ninject
         /// </code>
         /// </remarks>
         /// <value>
-        /// <c>true</c> if activation cache is disabled; otherwise, <c>false</c>. The default is <c>false</c>.
+        /// <see langword="true"/> if activation cache is disabled; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
         public bool ActivationCacheDisabled { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Null is a valid value for injection.
+        /// Gets or sets a value indicating whether <see langword="null"/> is a valid value for injection.
         /// By default this is disabled and whenever a provider returns null an exception is thrown.
         /// </summary>
         /// <value>
-        /// <c>true</c> if null is allowed as injected value; otherwise, <c>false</c>. The default is <c>false</c>.
+        /// <see langword="true"/> if <see langword="null"/> is allowed as injected value; otherwise, <see langword="false"/>.
+        /// The default is <see langword="false"/>.
         /// </value>
+        /// <remarks>
+        /// When <see langword="false"/>, an <see cref="ActivationException"/> is thrown whenever a provider returns <see langword="null"/>.
+        /// </remarks>
         public bool AllowNullInjection { get; set; }
 
         /// <summary>

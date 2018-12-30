@@ -32,12 +32,15 @@ namespace Ninject.Parameters
         /// <summary>
         /// Determines if the parameter applies to the given target.
         /// </summary>
-        /// <remarks>
-        /// Only one parameter may return true.
-        /// </remarks>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>True if the parameter applies in the specified context to the specified target.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the parameter applies in the specified context to the specified target;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// Only one parameter may return <see langword="true"/>.
+        /// </remarks>
         bool AppliesToTarget(IContext context, ITarget target);
     }
 }

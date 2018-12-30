@@ -23,11 +23,10 @@ namespace Ninject.Activation.Strategies
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
 
+    using Ninject.Components;
     using Ninject.Infrastructure;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Injection;
     using Ninject.Parameters;
     using Ninject.Planning.Directives;
@@ -54,14 +53,28 @@ namespace Ninject.Activation.Strategies
         private readonly INinjectSettings settings;
 
         /// <summary>
+        /// The <see cref="IExceptionFormatter"/> component.
+        /// </summary>
+        private readonly IExceptionFormatter exceptionFormatter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PropertyInjectionStrategy"/> class.
         /// </summary>
         /// <param name="injectorFactory">The injector factory component.</param>
         /// <param name="settings">The ninject settings.</param>
-        public PropertyInjectionStrategy(IInjectorFactory injectorFactory, INinjectSettings settings)
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="injectorFactory"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="settings"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="exceptionFormatter"/> is <see langword="null"/>.</exception>
+        public PropertyInjectionStrategy(IInjectorFactory injectorFactory, INinjectSettings settings, IExceptionFormatter exceptionFormatter)
         {
+            Ensure.ArgumentNotNull(injectorFactory, nameof(injectorFactory));
+            Ensure.ArgumentNotNull(settings, nameof(settings));
+            Ensure.ArgumentNotNull(exceptionFormatter, nameof(exceptionFormatter));
+
             this.injectorFactory = injectorFactory;
             this.settings = settings;
+            this.exceptionFormatter = exceptionFormatter;
         }
 
         private BindingFlags Flags
@@ -78,12 +91,14 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="reference"/> is <see langword="null"/>.</exception>
         public override void Activate(IContext context, InstanceReference reference)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(reference, "reference");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(reference, nameof(reference));
 
-            var propertyValues = context.Parameters.OfType<IPropertyValue>().ToList();
+            var propertyValues = GetPropertyValues(context.Parameters);
 
             foreach (var directive in context.Plan.GetAll<PropertyInjectionDirective>())
             {
@@ -91,7 +106,58 @@ namespace Ninject.Activation.Strategies
                 directive.Injector(reference.Instance, value);
             }
 
-            this.AssignPropertyOverrides(context, reference, propertyValues);
+            if (propertyValues.Count > 0)
+            {
+                this.AssignPropertyOverrides(context, reference, propertyValues);
+            }
+        }
+
+        /// <summary>
+        /// Locates a <see cref="PropertyInfo"/> by name using the specified <see cref="StringComparison"/>.
+        /// </summary>
+        /// <param name="properties">The list of properties to search.</param>
+        /// <param name="name">The name to find.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/> to use when comparing the name.</param>
+        /// <returns>
+        /// The <see cref="PropertyInfo"/> with a matching <see cref="IParameter.Name"/>, if found; otherwise,
+        /// <see langword="null"/>.
+        /// </returns>
+        private static PropertyInfo FindPropertyByName(PropertyInfo[] properties, string name, StringComparison stringComparison)
+        {
+            PropertyInfo found = null;
+
+            foreach (var property in properties)
+            {
+                if (string.Equals(property.Name, name, stringComparison))
+                {
+                    found = property;
+                    break;
+                }
+            }
+
+            return found;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="IPropertyValue"/> instances in the specified parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters to search.</param>
+        /// <returns>
+        /// A list of the <see cref="IPropertyValue"/> instances in <paramref name="parameters"/>.
+        /// </returns>
+        private static List<IPropertyValue> GetPropertyValues(IEnumerable<IParameter> parameters)
+        {
+            var propertyValues = new List<IPropertyValue>();
+
+            foreach (var parameter in parameters)
+            {
+                if (parameter is IPropertyValue propertyValue)
+                {
+                    propertyValues.Add(propertyValue);
+                }
+            }
+
+            return propertyValues;
         }
 
         /// <summary>
@@ -100,22 +166,22 @@ namespace Ninject.Activation.Strategies
         /// <param name="context">The context.</param>
         /// <param name="reference">A reference to the instance being activated.</param>
         /// <param name="propertyValues">The parameter override value accessors.</param>
-        private void AssignPropertyOverrides(IContext context, InstanceReference reference, IList<IPropertyValue> propertyValues)
+        /// <exception cref="ActivationException">A given <see cref="IPropertyValue"/> cannot be resolved to a property of the specified instance.</exception>
+        private void AssignPropertyOverrides(IContext context, InstanceReference reference, List<IPropertyValue> propertyValues)
         {
             var properties = reference.Instance.GetType().GetProperties(this.Flags);
 
             foreach (var propertyValue in propertyValues)
             {
-                var propertyName = propertyValue.Name;
-                var propertyInfo = properties.FirstOrDefault(property => string.Equals(property.Name, propertyName, StringComparison.Ordinal));
+                var propertyInfo = FindPropertyByName(properties, propertyValue.Name, StringComparison.Ordinal);
 
                 if (propertyInfo == null)
                 {
-                    throw new ActivationException(ExceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyName));
+                    throw new ActivationException(this.exceptionFormatter.CouldNotResolvePropertyForValueInjection(context.Request, propertyValue.Name));
                 }
 
                 var target = new PropertyInjectionDirective(propertyInfo, this.injectorFactory.Create(propertyInfo));
-                var value = this.GetValue(context, target.Target, propertyValues);
+                var value = propertyValue.GetValue(context, target.Target);
                 target.Injector(reference.Instance, value);
             }
         }
@@ -125,15 +191,49 @@ namespace Ninject.Activation.Strategies
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <param name="allPropertyValues">all property values of the current request.</param>
-        /// <returns>The value to inject into the specified target.</returns>
-        private object GetValue(IContext context, ITarget target, IEnumerable<IPropertyValue> allPropertyValues)
+        /// <param name="allPropertyValues">The property values of the current request.</param>
+        /// <returns>
+        /// The value to inject into the specified <see cref="ITarget"/>.
+        /// </returns>
+        private object GetValue(IContext context, ITarget target, List<IPropertyValue> allPropertyValues)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(target, "target");
+            var parameter = this.FindPropertyValueByName(context, allPropertyValues, target.Name, StringComparison.Ordinal);
+            if (parameter != null)
+            {
+                // Remove parameter from list of property values to ensure we do not attempt to process
+                // it again when we assign the overrides.
+                allPropertyValues.Remove(parameter);
+                return parameter.GetValue(context, target);
+            }
 
-            var parameter = allPropertyValues.SingleOrDefault(p => p.Name == target.Name);
-            return parameter != null ? parameter.GetValue(context, target) : target.ResolveWithin(context);
+            return target.ResolveWithin(context);
+        }
+
+        /// <summary>
+        /// Locates a <see cref="IPropertyValue"/> by name using the specified <see cref="StringComparison"/>.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="propertyValues">The list of property values to search.</param>
+        /// <param name="name">The name to find.</param>
+        /// <param name="stringComparison">The <see cref="StringComparison"/> to use when comparing the name.</param>
+        /// <returns>
+        /// The <see cref="IPropertyValue"/> with a matching <see cref="IParameter.Name"/>, if found; otherwise,
+        /// <see langword="null"/>.
+        /// </returns>
+        private IPropertyValue FindPropertyValueByName(IContext context, List<IPropertyValue> propertyValues, string name, StringComparison stringComparison)
+        {
+            IPropertyValue found = null;
+
+            foreach (var propertyValue in propertyValues)
+            {
+                if (string.Equals(propertyValue.Name, name, stringComparison))
+                {
+                    found = propertyValue;
+                    break;
+                }
+            }
+
+            return found;
         }
     }
 }

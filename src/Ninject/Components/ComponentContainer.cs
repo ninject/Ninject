@@ -28,7 +28,6 @@ namespace Ninject.Components
 
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Disposal;
-    using Ninject.Infrastructure.Introspection;
     using Ninject.Infrastructure.Language;
 
     /// <summary>
@@ -57,10 +56,15 @@ namespace Ninject.Components
         private readonly INinjectSettings settings;
 
         /// <summary>
+        /// The <see cref="IExceptionFormatter"/> component.
+        /// </summary>
+        private readonly IExceptionFormatter exceptionFormatter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
         /// </summary>
         public ComponentContainer()
-            : this(new NinjectSettings())
+            : this(new NinjectSettings(), new ExceptionFormatter())
         {
         }
 
@@ -69,8 +73,20 @@ namespace Ninject.Components
         /// </summary>
         /// <param name="settings">The ninject settings.</param>
         public ComponentContainer(INinjectSettings settings)
+            : this(settings, new ExceptionFormatter())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComponentContainer"/> class.
+        /// </summary>
+        /// <param name="settings">The ninject settings.</param>
+        /// <param name="exceptionFormatter">The <see cref="IExceptionFormatter"/> component.</param>
+        public ComponentContainer(INinjectSettings settings, IExceptionFormatter exceptionFormatter)
         {
             this.settings = settings;
+            this.exceptionFormatter = exceptionFormatter;
+            this.Add<IExceptionFormatter, IExceptionFormatter>(exceptionFormatter);
         }
 
         /// <summary>
@@ -81,7 +97,7 @@ namespace Ninject.Components
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public override void Dispose(bool disposing)
         {
             if (disposing && !this.IsDisposed)
@@ -157,9 +173,10 @@ namespace Ninject.Components
         /// Removes all registrations for the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public void RemoveAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             foreach (Type implementation in this.mappings[component])
             {
@@ -186,7 +203,7 @@ namespace Ninject.Components
             var implementations = this.mappings[component];
             if (implementations.Count == 0)
             {
-                throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
+                throw new InvalidOperationException(this.exceptionFormatter.NoSuchComponentRegistered(component));
             }
 
             return (T)this.ResolveInstance(component, implementations[0]);
@@ -196,7 +213,9 @@ namespace Ninject.Components
         /// Gets all available instances of the specified component.
         /// </summary>
         /// <typeparam name="T">The component type.</typeparam>
-        /// <returns>A series of instances of the specified component.</returns>
+        /// <returns>
+        /// A series of instances of the specified component.
+        /// </returns>
         public IEnumerable<T> GetAll<T>()
             where T : INinjectComponent
         {
@@ -207,10 +226,13 @@ namespace Ninject.Components
         /// Gets one instance of the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
-        /// <returns>The instance of the component.</returns>
+        /// <returns>
+        /// The instance of the component.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public object Get(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             if (component == typeof(IKernelConfiguration))
             {
@@ -236,7 +258,7 @@ namespace Ninject.Components
             var implementations = this.mappings[component];
             if (implementations.Count == 0)
             {
-                throw new InvalidOperationException(ExceptionFormatter.NoSuchComponentRegistered(component));
+                throw new InvalidOperationException(this.exceptionFormatter.NoSuchComponentRegistered(component));
             }
 
             return this.ResolveInstance(component, implementations[0]);
@@ -246,10 +268,13 @@ namespace Ninject.Components
         /// Gets all available instances of the specified component.
         /// </summary>
         /// <param name="component">The component type.</param>
-        /// <returns>A series of instances of the specified component.</returns>
+        /// <returns>
+        /// A series of instances of the specified component.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="component"/> is <see langword="null"/>.</exception>
         public IEnumerable<object> GetAll(Type component)
         {
-            Ensure.ArgumentNotNull(component, "component");
+            Ensure.ArgumentNotNull(component, nameof(component));
 
             return this.mappings[component]
                 .Select(implementation => this.ResolveInstance(component, implementation));
@@ -257,14 +282,7 @@ namespace Ninject.Components
 
         private static ConstructorInfo SelectConstructor(Type component, Type implementation)
         {
-            var constructor = implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
-
-            if (constructor == null)
-            {
-                throw new InvalidOperationException(ExceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
-            }
-
-            return constructor;
+            return implementation.GetConstructors().OrderByDescending(c => c.GetParameters().Length).FirstOrDefault();
         }
 
         private object ResolveInstance(Type component, Type implementation)
@@ -283,6 +301,11 @@ namespace Ninject.Components
         private object CreateNewInstance(Type component, Type implementation)
         {
             var constructor = SelectConstructor(component, implementation);
+            if (constructor == null)
+            {
+                throw new InvalidOperationException(this.exceptionFormatter.NoConstructorsAvailableForComponent(component, implementation));
+            }
+
             var arguments = this.GetConstructorArguments(constructor.GetParameters());
 
             try
@@ -317,6 +340,20 @@ namespace Ninject.Components
             }
 
             return arguments;
+        }
+
+        /// <summary>
+        /// Registers an instance of a component in the container.
+        /// </summary>
+        /// <typeparam name="TComponent">The component type.</typeparam>
+        /// <typeparam name="TImplementation">The component's implementation type.</typeparam>
+        /// <param name="instance">THe instance of <typeparamref name="TImplementation"/> to register.</param>
+        private void Add<TComponent, TImplementation>(TImplementation instance)
+            where TComponent : INinjectComponent
+            where TImplementation : TComponent, INinjectComponent
+        {
+            this.mappings.Add(typeof(TComponent), typeof(TImplementation));
+            this.instances.Add(typeof(TImplementation), instance);
         }
     }
 }

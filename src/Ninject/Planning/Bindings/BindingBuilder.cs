@@ -43,16 +43,20 @@ namespace Ninject.Planning.Bindings
         /// <param name="planner">The <see cref="IPlanner"/> component.</param>
         /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="serviceNames">The names of the services.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="bindingConfiguration"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="planner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="constructorScorer"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="serviceNames"/> is <see langword="null"/>.</exception>
         public BindingBuilder(
             IBindingConfiguration bindingConfiguration,
             IPlanner planner,
             IConstructorScorer constructorScorer,
             string serviceNames)
         {
-            Ensure.ArgumentNotNull(bindingConfiguration, "bindingConfiguration");
-            Ensure.ArgumentNotNull(planner, "planner");
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
-            Ensure.ArgumentNotNull(serviceNames, "serviceNames");
+            Ensure.ArgumentNotNull(bindingConfiguration, nameof(bindingConfiguration));
+            Ensure.ArgumentNotNull(planner, nameof(planner));
+            Ensure.ArgumentNotNull(constructorScorer, nameof(constructorScorer));
+            Ensure.ArgumentNotNull(serviceNames, nameof(serviceNames));
 
             this.BindingConfiguration = bindingConfiguration;
             this.Planner = planner;

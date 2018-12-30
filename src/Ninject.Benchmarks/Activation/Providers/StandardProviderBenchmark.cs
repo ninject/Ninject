@@ -2,6 +2,7 @@
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Providers;
+using Ninject.Components;
 using Ninject.Parameters;
 using Ninject.Planning;
 using Ninject.Planning.Bindings;
@@ -121,7 +122,8 @@ namespace Ninject.Benchmarks.Activation.Providers
                                new Binding(serviceType),
                                kernelConfiguration.Components.Get<ICache>(),
                                kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>());
+                               kernelConfiguration.Components.Get<IPipeline>(),
+                               kernelConfiguration.Components.Get<IExceptionFormatter>());
         }
 
         private static ParameterTarget CreateWarriorParameterTarget()

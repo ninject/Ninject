@@ -41,6 +41,7 @@ namespace Ninject.Parameters
         /// </summary>
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="value">The value to inject into the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public WeakConstructorArgument(string name, object value)
             : this(name, value, false)
         {
@@ -52,6 +53,7 @@ namespace Ninject.Parameters
         /// <param name="name">The name of the argument to override.</param>
         /// <param name="value">The value to inject into the property.</param>
         /// <param name="shouldInherit">Whether the parameter should be inherited into child requests.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
         public WeakConstructorArgument(string name, object value, bool shouldInherit)
             : base(name, value, shouldInherit)
         {
@@ -65,10 +67,11 @@ namespace Ninject.Parameters
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <returns>
-        /// True if the parameter applies in the specified context to the specified target.
+        /// <see langword="true"/> if the parameter applies in the specified context to the specified target;
+        /// otherwise, <see langword="false"/>.
         /// </returns>
         /// <remarks>
-        /// Only one parameter may return true.
+        /// Only one parameter may return <see langword="true"/>.
         /// </remarks>
         public bool AppliesToTarget(IContext context, ITarget target)
         {

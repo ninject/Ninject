@@ -61,7 +61,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <param name="other">The <see cref="object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified <see cref="object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         bool Equals(object other);

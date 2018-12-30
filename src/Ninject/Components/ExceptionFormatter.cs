@@ -19,7 +19,7 @@
 // </copyright>
 // -------------------------------------------------------------------------------------------------
 
-namespace Ninject.Infrastructure.Introspection
+namespace Ninject.Components
 {
     using System;
     using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace Ninject.Infrastructure.Introspection
     using System.Reflection;
 
     using Ninject.Activation;
+    using Ninject.Infrastructure.Introspection;
     using Ninject.Modules;
     using Ninject.Planning.Directives;
     using Ninject.Planning.Targets;
@@ -34,7 +35,7 @@ namespace Ninject.Infrastructure.Introspection
     /// <summary>
     /// Provides meaningful exception messages.
     /// </summary>
-    public static class ExceptionFormatter
+    public class ExceptionFormatter : NinjectComponent, IExceptionFormatter
     {
         /// <summary>
         /// Generates a message saying that modules without names are not supported.
@@ -126,58 +127,6 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
-        /// Generates a message saying that the binding could not be resolved on the specified request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>The exception message.</returns>
-        public static string CouldNotResolveBinding(IRequest request)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error activating {0}", request.Service.Format());
-                sw.WriteLine("No matching bindings are available, and the type is not self-bindable.");
-
-                sw.WriteLine("Activation path:");
-                sw.WriteLine(request.FormatActivationPath());
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that you have defined a binding for {0}.", request.Service.Format());
-                sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
-                sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
-                sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
-                sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Generates a message saying that the specified context has cyclic dependencies.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns>The exception message.</returns>
-        public static string CyclicalDependenciesDetected(IContext context)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
-                sw.WriteLine("A cyclical dependency was detected between the constructors of two services.");
-                sw.WriteLine();
-
-                sw.WriteLine("Activation path:");
-                sw.WriteLine(context.Request.FormatActivationPath());
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that you have not declared a dependency for {0} on any implementations of the service.", context.Request.Service.Format());
-                sw.WriteLine("  2) Consider combining the services into a single one to remove the cycle.");
-                sw.WriteLine("  3) Use property injection instead of constructor injection, and implement IInitializable");
-                sw.WriteLine("     if you need initialization logic to be run after property values have been injected.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
         /// Generates a message saying that an invalid attribute type is used in the binding condition.
         /// </summary>
         /// <param name="serviceNames">The names of the services.</param>
@@ -227,73 +176,6 @@ namespace Ninject.Infrastructure.Introspection
         }
 
         /// <summary>
-        /// Generates a message saying that no constructors are available for the given component.
-        /// </summary>
-        /// <param name="component">The component.</param>
-        /// <param name="implementation">The implementation.</param>
-        /// <returns>The exception message.</returns>
-        public static string NoConstructorsAvailableForComponent(Type component, Type implementation)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error loading Ninject component {0}", component.Format());
-                sw.WriteLine("No constructor was available to create an instance of the registered implementation type {0}.", implementation.Format());
-                sw.WriteLine();
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that the implementation type has a public constructor.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Generates a message saying that the specified component is not registered.
-        /// </summary>
-        /// <param name="component">The component.</param>
-        /// <returns>The exception message.</returns>
-        public static string NoSuchComponentRegistered(Type component)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error loading Ninject component {0}", component.Format());
-                sw.WriteLine("No such component has been registered in the kernel's component container.");
-                sw.WriteLine();
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) If you have created a custom subclass for KernelBase, ensure that you have properly");
-                sw.WriteLine("     implemented the AddComponents() method.");
-                sw.WriteLine("  2) Ensure that you have not removed the component from the container via a call to RemoveAll().");
-                sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Generates a message saying that the specified property could not be resolved on the specified request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>The exception message.</returns>
-        public static string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error activating {0}", request.Service.Format());
-                sw.WriteLine("No matching property {0}.", propertyName);
-
-                sw.WriteLine("Activation path:");
-                sw.WriteLine(request.FormatActivationPath());
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that you have the correct property name.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
         /// Generates a message saying that the provider callback on the specified context is null.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -310,28 +192,6 @@ namespace Ninject.Infrastructure.Introspection
 
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that one of the 'To' methods is called after 'Bind' method.");
-
-                return sw.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Generates a message saying that the provider on the specified context returned null.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns>The exception message.</returns>
-        public static string ProviderReturnedNull(IContext context)
-        {
-            using (var sw = new StringWriter())
-            {
-                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
-                sw.WriteLine("Provider returned null.");
-
-                sw.WriteLine("Activation path:");
-                sw.WriteLine(context.Request.FormatActivationPath());
-
-                sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that the provider handles creation requests properly.");
 
                 return sw.ToString();
             }
@@ -365,6 +225,147 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Specify the constructor using ToConstructor syntax.");
                 sw.WriteLine("  2) Add an Inject attribute to the constructor.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the binding could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The exception message.</returns>
+        public string CouldNotResolveBinding(IRequest request)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0}", request.Service.Format());
+                sw.WriteLine("No matching bindings are available, and the type is not self-bindable.");
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that you have defined a binding for {0}.", request.Service.Format());
+                sw.WriteLine("  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.");
+                sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
+                sw.WriteLine("  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.");
+                sw.WriteLine("  5) If you are using automatic module loading, ensure the search path and filters are correct.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the specified property could not be resolved on the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The exception message.</returns>
+        public string CouldNotResolvePropertyForValueInjection(IRequest request, string propertyName)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0}", request.Service.Format());
+                sw.WriteLine("No matching property {0}.", propertyName);
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that you have the correct property name.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the specified context has cyclic dependencies.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
+        public string CyclicalDependenciesDetected(IContext context)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+                sw.WriteLine("A cyclical dependency was detected between the constructors of two services.");
+                sw.WriteLine();
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(context.Request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that you have not declared a dependency for {0} on any implementations of the service.", context.Request.Service.Format());
+                sw.WriteLine("  2) Consider combining the services into a single one to remove the cycle.");
+                sw.WriteLine("  3) Use property injection instead of constructor injection, and implement IInitializable");
+                sw.WriteLine("     if you need initialization logic to be run after property values have been injected.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that no constructors are available for the given component.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="implementation">The implementation.</param>
+        /// <returns>The exception message.</returns>
+        public string NoConstructorsAvailableForComponent(Type component, Type implementation)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error loading Ninject component {0}", component.Format());
+                sw.WriteLine("No constructor was available to create an instance of the registered implementation type {0}.", implementation.Format());
+                sw.WriteLine();
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that the implementation type has a public constructor.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the specified component is not registered.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <returns>The exception message.</returns>
+        public string NoSuchComponentRegistered(Type component)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error loading Ninject component {0}", component.Format());
+                sw.WriteLine("No such component has been registered in the kernel's component container.");
+                sw.WriteLine();
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) If you have created a custom subclass for KernelBase, ensure that you have properly");
+                sw.WriteLine("     implemented the AddComponents() method.");
+                sw.WriteLine("  2) Ensure that you have not removed the component from the container via a call to RemoveAll().");
+                sw.WriteLine("  3) Ensure you have not accidentally created more than one kernel.");
+
+                return sw.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates a message saying that the provider on the specified context returned null.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The exception message.</returns>
+        public string ProviderReturnedNull(IContext context)
+        {
+            using (var sw = new StringWriter())
+            {
+                sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
+                sw.WriteLine("Provider returned null.");
+
+                sw.WriteLine("Activation path:");
+                sw.WriteLine(context.Request.FormatActivationPath());
+
+                sw.WriteLine("Suggestions:");
+                sw.WriteLine("  1) Ensure that the provider handles creation requests properly.");
 
                 return sw.ToString();
             }

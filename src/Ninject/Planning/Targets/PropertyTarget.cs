@@ -33,6 +33,7 @@ namespace Ninject.Planning.Targets
         /// Initializes a new instance of the <see cref="PropertyTarget"/> class.
         /// </summary>
         /// <param name="site">The property that this target represents.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="site"/> is <see langword="null"/>.</exception>
         public PropertyTarget(PropertyInfo site)
             : base(site, site)
         {

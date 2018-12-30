@@ -43,6 +43,10 @@ namespace Ninject.Planning.Bindings
         /// <param name="planner">The <see cref="IPlanner"/> component.</param>
         /// <param name="constructorScorer">The <see cref="IConstructorScorer"/> component.</param>
         /// <param name="serviceNames">The names of the services.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="binding"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="planner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="constructorScorer"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="serviceNames"/> is <see langword="null"/>.</exception>
         public BindingBuilder(
             IBinding binding,
             IPlanner planner,
@@ -54,7 +58,7 @@ namespace Ninject.Planning.Bindings
                   constructorScorer,
                   serviceNames)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.Binding = binding;
         }

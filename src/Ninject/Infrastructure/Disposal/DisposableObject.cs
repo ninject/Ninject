@@ -57,7 +57,7 @@ namespace Ninject.Infrastructure.Disposal
         /// <summary>
         /// Releases resources held by the object.
         /// </summary>
-        /// <param name="disposing"><c>True</c> if called manually, otherwise by GC.</param>
+        /// <param name="disposing"><see langword="true"/> if called manually, otherwise by GC.</param>
         public virtual void Dispose(bool disposing)
         {
             lock (this)
