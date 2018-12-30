@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed return value of `ISelector.SelectConstructorsForInjection(Type type)` (and implementing classes) from `IEnumerable<ConstructorInfo>` to `ConstructorInfo[]`.
 - The `T Get<T>(string key, T defaultValue)` and `void Set(string key, object value)` methods have been removed from **(I)NinjectSettings**.
 - The `GetBindings(Type service)` method in **(I)KernelConfiguration**, **(I)ReadOnlyKernel** and **KernelBase** now returns `IBinding[]` instead of `IEnumerable<IBinding>`.
+- Added a PropertyInjection setting that can be used to control whether property injection is enabled. By default, property injection is enabled.
+- Added a MethodInjection setting that can be used to control whether method injection is enabled. By default, method injection is enabled.
 
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)

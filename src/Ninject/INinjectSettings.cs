@@ -105,5 +105,23 @@ namespace Ninject
         /// When <see langword="false"/>, an <see cref="ActivationException"/> is thrown whenever a provider returns <see langword="null"/>.
         /// </remarks>
         bool AllowNullInjection { get; set; }
-   }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether method injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if method injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        bool MethodInjection { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether property injection should enabled.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if property injection is enabled; otherwise, <see langword="false"/>. The default
+        /// is <see langword="true"/>.
+        /// </value>
+        bool PropertyInjection { get; set; }
+    }
 }

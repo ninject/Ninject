@@ -114,5 +114,25 @@ namespace Ninject.Test.Unit
             _settings.AllowNullInjection = false;
             Assert.False(_settings.AllowNullInjection);
         }
+
+        [Fact]
+        public void MethodInjection()
+        {
+            Assert.True(_settings.MethodInjection);
+            _settings.MethodInjection = false;
+            Assert.False(_settings.MethodInjection);
+            _settings.MethodInjection = true;
+            Assert.True(_settings.MethodInjection);
+        }
+
+        [Fact]
+        public void PropertyInjection()
+        {
+            Assert.True(_settings.PropertyInjection);
+            _settings.PropertyInjection = false;
+            Assert.False(_settings.PropertyInjection);
+            _settings.PropertyInjection = true;
+            Assert.True(_settings.PropertyInjection);
+        }
     }
 }
