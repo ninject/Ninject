@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `GetBindings(Type service)` method in **IKernel** and **KernelBase** now returns `IBinding[]` instead of `IEnumerable<IBinding>`.
 - Removed `IHaveKernel` inheritance from `IBindingSyntax`.
 - Removed `IInjectorFactory InjectorFactory` property from `PropertyInjectionStrategy`.
+- Added a PropertyInjection setting that can be used to control whether property injection is enabled. By default, property injection is enabled.
+- Added a MethodInjection setting that can be used to control whether method injection is enabled. By default, method injection is enabled.
 
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)

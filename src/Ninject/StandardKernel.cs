@@ -94,8 +94,16 @@ namespace Ninject
                 this.Components.Add<IActivationStrategy, ActivationCacheStrategy>();
             }
 
-            this.Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
-            this.Components.Add<IActivationStrategy, MethodInjectionStrategy>();
+            if (this.Settings.PropertyInjection)
+            {
+                this.Components.Add<IActivationStrategy, PropertyInjectionStrategy>();
+            }
+
+            if (this.Settings.MethodInjection)
+            {
+                this.Components.Add<IActivationStrategy, MethodInjectionStrategy>();
+            }
+
             this.Components.Add<IActivationStrategy, InitializableStrategy>();
             this.Components.Add<IActivationStrategy, StartableStrategy>();
             this.Components.Add<IActivationStrategy, BindingActionStrategy>();
