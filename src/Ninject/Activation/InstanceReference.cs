@@ -38,7 +38,9 @@ namespace Ninject.Activation
         /// Returns a value indicating whether the instance is of the specified type.
         /// </summary>
         /// <typeparam name="T">The type in question.</typeparam>
-        /// <returns><see langword="True"/> if the instance is of the specified type, otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the instance is of the specified type, otherwise, <see langword="false"/>.
+        /// </returns>
         [SecuritySafeCritical]
         public bool Is<T>()
         {

@@ -214,7 +214,9 @@ namespace Ninject
         /// <summary>
         /// Gets the modules that have been loaded into the kernel.
         /// </summary>
-        /// <returns>A series of loaded modules.</returns>
+        /// <returns>
+        /// A series of loaded modules.
+        /// </returns>
         public IEnumerable<INinjectModule> GetModules()
         {
             return this.modules.Values.ToArray();
@@ -325,7 +327,7 @@ namespace Ninject
         /// </summary>
         /// <param name="instance">The instance to release.</param>
         /// <returns>
-        /// <see langword="true"/> if the instance was found and released; otherwise <see langword="false"/>.
+        /// <see langword="true"/> if the instance was found and released; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/>.</exception>
         public virtual bool Release(object instance)
@@ -370,7 +372,9 @@ namespace Ninject
         /// until a consumer iterates over the enumerator.
         /// </summary>
         /// <param name="request">The request to resolve.</param>
-        /// <returns>An enumerator of instances that match the request.</returns>
+        /// <returns>
+        /// An enumerator of instances that match the request.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
@@ -385,7 +389,9 @@ namespace Ninject
         /// <param name="parameters">The parameters to pass to the resolution.</param>
         /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
         /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
-        /// <returns>The created request.</returns>
+        /// <returns>
+        /// The request for the specified service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
         public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
@@ -399,7 +405,9 @@ namespace Ninject
         /// <summary>
         /// Begins a new activation block, which can be used to deterministically dispose resolved instances.
         /// </summary>
-        /// <returns>The new activation block.</returns>
+        /// <returns>
+        /// The new activation block.
+        /// </returns>
         public virtual IActivationBlock BeginBlock()
         {
             return new ActivationBlock(this);
@@ -409,7 +417,9 @@ namespace Ninject
         /// Gets the bindings registered for the specified service.
         /// </summary>
         /// <param name="service">The service in question.</param>
-        /// <returns>A series of bindings that are registered for the service.</returns>
+        /// <returns>
+        /// A series of bindings that are registered for the service.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public virtual IBinding[] GetBindings(Type service)
         {
@@ -437,7 +447,7 @@ namespace Ninject
         /// Gets the service object of the specified type.
         /// </summary>
         /// <param name="service">The service type.</param>
-        /// <returns>The service object</returns>
+        /// <returns>The service object.</returns>
         object IServiceProvider.GetService(Type service)
         {
             return this.Get(service);
@@ -446,8 +456,10 @@ namespace Ninject
         /// <summary>
         /// Returns a predicate that can determine if a given IBinding matches the request.
         /// </summary>
-        /// <param name="request">The request/</param>
-        /// <returns>A predicate that can determine if a given IBinding matches the request.</returns>
+        /// <param name="request">The request.</param>
+        /// <returns>
+        /// A predicate that can determine if a given <see cref="IBinding"/> matches the request.
+        /// </returns>
         protected virtual Func<IBinding, bool> SatifiesRequest(IRequest request)
         {
             return binding => binding.Matches(request) && request.Matches(binding);
@@ -462,7 +474,9 @@ namespace Ninject
         /// Attempts to handle a missing binding for a request.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns><c>True</c> if the missing binding can be handled; otherwise <c>false</c>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the missing binding can be handled; otherwise, <see langword="false"/>.
+        /// </returns>
         protected virtual bool HandleMissingBinding(IRequest request)
         {
             Ensure.ArgumentNotNull(request, nameof(request));
@@ -496,7 +510,9 @@ namespace Ninject
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="binding">The binding.</param>
-        /// <returns>The created context.</returns>
+        /// <returns>
+        /// The created context.
+        /// </returns>
         protected virtual IContext CreateContext(IRequest request, IBinding binding)
         {
             Ensure.ArgumentNotNull(request, nameof(request));

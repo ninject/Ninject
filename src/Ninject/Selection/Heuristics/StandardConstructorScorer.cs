@@ -42,12 +42,16 @@ namespace Ninject.Selection.Heuristics
         /// Gets the score for the specified constructor.
         /// </summary>
         /// <param name="context">The injection context.</param>
-        /// <param name="directive">The constructor.</param>
-        /// <returns>The constructor's score.</returns>
+        /// <param name="directive">The constructor injection directive.</param>
+        /// <returns>
+        /// The constructor's score.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="directive"/> is <see langword="null"/>.</exception>
         public virtual int Score(IContext context, ConstructorInjectionDirective directive)
         {
-            Ensure.ArgumentNotNull(context, "context");
-            Ensure.ArgumentNotNull(directive, "directive");
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(directive, nameof(directive));
 
             if (directive.HasInjectAttribute)
             {

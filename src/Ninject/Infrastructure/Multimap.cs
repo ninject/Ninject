@@ -154,8 +154,8 @@ namespace Ninject.Infrastructure
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
         public bool ContainsValue(TKey key, TValue value)
         {
-            Ensure.ArgumentNotNull(key, "key");
-            Ensure.ArgumentNotNull(value, "value");
+            Ensure.ArgumentNotNull(key, nameof(key));
+            Ensure.ArgumentNotNull(value, nameof(value));
 
             return this.items.TryGetValue(key, out var values) && values.Contains(value);
         }

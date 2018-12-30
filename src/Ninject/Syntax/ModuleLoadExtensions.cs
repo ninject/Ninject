@@ -21,6 +21,7 @@
 
 namespace Ninject
 {
+    using System;
     using System.Reflection;
 
     using Ninject.Infrastructure;
@@ -35,11 +36,12 @@ namespace Ninject
         /// Creates a new instance of the module and loads it into the kernel.
         /// </summary>
         /// <typeparam name="TModule">The type of the module.</typeparam>
-        /// <param name="kernel">The kernel.</param>
+        /// <param name="kernel">The kernel into which the module is loaded.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
         public static void Load<TModule>(this IKernel kernel)
             where TModule : INinjectModule, new()
         {
-            Ensure.ArgumentNotNull(kernel, "kernel");
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
             kernel.Load(new TModule());
         }
 
@@ -48,8 +50,12 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         /// <param name="modules">The modules to load.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="modules"/> is <see langword="null"/>.</exception>
         public static void Load(this IKernel kernel, params INinjectModule[] modules)
         {
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
+
             kernel.Load(modules);
         }
 
@@ -58,8 +64,12 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         /// <param name="filePatterns">The file patterns (i.e. "*.dll", "modules/*.rb") to match.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="filePatterns"/> is <see langword="null"/>.</exception>
         public static void Load(this IKernel kernel, params string[] filePatterns)
         {
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
+
             kernel.Load(filePatterns);
         }
 
@@ -68,8 +78,12 @@ namespace Ninject
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         /// <param name="assemblies">The assemblies to search.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="kernel"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="assemblies"/> is <see langword="null"/>.</exception>
         public static void Load(this IKernel kernel, params Assembly[] assemblies)
         {
+            Ensure.ArgumentNotNull(kernel, nameof(kernel));
+
             kernel.Load(assemblies);
         }
     }

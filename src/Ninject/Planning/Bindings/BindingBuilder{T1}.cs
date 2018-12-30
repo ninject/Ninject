@@ -49,7 +49,7 @@ namespace Ninject.Planning.Bindings
                   binding.BindingConfiguration,
                   serviceNames)
         {
-            Ensure.ArgumentNotNull(binding, "binding");
+            Ensure.ArgumentNotNull(binding, nameof(binding));
 
             this.Binding = binding;
         }

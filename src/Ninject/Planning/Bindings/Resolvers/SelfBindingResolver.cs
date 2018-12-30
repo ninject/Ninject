@@ -40,7 +40,9 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// </summary>
         /// <param name="bindings">The multimap of all registered bindings.</param>
         /// <param name="request">The service in question.</param>
-        /// <returns>The series of matching bindings.</returns>
+        /// <returns>
+        /// The series of matching bindings.
+        /// </returns>
         public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
         {
             var service = request.Service;
@@ -62,7 +64,9 @@ namespace Ninject.Planning.Bindings.Resolvers
         /// Returns a value indicating whether the specified service is self-bindable.
         /// </summary>
         /// <param name="service">The service.</param>
-        /// <returns><see langword="True"/> if the type is self-bindable; otherwise <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the type is self-bindable; otherwise, <see langword="false"/>.
+        /// </returns>
         protected virtual bool TypeIsSelfBindable(Type service)
         {
             return !service.IsInterface
