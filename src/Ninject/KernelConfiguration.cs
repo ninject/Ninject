@@ -273,7 +273,7 @@ namespace Ninject
         {
             var readonlyKernel = new ReadOnlyKernel(
                 this.Settings,
-                this.bindings,
+                this.bindings.Clone(new ReferenceEqualityTypeComparer()),
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IConstructorScorer>(),

@@ -84,7 +84,7 @@ namespace Ninject
             IEnumerable<IMissingBindingResolver> missingBindingResolvers)
         {
             this.settings = settings;
-            this.bindings = new Dictionary<Type, ICollection<IBinding>>(bindings, new ReferenceEqualityTypeComparer());
+            this.bindings = bindings;
             this.bindingResolvers = bindingResolvers;
             this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
@@ -94,8 +94,8 @@ namespace Ninject
             this.exceptionFormatter = exceptionFormatter;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
 
-            this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, this.bindings);
-            this.AddReadOnlyKernelBinding<IResolutionRoot>(this, this.bindings);
+            this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
+            this.AddReadOnlyKernelBinding<IResolutionRoot>(this, bindings);
         }
 
         /// <summary>
