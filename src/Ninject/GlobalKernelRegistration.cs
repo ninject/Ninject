@@ -26,6 +26,8 @@ namespace Ninject
     using System.Linq;
     using System.Threading;
 
+    using Ninject.Infrastructure;
+
     /// <summary>
     /// Allows to register kernel globally to perform some tasks on all kernels.
     /// The registration is done by loading the GlobalKernelRegistrationModule to the kernel.
@@ -34,7 +36,7 @@ namespace Ninject
     {
         private static readonly ReaderWriterLockSlim KernelRegistrationsLock = new ReaderWriterLockSlim();
 
-        private static readonly IDictionary<Type, Registration> KernelRegistrations = new Dictionary<Type, Registration>();
+        private static readonly IDictionary<Type, Registration> KernelRegistrations = new Dictionary<Type, Registration>(new ReferenceEqualityTypeComparer());
 
         /// <summary>
         /// Registers the kernel for the specified type.

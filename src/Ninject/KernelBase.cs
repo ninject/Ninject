@@ -376,6 +376,7 @@ namespace Ninject
         /// An enumerator of instances that match the request.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ActivationException">More than one matching bindings is available for the request, and <see cref="IRequest.IsUnique"/> is <see langword="true"/>.</exception>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
             return this.Resolve(request, true);
