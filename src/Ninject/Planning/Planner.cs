@@ -36,7 +36,7 @@ namespace Ninject.Planning
     public class Planner : NinjectComponent, IPlanner
     {
         private readonly ReaderWriterLockSlim plannerLock = new ReaderWriterLockSlim();
-        private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>();
+        private readonly Dictionary<Type, IPlan> plans = new Dictionary<Type, IPlan>(new ReferenceEqualityTypeComparer());
         private readonly List<IPlanningStrategy> strategies;
 
         /// <summary>

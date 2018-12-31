@@ -50,7 +50,7 @@ namespace Ninject
         /// <summary>
         /// The service-bindings dictionary.
         /// </summary>
-        private readonly Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
+        private readonly Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>(new ReferenceEqualityTypeComparer());
 
         /// <summary>
         /// The ninject modules.
@@ -261,9 +261,8 @@ namespace Ninject
 
             var resolvers = this.Components.GetAll<IBindingResolver>();
 
-            return resolvers.SelectMany(resolver => resolver.Resolve(
-                this.bindings.Keys.ToDictionary(type => type, type => this.bindings[type]),
-                service)).ToArray();
+            return resolvers.SelectMany(resolver => resolver.Resolve(new Dictionary<Type, ICollection<IBinding>>(this.bindings, new ReferenceEqualityTypeComparer()), service))
+                            .ToArray();
         }
 
         /// <summary>
@@ -274,7 +273,7 @@ namespace Ninject
         {
             var readonlyKernel = new ReadOnlyKernel(
                 this.Settings,
-                this.bindings.Clone(),
+                this.bindings,
                 this.Components.Get<ICache>(),
                 this.Components.Get<IPlanner>(),
                 this.Components.Get<IConstructorScorer>(),

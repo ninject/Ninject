@@ -55,8 +55,8 @@ namespace Ninject
         private readonly IEnumerable<IMissingBindingResolver> missingBindingResolvers;
         private readonly object missingBindingCacheLock = new object();
 
-        private Dictionary<Type, IBinding[]> bindingCache = new Dictionary<Type, IBinding[]>();
-        private Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
+        private Dictionary<Type, IBinding[]> bindingCache = new Dictionary<Type, IBinding[]>(new ReferenceEqualityTypeComparer());
+        private Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>(new ReferenceEqualityTypeComparer());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyKernel"/> class.
@@ -84,7 +84,7 @@ namespace Ninject
             IEnumerable<IMissingBindingResolver> missingBindingResolvers)
         {
             this.settings = settings;
-            this.bindings = bindings;
+            this.bindings = new Dictionary<Type, ICollection<IBinding>>(bindings, new ReferenceEqualityTypeComparer());
             this.bindingResolvers = bindingResolvers;
             this.missingBindingResolvers = missingBindingResolvers;
             this.cache = cache;
@@ -94,8 +94,8 @@ namespace Ninject
             this.exceptionFormatter = exceptionFormatter;
             this.bindingPrecedenceComparer = bindingPrecedenceComparer;
 
-            this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, bindings);
-            this.AddReadOnlyKernelBinding<IResolutionRoot>(this, bindings);
+            this.AddReadOnlyKernelBinding<IReadOnlyKernel>(this, this.bindings);
+            this.AddReadOnlyKernelBinding<IResolutionRoot>(this, this.bindings);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Ninject
                 return false;
             }
 
-            bindings.Map(binding => binding.IsImplicit = true);
+            bindings.ForEach(binding => binding.IsImplicit = true);
 
             lock (this.missingBindingCacheLock)
             {
@@ -271,7 +271,7 @@ namespace Ninject
                     return true;
                 }
 
-                var newBindings = new Dictionary<Type, ICollection<IBinding>>(this.bindings);
+                var newBindings = new Dictionary<Type, ICollection<IBinding>>(this.bindings, new ReferenceEqualityTypeComparer());
                 bindings.GroupBy(b => b.Service, b => b, (service, b) => new { service, bindings = b })
                                     .Map(
                 serviceGroup =>
@@ -419,7 +419,7 @@ namespace Ninject
                 .FirstOrDefault(b => b.Any());
         }
 
-        private void AddReadOnlyKernelBinding<T>(T readonlyKernel, IDictionary<Type, ICollection<IBinding>> bindings)
+        private void AddReadOnlyKernelBinding<T>(T readonlyKernel, Dictionary<Type, ICollection<IBinding>> bindings)
         {
             var binding = new Binding(typeof(T));
             new BindingBuilder<T>(binding, this.planner, this.constructorScorer, typeof(T).Format()).ToConstant(readonlyKernel);
@@ -436,7 +436,7 @@ namespace Ninject
             result = this.CreateBindings(service);
             if (result.Length > 0)
             {
-                var newBindingCache = new Dictionary<Type, IBinding[]>(this.bindingCache);
+                var newBindingCache = new Dictionary<Type, IBinding[]>(this.bindingCache, new ReferenceEqualityTypeComparer());
                 newBindingCache[service] = result;
                 this.bindingCache = newBindingCache;
             }
