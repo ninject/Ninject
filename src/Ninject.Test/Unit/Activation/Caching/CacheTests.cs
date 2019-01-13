@@ -613,6 +613,7 @@ namespace Ninject.Tests.Unit.Activation.Caching
         [Fact]
         public void Concurrency()
         {
+            const int iterations = 5_000;
             var cache = CreateCache();
             var scope = new object();
             var instance = new object();
@@ -620,10 +621,11 @@ namespace Ninject.Tests.Unit.Activation.Caching
             _contextMock1.Setup(p => p.Binding).Returns(_bindingMock1.Object);
             _bindingMock1.Setup(p => p.BindingConfiguration).Returns(_bindingConfigurationMock1.Object);
             _contextMock1.Setup(p => p.HasInferredGenericArguments).Returns(false);
+            _pipelineMock.Setup(p => p.Deactivate(_contextMock1.Object, It.Is<InstanceReference>(i => ReferenceEquals(i.Instance, instance))));
 
             var tryGetTask = new Task(() =>
             {
-                for (var i = 0; i < 5000; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     cache.TryGet(_contextMock1.Object, scope);
                 }
@@ -633,7 +635,7 @@ namespace Ninject.Tests.Unit.Activation.Caching
             {
                 var reference = new InstanceReference { Instance = instance };
 
-                for (var i = 0; i < 5000; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     cache.Remember(_contextMock1.Object, scope, reference);
                 }
@@ -641,7 +643,7 @@ namespace Ninject.Tests.Unit.Activation.Caching
 
             var releaseTask = new Task(() =>
             {
-                for (var i = 0; i < 5000; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     cache.Release(instance);
                 }
@@ -649,7 +651,7 @@ namespace Ninject.Tests.Unit.Activation.Caching
 
             var clearScopeTask = new Task(() =>
             {
-                for (var i = 0; i < 5000; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     cache.Clear(scope);
                 }
@@ -657,7 +659,7 @@ namespace Ninject.Tests.Unit.Activation.Caching
 
             var clearTask = new Task(() =>
             {
-                for (var i = 0; i < 5000; i++)
+                for (var i = 0; i < iterations; i++)
                 {
                     cache.Clear();
                 }
