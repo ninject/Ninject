@@ -108,7 +108,7 @@ namespace Ninject.Selection.Heuristics
         /// <returns>Whether a binding exists for the target in the given context.</returns>
         protected virtual bool BindingExists(IKernel kernel, IContext context, ITarget target)
         {
-            var targetType = this.GetTargetType(target);
+            var targetType = GetTargetType(target);
 
             if (target.HasDefaultValue)
             {
@@ -150,7 +150,7 @@ namespace Ninject.Selection.Heuristics
             return false;
         }
 
-        private Type GetTargetType(ITarget target)
+        private static Type GetTargetType(ITarget target)
         {
             var targetType = target.Type;
 
