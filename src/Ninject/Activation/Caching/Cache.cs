@@ -312,7 +312,11 @@ namespace Ninject.Activation.Caching
                 // * if there were a corresponding scope, then removing all instances from the
                 //   would allow the scope to be finalized. This means the scope itself would
                 //   be removed from the cache upon the next pruning run.
+                //
+                // Note that this will throw an ArgumentNullException if instance is null, but
+                // Ninject itself will never add a null instance to the cache.
                 this.Clear(instance);
+
                 return true;
             }
 
@@ -354,6 +358,9 @@ namespace Ninject.Activation.Caching
                             // * if there were a corresponding scope, then removing all instances from the
                             //   would allow the scope to be finalized. This means the scope itself would
                             //   be removed from the cache upon the next pruning run.
+                            //
+                            // Note that this will throw an ArgumentNullException if instance is null, but
+                            // Ninject itself will never add a null instance to the cache.
                             this.Clear(cacheEntry.Reference.Instance);
                         }
                     }
