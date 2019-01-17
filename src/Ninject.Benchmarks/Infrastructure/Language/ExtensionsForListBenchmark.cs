@@ -76,29 +76,5 @@ namespace Ninject.Benchmarks.Infrastructure.Language
         {
             _readOnlyListNotEmpty.Union(_listNotEmpty);
         }
-
-        [Benchmark]
-        public void LinqUnion_IReadOnlyListAndIList_FirstAndSecondEmpty()
-        {
-            System.Linq.Enumerable.ToList(System.Linq.Enumerable.Union(_readOnlyListEmpty, _listEmpty));
-        }
-
-        [Benchmark]
-        public void LinqUnion_IReadOnlyListAndIList_FirstEmpty()
-        {
-            System.Linq.Enumerable.ToList(System.Linq.Enumerable.Union(_readOnlyListEmpty, _listNotEmpty));
-        }
-
-        [Benchmark]
-        public void LinqUnion_IReadOnlyListAndIList_SecondEmpty()
-        {
-            System.Linq.Enumerable.ToList(System.Linq.Enumerable.Union(_readOnlyListNotEmpty, _listEmpty));
-        }
-
-        [Benchmark]
-        public void LinqUnion_IReadOnlyListAndIList_FirstAndSecondAreNotEmpty()
-        {
-            System.Linq.Enumerable.ToList(System.Linq.Enumerable.Union(_readOnlyListNotEmpty, _listNotEmpty));
-        }
     }
 }
