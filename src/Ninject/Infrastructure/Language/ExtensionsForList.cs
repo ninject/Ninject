@@ -62,6 +62,14 @@ namespace Ninject.Infrastructure.Language
             }
             else
             {
+                if (first.Count == 0)
+                {
+                    var set = new HashSet<T>(first);
+                    var union = new T[set.Count];
+                    set.CopyTo(union);
+                    return union;
+                }
+
                 return Enumerable.ToList(Enumerable.Union(first, second));
             }
         }
