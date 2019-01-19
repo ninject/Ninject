@@ -79,11 +79,11 @@ namespace Ninject.Tests.Unit.Infrastructure.Language
 
             Assert.NotNull(actual);
             Assert.Equal(5, actual.Length);
-            Assert.Same(firstItem1, actual[0]);
-            Assert.Same(firstItem2, actual[1]);
-            Assert.Same(firstItem3, actual[2]);
-            Assert.Same(secondItem1, actual[3]);
-            Assert.Same(secondItem2, actual[4]);
+            Assert.Contains(firstItem1, actual);
+            Assert.Contains(firstItem2, actual);
+            Assert.Contains(firstItem3, actual);
+            Assert.Contains(secondItem1, actual);
+            Assert.Contains(secondItem2, actual);
         }
 
         [Fact]
@@ -102,11 +102,11 @@ namespace Ninject.Tests.Unit.Infrastructure.Language
 
             Assert.NotNull(actual);
             Assert.Equal(5, actual.Length);
-            Assert.Same(firstItem1, actual[0]);
-            Assert.Same(firstItem2, actual[1]);
-            Assert.Same(secondItem1, actual[2]);
-            Assert.Same(secondItem2, actual[3]);
-            Assert.Same(secondItem3, actual[4]);
+            Assert.Contains(firstItem1, actual);
+            Assert.Contains(firstItem2, actual);
+            Assert.Contains(secondItem1, actual);
+            Assert.Contains(secondItem2, actual);
+            Assert.Contains(secondItem3, actual);
         }
 
         [Fact]
@@ -125,11 +125,11 @@ namespace Ninject.Tests.Unit.Infrastructure.Language
 
             Assert.NotNull(actual);
             Assert.Equal(5, actual.Length);
-            Assert.Same(firstItem1, actual[0]);
-            Assert.Same(firstItem2, actual[1]);
-            Assert.Same(secondItem1, actual[2]);
-            Assert.Same(secondItem2, actual[3]);
-            Assert.Same(secondItem3, actual[4]);
+            Assert.Contains(firstItem1, actual);
+            Assert.Contains(firstItem2, actual);
+            Assert.Contains(secondItem1, actual);
+            Assert.Contains(secondItem2, actual);
+            Assert.Contains(secondItem3, actual);
         }
 
         [Fact]
