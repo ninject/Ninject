@@ -105,7 +105,10 @@ namespace Ninject.Selection.Heuristics
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>Whether a binding exists for the target in the given context.</returns>
+        /// <returns>
+        /// <see langword="true"/> if a binding exists for the target in the given context; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
         protected virtual bool BindingExists(IContext context, ITarget target)
         {
             return this.BindingExists(context.Kernel, context, target);
@@ -117,16 +120,18 @@ namespace Ninject.Selection.Heuristics
         /// <param name="kernel">The kernel.</param>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>Whether a binding exists for the target in the given context.</returns>
+        /// <returns>
+        /// <see langword="true"/> if a binding exists for the target in the given context; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
         protected virtual bool BindingExists(IReadOnlyKernel kernel, IContext context, ITarget target)
         {
-            var targetType = this.GetTargetType(target);
-
             if (target.HasDefaultValue)
             {
                 return true;
             }
 
+            var targetType = GetTargetType(target);
             var bindings = kernel.GetBindings(targetType);
             if (bindings.Length > 0)
             {
@@ -148,7 +153,10 @@ namespace Ninject.Selection.Heuristics
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
-        /// <returns>Whether a parameter exists for the target in the given context.</returns>
+        /// <returns>
+        /// <see langword="true"/> if a parameter exists for the target in the given context;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
         protected virtual bool ParameterExists(IContext context, ITarget target)
         {
             foreach (var parameter in context.Parameters)
@@ -162,7 +170,7 @@ namespace Ninject.Selection.Heuristics
             return false;
         }
 
-        private Type GetTargetType(ITarget target)
+        private static Type GetTargetType(ITarget target)
         {
             var targetType = target.Type;
 

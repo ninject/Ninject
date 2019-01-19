@@ -14,6 +14,7 @@ using Ninject.Planning.Directives;
 using Ninject.Selection.Heuristics;
 using Ninject.Tests.Fakes;
 using Ninject.Tests.Integration;
+using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
 
 namespace Ninject.Benchmarks.Selection.Heuristics
 {
@@ -36,6 +37,8 @@ namespace Ninject.Benchmarks.Selection.Heuristics
         private ConstructorInjectionDirective _barracksCtorDirective;
         private ConstructorInfo _monasteryCtor;
         private ConstructorInjectionDirective _monasteryCtorDirective;
+        private ConstructorInfo _enumerableCtor;
+        private ConstructorInjectionDirective _enumerableCtorDirective;
         private StandardConstructorScorer _standardConstructorScorer;
         private IInjectorFactory _injectorFactory;
         private Context _contextWithParams;
@@ -97,6 +100,9 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _monasteryCtor = typeof(Monastery).GetConstructor(new[] { typeof(IWarrior), typeof(IWeapon) });
             _monasteryCtorDirective = new ConstructorInjectionDirective(_monasteryCtor, _injectorFactory.Create(_monasteryCtor));
 
+            _enumerableCtor = typeof(RequestsEnumerable).GetConstructor(new[] { typeof(IEnumerable<IChild>) });
+            _enumerableCtorDirective = new ConstructorInjectionDirective(_enumerableCtor, _injectorFactory.Create(_enumerableCtor));
+
             _standardConstructorScorer = new StandardConstructorScorer(ninjectSettings);
         }
 
@@ -128,6 +134,12 @@ namespace Ninject.Benchmarks.Selection.Heuristics
         public void OnlyBindings_DefaultValues()
         {
             _standardConstructorScorer.Score(_contextWithoutParams, _knifeDefaultsCtorDirective);
+        }
+
+        [Benchmark]
+        public void OnlyBindings_IEnumerable()
+        {
+            _standardConstructorScorer.Score(_contextWithoutParams, _enumerableCtorDirective);
         }
 
         [Benchmark]
