@@ -24,8 +24,6 @@ namespace Ninject.Infrastructure.Language
     using System;
     using System.Collections.Generic;
 
-    using Enumerable = System.Linq.Enumerable;
-
     /// <summary>
     /// Provides extension methods for <see cref="IList{T}"/> and <see cref="IReadOnlyList{T}"/>.
     /// </summary>
@@ -42,7 +40,7 @@ namespace Ninject.Infrastructure.Language
         /// </returns>
         /// <exception cref="NullReferenceException"><paramref name="second"/> is <see langword="null"/>.</exception>
         /// <exception cref="NullReferenceException"><paramref name="second"/> is not empy, and <paramref name="first"/> is <see langword="null"/>.</exception>
-        public static IReadOnlyList<T> Union<T>(this IReadOnlyList<T> first, ICollection<T> second)
+        public static IReadOnlyCollection<T> Union<T>(this IReadOnlyList<T> first, ICollection<T> second)
         {
             var numberItemsInSecond = second.Count;
 
@@ -54,23 +52,21 @@ namespace Ninject.Infrastructure.Language
                 }
                 else
                 {
-                    var set = new HashSet<T>(first);
-                    var union = new T[set.Count];
-                    set.CopyTo(union);
-                    return union;
+                    return new HashSet<T>(first);
                 }
             }
             else
             {
-                if (first.Count == 0)
+                var union = new HashSet<T>(second);
+                if (first.Count > 0)
                 {
-                    var set = new HashSet<T>(first);
-                    var union = new T[set.Count];
-                    set.CopyTo(union);
-                    return union;
+                    foreach (var firstItem in first)
+                    {
+                        union.Add(firstItem);
+                    }
                 }
 
-                return Enumerable.ToList(Enumerable.Union(first, second));
+                return union;
             }
         }
 
@@ -99,33 +95,33 @@ namespace Ninject.Infrastructure.Language
             }
             else
             {
-                T[] union;
+                T[] concat;
                 var numberItemsInFirst = first.Count;
 
                 if (numberItemsInFirst == 0)
                 {
-                    union = new T[numberItemsInSecond];
+                    concat = new T[numberItemsInSecond];
                     for (var i = 0; i < numberItemsInSecond; i++)
                     {
-                        union[i] = second[i];
+                        concat[i] = second[i];
                     }
                 }
                 else
                 {
-                    union = new T[numberItemsInFirst + numberItemsInSecond];
+                    concat = new T[numberItemsInFirst + numberItemsInSecond];
 
                     for (var i = 0; i < numberItemsInFirst; i++)
                     {
-                        union[i] = first[i];
+                        concat[i] = first[i];
                     }
 
                     for (var i = 0; i < numberItemsInSecond; i++)
                     {
-                        union[i + numberItemsInFirst] = second[i];
+                        concat[i + numberItemsInFirst] = second[i];
                     }
                 }
 
-                return union;
+                return concat;
             }
         }
     }
