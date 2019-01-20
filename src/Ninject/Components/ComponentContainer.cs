@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------------------------------------
 // <copyright file="ComponentContainer.cs" company="Ninject Project Contributors">
 //   Copyright (c) 2007-2010 Enkari, Ltd. All rights reserved.
-//   Copyright (c) 2010-2017 Ninject Project Contributors. All rights reserved.
+//   Copyright (c) 2010-2019 Ninject Project Contributors. All rights reserved.
 //
 //   Dual-licensed under the Apache License, Version 2.0, and the Microsoft Public License (Ms-PL).
 //   You may not use this file except in compliance with one of the Licenses.
