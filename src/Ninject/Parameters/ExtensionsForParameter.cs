@@ -47,6 +47,8 @@ namespace Ninject.Parameters
                 return Array.Empty<IParameter>();
             }
 
+            // TRIGGER RE-CHECK
+
             List<IParameter> inherit = new List<IParameter>();
 
             foreach (var param in parameters)
