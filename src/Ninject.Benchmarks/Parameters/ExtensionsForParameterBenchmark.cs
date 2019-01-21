@@ -34,9 +34,9 @@ namespace Ninject.Benchmarks.Parameters
             _mixOfParametersWithShouldInheritSetToTrueAndFalse = new List<IParameter>
                 {
                     new ConstructorArgument("foo1", 1, true),
-                    new ConstructorArgument("foo2", 2, true),
+                    new ConstructorArgument("foo2", 2, false),
                     new ConstructorArgument("foo3", 3, true),
-                    new ConstructorArgument("foo4", 4, true),
+                    new ConstructorArgument("foo4", 4, false),
                     new ConstructorArgument("foo5", 5, true)
                 };
         }
