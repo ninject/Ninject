@@ -288,7 +288,7 @@ namespace Ninject.Benchmarks.Activation.Caching
         {
             var request = new Request(typeof(CacheBenchmark),
                                       null,
-                                      Enumerable.Empty<IParameter>(),
+                                      Array.Empty<IParameter>(),
                                       null,
                                       false,
                                       true);
