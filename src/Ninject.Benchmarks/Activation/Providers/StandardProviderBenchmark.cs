@@ -107,7 +107,7 @@ namespace Ninject.Benchmarks.Activation.Providers
             _standardProvider.GetValue(_contextWithConstructorArguments, _warriorParameterTarget);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IEnumerable<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
         {
             var request = new Request(typeof(StandardProviderBenchmark),
                                       null,

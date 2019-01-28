@@ -32,7 +32,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
 
             _context = CreateContext(kernelConfiguration,
                                      kernelConfiguration.BuildReadOnlyKernel(),
-                                     Enumerable.Empty<IParameter>(),
+                                     Array.Empty<IParameter>(),
                                      typeof(MyService),
                                      ninjectSettings);
             _reference = new InstanceReference { Instance = _context.Resolve() };
@@ -46,7 +46,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
             _methodInjectionStrategy.Activate(_context, _reference);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IEnumerable<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
         {
             var request = new Request(serviceType,
                                       null,

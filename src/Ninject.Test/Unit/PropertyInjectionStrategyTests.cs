@@ -152,7 +152,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         protected Mock<ITarget> barTargetMock;
         protected InstanceReference reference;
         protected FakePropertyInjectionDirective[] directives;
-        protected ICollection<IParameter> parameters;
+        protected IReadOnlyList<IParameter> parameters;
 
         public WhenActivateIsCalled_WithProjectInjectionDirectivesAndWithPropertyValuesFullMatch()
         {
@@ -243,7 +243,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         protected Mock<ITarget> gooTargetMock;
         protected InstanceReference reference;
         protected FakePropertyInjectionDirective[] directives;
-        protected ICollection<IParameter> parameters;
+        protected IReadOnlyList<IParameter> parameters;
 
         public WhenActivateIsCalled_WithProjectInjectionDirectivesAndWithPropertyValuesPartialMatch()
         {
@@ -350,7 +350,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 
         public WhenActivateIsCalled_WithoutProjectInjectionDirectivesAndWithoutPropertyValues()
         {
-            ICollection<IParameter> parameters = new List<IParameter>
+            IReadOnlyList<IParameter> parameters = new List<IParameter>
                 {
                     new ConstructorArgument("A", "B")
                 };
@@ -390,7 +390,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         protected Mock<PropertyInjector> barInjectorMock;
         protected InstanceReference reference;
         protected PropertyInjectionDirective[] directives;
-        protected ICollection<IParameter> parameters;
+        protected IReadOnlyList<IParameter> parameters;
 
         public WhenActivateIsCalled_WithoutProjectInjectionDirectivesAndWithPropertyValues()
         {
@@ -455,7 +455,7 @@ namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
         protected Dummy instance;
         protected InstanceReference reference;
         private string exceptionMessage;
-        protected ICollection<IParameter> parameters;
+        protected IReadOnlyList<IParameter> parameters;
 
         public WhenActivateIsCalled_PropertyValueCannotBeResolvedToProperty()
         {

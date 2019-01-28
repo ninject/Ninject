@@ -394,7 +394,7 @@ namespace Ninject
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        public virtual IRequest CreateRequest(Type service, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(service, nameof(service));
             Ensure.ArgumentNotNull(parameters, nameof(parameters));
@@ -527,7 +527,7 @@ namespace Ninject
             {
                 if (request.ParentRequest == null)
                 {
-                    request = this.CreateRequest(service, null, request.Parameters.Where(p => p.ShouldInherit), true, false);
+                    request = this.CreateRequest(service, null, request.Parameters.GetShouldInheritParameters(), true, false);
                 }
                 else
                 {

@@ -23,7 +23,6 @@ namespace Ninject.Activation
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Infrastructure;
     using Ninject.Infrastructure.Introspection;
@@ -47,14 +46,14 @@ namespace Ninject.Activation
         /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public Request(Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
+        public Request(Type service, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters, Func<object> scopeCallback, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(service, nameof(service));
             Ensure.ArgumentNotNull(parameters, nameof(parameters));
 
             this.Service = service;
             this.Constraint = constraint;
-            this.Parameters = parameters.ToList();
+            this.Parameters = parameters;
             this.ScopeCallback = scopeCallback;
             this.ActiveBindings = new Stack<IBinding>();
             this.Depth = 0;
@@ -77,7 +76,7 @@ namespace Ninject.Activation
             this.Target = target;
             this.Constraint = target.Constraint;
             this.IsOptional = target.IsOptional;
-            this.Parameters = parentContext.Parameters.Where(p => p.ShouldInherit).ToList();
+            this.Parameters = parentContext.Parameters.GetShouldInheritParameters();
             this.ScopeCallback = scopeCallback;
             this.ActiveBindings = new Stack<IBinding>(this.ParentRequest.ActiveBindings);
             this.Depth = this.ParentRequest.Depth + 1;
@@ -111,7 +110,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the parameters that affect the resolution.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; private set; }
+        public IReadOnlyList<IParameter> Parameters { get; private set; }
 
         /// <summary>
         /// Gets the stack of bindings which have been activated by either this request or its ancestors.

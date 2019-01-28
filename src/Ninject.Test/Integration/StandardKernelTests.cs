@@ -542,7 +542,7 @@
         public void ForImplicitBindings()
         {
             this.kernel.Get<Sword>();
-            var request = this.kernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+            var request = this.kernel.CreateRequest(typeof(Sword), null, Array.Empty<IParameter>(), false, true);
 
             this.kernel.CanResolve(request, true).Should().BeFalse();
             this.kernel.CanResolve(request, false).Should().BeTrue();

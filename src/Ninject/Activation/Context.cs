@@ -23,11 +23,11 @@ namespace Ninject.Activation
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Activation.Caching;
     using Ninject.Components;
     using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
@@ -78,8 +78,7 @@ namespace Ninject.Activation
             this.Kernel = kernel;
             this.Request = request;
             this.Binding = binding;
-            this.Parameters = request.Parameters.Union(binding.Parameters).ToList();
-
+            this.Parameters = request.Parameters.Concat(binding.Parameters);
             this.Cache = cache;
             this.Planner = planner;
             this.Pipeline = pipeline;
@@ -115,7 +114,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets or sets the parameters that were passed to manipulate the activation process.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; set; }
+        public IReadOnlyList<IParameter> Parameters { get; set; }
 
         /// <summary>
         /// Gets the generic arguments for the request, if any.
@@ -145,7 +144,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the scope for the context that "owns" the instance activated therein.
         /// </summary>
-        /// <returns>The object that acts as the scope.</returns>
+        /// <returns>
+        /// The object that acts as the scope.
+        /// </returns>
         public object GetScope()
         {
             return this.cachedScope ?? this.Request.GetScope() ?? this.Binding.GetScope(this);
@@ -154,7 +155,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the provider that should be used to create the instance for this context.
         /// </summary>
-        /// <returns>The provider that should be used.</returns>
+        /// <returns>
+        /// The provider that should be used.
+        /// </returns>
         public IProvider GetProvider()
         {
             return this.Binding.GetProvider(this);
@@ -163,7 +166,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Resolves the instance associated with this hook.
         /// </summary>
-        /// <returns>The resolved instance.</returns>
+        /// <returns>
+        /// The resolved instance.
+        /// </returns>
         public object Resolve()
         {
             if (this.Request.ActiveBindings.Contains(this.Binding) &&

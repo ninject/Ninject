@@ -176,8 +176,8 @@ namespace Ninject.Tests.Unit.Activation
         [Fact]
         public void Constructor_BindingAndRequestDefineParameters()
         {
-            ICollection<IParameter> requestParameters = new IParameter[] { _constructorArgDate, _constructorArgName};
-            ICollection<IParameter> bindingParameters = new IParameter[] { _propertyFirstName, _constructorArgDate, _constructorArgId };
+            IReadOnlyList<IParameter> requestParameters = new IParameter[] { _constructorArgDate, _constructorArgName};
+            IList<IParameter> bindingParameters = new IParameter[] { _propertyFirstName, _constructorArgDate, _constructorArgId };
             Type service = typeof(Dagger);
 
             _requestMock.Setup(p => p.Parameters).Returns(requestParameters);
@@ -195,15 +195,15 @@ namespace Ninject.Tests.Unit.Activation
             var parameters = context.Parameters;
 
             Assert.NotNull(parameters);
-            Assert.Equal(new IParameter[] { _constructorArgDate, _constructorArgName, _propertyFirstName, _constructorArgId }, context.Parameters);
+            Assert.Equal(new IParameter[] { _constructorArgDate, _constructorArgName, _propertyFirstName, _constructorArgDate, _constructorArgId }, context.Parameters);
             Assert.Same(parameters, context.Parameters);
         }
 
         [Fact]
         public void Constructor_RequestDefinesParameters()
         {
-            ICollection<IParameter> requestParameters = new IParameter[] { _constructorArgDate, _constructorArgName };
-            ICollection<IParameter> bindingParameters = Array.Empty<IParameter>();
+            IReadOnlyList<IParameter> requestParameters = new IParameter[] { _constructorArgDate, _constructorArgName };
+            IList<IParameter> bindingParameters = Array.Empty<IParameter>();
             Type service = typeof(Dagger);
 
             _requestMock.Setup(p => p.Parameters).Returns(requestParameters);
@@ -228,8 +228,8 @@ namespace Ninject.Tests.Unit.Activation
         [Fact]
         public void Constructor_BindingDefinesParameters()
         {
-            ICollection<IParameter> requestParameters = Array.Empty<IParameter>();
-            ICollection<IParameter> bindingParameters = new IParameter[] { _propertyFirstName, _constructorArgId };
+            IReadOnlyList<IParameter> requestParameters = Array.Empty<IParameter>();
+            IList<IParameter> bindingParameters = new IParameter[] { _propertyFirstName, _constructorArgId };
             Type service = typeof(Dagger);
 
             _requestMock.Setup(p => p.Parameters).Returns(requestParameters);
@@ -254,8 +254,8 @@ namespace Ninject.Tests.Unit.Activation
         [Fact]
         public void Constructor_NoParameters()
         {
-            ICollection<IParameter> requestParameters = Array.Empty<IParameter>();
-            ICollection<IParameter> bindingParameters = Array.Empty<IParameter>();
+            IReadOnlyList<IParameter> requestParameters = Array.Empty<IParameter>();
+            IList<IParameter> bindingParameters = Array.Empty<IParameter>();
             Type bindingService = typeof(Dagger);
 
             _requestMock.Setup(p => p.Parameters).Returns(requestParameters);

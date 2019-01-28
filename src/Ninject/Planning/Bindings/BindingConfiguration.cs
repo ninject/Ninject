@@ -87,7 +87,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the parameters defined for the binding.
         /// </summary>
-        public ICollection<IParameter> Parameters { get; private set; }
+        public IList<IParameter> Parameters { get; private set; }
 
         /// <summary>
         /// Gets the actions that should be called after instances are activated via the binding.

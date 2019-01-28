@@ -70,7 +70,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the parameters defined for the binding.
         /// </summary>
-        ICollection<IParameter> Parameters { get; }
+        IList<IParameter> Parameters { get; }
 
         /// <summary>
         /// Gets the actions that should be called after instances are activated via the binding.

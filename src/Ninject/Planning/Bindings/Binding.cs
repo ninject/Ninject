@@ -178,7 +178,7 @@ namespace Ninject.Planning.Bindings
         /// <summary>
         /// Gets the parameters defined for the binding.
         /// </summary>
-        public ICollection<IParameter> Parameters
+        public IList<IParameter> Parameters
         {
             get
             {

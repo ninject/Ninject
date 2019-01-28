@@ -69,7 +69,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
                                                                                ninjectSettings);
             _instrumentedContextWithoutPropertyValues = CreateContext(kernelConfiguration,
                                                                       kernelConfiguration.BuildReadOnlyKernel(),
-                                                                      Enumerable.Empty<IParameter>(),
+                                                                      Array.Empty<IParameter>(),
                                                                       typeof(MyInstrumentedService),
                                                                       ninjectSettings);
             _bareContextWithPropertyValuesFullMatch = CreateContext(kernelConfiguration,
@@ -84,7 +84,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
                                                                        ninjectSettings);
             _bareContextWithoutPropertyValues = CreateContext(kernelConfiguration,
                                                               kernelConfiguration.BuildReadOnlyKernel(),
-                                                              Enumerable.Empty<IParameter>(),
+                                                              Array.Empty<IParameter>(),
                                                               typeof(MyBareService),
                                                               ninjectSettings);
 
@@ -134,7 +134,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
             _propertyInjectionStrategy.Activate(_instrumentedContextWithoutPropertyValues, _instrumentedReferenceWithoutPropertyValues);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IEnumerable<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
         {
             var request = new Request(serviceType,
                                       null,

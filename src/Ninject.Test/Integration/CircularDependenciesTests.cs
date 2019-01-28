@@ -41,7 +41,7 @@
         [Fact]
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
-            var request = new Request(typeof(TwoWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
+            var request = new Request(typeof(TwoWayConstructorFoo), null, Array.Empty<IParameter>(), null, false, false);
             this.kernel.Resolve(request);
         }
 
@@ -102,7 +102,7 @@
         [Fact]
         public void DoesNotThrowExceptionIfHookIsCreated()
         {
-            var request = new Request(typeof(ThreeWayConstructorFoo), null, Enumerable.Empty<IParameter>(), null, false, false);
+            var request = new Request(typeof(ThreeWayConstructorFoo), null, Array.Empty<IParameter>(), null, false, false);
 
             this.kernel.Resolve(request);
         }
