@@ -153,7 +153,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the scope for the context that "owns" the instance activated therein.
         /// </summary>
-        /// <returns>The object that acts as the scope.</returns>
+        /// <returns>
+        /// The object that acts as the scope.
+        /// </returns>
         public object GetScope()
         {
             return this.cachedScope ?? this.Request.GetScope() ?? this.Binding.GetScope(this);
@@ -162,7 +164,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the provider that should be used to create the instance for this context.
         /// </summary>
-        /// <returns>The provider that should be used.</returns>
+        /// <returns>
+        /// The provider that should be used.
+        /// </returns>
         public IProvider GetProvider()
         {
             return this.Binding.GetProvider(this);
@@ -171,7 +175,9 @@ namespace Ninject.Activation
         /// <summary>
         /// Resolves the instance associated with this hook.
         /// </summary>
-        /// <returns>The resolved instance.</returns>
+        /// <returns>
+        /// The resolved instance.
+        /// </returns>
         public object Resolve()
         {
             if (this.Request.ActiveBindings.Contains(this.Binding) &&
@@ -219,11 +225,13 @@ namespace Ninject.Activation
 
         private object ResolveInternal(object scope)
         {
-            var cachedInstance = this.Cache.TryGet(this);
-
-            if (cachedInstance != null)
+            if (scope != null)
             {
-                return cachedInstance;
+                var cachedInstance = this.Cache.TryGet(this, scope);
+                if (cachedInstance != null)
+                {
+                    return cachedInstance;
+                }
             }
 
             this.Request.ActiveBindings.Push(this.Binding);
@@ -249,7 +257,7 @@ namespace Ninject.Activation
 
             if (scope != null)
             {
-                this.Cache.Remember(this, reference);
+                this.Cache.Remember(this, scope, reference);
             }
 
             if (this.Plan == null)

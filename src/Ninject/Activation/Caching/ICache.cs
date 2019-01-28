@@ -21,6 +21,8 @@
 
 namespace Ninject.Activation.Caching
 {
+    using System;
+
     using Ninject.Components;
 
     /// <summary>
@@ -38,7 +40,18 @@ namespace Ninject.Activation.Caching
         /// </summary>
         /// <param name="context">The context to store.</param>
         /// <param name="reference">The instance reference.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         void Remember(IContext context, InstanceReference reference);
+
+        /// <summary>
+        /// Stores the specified context in the cache.
+        /// </summary>
+        /// <param name="context">The context to store.</param>
+        /// <param name="scope">The scope of the context.</param>
+        /// <param name="reference">The instance reference.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="scope"/> is <see langword="null"/>.</exception>
+        void Remember(IContext context, object scope, InstanceReference reference);
 
         /// <summary>
         /// Tries to retrieve an instance to re-use in the specified context.
@@ -47,7 +60,20 @@ namespace Ninject.Activation.Caching
         /// <returns>
         /// The instance for re-use, or <see langword="null"/> if none has been stored.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
         object TryGet(IContext context);
+
+        /// <summary>
+        /// Tries to retrieve an instance to re-use in the specified context and scope.
+        /// </summary>
+        /// <param name="context">The context that is being activated.</param>
+        /// <param name="scope">The scope in which the instance is being activated.</param>
+        /// <returns>
+        /// The instance for re-use, or <see langword="null"/> if none has been stored.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="scope"/> is <see langword="null"/>.</exception>
+        object TryGet(IContext context, object scope);
 
         /// <summary>
         /// Deactivates and releases the specified instance from the cache.
