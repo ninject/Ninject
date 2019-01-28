@@ -32,7 +32,26 @@ namespace Ninject.Infrastructure
     /// <typeparam name="TValue">The type of value.</typeparam>
     public class Multimap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, IList<TValue>>>
     {
-        private readonly Dictionary<TKey, IList<TValue>> items = new Dictionary<TKey, IList<TValue>>();
+        private readonly Dictionary<TKey, IList<TValue>> items;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Multimap{TKey, TValue}"/> class that is empty,
+        /// has the default initial capacity, and uses the default <see cref="IEqualityComparer{T}"/>.
+        /// </summary>
+        public Multimap()
+        {
+            this.items = new Dictionary<TKey, IList<TValue>>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Multimap{TKey, TValue}"/> class that is empty,
+        /// has the default initial capacity, and uses the specified <see cref="IEqualityComparer{T}"/>.
+        /// </summary>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default <see cref="EqualityComparer{T}"/> for the type of the key.</param>
+        public Multimap(IEqualityComparer<TKey> comparer)
+        {
+            this.items = new Dictionary<TKey, IList<TValue>>(comparer);
+        }
 
         /// <summary>
         /// Gets the collection of keys.

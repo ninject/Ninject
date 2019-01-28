@@ -38,7 +38,7 @@ namespace Ninject.Components
         /// <summary>
         /// The mappings for ninject components.
         /// </summary>
-        private readonly Multimap<Type, Type> mappings = new Multimap<Type, Type>();
+        private readonly Multimap<Type, Type> mappings = new Multimap<Type, Type>(new ReferenceEqualityTypeComparer());
 
         /// <summary>
         /// The mappings for ninject components with transient scope.
@@ -48,7 +48,7 @@ namespace Ninject.Components
         /// <summary>
         /// The ninject component instances.
         /// </summary>
-        private readonly Dictionary<Type, INinjectComponent> instances = new Dictionary<Type, INinjectComponent>();
+        private readonly Dictionary<Type, INinjectComponent> instances = new Dictionary<Type, INinjectComponent>(new ReferenceEqualityTypeComparer());
 
         /// <summary>
         /// The ninject settings.
