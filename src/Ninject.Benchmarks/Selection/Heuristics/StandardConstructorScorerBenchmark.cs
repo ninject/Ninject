@@ -72,7 +72,7 @@ namespace Ninject.Benchmarks.Selection.Heuristics
 
             _contextWithoutParams = CreateContext(kernelConfiguration,
                                                   kernelConfiguration.BuildReadOnlyKernel(),
-                                                  Enumerable.Empty<IParameter>(),
+                                                  Array.Empty<IParameter>(),
                                                   typeof(StandardConstructorScorerBenchmark),
                                                   ninjectSettings);
 
@@ -160,7 +160,7 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _standardConstructorScorer.Score(_contextWithParams, _spartanHeightAndWeaponCtorDirective);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IEnumerable<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
         {
             var request = new Request(typeof(StandardConstructorScorerBenchmark),
                                       null,

@@ -61,7 +61,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets the parameters that affect the resolution.
         /// </summary>
-        IEnumerable<IParameter> Parameters { get; }
+        IReadOnlyList<IParameter> Parameters { get; }
 
         /// <summary>
         /// Gets the stack of bindings which have been activated by either this request or its ancestors.

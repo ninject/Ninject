@@ -148,7 +148,7 @@ namespace Ninject.Tests.Unit.CacheTests
 
         public ICache Cache { get; private set; }
 
-        public IEnumerable<IParameter> Parameters { get; set; }
+        public IReadOnlyList<IParameter> Parameters { get; set; }
 
         public Type[] GenericArguments
         {
