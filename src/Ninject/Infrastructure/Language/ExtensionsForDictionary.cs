@@ -71,10 +71,35 @@ namespace Ninject.Infrastructure.Language
         /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TValue">The type of the value item.</typeparam>
         /// <param name="dictionary">The dictionary to clone.</param>
-        /// <returns>The cloned dictionary.</returns>
+        /// <returns>
+        /// The cloned dictionary.
+        /// </returns>
         public static Dictionary<TKey, ICollection<TValue>> Clone<TKey, TValue>(this Dictionary<TKey, ICollection<TValue>> dictionary)
         {
             var clonedDictionary = new Dictionary<TKey, ICollection<TValue>>(dictionary.Count);
+
+            foreach (var kvp in dictionary)
+            {
+                // Add the entry with a clone of the values
+                clonedDictionary.Add(kvp.Key, kvp.Value.ToList());
+            }
+
+            return clonedDictionary;
+        }
+
+        /// <summary>
+        /// Clones the dictionary, and the list of values for each entry.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value item.</typeparam>
+        /// <param name="dictionary">The dictionary to clone.</param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default <see cref="EqualityComparer{T}"/> for the type of the key.</param>
+        /// <returns>
+        /// The cloned dictionary.
+        /// </returns>
+        public static Dictionary<TKey, ICollection<TValue>> Clone<TKey, TValue>(this Dictionary<TKey, ICollection<TValue>> dictionary, IEqualityComparer<TKey> comparer)
+        {
+            var clonedDictionary = new Dictionary<TKey, ICollection<TValue>>(dictionary.Count, comparer);
 
             foreach (var kvp in dictionary)
             {
