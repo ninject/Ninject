@@ -225,11 +225,13 @@ namespace Ninject.Activation
 
         private object ResolveInternal(object scope)
         {
-            var cachedInstance = this.Cache.TryGet(this);
-
-            if (cachedInstance != null)
+            if (scope != null)
             {
-                return cachedInstance;
+                var cachedInstance = this.Cache.TryGet(this, scope);
+                if (cachedInstance != null)
+                {
+                    return cachedInstance;
+                }
             }
 
             this.Request.ActiveBindings.Push(this.Binding);
@@ -255,7 +257,7 @@ namespace Ninject.Activation
 
             if (scope != null)
             {
-                this.Cache.Remember(this, reference);
+                this.Cache.Remember(this, scope, reference);
             }
 
             if (this.Plan == null)
