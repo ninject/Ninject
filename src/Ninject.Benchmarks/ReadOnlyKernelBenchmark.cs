@@ -86,7 +86,7 @@ namespace Ninject.Benchmarks
         [Benchmark]
         public void GetBindings_FromCache()
         {
-            var bindings = _readOnlyKernel.GetBindings(typeof(ICleric));
+            var bindings = _kernelWithConstructorAndPropertyInjection.GetBindings(typeof(ICleric));
             foreach (var binding in bindings)
             {
                 if (binding.Service == null)
