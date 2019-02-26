@@ -96,10 +96,10 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         {
             var service = typeof(Ninja);
             Func<IBindingMetadata, bool> constraint = (bindingMetadata) => false;
-            IEnumerable<IParameter> parameters = new[] {
-                                                            new ConstructorArgument("a", 1),
-                                                            new ConstructorArgument("b", 2)
-                                                       };
+            IParameter[] parameters = new[] {
+                                                new ConstructorArgument("a", 1),
+                                                new ConstructorArgument("b", 2)
+                                            };
             var isOptional = true;
             var isUnique = false;
 
@@ -129,7 +129,7 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         {
             const Type service = null;
             Func<IBindingMetadata, bool> constraint = null;
-            IEnumerable<IParameter> parameters = Enumerable.Empty<IParameter>();
+            var parameters = Array.Empty<IParameter>();
             var isOptional = true;
             var isUnique = false;
 
@@ -144,7 +144,7 @@ namespace Ninject.Tests.Unit.Activation.Blocks
         {
             var service = GetType();
             Func<IBindingMetadata, bool> constraint = null;
-            const IEnumerable<IParameter> parameters = null;
+            const IParameter[] parameters = null;
             var isOptional = true;
             var isUnique = false;
 

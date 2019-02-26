@@ -23,11 +23,11 @@ namespace Ninject.Activation
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Ninject.Activation.Caching;
     using Ninject.Components;
     using Ninject.Infrastructure;
+    using Ninject.Infrastructure.Language;
     using Ninject.Parameters;
     using Ninject.Planning;
     using Ninject.Planning.Bindings;
@@ -87,7 +87,7 @@ namespace Ninject.Activation
             this.Kernel = kernel;
             this.Request = request;
             this.Binding = binding;
-            this.Parameters = request.Parameters.Union(binding.Parameters);
+            this.Parameters = request.Parameters.Concat(binding.Parameters);
             this.Cache = cache;
             this.Planner = planner;
             this.Pipeline = pipeline;
@@ -123,7 +123,7 @@ namespace Ninject.Activation
         /// <summary>
         /// Gets or sets the parameters that were passed to manipulate the activation process.
         /// </summary>
-        public IEnumerable<IParameter> Parameters { get; set; }
+        public IReadOnlyList<IParameter> Parameters { get; set; }
 
         /// <summary>
         /// Gets the generic arguments for the request, if any.

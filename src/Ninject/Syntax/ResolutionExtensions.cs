@@ -431,7 +431,7 @@ namespace Ninject
             return CanResolve(root, service, constraint, parameters, false, true);
         }
 
-        private static bool CanResolve(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        private static bool CanResolve(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(root, nameof(root));
 
@@ -439,7 +439,7 @@ namespace Ninject
             return root.CanResolve(request);
         }
 
-        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique)
+        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters, bool isOptional, bool isUnique)
         {
             Ensure.ArgumentNotNull(root, nameof(root));
 
@@ -447,7 +447,7 @@ namespace Ninject
             return root.Resolve(request);
         }
 
-        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
+        private static IEnumerable<object> GetResolutionIterator(IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters, bool isOptional, bool isUnique, bool forceUnique)
         {
             Ensure.ArgumentNotNull(root, nameof(root));
 
@@ -468,7 +468,7 @@ namespace Ninject
             }
         }
 
-        private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Func<IBindingMetadata, bool> constraint, IEnumerable<IParameter> parameters)
+        private static T DoTryGetAndThrowOnInvalidBinding<T>(IResolutionRoot root, Func<IBindingMetadata, bool> constraint, IReadOnlyList<IParameter> parameters)
         {
             return GetResolutionIterator(root, typeof(T), constraint, parameters, true, true, true).Cast<T>().SingleOrDefault();
         }

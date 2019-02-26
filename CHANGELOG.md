@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `GetBindings(Type service)` method in **(I)KernelConfiguration**, **(I)ReadOnlyKernel** and **KernelBase** now returns `IBinding[]` instead of `IEnumerable<IBinding>`.
 - Added a PropertyInjection setting that can be used to control whether property injection is enabled. By default, property injection is enabled.
 - Added a MethodInjection setting that can be used to control whether method injection is enabled. By default, method injection is enabled.
+- Changed type of parameters argument in Request constructor from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
+- Changed type of parameters argument in IResolutionRoot.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
+- Changed type of parameters argument in KernelBase.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
+- Changed type of parameters argument in ReadOnlyKernel.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
+- Changed type of Parameters property in IBindingConfiguration (and implementing classes) from ICollection<IParameter> to IList<IParameter>.
+- Changed type of Parameters property in Request and Context from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
 
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)

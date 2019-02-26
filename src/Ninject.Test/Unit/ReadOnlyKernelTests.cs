@@ -94,7 +94,7 @@ namespace Ninject.Test.Unit
             [Fact]
             public void CanResolve_Request_ShouldNotIgnoreImplicitBindings()
             {
-                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Array.Empty<IParameter>(), false, true);
 
                 Assert.True(_readOnlyKernel.CanResolve(request));
             }
@@ -113,7 +113,7 @@ namespace Ninject.Test.Unit
             [Fact]
             public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldIgnoreImplicitBindingsWhenIgnoreImplicitBindingsIsTrue()
             {
-                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Array.Empty<IParameter>(), false, true);
 
                 Assert.False(_readOnlyKernel.CanResolve(request, true));
             }
@@ -121,7 +121,7 @@ namespace Ninject.Test.Unit
             [Fact]
             public void CanResolve_RequestAndIgnoreImplicitBindings_ShouldNotIgnoreImplicitBindingsWhenIgnoreImplicitBindingsIsFalse()
             {
-                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Enumerable.Empty<IParameter>(), false, true);
+                var request = _readOnlyKernel.CreateRequest(typeof(Sword), null, Array.Empty<IParameter>(), false, true);
 
                 Assert.True(_readOnlyKernel.CanResolve(request, false));
             }

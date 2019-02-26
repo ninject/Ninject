@@ -461,14 +461,14 @@ namespace Ninject.Test.Unit.Activation.Providers
 
         private static Context CreateContext(IKernelConfiguration kernelConfiguration,
                                              IReadOnlyKernel readonlyKernel,
-                                             IEnumerable<IParameter> parameters,
+                                             IReadOnlyList<IParameter> parameters,
                                              Type serviceType,
                                              Func<IContext, IProvider> providerCallback,
                                              INinjectSettings ninjectSettings)
         {
             var request = new Request(serviceType,
                                       null,
-                                      Enumerable.Empty<IParameter>(),
+                                      parameters,
                                       null,
                                       false,
                                       true);
