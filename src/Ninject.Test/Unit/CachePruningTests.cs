@@ -29,13 +29,8 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void CollectedScopeInstancesAreRemoved()
         {
-            var sword = new Sword();
-            var swordWeakReference = new WeakReference(sword);
-            var context = CreateContextMock(new TestObject(42), this.bindingConfigurationMock.Object);
-            this.Remember(sword, context);
-
-            sword = null;
-            context = null;
+            // Use separate method to allow scope to be finalized
+            var swordWeakReference = Remember();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -54,17 +49,14 @@ namespace Ninject.Tests.Unit.CacheTests
         [Fact]
         public void UncollectedScopeInstancesAreNotRemoved()
         {
-            var sword = new Sword();
-            var swordWeakReference = new WeakReference(sword);
-            var context = CreateContextMock(new TestObject(42), this.bindingConfigurationMock.Object);
-            this.Remember(sword, context);
+            // Use separate method to allow scope to be finalized
+            var swordWeakReference = Remember();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
             bool swordCollected = !swordWeakReference.IsAlive;
-
             swordCollected.Should().BeFalse();
         }
 
@@ -73,6 +65,15 @@ namespace Ninject.Tests.Unit.CacheTests
             var bindingMock = new Mock<IBinding>();
             bindingMock.Setup(b => b.BindingConfiguration).Returns(bindingConfiguration);
             return new ContextMock(scope, bindingMock.Object, genericArguments);
+        }
+
+        private WeakReference Remember()
+        {
+            var sword = new Sword();
+            var swordWeakReference = new WeakReference(sword);
+            var context = CreateContextMock(new TestObject(42), this.bindingConfigurationMock.Object);
+            this.Remember(sword, context);
+            return swordWeakReference;
         }
 
         private void Remember(Sword sword, IContext context)

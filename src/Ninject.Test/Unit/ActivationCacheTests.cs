@@ -60,8 +60,8 @@ namespace Ninject.Tests.Unit
         [Fact]
         public void DeadObjectsAreRemoved()
         {
-            this.testee.AddActivatedInstance(new TestObject(42));
-            this.testee.AddDeactivatedInstance(new TestObject(42));
+            // Use separate method to allow instances to be finalized
+            AddActivatedAndDeactivatedInstance();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -86,6 +86,12 @@ namespace Ninject.Tests.Unit
             var isActivated = this.testee.IsActivated(instance);
 
             isActivated.Should().BeTrue();
+        }
+
+        private void AddActivatedAndDeactivatedInstance()
+        {
+            this.testee.AddActivatedInstance(new TestObject(42));
+            this.testee.AddDeactivatedInstance(new TestObject(42));
         }
     }
 }
