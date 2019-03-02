@@ -138,14 +138,20 @@ namespace Ninject.Tests.Integration
 
             var barracks = this.kernel.Get<Barracks>();
 
-            barracks.Weapon.Should().BeOfType<Sword>();
-            barracks.Warrior.Weapon.Should().BeOfType<Dagger>();
-            barracks.Weapon.Should().BeSameAs(weakReference.Target);
-            barracks.Weapon = null;
+            // Assert in separate method to allow weapon to be finalized
+            AssertWeapons(barracks, weakReference);
 
             GC.Collect();
 
             weakReference.IsAlive.Should().BeFalse();
+        }
+
+        private void AssertWeapons(Barracks barracks, WeakReference weaponReference)
+        {
+            barracks.Weapon.Should().BeOfType<Sword>();
+            barracks.Warrior.Weapon.Should().BeOfType<Dagger>();
+            barracks.Weapon.Should().BeSameAs(weaponReference.Target);
+            barracks.Weapon = null;
         }
 
 
