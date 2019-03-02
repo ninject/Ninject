@@ -81,17 +81,23 @@ namespace Ninject.Tests.Integration
 
             var weakReference = this.Process();
 
-            var warrior = this.kernel.Get<FootSoldier>();
-
-            warrior.Weapon.Should().BeOfType<Sword>();
-            warrior.Weapon.Should().BeSameAs(weakReference.Target);
-            warrior.Weapon = null;
+            // Assert Weapon property in separate method to allow weapon to be finalized
+            AssertProperty(weakReference);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
             weakReference.IsAlive.Should().BeFalse();
+        }
+
+        private void AssertProperty(WeakReference weaponReference)
+        {
+            var warrior = this.kernel.Get<FootSoldier>();
+
+            warrior.Weapon.Should().BeOfType<Sword>();
+            warrior.Weapon.Should().BeSameAs(weaponReference.Target);
+            warrior.Weapon = null;
         }
 
         private WeakReference Process()

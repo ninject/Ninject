@@ -40,16 +40,20 @@
         {
             this.kernel.Bind<IWeapon>().To<Sword>().InTransientScope();
 
-            var instance = this.kernel.Get<IWeapon>();
-            var reference = new WeakReference(instance);
-
-            instance = null;
+            // Use separate method to allow instance to be finalized
+            var reference = GetWeakReference<IWeapon>();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
             reference.IsAlive.Should().BeFalse();
+        }
+
+        private WeakReference GetWeakReference<T>()
+        {
+            var instance = this.kernel.Get<T>();
+            return new WeakReference(instance);
         }
     }
 
@@ -71,21 +75,25 @@
         {
             this.kernel.Bind<Sword>().ToSelf().InTransientScope();
 
-            var instance = this.kernel.Get<Sword>();
-            var reference = new WeakReference(instance);
-
-            instance = null;
+            // Use separate method to allow instance to be finalized
+            var weakReference = GetWeakReference<Sword>();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            reference.IsAlive.Should().BeFalse();
+            weakReference.IsAlive.Should().BeFalse();
 
             var cache = this.kernel.Components.Get<ICache>();
             cache.Prune();
 
             cache.Count.Should().Be(0);
+        }
+
+        private WeakReference GetWeakReference<T>()
+        {
+            var instance = this.kernel.Get<T>();
+            return new WeakReference(instance);
         }
     }
 
@@ -107,16 +115,20 @@
         {
             this.kernel.Bind<IWeapon>().ToProvider<SwordProvider>().InTransientScope();
 
-            var instance = this.kernel.Get<IWeapon>();
-            var reference = new WeakReference(instance);
-
-            instance = null;
+            // Use separate method to allow instance to be finalized
+            var weakReference = GetWeakReference<IWeapon>();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            reference.IsAlive.Should().BeFalse();
+            weakReference.IsAlive.Should().BeFalse();
+        }
+
+        private WeakReference GetWeakReference<T>()
+        {
+            var instance = this.kernel.Get<IWeapon>();
+            return new WeakReference(instance);
         }
     }
 
@@ -138,16 +150,20 @@
         {
             this.kernel.Bind<IWeapon>().ToMethod(x => new Sword()).InTransientScope();
 
-            var instance = this.kernel.Get<IWeapon>();
-            var reference = new WeakReference(instance);
-
-            instance = null;
+            // Use separate method to allow instance to be finalized
+            var weakReference = GetWeakReference<IWeapon>();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            reference.IsAlive.Should().BeFalse();
+            weakReference.IsAlive.Should().BeFalse();
+        }
+
+        private WeakReference GetWeakReference<T>()
+        {
+            var instance = this.kernel.Get<IWeapon>();
+            return new WeakReference(instance);
         }
     }
 

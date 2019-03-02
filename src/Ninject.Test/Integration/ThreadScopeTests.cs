@@ -75,16 +75,8 @@
             this.kernel.Bind<NotifiesWhenDisposed>().ToSelf().InThreadScope();
             var cache = this.kernel.Components.Get<ICache>();
 
-            NotifiesWhenDisposed instance = null;
-
-            ThreadStart callback = () => instance = this.kernel.Get<NotifiesWhenDisposed>();
-
-            var thread = new Thread(callback);
-
-            thread.Start();
-            thread.Join();
-
-            thread = null;
+            // Use separate method to allow thread/scope to be finalized
+            NotifiesWhenDisposed instance = GetInstanceFromSeparateThread();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -94,6 +86,20 @@
 
             instance.Should().NotBeNull();
             instance.IsDisposed.Should().BeTrue();
+        }
+
+        private NotifiesWhenDisposed GetInstanceFromSeparateThread()
+        {
+            NotifiesWhenDisposed instance = null;
+
+            ThreadStart callback = () => instance = this.kernel.Get<NotifiesWhenDisposed>();
+
+            var thread = new Thread(callback);
+
+            thread.Start();
+            thread.Join();
+
+            return instance;
         }
     }
 }
