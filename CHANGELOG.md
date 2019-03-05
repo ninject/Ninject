@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed type of parameters argument in ReadOnlyKernel.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
 - Changed type of Parameters property in IBindingConfiguration (and implementing classes) from ICollection<IParameter> to IList<IParameter>.
 - Changed type of Parameters property in Request and Context from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
+- Added a `object ResolveSingle(IRequest request)` method to IResolutionRoot which is optimized for resolving a single instance of a given service.
+  This new method is used in the Get, TryGet and TryGetAndThrowOnInvalidBinding extension method.
 
 ### Fixed
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)

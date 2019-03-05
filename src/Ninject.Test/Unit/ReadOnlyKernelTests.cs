@@ -29,8 +29,8 @@ namespace Ninject.Test.Unit
         protected Mock<IBindingResolver> BindingResolverMock2 { get; }
         protected Mock<IMissingBindingResolver> MissingBindingResolverMock1 { get; }
         protected Mock<IMissingBindingResolver> MissingBindingResolverMock2 { get; }
-        protected IEnumerable<IBindingResolver> BindingResolvers { get; }
-        protected IEnumerable<IMissingBindingResolver> MissingBindingResolvers { get; }
+        protected List<IBindingResolver> BindingResolvers { get; }
+        protected List<IMissingBindingResolver> MissingBindingResolvers { get; }
 
         public ReadOnlyKernelTests()
         {
@@ -305,8 +305,8 @@ namespace Ninject.Test.Unit
                                       IPipeline pipeline,
                                       IExceptionFormatter exceptionFormatter,
                                       IBindingPrecedenceComparer bindingPrecedenceComparer,
-                                      IEnumerable<IBindingResolver> bindingResolvers,
-                                      IEnumerable<IMissingBindingResolver> missingBindingResolvers)
+                                      List<IBindingResolver> bindingResolvers,
+                                      List<IMissingBindingResolver> missingBindingResolvers)
                 : base(settings,
                        bindings,
                        cache,

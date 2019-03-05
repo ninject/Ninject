@@ -139,54 +139,6 @@ namespace Ninject.Test.Unit.Activation.Providers
         }
 
         [Fact]
-        public void Create_ShouldThrowInvalidOperationExceptionWhenNoConstructorArgumentIsAvailableForGivenParameterAndResolveReturnsMultipleResults()
-        {
-            var seq = new MockSequence();
-
-            var injectorOneMock = new Mock<ConstructorInjector>(MockBehavior.Strict);
-            var injectorTwoMock = new Mock<ConstructorInjector>(MockBehavior.Strict);
-            var directiveOne = new ConstructorInjectionDirective(GetMyServiceWeaponAndWarriorConstructor(), injectorOneMock.Object);
-            var directiveTwo = new ConstructorInjectionDirective(GetMyServiceClericAndName(), injectorTwoMock.Object);
-            var readOnlyKernelMock = new Mock<IReadOnlyKernel>(MockBehavior.Strict);
-            var childRequestMock = new Mock<IRequest>(MockBehavior.Strict);
-            var planMock = new Mock<IPlan>(MockBehavior.Strict);
-            var instance = new object();
-            var weaponMock = new Mock<IWeapon>(MockBehavior.Strict);
-            var warriorMock = new Mock<IWarrior>(MockBehavior.Strict);
-            var directives = new[]
-
-                {
-                    directiveOne,
-                    directiveTwo
-                };
-
-            var parameters = new List<IParameter>
-                {
-                    new ConstructorArgument("name", "Foo"),
-                    new ConstructorArgument("weapon", weaponMock.Object),
-                    new ConstructorArgument("cleric", new Monk()),
-                };
-
-            _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _planMock.InSequence(seq).Setup(p => p.GetAll< ConstructorInjectionDirective>()).Returns(directives);
-            _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveOne)).Returns(3);
-            _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveTwo)).Returns(2);
-            _contextMock.InSequence(seq).Setup(p => p.Parameters).Returns(parameters);
-            _contextMock.InSequence(seq).Setup(p => p.Parameters).Returns(parameters);
-            _contextMock.InSequence(seq).Setup(p => p.Request).Returns(_requestMock.Object);
-            _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
-            childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
-            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object, new FootSoldier() });
-
-            var actualException = Assert.Throws<InvalidOperationException>(() => _standardProvider.Create(_contextMock.Object));
-
-            Assert.Null(actualException.InnerException);
-            Assert.Equal("Sequence contains more than one element", actualException.Message);
-        }
-
-        [Fact]
         public void Create_ShouldPassResolvedObjectForGivenParameterWhenNoConstructorArgumentIsAvailableForParameterAndResolveReturnsSingleResult()
         {
             var seq = new MockSequence();
@@ -225,7 +177,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
             childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
             _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object });
+            readOnlyKernelMock.InSequence(seq).Setup(p => p.ResolveSingle(childRequestMock.Object)).Returns(warriorMock.Object);
             injectorOneMock.InSequence(seq).Setup(p => p(weaponMock.Object, warriorMock.Object)).Returns(expected);
 
             var actual = _standardProvider.Create(_contextMock.Object);
@@ -271,7 +223,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
             childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
             _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(Enumerable.Empty<object>());
+            readOnlyKernelMock.InSequence(seq).Setup(p => p.ResolveSingle(childRequestMock.Object)).Returns(null);
             injectorOneMock.InSequence(seq).Setup(p => p(weaponMock.Object, null)).Returns(expected);
 
             var actual = _standardProvider.Create(_contextMock.Object);
