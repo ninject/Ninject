@@ -5,12 +5,12 @@
     using System.Collections.Generic;
     using Xunit;
 
-    public class WhenServiceRequestsConstrainedListOfDependencies : ConstrainedDependenciesContext
+    public class WhenServiceRequestsConstrainedIListOfDependencies : ConstrainedDependenciesContext
     {
         [Fact]
         public void ServiceIsInjectedWithAllDependenciesThatMatchTheConstraint()
         {
-            this.Kernel.Bind<IParent>().To<RequestsConstrainedList>();
+            this.Kernel.Bind<IParent>().To<RequestsConstrainedIList>();
             this.Kernel.Bind<IChild>().To<ChildA>().Named("joe");
             this.Kernel.Bind<IChild>().To<ChildB>().Named("bob");
 
@@ -23,7 +23,7 @@
         [Fact]
         public void WhenNoMatchingBindingExistsEmptyEnumerableIsInjected()
         {
-            this.Kernel.Bind<IParent>().To<RequestsConstrainedList>();
+            this.Kernel.Bind<IParent>().To<RequestsConstrainedIList>();
             this.Kernel.Bind<IChild>().To<ChildA>().Named("joe");
             this.Kernel.Bind<IChild>().To<ChildB>().Named("ian");
 
@@ -32,6 +32,7 @@
             parent.Should().NotBeNull();
             parent.Children.Should().BeOfType<List<IChild>>();
             parent.Children.Count.Should().Be(0);
+            parent.Children.Should().BeOfType<List<IChild>>();
         }
     }
 }
