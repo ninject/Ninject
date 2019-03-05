@@ -33,7 +33,7 @@
             instance.Should().BeSameAs(sword);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void SameInstanceShouldBeReturnedWhenConstantIsArray()
         {
             var swords = new Sword[0];
@@ -43,7 +43,7 @@
             instance.Should().BeSameAs(swords);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void SameInstanceShouldBeReturnedWhenConstantIsGenericList()
         {
             var swords = new List<Sword>();
@@ -53,7 +53,7 @@
             instance.Should().BeSameAs(swords);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void SameInstanceShouldBeReturnedWhenConstantIsGenericICollection()
         {
             var swords = new List<Sword>();
@@ -63,7 +63,7 @@
             instance.Should().BeSameAs(swords);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void SameInstanceShouldBeReturnedWhenConstantIsGenericIList()
         {
             var swords = new List<Sword>();

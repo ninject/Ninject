@@ -394,12 +394,6 @@ namespace Ninject
 
         private object ResolveSingleUnique(IRequest request, bool handleMissingBindings)
         {
-            var collection = this.ResolveCollection(request);
-            if (collection != null)
-            {
-                return collection;
-            }
-
             var bindings = this.GetBindingsCore(request.Service);
             IBinding satisfiedBinding = null;
 
@@ -453,6 +447,12 @@ namespace Ninject
             if (satisfiedBinding != null)
             {
                 return this.CreateContext(request, satisfiedBinding).Resolve();
+            }
+
+            var collection = this.ResolveCollection(request);
+            if (collection != null)
+            {
+                return collection;
             }
 
             if (handleMissingBindings && this.HandleMissingBinding(request))
@@ -547,12 +547,6 @@ namespace Ninject
 
         private object ResolveSingleNonUnique(IRequest request, bool handleMissingBindings)
         {
-            var collection = this.ResolveCollection(request);
-            if (collection != null)
-            {
-                return collection;
-            }
-
             var bindings = this.GetBindingsCore(request.Service);
             IBinding satisfiedBinding = null;
 
@@ -576,6 +570,12 @@ namespace Ninject
             if (satisfiedBinding != null)
             {
                 return this.CreateContext(request, satisfiedBinding).Resolve();
+            }
+
+            var collection = this.ResolveCollection(request);
+            if (collection != null)
+            {
+                return collection;
             }
 
             /*

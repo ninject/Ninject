@@ -475,7 +475,7 @@ namespace Ninject.Tests.Integration
                 weapons.Should().HaveCount(2);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGetOfT_Parameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>();
@@ -507,7 +507,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGetOfT_NameAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>().Named("a");
@@ -543,7 +543,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGetOfT_ConstraintAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>().Named("a");
@@ -582,7 +582,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGet_ServiceAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>();
@@ -624,7 +624,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGet_ServiceAndNameAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>().Named("a");
@@ -667,7 +667,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip= "https://github.com/ninject/Ninject/issues/333")]
+            [Fact]
             public void TryGet_ServiceAndConstraintAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>().Named("a");
