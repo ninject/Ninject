@@ -322,47 +322,47 @@ namespace Ninject.Test.Unit.Selection
             _settingsMock.InSequence(_sequence)
                          .Setup(p => p.InjectParentPrivateProperties)
                          .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(weaponProperty))
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(weaponProperty))
                                     .Returns(true);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(idProperty))
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(idProperty))
                                     .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(idProperty))
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(idProperty))
                                     .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(nameProperty))
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(nameProperty))
                                     .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(nameProperty))
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(nameProperty))
                                     .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(enabledProperty))
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(enabledProperty))
                                     .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(enabledProperty))
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(enabledProperty))
                                     .Returns(false);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(stopProperty))
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(visibleProperty))
+                                    .Returns(false);
+            _injectionHeuristicMock2.Setup(p => p.ShouldInject(visibleProperty))
+                                    .Returns(false);
+            _injectionHeuristicMock1.Setup(p => p.ShouldInject(stopProperty))
                                     .Returns(true);
-            _injectionHeuristicMock1.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(visibleProperty))
-                                    .Returns(false);
-            _injectionHeuristicMock2.InSequence(_sequence)
-                                    .Setup(p => p.ShouldInject(visibleProperty))
-                                    .Returns(false);
 
             #endregion Arrange
 
             var actual = _selector.SelectPropertiesForInjection(type);
 
-            Assert.Equal(new[]
-                            {
-                                weaponProperty,
-                                stopProperty
-                            },
-                        actual);
+            var actualList = actual.ToList();
+
+            Assert.Equal(2, actualList.Count);
+            Assert.Contains(weaponProperty, actualList);
+            Assert.Contains(stopProperty, actualList);
+
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(weaponProperty), Times.Once);
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(idProperty), Times.Once);
+            _injectionHeuristicMock2.Verify(p => p.ShouldInject(idProperty), Times.Once);
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(nameProperty), Times.Once);
+            _injectionHeuristicMock2.Verify(p => p.ShouldInject(nameProperty), Times.Once);
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(enabledProperty), Times.Once);
+            _injectionHeuristicMock2.Verify(p => p.ShouldInject(enabledProperty), Times.Once);
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(visibleProperty), Times.Once);
+            _injectionHeuristicMock2.Verify(p => p.ShouldInject(visibleProperty), Times.Once);
+            _injectionHeuristicMock1.Verify(p => p.ShouldInject(stopProperty), Times.Once);
         }
 
         [Fact]
