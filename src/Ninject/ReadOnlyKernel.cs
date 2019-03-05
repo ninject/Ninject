@@ -578,8 +578,10 @@ namespace Ninject
                 return this.CreateContext(request, satisfiedBinding).Resolve();
             }
 
-            // We can end up here if there are no bindings for the service, or if there's no binding that satisfies
-            // the request.
+            /*
+            / We end up here if there are no bindings for the service, or if there's no binding that satisfies
+            / the request.
+            */
 
             if (handleMissingBindings && this.HandleMissingBinding(request))
             {
