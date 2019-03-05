@@ -1,7 +1,5 @@
 ﻿namespace Ninject.Tests.Integration.EnumerableDependenciesTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using FluentAssertions;
     using Ninject.Tests.Integration.EnumerableDependenciesTests.Fakes;
     using Xunit;
