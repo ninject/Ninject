@@ -96,7 +96,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(1);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+            [Fact]
             public void TryGetOfT_NameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
             {
                 Kernel = Configuration.BuildReadOnlyKernel();
@@ -110,7 +110,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().OnlyContain(b => b.IsImplicit);
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+            [Fact]
             public void TryGet_ServiceAndNameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
             {
                 Kernel = Configuration.BuildReadOnlyKernel();
