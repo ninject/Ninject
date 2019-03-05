@@ -75,6 +75,17 @@ namespace Ninject.Syntax
         IEnumerable<object> Resolve(IRequest request);
 
         /// <summary>
+        /// Resolves an instance for the specified request.
+        /// </summary>
+        /// <param name="request">The request to resolve.</param>
+        /// <returns>
+        /// An instance that matches the request.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ActivationException">More than one matching bindings is available for the request, and <see cref="IRequest.IsUnique"/> is <see langword="true"/>.</exception>
+        object ResolveSingle(IRequest request);
+
+        /// <summary>
         /// Creates a request for the specified service.
         /// </summary>
         /// <param name="service">The service that is being requested.</param>
@@ -83,7 +94,7 @@ namespace Ninject.Syntax
         /// <param name="isOptional"><see langword="true"/> if the request is optional; otherwise, <see langword="false"/>.</param>
         /// <param name="isUnique"><see langword="true"/> if the request should return a unique result; otherwise, <see langword="false"/>.</param>
         /// <returns>
-        /// The created request.
+        /// The request for the specified service.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>

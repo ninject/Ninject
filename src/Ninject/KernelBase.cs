@@ -384,6 +384,20 @@ namespace Ninject
         {
             return this.ReadOnlyKernel.GetService(serviceType);
         }
+
+        /// <summary>
+        /// Resolves an instance for the specified request.
+        /// </summary>
+        /// <param name="request">The request to resolve.</param>
+        /// <returns>
+        /// An instance that matches the request.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ActivationException">More than one matching bindings is available for the request, and <see cref="IRequest.IsUnique"/> is <see langword="true"/>.</exception>
+        public object ResolveSingle(IRequest request)
+        {
+            return this.ReadOnlyKernel.ResolveSingle(request);
+        }
     }
 }
 #pragma warning restore CS0618 // Type or member is obsolete

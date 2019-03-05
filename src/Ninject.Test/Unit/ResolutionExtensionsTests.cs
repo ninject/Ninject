@@ -386,103 +386,61 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void Get_RootAndParameters_NoInstancesOfService()
+        public void Get_RootAndParameters_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, parameters));
+            var actual = ResolutionExtensions.Get<IWeapon>(root, parameters);
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains no elements", actual.Message);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void Get_RootAndParameters_SingleInstanceOfService()
+        public void Get_RootAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.Get<IWeapon>(root, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void Get_RootAndParameters_SingleInstanceNotOfService()
+        public void Get_RootAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<IWarrior>(root, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -496,7 +454,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.Get<IWeapon>(root, parameters));
@@ -519,7 +477,7 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void Get_RootAndConstraintAndParameters_NoInstancesOfService()
+        public void Get_RootAndConstraintAndParameters_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
@@ -530,97 +488,54 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, constraint, parameters));
+            var actual = ResolutionExtensions.Get<IWeapon>(root, constraint, parameters);
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains no elements", actual.Message);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void Get_RootAndConstraintAndParameters_SingleInstanceOfService()
+        public void Get_RootAndConstraintAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.Get<IWeapon>(root, constraint, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void Get_RootAndConstraintAndParameters_SingleInstanceNotOfService()
+        public void Get_RootAndConstraintAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), constraint, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<IWarrior>(root, constraint, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndConstraintAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            Func<IBindingMetadata, bool> constraint = (_) => true;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, constraint, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndConstraintAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            Func<IBindingMetadata, bool> constraint = (_) => true;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<IWeapon>(root, constraint, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -635,7 +550,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.Get<IWeapon>(root, constraint, parameters));
@@ -658,108 +573,64 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void Get_RootAndNameAndParameters_NoInstancesOfService()
+        public void Get_RootAndNameAndParameter_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, name, parameters));
+            var actual = ResolutionExtensions.Get<IWeapon>(root, name, parameters);
 
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains no elements", actual.Message);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void Get_RootAndNameAndParameters_SingleInstanceOfService()
+        public void Get_RootAndNameAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.Get<IWeapon>(root, name, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void Get_RootAndNameAndParameters_SingleInstanceNotOfService()
+        public void Get_RootAndNameAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(string), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<string>(root, name, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(string).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndNameAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.Get<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void Get_RootAndNameAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.Get<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(string).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -774,7 +645,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.Get<IWeapon>(root, name, parameters));
@@ -796,18 +667,17 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndParameters_NoInstancesOfService()
+        public void TryGet_RootAndParameters_ResolvesToNull()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, parameters);
 
@@ -815,83 +685,43 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndParameters_SingleInstanceOfService()
+        public void TryGet_RootAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGet_RootAndParameters_SingleInstanceNotOfService()
+        public void TryGet_RootAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>) null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWarrior>(root, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGet<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -905,7 +735,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, parameters);
@@ -928,19 +758,18 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndConstraintAndParameters_NoInstancesOfService()
+        public void TryGet_RootAndConstraintAndParameters_ResolvesToNull()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, constraint, parameters);
 
@@ -948,87 +777,45 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndConstraintAndParameters_SingleInstanceOfService()
+        public void TryGet_RootAndConstraintAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, constraint, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGet_RootAndConstraintAndParameters_SingleInstanceNotOfService()
+        public void TryGet_RootAndConstraintAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), constraint, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWarrior>(root, constraint, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndConstraintAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            Func<IBindingMetadata, bool> constraint = (_) => true;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGet<IWeapon>(root, constraint, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndConstraintAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            Func<IBindingMetadata, bool> constraint = (_) => true;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWeapon>(root, constraint, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -1043,7 +830,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, constraint, parameters);
@@ -1066,19 +853,18 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndNameAndParameters_NoInstancesOfService()
+        public void TryGet_RootAndNameAndParameters_ResolvesToNull()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, name, parameters);
 
@@ -1086,87 +872,45 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGet_RootAndNameAndParameters_SingleInstanceOfService()
+        public void TryGet_RootAndNameAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, name, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGet_RootAndNameAndParameters_SingleInstanceNotOfService()
+        public void TryGet_RootAndNameAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWarrior>(root, name, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndNameAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGet<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGet_RootAndNameAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGet<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -1181,7 +925,7 @@ namespace Ninject.Test.Unit
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = ResolutionExtensions.TryGet<IWeapon>(root, name, parameters);
@@ -1203,11 +947,10 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_NoInstancesOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
@@ -1215,8 +958,8 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, parameters);
 
@@ -1224,11 +967,11 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_SingleInstanceOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
@@ -1236,21 +979,21 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_SingleInstanceNotOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>) null, parameters, true, true))
@@ -1258,57 +1001,13 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWarrior>(root, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _requestMock.InSequence(_sequence)
-                        .SetupSet(p => p.ForceUnique = true);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _requestMock.InSequence(_sequence)
-                        .SetupSet(p => p.ForceUnique = true);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -1324,7 +1023,7 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, parameters));
@@ -1347,12 +1046,11 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_NoInstancesOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
@@ -1360,8 +1058,8 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, constraint, parameters);
 
@@ -1369,12 +1067,12 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_SingleInstanceOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_ResolvesToInstanceOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
@@ -1382,22 +1080,22 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, constraint, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_SingleInstanceNotOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_ResolvesToInstanceNotOfService()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), constraint, parameters, true, true))
@@ -1405,22 +1103,22 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWarrior>(root, constraint, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
+        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_ResolvesToInstanceNotOfService_ShouldThrowInvalidCastException()
         {
             var root = _rootMock.Object;
             Func<IBindingMetadata, bool> constraint = (_) => true;
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
+            var resolvedInstance = new Monk();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
@@ -1428,36 +1126,13 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, constraint, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndConstraintAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            Func<IBindingMetadata, bool> constraint = (_) => true;
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), constraint, parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _requestMock.InSequence(_sequence)
-                        .SetupSet(p => p.ForceUnique = true);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, constraint, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -1474,7 +1149,7 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, constraint, parameters));
@@ -1497,7 +1172,7 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_NoInstancesOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_ResolveReturnsNull()
         {
             var root = _rootMock.Object;
             var name = "NAME";
@@ -1510,8 +1185,8 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns(resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(null);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, name, parameters);
 
@@ -1519,12 +1194,12 @@ namespace Ninject.Test.Unit
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_SingleInstanceOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_ResolveReturnsInstanceOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger() };
+            var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
@@ -1532,22 +1207,22 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, name, parameters);
 
             Assert.NotNull(actual);
-            Assert.Same(resolvedInstances[0], actual);
+            Assert.Same(resolvedInstance, actual);
         }
 
         [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_SingleInstanceNotOfService()
+        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_ResolveReturnsInstanceNotOfService()
         {
             var root = _rootMock.Object;
             var name = "NAME";
             var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { 5L };
+            var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CreateRequest(typeof(IWarrior), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
@@ -1555,59 +1230,13 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
+                     .Returns(resolvedInstance);
 
             var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWarrior>(root, name, parameters));
 
             Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[0].GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
-        }
-
-        [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_MultipleInstancesOfService_ShouldThrowInvalidOperationException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Sword() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _requestMock.InSequence(_sequence)
-                        .SetupSet(p => p.ForceUnique = true);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidOperationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal("Sequence contains more than one element", actual.Message);
-        }
-
-        [Fact]
-        public void TryGetAndThrowOnInvalidBinding_RootAndNameAndParameters_MultipleInstancesNotOfService_ShouldThrowInvalidCastException()
-        {
-            var root = _rootMock.Object;
-            var name = "NAME";
-            var parameters = new IParameter[0];
-            var resolvedInstances = new object[] { new Dagger(), new Monk() };
-
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), It.IsNotNull<Func<IBindingMetadata, bool>>(), parameters, true, true))
-                     .Returns(_requestMock.Object);
-            _requestMock.InSequence(_sequence)
-                        .SetupSet(p => p.ForceUnique = true);
-            _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
-
-            var actual = Assert.Throws<InvalidCastException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, name, parameters));
-
-            Assert.Null(actual.InnerException);
-            Assert.Equal($"Unable to cast object of type '{resolvedInstances[1].GetType().FullName}' to type '{typeof(IWeapon).FullName}'.", actual.Message);
+            Assert.Equal($"Unable to cast object of type '{resolvedInstance.GetType().FullName}' to type '{typeof(IWarrior).FullName}'.", actual.Message);
         }
 
         [Fact]
@@ -1624,7 +1253,7 @@ namespace Ninject.Test.Unit
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.Resolve(_requestMock.Object))
+                     .Setup(p => p.ResolveSingle(_requestMock.Object))
                      .Throws(activationException);
 
             var actual = Assert.Throws<ActivationException>(() => ResolutionExtensions.TryGetAndThrowOnInvalidBinding<IWeapon>(root, name, parameters));

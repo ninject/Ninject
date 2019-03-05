@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Ninject.Activation;
+using Ninject.Activation.Caching;
 using Ninject.Parameters;
 using Ninject.Planning.Bindings;
 using Ninject.Tests.Fakes;
@@ -25,6 +26,8 @@ namespace Ninject.Benchmarks
         private IRequest _reflectRequest;
         private IRequest _barracksRequest;
         private IRequest _leasureRequest;
+        private KernelConfiguration _kernelConfigurationWithConstructorAndPropertyInjection;
+        private KernelConfiguration _kernelConfigurationWithOnlyConstructorInjection;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -46,14 +49,24 @@ namespace Ninject.Benchmarks
                     MethodInjection = false
                 };
 
-            _kernelWithConstructorAndPropertyInjection = BuildKernel(ninjectSettingsWithConstructorAndPropertyInjection);
-            _kernelWithOnlyConstructorInjection = BuildKernel(ninjectSettingsWithOnlyConstructorInjection);
+            _kernelConfigurationWithConstructorAndPropertyInjection = CreateKernelConfiguration(ninjectSettingsWithConstructorAndPropertyInjection);
+            _kernelConfigurationWithOnlyConstructorInjection = CreateKernelConfiguration(ninjectSettingsWithOnlyConstructorInjection);
+
+            _kernelWithConstructorAndPropertyInjection = _kernelConfigurationWithConstructorAndPropertyInjection.BuildReadOnlyKernel();
+            _kernelWithOnlyConstructorInjection = _kernelConfigurationWithOnlyConstructorInjection.BuildReadOnlyKernel();
 
             _weaponRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(IWeapon), null, Array.Empty<IParameter>(), false, true);
             _clericRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(ICleric), null, Array.Empty<IParameter>(), false, true);
             _reflectRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(IReflect), null, Array.Empty<IParameter>(), false, true);
             _barracksRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(NinjaBarracks), null, Array.Empty<IParameter>(), false, true);
             _leasureRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(ILeasure), null, new IParameter[] { new ConstructorArgument("immediately", true, true) }, false, true);
+        }
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            _kernelConfigurationWithConstructorAndPropertyInjection.Components.Get<ICache>().Clear();
+            _kernelConfigurationWithOnlyConstructorInjection.Components.Get<ICache>().Clear();
         }
 
         [Benchmark]
@@ -400,7 +413,7 @@ namespace Ninject.Benchmarks
             return bindingCache;
         }
 
-        private static IReadOnlyKernel BuildKernel(INinjectSettings ninjectSettings)
+        private static KernelConfiguration CreateKernelConfiguration(INinjectSettings ninjectSettings)
         {
             var kernelConfiguration = new KernelConfiguration(ninjectSettings);
             kernelConfiguration.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
@@ -427,7 +440,7 @@ namespace Ninject.Benchmarks
                                .To<Dagger>()
                                .WhenInjectedExactlyInto<TakeAWalk>();
 
-            return kernelConfiguration.BuildReadOnlyKernel();
+            return kernelConfiguration;
         }
 
         public interface ISingletonService

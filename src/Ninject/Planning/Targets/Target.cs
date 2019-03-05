@@ -179,7 +179,7 @@ namespace Ninject.Planning.Targets
 
             var request = parent.Request.CreateChild(this.Type, parent, this);
             request.IsUnique = true;
-            return parent.Kernel.Resolve(request).SingleOrDefault();
+            return parent.Kernel.ResolveSingle(request);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Ninject.Planning.Targets
 
             var request = parent.Request.CreateChild(service, parent, this);
             request.IsUnique = true;
-            return parent.Kernel.Resolve(request).SingleOrDefault();
+            return parent.Kernel.ResolveSingle(request);
         }
 
         /// <summary>
