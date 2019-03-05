@@ -492,7 +492,7 @@ namespace Ninject
                 return this.ResolveAll(request, false).CastSlow(service).ToArraySlow(service);
             }
 
-            if (request.Service.IsGenericType)
+            if (request.Service.IsGenericType && !request.Service.IsGenericTypeDefinition)
             {
                 var gtd = request.Service.GetGenericTypeDefinition();
 
