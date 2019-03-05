@@ -457,7 +457,7 @@ namespace Ninject
 
             if (handleMissingBindings && this.HandleMissingBinding(request))
             {
-                return this.ResolveSingle(request, true);
+                return this.ResolveSingle(request, false);
             }
 
             if (request.IsOptional)
@@ -585,7 +585,7 @@ namespace Ninject
 
             if (handleMissingBindings && this.HandleMissingBinding(request))
             {
-                return this.ResolveSingle(request, true);
+                return this.ResolveSingle(request, false);
             }
 
             if (request.IsOptional)
