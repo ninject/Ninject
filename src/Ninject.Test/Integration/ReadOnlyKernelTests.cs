@@ -689,8 +689,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(2);
             }
 
-
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/340")]
+            [Fact]
             public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullWhenTypeIsUnboundGenericTypeDefinition()
             {
                 var service = typeof(List<>);
@@ -799,7 +798,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().BeEmpty();
             }
 
-            [Fact(Skip = "https://github.com/ninject/Ninject/issues/340")]
+            [Fact]
             public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullWhenTypeIsUnboundGenericTypeDefinition()
             {
                 var service = typeof(List<>);
