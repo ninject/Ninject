@@ -19,6 +19,7 @@ test_script:
 
 artifacts:
   - path: 'src\**\*.nupkg'
+  - path: 'src\**\*.snupkg'
 
 deploy:
   provider: NuGet
