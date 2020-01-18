@@ -1,6 +1,6 @@
 configuration: Release
 
-image: Visual Studio 2017
+image: Visual Studio 2022
 
 init:
   - ps: >-
@@ -36,6 +36,7 @@ test_script:
 
 artifacts:
   - path: 'src\**\*.nupkg'
+  - path: 'src\**\*.snupkg'
 
 deploy:
   provider: NuGet

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
+  "version": "5.0.0-ci.{height}",
+  "cloudBuild": {
+    "buildNumber": {
+      "enabled": true
+    }
+  },
+  "nugetPackageVersion": {
+    "semVer": 2
+  },
+  "publicReleaseRefSpec": [
+    "^refs/heads/master$", // we release out of master
+    "^refs/tags/v\\d+\\.\\d+" // we also release tags starting with vN.N
+  ]
+}
