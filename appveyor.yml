@@ -13,7 +13,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - dotnet test --configuration Release --no-build --collect:"Code Coverage" src\Ninject.Test
+  - dotnet test --configuration Release --no-build /p:collect="Code Coverage" src\Ninject.Test
   - nuget install Codecov -x -Verbosity quiet
   - for /f %%a in ('dir /b /s *.coverage') do Codecov\tools\codecov -f "%%a"
 
