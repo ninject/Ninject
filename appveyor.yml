@@ -30,9 +30,11 @@ build:
   verbosity: minimal
 
 test_script:
-  - dotnet test --configuration Release --no-build --collect:"Code Coverage" src\Ninject.Test
+  - dotnet test --configuration Release --no-build --collect="Code Coverage" src\Ninject.Test
+  - nuget install Microsoft.CodeCoverage -x -Verbosity quiet
+  - for /f %%G in ('dir /b /s *.coverage') do Microsoft.CodeCoverage\build\netstandard1.0\CodeCoverage\CodeCoverage analyze /output:%%~dpnG.coveragexml "%%G"
   - nuget install Codecov -x -Verbosity quiet
-  - for /f %%a in ('dir /b /s *.coverage') do Codecov\tools\codecov -f "%%a"
+  - for /f %%G in ('dir /b /s *.coveragexml') do Codecov\tools\codecov -f "%%G"
 
 artifacts:
   - path: 'src\**\*.nupkg'
