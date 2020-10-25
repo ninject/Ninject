@@ -567,7 +567,26 @@
             }
         }
     }
-    
+
+    public class WhenServiceIsResolvedThroughServiceProviderInterface : StandardKernelContext
+    {
+        [Fact]
+        public void ItResolvesBoundService()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+
+            var provider = this.kernel as IServiceProvider;
+            provider.GetService(typeof(IWeapon)).Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ItReturnsNullWhenServiceIsNotConfigured()
+        {
+            var provider = this.kernel as IServiceProvider;
+            provider.GetService(typeof(Samurai)).Should().BeNull();
+        }
+    }
+
     public class InitializableA : IInitializable
     {
         public static int Count = 0;
