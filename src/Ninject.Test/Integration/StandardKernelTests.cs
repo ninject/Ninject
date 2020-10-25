@@ -585,6 +585,20 @@
             var provider = this.kernel as IServiceProvider;
             provider.GetService(typeof(Samurai)).Should().BeNull();
         }
+
+        [Fact]
+        public void ItThrowsWhenServiceIsNotConfiguredAndSettingThrowOnGetServiceNotFound()
+        {
+            using (var kernel = new StandardKernel(new NinjectSettings
+            {
+                ThrowOnGetServiceNotFound = true
+            }))
+            {
+                var provider = kernel as IServiceProvider;
+                Action resolveAction = () => provider.GetService(typeof(Samurai));
+                resolveAction.Should().Throw<ActivationException>();
+            }
+        }
     }
 
     public class InitializableA : IInitializable
