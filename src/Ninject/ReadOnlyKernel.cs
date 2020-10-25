@@ -246,7 +246,9 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(serviceType, nameof(serviceType));
 
-            return this.Get(serviceType);
+            return this.settings.ThrowOnGetServiceNotFound
+                ? this.Get(serviceType)
+                : this.TryGet(serviceType);
         }
 
         /// <summary>
