@@ -47,9 +47,9 @@ namespace Ninject
     {
         private readonly object handleMissingBindingLockObject = new object();
 
-        private readonly Multimap<Type, IBinding> bindings = new Multimap<Type, IBinding>();
+        private readonly Dictionary<Type, ICollection<IBinding>> bindings = new Dictionary<Type, ICollection<IBinding>>();
 
-        private readonly Dictionary<Type, List<IBinding>> bindingCache = new Dictionary<Type, List<IBinding>>();
+        private readonly Dictionary<Type, ICollection<IBinding>> bindingCache = new Dictionary<Type, ICollection<IBinding>>();
 
         private readonly Dictionary<string, INinjectModule> modules = new Dictionary<string, INinjectModule>();
 
@@ -153,7 +153,7 @@ namespace Ninject
         {
             Ensure.ArgumentNotNull(service, "service");
 
-            this.bindings.RemoveAll(service);
+            this.bindings.Remove(service);
 
             lock (this.bindingCache)
             {
