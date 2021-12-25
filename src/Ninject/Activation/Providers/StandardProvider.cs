@@ -190,6 +190,12 @@ namespace Ninject.Activation.Providers
         private ConstructorInjectionDirective DetermineConstructorInjectionDirective(IContext context)
         {
             var directives = context.Plan.ConstructorInjectionDirectives;
+
+            if (directives.Count == 0)
+            {
+                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+            }
+
             if (directives.Count == 1)
             {
                 return directives[0];
@@ -204,11 +210,10 @@ namespace Ninject.Activation.Providers
 
             if (bestDirectives.Length > 1)
             {
-                throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
+                throw new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives));
             }
 
-            return bestDirectives.SingleOrThrowException(
-                () => new ActivationException(ExceptionFormatter.ConstructorsAmbiguous(context, bestDirectives)));
+            return bestDirectives[0];
         }
     }
 }

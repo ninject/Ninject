@@ -199,7 +199,7 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine("Suggestions:");
                 sw.WriteLine("  1) Ensure that you have passed the correct type.");
                 sw.WriteLine("  2) If you have defined your own attribute type, ensure that it extends System.Attribute.");
-                sw.WriteLine("  3) To avoid problems with type-safety, use the generic version of the the method instead,");
+                sw.WriteLine("  3) To avoid problems with type-safety, use the generic version of the method instead,");
                 sw.WriteLine("     such as {0}<SomeAttribute>().", methodName);
 
                 return sw.ToString();
@@ -313,7 +313,7 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine(context.Request.FormatActivationPath());
 
                 sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that one of the 'To' methods is called after 'Bind' methond.");
+                sw.WriteLine("  1) Ensure that one of the 'To' methods is called after 'Bind' method.");
 
                 return sw.ToString();
             }
@@ -352,7 +352,7 @@ namespace Ninject.Infrastructure.Introspection
             using (var sw = new StringWriter())
             {
                 sw.WriteLine("Error activating {0} using {1}", context.Request.Service.Format(), context.Binding.Format(context));
-                sw.WriteLine("Several constructors have the same priority. Please specify the constructor using ToConstructor syntax or add an Inject attribute.");
+                sw.WriteLine("Several constructors have the same priority.");
                 sw.WriteLine();
 
                 sw.WriteLine("Constructors:");
@@ -367,8 +367,8 @@ namespace Ninject.Infrastructure.Introspection
                 sw.WriteLine(context.Request.FormatActivationPath());
 
                 sw.WriteLine("Suggestions:");
-                sw.WriteLine("  1) Ensure that the implementation type has a public constructor.");
-                sw.WriteLine("  2) If you have implemented the Singleton pattern, use a binding with InSingletonScope() instead.");
+                sw.WriteLine("  1) Specify the constructor using ToConstructor syntax.");
+                sw.WriteLine("  2) Add an Inject attribute to the constructor.");
 
                 return sw.ToString();
             }

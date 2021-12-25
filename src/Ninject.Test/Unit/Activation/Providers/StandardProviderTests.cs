@@ -82,8 +82,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                     new ConstructorArgument("cleric", cleric),
                 };
 
-            var kernelConfiguration = new KernelConfiguration(_ninjectSettings);
-            var context = CreateContext(kernelConfiguration, kernelConfiguration.BuildReadOnlyKernel(), parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
+            var kernel = new StandardKernel(_ninjectSettings);
+            var context = CreateContext(kernel, parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
             context.Plan = new Plan(typeof(MyService));
             context.Plan.Add(directiveOne);
             context.Plan.Add(directiveTwo);
@@ -106,7 +106,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             var injectorTwoMock = new Mock<ConstructorInjector>(MockBehavior.Strict);
             var directiveOne = new ConstructorInjectionDirective(GetMyServiceWeaponAndWarriorConstructor(), injectorOneMock.Object);
             var directiveTwo = new ConstructorInjectionDirective(GetMyServiceClericAndName(), injectorTwoMock.Object);
-            var readOnlyKernelMock = new Mock<IReadOnlyKernel>(MockBehavior.Strict);
+            var kernelMock = new Mock<IKernel>(MockBehavior.Strict);
             var childRequestMock = new Mock<IRequest>(MockBehavior.Strict);
             var planMock = new Mock<IPlan>(MockBehavior.Strict);
             var instance = new object();
@@ -128,7 +128,7 @@ namespace Ninject.Test.Unit.Activation.Providers
 
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _planMock.InSequence(seq).Setup(p => p.GetAll< ConstructorInjectionDirective>()).Returns(directives);
+            _planMock.InSequence(seq).Setup(p => p.ConstructorInjectionDirectives).Returns(directives);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveOne)).Returns(3);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveTwo)).Returns(2);
             _contextMock.InSequence(seq).Setup(p => p.Parameters).Returns(parameters);
@@ -136,8 +136,8 @@ namespace Ninject.Test.Unit.Activation.Providers
             _contextMock.InSequence(seq).Setup(p => p.Request).Returns(_requestMock.Object);
             _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
             childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
-            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object, new FootSoldier() });
+            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(kernelMock.Object);
+            kernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object, new FootSoldier() });
 
             var actualException = Assert.Throws<InvalidOperationException>(() => _standardProvider.Create(_contextMock.Object));
 
@@ -156,7 +156,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             var directiveTwo = new ConstructorInjectionDirective(GetMyServiceClericAndName(), injectorTwoMock.Object);
             var weaponMock = new Mock<IWeapon>(MockBehavior.Strict);
             var warriorMock = new Mock<IWarrior>(MockBehavior.Strict);
-            var readOnlyKernelMock = new Mock<IReadOnlyKernel>(MockBehavior.Strict);
+            var kernelMock = new Mock<IKernel>(MockBehavior.Strict);
             var childRequestMock = new Mock<IRequest>(MockBehavior.Strict);
             var planMock = new Mock<IPlan>(MockBehavior.Strict);
             var expected = new object();
@@ -175,7 +175,7 @@ namespace Ninject.Test.Unit.Activation.Providers
 
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _planMock.InSequence(seq).Setup(p => p.GetAll<ConstructorInjectionDirective>()).Returns(directives);
+            _planMock.InSequence(seq).Setup(p => p.ConstructorInjectionDirectives).Returns(directives);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveOne)).Returns(3);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveTwo)).Returns(2);
             _contextMock.InSequence(seq).Setup(p => p.Parameters).Returns(parameters);
@@ -183,8 +183,8 @@ namespace Ninject.Test.Unit.Activation.Providers
             _contextMock.InSequence(seq).Setup(p => p.Request).Returns(_requestMock.Object);
             _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
             childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
-            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object });
+            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(kernelMock.Object);
+            kernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(new[] { warriorMock.Object });
             injectorOneMock.InSequence(seq).Setup(p => p(weaponMock.Object, warriorMock.Object)).Returns(expected);
 
             var actual = _standardProvider.Create(_contextMock.Object);
@@ -203,7 +203,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             var directiveTwo = new ConstructorInjectionDirective(GetMyServiceClericAndName(), injectorTwoMock.Object);
             var weaponMock = new Mock<IWeapon>(MockBehavior.Strict);
             var warriorMock = new Mock<IWarrior>(MockBehavior.Strict);
-            var readOnlyKernelMock = new Mock<IReadOnlyKernel>(MockBehavior.Strict);
+            var kernelMock = new Mock<IKernel>(MockBehavior.Strict);
             var childRequestMock = new Mock<IRequest>(MockBehavior.Strict);
             var planMock = new Mock<IPlan>(MockBehavior.Strict);
             var directives = new[]
@@ -221,7 +221,7 @@ namespace Ninject.Test.Unit.Activation.Providers
 
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _planMock.InSequence(seq).Setup(p => p.GetAll<ConstructorInjectionDirective>()).Returns(directives);
+            _planMock.InSequence(seq).Setup(p => p.ConstructorInjectionDirectives).Returns(directives);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveOne)).Returns(3);
             _constructorScorerMock.InSequence(seq).Setup(p => p.Score(_contextMock.Object, directiveTwo)).Returns(2);
             _contextMock.InSequence(seq).Setup(p => p.Parameters).Returns(parameters);
@@ -229,8 +229,8 @@ namespace Ninject.Test.Unit.Activation.Providers
             _contextMock.InSequence(seq).Setup(p => p.Request).Returns(_requestMock.Object);
             _requestMock.InSequence(seq).Setup(p => p.CreateChild(typeof(IWarrior), _contextMock.Object, It.IsAny<ParameterTarget>())).Returns(childRequestMock.Object);
             childRequestMock.InSequence(seq).SetupSet(p => p.IsUnique = true);
-            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(readOnlyKernelMock.Object);
-            readOnlyKernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(Enumerable.Empty<object>());
+            _contextMock.InSequence(seq).Setup(p => p.Kernel).Returns(kernelMock.Object);
+            kernelMock.InSequence(seq).Setup(p => p.Resolve(childRequestMock.Object)).Returns(Enumerable.Empty<object>());
             injectorOneMock.InSequence(seq).Setup(p => p(weaponMock.Object, null)).Returns(expected);
 
             var actual = _standardProvider.Create(_contextMock.Object);
@@ -265,7 +265,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             _plannerMock.InSequence(seq).Setup(p => p.GetPlan(typeof(Monk))).Returns(_planMock.Object);
             _contextMock.InSequence(seq).SetupSet(p => p.Plan = _planMock.Object);
             _contextMock.InSequence(seq).Setup(p => p.Plan).Returns(_planMock.Object);
-            _planMock.InSequence(seq).Setup(p => p.GetAll<ConstructorInjectionDirective>()).Returns(directives);
+            _planMock.InSequence(seq).Setup(p => p.ConstructorInjectionDirectives).Returns(directives);
             constructorInjectorMock.InSequence(seq).Setup(p => p(new object[0])).Returns(createdObject);
 
             var actual = _standardProvider.Create(_contextMock.Object);
@@ -284,8 +284,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                     new ConstructorArgument("weapon", new Dagger())
                 };
 
-            var kernelConfiguration = new KernelConfiguration(_ninjectSettings);
-            var context = CreateContext(kernelConfiguration, kernelConfiguration.BuildReadOnlyKernel(), parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
+            var kernel = new StandardKernel(_ninjectSettings);
+            var context = CreateContext(kernel, parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
             context.Plan = new Plan(typeof(NinjaBarracks));
 
             _providerCallbackMock.Setup(p => p(context)).Returns(_providerMock.Object);
@@ -320,8 +320,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                     new ConstructorArgument("weapon", new Dagger())
                 };
 
-            var kernelConfiguration = new KernelConfiguration(_ninjectSettings);
-            var context = CreateContext(kernelConfiguration, kernelConfiguration.BuildReadOnlyKernel(), parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
+            var kernel = new StandardKernel(_ninjectSettings);
+            var context = CreateContext(kernel, parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
             context.Plan = new Plan(typeof(MyService));
             context.Plan.Add(directiveOne);
             context.Plan.Add(directiveTwo);
@@ -350,8 +350,8 @@ namespace Ninject.Test.Unit.Activation.Providers
                 };
             var constructorInjectorMock = new Mock<ConstructorInjector>(MockBehavior.Strict);
 
-            var kernelConfiguration = new KernelConfiguration(_ninjectSettings);
-            var context = CreateContext(kernelConfiguration, kernelConfiguration.BuildReadOnlyKernel(), parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
+            var kernel = new StandardKernel(_ninjectSettings);
+            var context = CreateContext(kernel, parameters, typeof(NinjaBarracks), _providerCallbackMock.Object, _ninjectSettings);
             context.Plan = new Plan(typeof(NinjaBarracks));
             context.Plan.Add(new ConstructorInjectionDirective(GetWeaponAndWarriorConstructor(), constructorInjectorMock.Object));
 
@@ -381,8 +381,7 @@ namespace Ninject.Test.Unit.Activation.Providers
             return typeof(MyService).GetConstructor(new[] { typeof(ICleric), typeof(string) });
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration,
-                                             IReadOnlyKernel readonlyKernel,
+        private static Context CreateContext(IKernel kernel,
                                              IEnumerable<IParameter> parameters,
                                              Type serviceType,
                                              Func<IContext, IProvider> providerCallback,
@@ -398,13 +397,12 @@ namespace Ninject.Test.Unit.Activation.Providers
             var binding = new Binding(serviceType);
             binding.BindingConfiguration.ProviderCallback = providerCallback;
 
-            var context = new Context(readonlyKernel,
-                                      ninjectSettings,
+            var context = new Context(kernel,
                                       request,
                                       binding,
-                                      kernelConfiguration.Components.Get<ICache>(),
-                                      kernelConfiguration.Components.Get<IPlanner>(),
-                                      kernelConfiguration.Components.Get<IPipeline>());
+                                      kernel.Components.Get<ICache>(),
+                                      kernel.Components.Get<IPlanner>(),
+                                      kernel.Components.Get<IPipeline>());
             context.Parameters = parameters.ToArray();
             return context;
         }
