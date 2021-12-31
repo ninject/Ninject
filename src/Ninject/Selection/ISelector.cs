@@ -34,11 +34,6 @@ namespace Ninject.Selection
     public interface ISelector : INinjectComponent
     {
         /// <summary>
-        /// Gets the constructor scorer.
-        /// </summary>
-        IConstructorScorer ConstructorScorer { get; }
-
-        /// <summary>
         /// Gets the heuristics used to determine which members should be injected.
         /// </summary>
         ICollection<IInjectionHeuristic> InjectionHeuristics { get; }

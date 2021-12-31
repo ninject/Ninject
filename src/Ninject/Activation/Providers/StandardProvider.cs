@@ -82,7 +82,7 @@ namespace Ninject.Activation.Providers
         {
             Ensure.ArgumentNotNull(prototype, "prototype");
 
-            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<ISelector>().ConstructorScorer);
+            return ctx => new StandardProvider(prototype, ctx.Kernel.Components.Get<IPlanner>(), ctx.Kernel.Components.Get<IConstructorScorer>());
         }
 
         /// <summary>

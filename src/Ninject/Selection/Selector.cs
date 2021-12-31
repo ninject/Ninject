@@ -41,21 +41,13 @@ namespace Ninject.Selection
         /// <summary>
         /// Initializes a new instance of the <see cref="Selector"/> class.
         /// </summary>
-        /// <param name="constructorScorer">The constructor scorer.</param>
         /// <param name="injectionHeuristics">The injection heuristics.</param>
-        public Selector(IConstructorScorer constructorScorer, IEnumerable<IInjectionHeuristic> injectionHeuristics)
+        public Selector(IEnumerable<IInjectionHeuristic> injectionHeuristics)
         {
-            Ensure.ArgumentNotNull(constructorScorer, "constructorScorer");
             Ensure.ArgumentNotNull(injectionHeuristics, "injectionHeuristics");
 
-            this.ConstructorScorer = constructorScorer;
             this.InjectionHeuristics = injectionHeuristics.ToList();
         }
-
-        /// <summary>
-        /// Gets the constructor scorer.
-        /// </summary>
-        public IConstructorScorer ConstructorScorer { get; private set; }
 
         /// <summary>
         /// Gets the property injection heuristics.
