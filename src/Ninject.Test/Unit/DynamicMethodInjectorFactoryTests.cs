@@ -50,6 +50,25 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             samurai.Should().NotBeNull();
             samurai.Weapon.Should().BeNull();
         }
+
+        [Fact]
+        public void CallsConstructorWithPointerArgument()
+        {
+            var consInfo = typeof(string).GetConstructor(new[] { typeof(char*) });
+            var injector = this.injectorFactory.Create(consInfo);
+            unsafe
+            {
+                var fchar = 'f';
+                var o = Pointer.Box(&fchar, typeof(char*));
+
+                char* uf = (char*)Pointer.Unbox(o);
+
+                var s = new string(uf);
+
+                var fstring = injector.Invoke(new[] { Pointer.Box(&fchar, typeof(char*)) });
+                fstring.Should().Be("f");
+            }
+        }
     }
 
     public class WhenPropertyInjectorIsInvoked : DynamicMethodInjectorFactoryContext

@@ -33,6 +33,8 @@ namespace Ninject.Injection
     /// </summary>
     public class DynamicMethodInjectorFactory : NinjectComponent, IInjectorFactory
     {
+        private static readonly MethodInfo UnboxPointer = typeof(Pointer).GetMethod("Unbox");
+
         /// <summary>
         /// Gets or creates an injector for the specified constructor.
         /// </summary>
@@ -140,8 +142,18 @@ namespace Ninject.Injection
 
         private static void EmitUnboxOrCast(ILGenerator il, Type type)
         {
-            var opCode = type.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass;
-            il.Emit(opCode, type);
+            if (type.IsValueType)
+            {
+                il.Emit(OpCodes.Unbox, type);
+            }
+            else if (type.IsPointer)
+            {
+                il.Emit(OpCodes.Call, UnboxPointer);
+            }
+            else
+            {
+                il.Emit(OpCodes.Castclass, type);
+            }
         }
 
         private static string GetAnonymousMethodName()
