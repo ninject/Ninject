@@ -63,8 +63,6 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 
                 char* uf = (char*)Pointer.Unbox(o);
 
-                var s = new string(uf);
-
                 var fstring = injector.Invoke(new[] { Pointer.Box(&fchar, typeof(char*)) });
                 fstring.Should().Be("f");
             }
