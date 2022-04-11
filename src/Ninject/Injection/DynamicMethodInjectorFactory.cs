@@ -144,7 +144,7 @@ namespace Ninject.Injection
         {
             if (type.IsValueType)
             {
-                il.Emit(OpCodes.Unbox, type);
+                il.Emit(OpCodes.Unbox_Any, type);
             }
             else if (type.IsPointer)
             {
