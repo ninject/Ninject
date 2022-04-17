@@ -247,7 +247,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static object TryGet(this IResolutionRoot root, Type service, string name, params IParameter[] parameters)
         {
-            return TryGet(() => GetResolutionIterator(root, service, b => b.Name == name, parameters, true, false));
+            return TryGet(() => GetResolutionIterator(root, service, b => b.Name == name, parameters, true, true));
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Ninject
         /// <returns>An instance of the service, or <see langword="null"/> if no implementation was available.</returns>
         public static object TryGet(this IResolutionRoot root, Type service, Func<IBindingMetadata, bool> constraint, params IParameter[] parameters)
         {
-            return TryGet(() => GetResolutionIterator(root, service, constraint, parameters, true, false));
+            return TryGet(() => GetResolutionIterator(root, service, constraint, parameters, true, true));
         }
 
         /// <summary>
