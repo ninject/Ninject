@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.3.5]
 
 ### Fixed
+- `InvalidProgramException` when constructor argument is Pointer or Value type [#386](https://github.com/ninject/Ninject/issues/386) [#389](https://github.com/ninject/Ninject/issues/389)
+- Request for empty `List<>` returns non-empty `List<>` [#263](https://github.com/ninject/Ninject/issues/263)
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)
+
+### Changed
+- Fixed `IServiceProvider.GetService` implementation [#376](https://github.com/ninject/Ninject/issues/376)
 
 ## [3.3.4] - 2017-11-13
 
