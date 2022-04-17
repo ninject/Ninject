@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.3.5]
+## [3.3.5-rc2] - 2022-04-07
+
+### Changed
+- Changed `IServiceProvider.GetService` implementation [#376](https://github.com/ninject/Ninject/issues/376)
+- Consolidated handling of `isUnique` parameter for `TryGet` [#378](https://github.com/ninject/Ninject/issues/378)
+
+## [3.3.5-rc1] - 2022-04-12
 
 ### Changed
 - Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6 and .NET Standard 2.0 target frameworks.
@@ -28,10 +34,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `InvalidProgramException` when constructor argument is Pointer or Value type [#386](https://github.com/ninject/Ninject/issues/386) [#389](https://github.com/ninject/Ninject/issues/389)
 - Request for empty `List<>` returns non-empty `List<>` [#263](https://github.com/ninject/Ninject/issues/263)
 - Call `kernel.Get<T>()` two times do not give the same result [#262](https://github.com/ninject/Ninject/issues/262)
-
-### Changed
-- Fixed `IServiceProvider.GetService` implementation [#376](https://github.com/ninject/Ninject/issues/376)
-- Consolidated handling of `isUnique` parameter for `TryGet` [#378](https://github.com/ninject/Ninject/issues/378)
 
 ## [3.3.4] - 2017-11-13
 
