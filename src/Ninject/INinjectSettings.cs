@@ -103,6 +103,14 @@ namespace Ninject
         bool AllowNullInjection { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the old (&lt;= 3.3.4) behavior of <see cref="IServiceProvider.GetService(Type)"/>
+        /// should be used which throws an exception if the requested service cannot be found. Note that the documentation
+        /// of that method https://docs.microsoft.com/en-us/dotnet/api/system.iserviceprovider.getservice?view=netframework-4.6.2
+        /// states that the method should return <see langword="null"/> if there is no such service.
+        /// </summary>
+        bool ThrowOnGetServiceNotFound { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether method injection should enabled.
         /// </summary>
         /// <value>

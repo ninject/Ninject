@@ -451,7 +451,9 @@ namespace Ninject
         /// <returns>The service object.</returns>
         object IServiceProvider.GetService(Type service)
         {
-            return this.Get(service);
+            return this.Settings.ThrowOnGetServiceNotFound
+               ? this.Get(service)
+               : this.TryGet(service);
         }
 
         /// <summary>
