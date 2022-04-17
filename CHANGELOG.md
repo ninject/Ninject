@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Fixed `IServiceProvider.GetService` implementation [#376](https://github.com/ninject/Ninject/issues/376)
+- Consolidated handling of `isUnique` parameter for `TryGet` [#378](https://github.com/ninject/Ninject/issues/378)
 
 ## [3.3.4] - 2017-11-13
 
