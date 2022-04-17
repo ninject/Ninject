@@ -155,7 +155,11 @@ namespace Ninject
         /// of that method https://docs.microsoft.com/en-us/dotnet/api/system.iserviceprovider.getservice?view=netframework-4.6.2
         /// states that the method should return <see langword="null"/> if there is no such service.
         /// </summary>
-        public bool ThrowOnGetServiceNotFound { get; set; }
+        public bool ThrowOnGetServiceNotFound
+        {
+            get { return this.Get("ThrowOnGetServiceNotFound", false); }
+            set { this.Set("ThrowOnGetServiceNotFound", value); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether method injection should enabled.

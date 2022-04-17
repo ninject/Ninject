@@ -59,10 +59,6 @@ namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
             unsafe
             {
                 var fchar = 'f';
-                var o = Pointer.Box(&fchar, typeof(char*));
-
-                char* uf = (char*)Pointer.Unbox(o);
-
                 var fstring = injector.Invoke(new[] { Pointer.Box(&fchar, typeof(char*)) });
                 fstring.Should().Be("f");
             }
