@@ -360,8 +360,8 @@ namespace Ninject.Tests.Integration
                 bindings.Should().OnlyContain(b => !b.IsImplicit);
             }
 
-            [Fact(Skip = "Unique?")]
-            public void TryGet_ServiceAndNameAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsSelfBinding()
+            [Fact()]
+            public void TryGet_ServiceAndNameAndParameters_WhenTypeIsSelfBinding()
             {
                 var service = typeof(Sword);
 
@@ -371,8 +371,7 @@ namespace Ninject.Tests.Integration
                 Kernel = Configuration.BuildReadOnlyKernel();
 
                 var weapon = Kernel.TryGet(service, "a", Array.Empty<IParameter>());
-                weapon.Should().NotBeNull();
-                weapon.Should().BeOfType<Sword>();
+                weapon.Should().BeNull();
 
                 var bindings = Kernel.GetBindings(service);
                 bindings.Should().HaveCount(2);
@@ -380,8 +379,8 @@ namespace Ninject.Tests.Integration
             }
 
 
-            [Fact(Skip = "Unique?")]
-            public void TryGet_ServiceAndNameAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsNotSelfBinding()
+            [Fact()]
+            public void TryGet_ServiceAndNameAndParameters_WhenTypeIsNotSelfBinding()
             {
                 var service = typeof(IWeapon);
 
@@ -391,16 +390,15 @@ namespace Ninject.Tests.Integration
                 Kernel = Configuration.BuildReadOnlyKernel();
 
                 var weapon = Kernel.TryGet(service, "a", Array.Empty<IParameter>());
-                weapon.Should().NotBeNull();
-                weapon.Should().BeOfType<Sword>();
+                weapon.Should().BeNull();
 
                 var bindings = Kernel.GetBindings(service);
                 bindings.Should().HaveCount(2);
                 bindings.Should().OnlyContain(b => !b.IsImplicit);
             }
 
-            [Fact(Skip = "Unique?")]
-            public void TryGet_ServiceAndConstraintAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsSelfBinding()
+            [Fact()]
+            public void TryGet_ServiceAndConstraintAndParameters_WhenTypeIsSelfBinding()
             {
                 var service = typeof(Sword);
 
@@ -412,16 +410,15 @@ namespace Ninject.Tests.Integration
 
                 var weapon = Kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
 
-                weapon.Should().NotBeNull();
-                weapon.Should().BeOfType<Sword>();
+                weapon.Should().BeNull();
 
                 var bindings = Kernel.GetBindings(service);
                 bindings.Should().HaveCount(3);
                 bindings.Should().OnlyContain(b => !b.IsImplicit);
             }
 
-            [Fact(Skip ="Unique?")]
-            public void TryGet_ServiceAndConstraintAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsNotSelfBindingAndNotGeneric()
+            [Fact()]
+            public void TryGet_ServiceAndConstraintAndParameters_WhenTypeIsNotSelfBindingAndNotGeneric()
             {
                 var service = typeof(IWeapon);
 
@@ -432,8 +429,7 @@ namespace Ninject.Tests.Integration
 
                 var weapon = Kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
 
-                weapon.Should().NotBeNull();
-                weapon.Should().BeOfType<Sword>();
+                weapon.Should().BeNull();
 
                 var bindings = Kernel.GetBindings(service);
                 bindings.Should().HaveCount(2);
