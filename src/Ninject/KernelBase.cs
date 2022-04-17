@@ -398,6 +398,24 @@ namespace Ninject
         {
             return this.ReadOnlyKernel.ResolveSingle(request);
         }
+        
+        /// <summary>
+        /// Decorates one type with another
+        /// </summary>
+        /// <typeparam name="DecorateThis">The type to be decorated</typeparam>
+        /// <typeparam name="WithThis">The decorator that must inherit from the type it is decorating</typeparam>
+        /// <returns>The resulting binding</returns>
+        public IBindingWhenInNamedWithOrOnSyntax<WithThis> Decorate<DecorateThis, WithThis>()
+            where WithThis : DecorateThis
+        {
+            var binding = GetBindings(typeof(DecorateThis))
+                .Last();
+            var lowerBinding = new BindingConfigurationBuilder<DecorateThis>(binding
+                .BindingConfiguration, binding.Metadata.Name, this);
+            var bindingSyntax = Bind<DecorateThis>();
+            lowerBinding.WhenInjectedInto<WithThis>();
+            return bindingSyntax.To<WithThis>();
+        }
     }
 }
 #pragma warning restore CS0618 // Type or member is obsolete
