@@ -37,7 +37,7 @@ namespace Ninject.Syntax
         /// <summary>
         /// Specifies that the argument is injected.
         /// </summary>
-        /// <typeparam name="T">The type of the parameter</typeparam>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <returns>Not used. This interface has no implementation.</returns>
         T Inject<T>();
     }

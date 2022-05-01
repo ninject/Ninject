@@ -44,7 +44,7 @@ namespace Ninject.Syntax
         /// Declares a binding for the specified service.
         /// </summary>
         /// <typeparam name="T">The service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T> Bind<T>()
         {
             var service = typeof(T);
@@ -61,7 +61,7 @@ namespace Ninject.Syntax
         /// </summary>
         /// <typeparam name="T1">The first service to bind.</typeparam>
         /// <typeparam name="T2">The second service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2> Bind<T1, T2>()
         {
             var service1 = typeof(T1);
@@ -82,7 +82,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T1">The first service to bind.</typeparam>
         /// <typeparam name="T2">The second service to bind.</typeparam>
         /// <typeparam name="T3">The third service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3> Bind<T1, T2, T3>()
         {
             var service1 = typeof(T1);
@@ -106,7 +106,7 @@ namespace Ninject.Syntax
         /// <typeparam name="T2">The second service to bind.</typeparam>
         /// <typeparam name="T3">The third service to bind.</typeparam>
         /// <typeparam name="T4">The fourth service to bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1, T2, T3, T4> Bind<T1, T2, T3, T4>()
         {
             var service1 = typeof(T1);
@@ -189,7 +189,7 @@ namespace Ninject.Syntax
         /// Removes any existing bindings for the specified service, and declares a new one.
         /// </summary>
         /// <typeparam name="T1">The first service to re-bind.</typeparam>
-        /// <returns>The fluent syntax</returns>
+        /// <returns>The fluent syntax.</returns>
         public IBindingToSyntax<T1> Rebind<T1>()
         {
             this.Unbind<T1>();

@@ -81,8 +81,10 @@ namespace Ninject
         /// Gets or sets a value indicating whether the activation cache is disabled.
         /// If the activation cache is disabled less memory is used. But in some cases
         /// instances are activated or deactivated multiple times. e.g. in the following scenario:
+        /// <code>
         /// Bind{A}().ToSelf();
         /// Bind{IA}().ToMethod(ctx => kernel.Get{IA}();
+        /// </code>
         /// </summary>
         /// <value>
         /// <see langword="true"/> if activation cache is disabled; otherwise, <see langword="false"/>.

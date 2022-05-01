@@ -31,7 +31,7 @@ namespace Ninject.Infrastructure.Introspection
     using Ninject.Planning.Targets;
 
     /// <summary>
-    /// Provides extension methods for string formatting
+    /// Provides extension methods for string formatting.
     /// </summary>
     public static class FormatExtensions
     {
@@ -61,7 +61,7 @@ namespace Ninject.Infrastructure.Introspection
         /// </summary>
         /// <param name="binding">The binding to be formatted.</param>
         /// <param name="context">The context.</param>
-        /// <returns>The binding formatted as string</returns>
+        /// <returns>The binding formatted as string.</returns>
         public static string Format(this IBinding binding, IContext context)
         {
             using (var sw = new StringWriter())

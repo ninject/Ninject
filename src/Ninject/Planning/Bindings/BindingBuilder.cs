@@ -151,7 +151,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the service should be bound to an instance of the specified provider type.
         /// The instance will be activated via the kernel when an instance of the service is activated.
         /// </summary>
-        /// <typeparam name="T">The type of the returned fluent syntax</typeparam>
+        /// <typeparam name="T">The type of the returned fluent syntax.</typeparam>
         /// <param name="providerType">The type of provider to activate.</param>
         /// <returns>The fluent syntax.</returns>
         protected IBindingWhenInNamedWithOrOnSyntax<T> ToProviderInternal<T>(Type providerType)
@@ -249,7 +249,7 @@ namespace Ninject.Planning.Bindings
             /// <summary>
             /// Specifies that the argument is injected.
             /// </summary>
-            /// <typeparam name="T1">The type of the parameter</typeparam>
+            /// <typeparam name="T1">The type of the parameter.</typeparam>
             /// <returns>Not used. This interface has no implementation.</returns>
             public T1 Inject<T1>()
             {

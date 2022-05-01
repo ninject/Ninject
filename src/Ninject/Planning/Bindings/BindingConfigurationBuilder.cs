@@ -208,7 +208,7 @@ namespace Ninject.Planning.Bindings
         /// Indicates that the binding should be used only for injections on the specified type.
         /// The type must match exactly the specified type. Types that derive from the specified type
         /// will not be considered as valid target.
-        /// Should match at least one of the specified targets
+        /// Should match at least one of the specified targets.
         /// </summary>
         /// <param name="parents">The types.</param>
         /// <returns>The fluent syntax.</returns>
