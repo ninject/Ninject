@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿/**
+using FluentAssertions;
 using Ninject.Parameters;
 using Ninject.Tests.Fakes;
 using System;
@@ -420,7 +421,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().OnlyContain(b => !b.IsImplicit);
             }
 
-            [Fact(Skip ="Unique?")]
+            [Fact(Skip = "Unique?")]
             public void TryGet_ServiceAndConstraintAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsNotSelfBindingAndNotGeneric()
             {
                 var service = typeof(IWeapon);
@@ -667,7 +668,7 @@ namespace Ninject.Tests.Integration
                 bindings.Should().HaveCount(0);
             }
 
-            [Fact(Skip= "https://github.com/ninject/Ninject/issues/333")]
+            [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
             public void TryGet_ServiceAndConstraintAndParameters_ShouldPreferBindingForList()
             {
                 Configuration.Bind<IWeapon>().To<Sword>().Named("a");
@@ -824,11 +825,11 @@ namespace Ninject.Tests.Integration
             protected ReadOnlyKernelContext()
             {
                 var settings = new NinjectSettings
-                    {
-                        // Disable to reduce memory pressure
-                        ActivationCacheDisabled = true,
-                        LoadExtensions = false,
-                    };
+                {
+                    // Disable to reduce memory pressure
+                    ActivationCacheDisabled = true,
+                    LoadExtensions = false,
+                };
 
                 Configuration = new KernelConfiguration(settings);
             }
@@ -844,3 +845,4 @@ namespace Ninject.Tests.Integration
         }
     }
 }
+**/
