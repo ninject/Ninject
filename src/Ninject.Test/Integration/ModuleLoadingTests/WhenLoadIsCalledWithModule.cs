@@ -25,7 +25,7 @@
             this.Kernel.Load(module);
 
             moduleMock.Verify(x => x.OnLoad(this.Kernel), Times.Once());
-            this.Kernel.GetModules().Should().BeEquivalentTo(module);
+            this.Kernel.GetModules().Should().BeEquivalentTo(new[] { module });
         }
 
         [Fact]
@@ -85,7 +85,7 @@
             this.Kernel.Unload(module1.Name);
             this.Kernel.Load(module2);
 
-            this.Kernel.GetModules().Should().BeEquivalentTo(module2);
+            this.Kernel.GetModules().Should().BeEquivalentTo(new[] { module2 });
         }
 
         [Fact]
