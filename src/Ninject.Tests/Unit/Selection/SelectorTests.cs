@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using Ninject.Selection;
 using Ninject.Selection.Heuristics;
 using Ninject.Tests.Fakes;
@@ -222,7 +223,7 @@ namespace Ninject.Tests.Unit.Selection
 
             var actual = _selector.SelectMethodsForInjection(type);
 
-            Assert.Equal(new[]
+            actual.Should().BeEquivalentTo(new[]
                             {
                                 getVisibleMethod,
                                 doMethodNoArgs,
@@ -230,8 +231,7 @@ namespace Ninject.Tests.Unit.Selection
                                 executeMethodStringArg,
                                 executeMethodStringAndInt32Arg,
                                 equalsMethod
-                            },
-                        actual);
+                            });
         }
 
         [Fact]
@@ -281,14 +281,13 @@ namespace Ninject.Tests.Unit.Selection
 
             var actual = _selector.SelectMethodsForInjection(type);
 
-            Assert.Equal(new[]
+            actual.Should().BeEquivalentTo(new[]
                             {
                                 getVisibleMethod,
                                 executeMethodNoArgs,
                                 executeMethodStringArg,
                                 toStringMethod
-                            },
-                        actual);
+                            });
         }
 
         [Fact]
