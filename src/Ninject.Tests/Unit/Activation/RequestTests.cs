@@ -4,7 +4,7 @@ using Ninject.Planning.Bindings;
 using System;
 using Xunit;
 
-namespace Ninject.Test.Unit.Activation
+namespace Ninject.Tests.Unit.Activation
 {
     public class RequestTests
     {

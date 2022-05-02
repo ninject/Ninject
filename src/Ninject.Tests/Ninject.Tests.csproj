@@ -31,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestAssembly\TestAssembly.csproj" />
-    <ProjectReference Include="..\TestModules\TestModules.csproj" />
+    <ProjectReference Include="..\Ninject.Tests.TestAssembly\Ninject.Tests.TestAssembly.csproj" />
+    <ProjectReference Include="..\Ninject.Tests.TestModules\Ninject.Tests.TestModules.csproj" />
   </ItemGroup>
 
 </Project>

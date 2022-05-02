@@ -17,7 +17,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace Ninject.Test.Unit.Activation.Providers
+namespace Ninject.Tests.Unit.Activation.Providers
 {
     public class StandardProviderTests
     {

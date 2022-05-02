@@ -6,7 +6,7 @@ using System;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
-namespace Ninject.Test.Unit.Infrastructure.Language
+namespace Ninject.Tests.Unit.Infrastructure.Language
 {
     public class ExtensionsForDictionaryTests
     {

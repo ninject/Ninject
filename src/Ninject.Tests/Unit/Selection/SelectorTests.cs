@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace Ninject.Test.Unit.Selection
+namespace Ninject.Tests.Unit.Selection
 {
     public class SelectorTests
     {

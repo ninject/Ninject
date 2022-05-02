@@ -28,7 +28,7 @@ using Ninject.Planning;
 using Ninject.Planning.Strategies;
 using Xunit;
 
-namespace Ninject.Test.Unit.Planning
+namespace Ninject.Tests.Unit.Planning
 {
     public class PlannerTests
     {

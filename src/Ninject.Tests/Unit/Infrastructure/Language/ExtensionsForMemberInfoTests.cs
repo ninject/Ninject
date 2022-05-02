@@ -4,7 +4,7 @@ using Xunit;
 using Ninject.Infrastructure.Language;
 using System;
 
-namespace Ninject.Test.Unit.Infrastructure.Language
+namespace Ninject.Tests.Unit.Infrastructure.Language
 {
     public class ExtensionsForMemberInfoTests
     {

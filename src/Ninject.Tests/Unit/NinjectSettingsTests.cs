@@ -4,7 +4,7 @@ using Ninject.Tests.Fakes;
 using System;
 using Xunit;
 
-namespace Ninject.Test.Unit
+namespace Ninject.Tests.Unit
 {
     public class NinjectSettingsTests
     {

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Ninject.Test.Unit
+namespace Ninject.Tests.Unit
 {
     public class ResolutionExtensionsTests
     {

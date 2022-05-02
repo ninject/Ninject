@@ -3,7 +3,7 @@ using Ninject.Planning.Directives;
 using System;
 using Xunit;
 
-namespace Ninject.Test.Unit.Planning
+namespace Ninject.Tests.Unit.Planning
 {
     public class PlanTests
     {
