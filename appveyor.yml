@@ -13,7 +13,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - dotnet test --configuration Release --no-build --collect="Code Coverage" src\Ninject.Test
+  - dotnet test --configuration Release --no-build --collect="Code Coverage" src\Ninject.Tests
   - nuget install Microsoft.CodeCoverage -x -Verbosity quiet
   - for /f %%G in ('dir /b /s *.coverage') do Microsoft.CodeCoverage\build\netstandard1.0\CodeCoverage\CodeCoverage analyze /output:%%~dpnG.coverage.xml "%%G"
 
