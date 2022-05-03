@@ -9,7 +9,7 @@ namespace Ninject.Tests.Integration.ModuleLoadingTests
 
     public class WhenLoadIsCalledWithFileName : ModuleLoadingContext
     {
-        protected readonly string ModuleFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestModule.dll");
+        protected readonly string ModuleFilename = Path.Combine(AppContext.BaseDirectory, @"Ninject.Tests.TestModule.dll");
 
         [Fact]
         public void ModulesContainedInAssembliesAreLoaded()

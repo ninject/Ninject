@@ -11,8 +11,8 @@ namespace Ninject.Tests.Unit
     public class AssemblyNameRetrieverContext
     {
         protected readonly AssemblyNameRetriever AssemblyNameRetriever;
-        protected readonly string ModuleFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestModule.dll");
-        protected readonly string AssemblyFilename = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), @"Ninject.Tests.TestAssembly.dll");
+        protected readonly string ModuleFilename = Path.Combine(AppContext.BaseDirectory, @"Ninject.Tests.TestModule.dll");
+        protected readonly string AssemblyFilename = Path.Combine(AppContext.BaseDirectory, @"Ninject.Tests.TestAssembly.dll");
 
         public AssemblyNameRetrieverContext()
         {
