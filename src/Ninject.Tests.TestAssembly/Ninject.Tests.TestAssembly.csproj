@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
-    <AssemblyName>Ninject.Tests.TestAssembly</AssemblyName>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

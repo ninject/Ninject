@@ -1,7 +1,7 @@
-﻿using Ninject.Modules;
-
-namespace Ninject.Tests.TestModules
+﻿namespace Ninject.Tests.TestModule
 {
+    using Ninject.Modules;
+
     public class TestModule : NinjectModule
     {
         public override void Load()

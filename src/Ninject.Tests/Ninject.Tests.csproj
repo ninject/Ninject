@@ -6,7 +6,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Ninject.snk</AssemblyOriginatorKeyFile>
-    <NoWarn>CS0618</NoWarn>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ninject.Tests.TestAssembly\Ninject.Tests.TestAssembly.csproj" />
-    <ProjectReference Include="..\Ninject.Tests.TestModules\Ninject.Tests.TestModules.csproj" />
+    <ProjectReference Include="..\Ninject.Tests.TestModule\Ninject.Tests.TestModule.csproj" />
   </ItemGroup>
 
 </Project>

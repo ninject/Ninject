@@ -19,7 +19,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <NoWarn>CS0618</NoWarn>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ninject/Ninject</RepositoryUrl>
     <DebugType>pdbonly</DebugType>
