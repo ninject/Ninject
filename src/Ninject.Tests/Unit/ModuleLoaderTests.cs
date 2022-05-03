@@ -12,7 +12,6 @@
 
     public class ModuleLoaderContext
     {
-        protected readonly string executingAssemblyDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
         protected readonly ModuleLoader moduleLoader;
         protected readonly Mock<IKernel> kernelMock;
         protected readonly Mock<IComponentContainer> componentsMock;
@@ -43,8 +42,8 @@
         {
             this.moduleLoader.LoadModules(new[] { "TestModules/*" });
 
-            var fooFiles = new[] { Path.Combine(this.executingAssemblyDirectory, @"TestModules\test.foo") };
-            var barFiles = new[] { Path.Combine(this.executingAssemblyDirectory, @"TestModules\test.bar") };
+            var fooFiles = new[] { Path.Combine(AppContext.BaseDirectory, @"TestModules\test.foo") };
+            var barFiles = new[] { Path.Combine(AppContext.BaseDirectory, @"TestModules\test.bar") };
 
             this.fooPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(fooFiles))));
             this.barPluginMock.Verify(x => x.LoadModules(It.Is<IEnumerable<string>>(e => e.SequenceEqual(barFiles))));
