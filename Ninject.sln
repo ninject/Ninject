@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject", "src\Ninject\Ninject.csproj", "{25A6D723-B248-4168-BB2B-50FBD29209A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Test", "src\Ninject.Tests\Ninject.Tests.csproj", "{B53AF472-7F44-4AC7-9F00-98E9EB264768}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Tests", "src\Ninject.Tests\Ninject.Tests.csproj", "{B53AF472-7F44-4AC7-9F00-98E9EB264768}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAssembly", "src\Ninject.Tests.TestAssembly\Ninject.Tests.TestAssembly.csproj", "{339DD924-374A-4221-8671-BE951AD280F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Tests.TestAssembly", "src\Ninject.Tests.TestAssembly\Ninject.Tests.TestAssembly.csproj", "{339DD924-374A-4221-8671-BE951AD280F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestModules", "src\Ninject.Tests.TestModules\Ninject.Tests.TestModules.csproj", "{3D6710B4-726A-44B2-A4A2-CCF3882FC611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Tests.TestModule", "src\Ninject.Tests.TestModule\Ninject.Tests.TestModule.csproj", "{3D6710B4-726A-44B2-A4A2-CCF3882FC611}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
