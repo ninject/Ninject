@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-using Ninject.Tests.Fakes;
-using Xunit;
-using Ninject.Injection;
-
-namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
+﻿namespace Ninject.Tests.Unit.MethodInjectionDirectiveBaseTests
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+    using Ninject.Tests.Fakes;
+    using Xunit;
+    using Ninject.Injection;
     using FluentAssertions;
 
     public class MethodInjectionDirectiveBaseContext

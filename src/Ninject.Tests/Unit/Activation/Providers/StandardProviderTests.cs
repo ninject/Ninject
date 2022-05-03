@@ -1,24 +1,24 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Caching;
-using Ninject.Activation.Providers;
-using Ninject.Components;
-using Ninject.Injection;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Bindings;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-using Ninject.Selection.Heuristics;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Activation.Providers
+﻿namespace Ninject.Tests.Unit.Activation.Providers
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Activation.Providers;
+    using Ninject.Components;
+    using Ninject.Injection;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+    using Ninject.Selection.Heuristics;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Xunit;
+
     public class StandardProviderTests
     {
         private Mock<IContext> _contextMock;

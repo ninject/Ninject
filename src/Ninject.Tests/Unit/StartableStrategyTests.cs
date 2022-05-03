@@ -1,10 +1,9 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Xunit;
-
-namespace Ninject.Tests.Unit.StartableStrategyTests
+﻿namespace Ninject.Tests.Unit.StartableStrategyTests
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Strategies;
+    using Xunit;
     using FluentAssertions;
 
     public class StartableStrategyContext

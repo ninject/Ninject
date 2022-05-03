@@ -1,11 +1,11 @@
-﻿using System.Reflection;
-using Xunit;
-
-using Ninject.Infrastructure.Language;
-using System;
-
-namespace Ninject.Tests.Unit.Infrastructure.Language
+﻿namespace Ninject.Tests.Unit.Infrastructure.Language
 {
+    using System.Reflection;
+    using Xunit;
+
+    using Ninject.Infrastructure.Language;
+    using System;
+
     public class ExtensionsForMemberInfoTests
     {
         private BindingFlags _bindingFlags;

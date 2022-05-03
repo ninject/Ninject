@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Moq;
-using Ninject.Components;
-using Ninject.Modules;
-using Xunit;
-
-namespace Ninject.Tests.Unit.ModuleLoaderTests
+﻿namespace Ninject.Tests.Unit.ModuleLoaderTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using Moq;
+    using Ninject.Components;
+    using Ninject.Modules;
+    using Xunit;
+
     public class ModuleLoaderContext
     {
         protected readonly string executingAssemblyDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);

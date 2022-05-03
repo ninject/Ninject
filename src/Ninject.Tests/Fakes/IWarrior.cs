@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Ninject.Tests.Fakes
+﻿namespace Ninject.Tests.Fakes
 {
+    using System;
+
     public interface IWarrior
     {
         IWeapon Weapon { get; }

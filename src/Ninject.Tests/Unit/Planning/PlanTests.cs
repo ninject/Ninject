@@ -1,10 +1,10 @@
-﻿using Ninject.Planning;
-using Ninject.Planning.Directives;
-using System;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Planning
+﻿namespace Ninject.Tests.Unit.Planning
 {
+    using Ninject.Planning;
+    using Ninject.Planning.Directives;
+    using System;
+    using Xunit;
+
     public class PlanTests
     {
         private Plan _plan;

@@ -1,16 +1,15 @@
-﻿using System.Reflection;
-using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Ninject.Injection;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-using Xunit;
-
-namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
+﻿namespace Ninject.Tests.Unit.PropertyInjectionStrategyTests
 {
+    using System.Reflection;
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Strategies;
+    using Ninject.Injection;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+    using Xunit;
     using Ninject.Components;
     using System;
     using System.Collections.Generic;

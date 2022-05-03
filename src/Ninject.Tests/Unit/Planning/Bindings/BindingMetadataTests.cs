@@ -1,10 +1,9 @@
-﻿using System;
-using Xunit;
-using Ninject.Planning.Bindings;
-
-
-namespace Ninject.Tests.Unit.Planning.Bindings
+﻿namespace Ninject.Tests.Unit.Planning.Bindings
 {
+    using System;
+    using Xunit;
+    using Ninject.Planning.Bindings;
+
     public class BindingMetadataTests
     {
         private BindingMetadata _bindingMetadata;

@@ -19,10 +19,9 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
-using System.Diagnostics;
-
 namespace Ninject.Tests.Integration
 {
+    using System.Diagnostics;
     using System;
     using System.Collections.Generic;
     using FluentAssertions;

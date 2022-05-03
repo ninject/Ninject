@@ -1,10 +1,10 @@
-﻿using Ninject.Parameters;
-using System;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Parameters
+﻿namespace Ninject.Tests.Unit.Parameters
 {
+    using Ninject.Parameters;
+    using System;
+    using System.Collections.Generic;
+    using Xunit;
+
     public class ExtensionsForParameterTests
     {
         [Fact]

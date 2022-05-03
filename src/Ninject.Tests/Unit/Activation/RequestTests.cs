@@ -1,11 +1,11 @@
-﻿using Ninject.Activation;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using System;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Activation
+﻿namespace Ninject.Tests.Unit.Activation
 {
+    using Ninject.Activation;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using System;
+    using Xunit;
+
     public class RequestTests
     {
         [Fact]

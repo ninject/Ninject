@@ -1,16 +1,16 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-
-namespace Ninject.Tests.Unit
+﻿namespace Ninject.Tests.Unit
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class ResolutionExtensionsTests
     {
         private Mock<IResolutionRoot> _rootMock;

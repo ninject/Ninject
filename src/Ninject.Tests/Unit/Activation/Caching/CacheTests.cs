@@ -1,14 +1,14 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Caching;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Planning.Bindings;
-using System;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Activation.Caching
+﻿namespace Ninject.Tests.Unit.Activation.Caching
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Infrastructure.Disposal;
+    using Ninject.Planning.Bindings;
+    using System;
+    using System.Threading.Tasks;
+    using Xunit;
+
     public class CacheTest
     {
         private Mock<IPipeline> _pipelineMock;

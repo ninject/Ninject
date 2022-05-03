@@ -1,10 +1,10 @@
-﻿using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-using System;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Syntax
+﻿namespace Ninject.Tests.Unit.Syntax
 {
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+    using System;
+    using Xunit;
+
     public class BindingRootTests
     {
         private BindingRoot _bindingRoot;

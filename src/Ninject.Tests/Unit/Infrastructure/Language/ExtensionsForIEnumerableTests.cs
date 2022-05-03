@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using Xunit;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-
-namespace Ninject.Tests.Unit.Infrastructure.Language
+﻿namespace Ninject.Tests.Unit.Infrastructure.Language
 {
+    using System.Collections;
+    using Xunit;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+
     public class ExtensionsForIEnumerableTests
     {
         [Fact]

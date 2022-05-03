@@ -1,11 +1,11 @@
-﻿using Ninject.Activation;
-using Ninject.Infrastructure;
-using Ninject.Tests.Fakes;
-using System;
-using Xunit;
-
-namespace Ninject.Tests.Unit
+﻿namespace Ninject.Tests.Unit
 {
+    using Ninject.Activation;
+    using Ninject.Infrastructure;
+    using Ninject.Tests.Fakes;
+    using System;
+    using Xunit;
+
     public class NinjectSettingsTests
     {
         private NinjectSettings _settings;

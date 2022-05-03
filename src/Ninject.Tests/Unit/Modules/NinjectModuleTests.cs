@@ -1,13 +1,13 @@
-﻿using Moq;
-using Ninject.Components;
-using Ninject.Modules;
-using Ninject.Planning.Bindings;
-using System;
-using System.Threading;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Modules
+﻿namespace Ninject.Tests.Unit.Modules
 {
+    using Moq;
+    using Ninject.Components;
+    using Ninject.Modules;
+    using Ninject.Planning.Bindings;
+    using System;
+    using System.Threading;
+    using Xunit;
+
     public class NinjectModuleTests
     {
         protected Mock<IKernel> KernelMock { get; }

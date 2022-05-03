@@ -1,18 +1,17 @@
-﻿using System.Linq;
-using System.Reflection;
-using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Ninject.Infrastructure.Language;
-using Ninject.Injection;
-using Ninject.Planning;
-using Ninject.Planning.Directives;
-using Ninject.Planning.Targets;
-using Ninject.Tests.Fakes;
-using Xunit;
-
-namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
+﻿namespace Ninject.Tests.Unit.MethodInjectionStrategyTests
 {
+    using System.Linq;
+    using System.Reflection;
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Strategies;
+    using Ninject.Infrastructure.Language;
+    using Ninject.Injection;
+    using Ninject.Planning;
+    using Ninject.Planning.Directives;
+    using Ninject.Planning.Targets;
+    using Ninject.Tests.Fakes;
+    using Xunit;
     using FluentAssertions;
 
     public class MethodInjectionStrategyContext

@@ -1,11 +1,10 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Strategies;
-using Ninject.Tests.Fakes;
-using Xunit;
-
-namespace Ninject.Tests.Unit.DisposableStrategyTests
+﻿namespace Ninject.Tests.Unit.DisposableStrategyTests
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Strategies;
+    using Ninject.Tests.Fakes;
+    using Xunit;
     using FluentAssertions;
 
     public class DisposableStrategyContext

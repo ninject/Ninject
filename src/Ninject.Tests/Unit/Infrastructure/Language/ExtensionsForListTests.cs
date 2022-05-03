@@ -1,11 +1,11 @@
-﻿using Ninject.Infrastructure.Language;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Infrastructure.Language
+﻿namespace Ninject.Tests.Unit.Infrastructure.Language
 {
+    using Ninject.Infrastructure.Language;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class ExtensionsForListTests
     {
         private Random _random;

@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Ninject.Activation;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-
-namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
+﻿namespace Ninject.Tests.Integration.DefaultScopeCallbackTests
 {
+    using System.Collections.Generic;
+    using Ninject.Activation;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
     using System;
     using System.Linq;
     using FluentAssertions;

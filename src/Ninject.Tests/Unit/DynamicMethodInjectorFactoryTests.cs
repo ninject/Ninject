@@ -1,12 +1,12 @@
-﻿#if !NO_LCG
-using System.Reflection;
-using FluentAssertions;
-using Ninject.Injection;
-using Ninject.Tests.Fakes;
-using Xunit;
-
-namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
+﻿namespace Ninject.Tests.Unit.DynamicMethodInjectorFactoryTests
 {
+#if !NO_LCG
+    using System.Reflection;
+    using FluentAssertions;
+    using Ninject.Injection;
+    using Ninject.Tests.Fakes;
+    using Xunit;
+
     public class DynamicMethodInjectorFactoryContext
     {
         protected DynamicMethodInjectorFactory injectorFactory;

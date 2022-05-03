@@ -1,16 +1,16 @@
-﻿using FluentAssertions;
-using Moq;
-using Ninject.Selection;
-using Ninject.Selection.Heuristics;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Selection
+﻿namespace Ninject.Tests.Unit.Selection
 {
+    using FluentAssertions;
+    using Moq;
+    using Ninject.Selection;
+    using Ninject.Selection.Heuristics;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Xunit;
+
     public class SelectorTests
     {
         private Mock<IInjectionHeuristic> _injectionHeuristicMock1;

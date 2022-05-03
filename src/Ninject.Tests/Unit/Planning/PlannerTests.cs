@@ -18,18 +18,18 @@
 //   limitations under the License.
 // </copyright>
 //-------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Moq;
-using Ninject.Planning;
-using Ninject.Planning.Strategies;
-using Xunit;
-
 namespace Ninject.Tests.Unit.Planning
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Moq;
+    using Ninject.Planning;
+    using Ninject.Planning.Strategies;
+    using Xunit;
+
     public class PlannerTests
     {
         private Mock<IPlanningStrategy> _strategyOneMock;

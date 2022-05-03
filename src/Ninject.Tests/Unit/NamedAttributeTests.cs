@@ -1,9 +1,8 @@
-﻿using Moq;
-using Ninject.Planning.Bindings;
-using Xunit;
-
-namespace Ninject.Tests.Unit.NamedAttributeTests
+﻿namespace Ninject.Tests.Unit.NamedAttributeTests
 {
+    using Moq;
+    using Ninject.Planning.Bindings;
+    using Xunit;
     using FluentAssertions;
 
     public class NamedAttributeContext

@@ -1,18 +1,18 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Caching;
-using Ninject.Components;
-using Ninject.Parameters;
-using Ninject.Planning;
-using Ninject.Planning.Bindings;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Activation
+﻿namespace Ninject.Tests.Unit.Activation
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Caching;
+    using Ninject.Components;
+    using Ninject.Parameters;
+    using Ninject.Planning;
+    using Ninject.Planning.Bindings;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class ContextTests
     {
         private Mock<IKernel> _kernelMock;

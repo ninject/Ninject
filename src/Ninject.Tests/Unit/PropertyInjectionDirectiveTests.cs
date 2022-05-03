@@ -1,11 +1,10 @@
-﻿using System;
-using System.Reflection;
-using Ninject.Injection;
-using Ninject.Planning.Directives;
-using Xunit;
-
-namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
+﻿namespace Ninject.Tests.Unit.PropertyInjectionDirectiveTests
 {
+    using System;
+    using System.Reflection;
+    using Ninject.Injection;
+    using Ninject.Planning.Directives;
+    using Xunit;
     using FluentAssertions;
 
     public class PropertyInjectionDirectiveContext

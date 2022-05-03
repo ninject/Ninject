@@ -1,17 +1,17 @@
-﻿using Moq;
-using Ninject.Activation;
-using Ninject.Activation.Blocks;
-using Ninject.Parameters;
-using Ninject.Planning.Bindings;
-using Ninject.Syntax;
-using Ninject.Tests.Fakes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-
-namespace Ninject.Tests.Unit.Activation.Blocks
+﻿namespace Ninject.Tests.Unit.Activation.Blocks
 {
+    using Moq;
+    using Ninject.Activation;
+    using Ninject.Activation.Blocks;
+    using Ninject.Parameters;
+    using Ninject.Planning.Bindings;
+    using Ninject.Syntax;
+    using Ninject.Tests.Fakes;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class ActivationBlockTests
     {
         private Mock<IResolutionRoot> _parentMock;

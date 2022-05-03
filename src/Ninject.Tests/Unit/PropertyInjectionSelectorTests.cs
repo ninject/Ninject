@@ -1,10 +1,10 @@
-using System;
-using Ninject.Infrastructure.Disposal;
-using Ninject.Tests.Fakes;
-using Xunit;
-
 namespace Ninject.Tests.Unit
 {
+    using System;
+    using Ninject.Infrastructure.Disposal;
+    using Ninject.Tests.Fakes;
+    using Xunit;
+
     public class PropertyInjectionSelectorContext : DisposableObject
     {
         protected IKernel _kernel;
