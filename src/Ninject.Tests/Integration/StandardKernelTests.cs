@@ -44,7 +44,7 @@
             this.kernel.Bind<IWeapon>().To<Shuriken>();
 
             var exception = Assert.Throws<ActivationException>(() => this.kernel.Get<IWeapon>());
-            
+
             exception.Message.Should().Contain("More than one matching bindings are available.");
             exception.Message.Should().Contain("1) binding from IWeapon to Sword");
             exception.Message.Should().Contain("2) binding from IWeapon to Shuriken");
@@ -185,41 +185,53 @@
     public class WhenTryGetIsCalledForUnboundService : StandardKernelContext
     {
         [Fact]
-        public void ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
+        public void TryGetOfT_Parameters_ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
         {
             var weapon = this.kernel.TryGet<Sword>();
-
             weapon.Should().NotBeNull();
             weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(typeof(Sword));
+            bindings.Should().HaveCount(1);
+            bindings.Should().ContainSingle(b => b.IsImplicit);
         }
 
         [Fact]
-        public void ReturnsNullIfTypeIsNotSelfBindable()
+        public void TryGetOfT_Parameters_ReturnsNullIfTypeIsNotSelfBindable()
         {
             var weapon = this.kernel.TryGet<IWeapon>();
             weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().BeEmpty();
         }
 
         [Fact]
-        public void ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
+        public void TryGetOfT_Parameters_ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
 
             var weapon = this.kernel.TryGet<IWeapon>();
             weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(1);
         }
 
         [Fact]
-        public void ReturnsNullIfNoBindingForADependencyExists()
+        public void TryGetOfT_Parameters_ReturnsNullIfNoBindingForADependencyExists()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
 
             var warrior = this.kernel.TryGet<IWarrior>();
             warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
         }
 
         [Fact]
-        public void ReturnsNullIfMultipleBindingsExistForADependency()
+        public void TryGetOfT_Parameters_ReturnsNullIfMultipleBindingsExistForADependency()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
             this.kernel.Bind<IWeapon>().To<Sword>();
@@ -227,18 +239,657 @@
 
             var warrior = this.kernel.TryGet<IWarrior>();
             warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
         }
 
         [Fact]
-        public void ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
+        public void TryGetOfT_Parameters_ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
         {
             this.kernel.Bind<IWarrior>().To<Samurai>();
             this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
 
             var warrior = this.kernel.TryGet<IWarrior>();
             warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+        public void TryGetOfT_NameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
+        {
+            var weapon = this.kernel.TryGet<Sword>("a", Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(Sword));
+            bindings.Should().HaveCount(1);
+            bindings.Should().OnlyContain(b => b.IsImplicit);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
+        {
+            var weapon = this.kernel.TryGet(typeof(Sword), "a", Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(Sword));
+            bindings.Should().HaveCount(1);
+            bindings.Should().OnlyContain(b => b.IsImplicit);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfNoBindingExistsAndTypeIsNotSelfBindable()
+        {
+            var weapon = this.kernel.TryGet(typeof(IWeapon), "a", Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfNoMatchingBindingExistsAndTypeIsNotSelfBindable()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("b");
+
+            var weapon = this.kernel.TryGet(typeof(IWeapon), "a", Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false).Named("a");
+
+            var weapon = this.kernel.TryGet(typeof(IWeapon), "a", Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfNoBindingForADependencyExists()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>().Named("a");
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), "a", Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfMultipleBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), "a", Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters_ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), (metadata) => true, Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ImplicitSelfBindingIsRegisteredAndActivatedIfTypeIsSelfBindable()
+        {
+            var weapon = this.kernel.TryGet(typeof(Sword), (metadata) => true, Array.Empty<IParameter>());
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(typeof(Sword));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullIfTypeIsNotSelfBindable()
+        {
+            var weapon = this.kernel.TryGet(typeof(IWeapon), (metadata) => true, Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullIfTypeHasOnlyUnmetConditionalBindings()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var weapon = this.kernel.TryGet(typeof(IWeapon), (metadata) => true, Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullIfNoBindingForADependencyExists()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), (metadata) => true, Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullIfMultipleBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), (metadata) => true, Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullIfOnlyUnmetConditionalBindingsExistForADependency()
+        {
+            this.kernel.Bind<IWarrior>().To<Samurai>();
+            this.kernel.Bind<IWeapon>().To<Sword>().When(ctx => false);
+
+            var warrior = this.kernel.TryGet(typeof(IWarrior), (metadata) => true, Array.Empty<IParameter>());
+            warrior.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWarrior));
+            bindings.Should().HaveCount(1);
         }
     }
+
+    public class WhenTryGetIsCalledForServiceWithMultipleBindingsOfSameWeight : StandardKernelContext
+    {
+        [Fact]
+        public void TryGetOfT_Parameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var weapon = this.kernel.TryGet<IWeapon>(Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void TryGetOfT_NameAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapon = this.kernel.TryGet<IWeapon>("a", Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void TryGetOfT_ConstraintAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapon = this.kernel.TryGet<IWeapon>((metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(typeof(IWeapon));
+            bindings.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndParameters()
+        {
+            var service = typeof(IWeapon);
+
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var weapon = this.kernel.TryGet(service, Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(2);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+
+        [Fact(Skip = "Unique?")]
+        public void TryGet_ServiceAndNameAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsSelfBinding()
+        {
+            var service = typeof(Sword);
+
+            this.kernel.Bind<Sword>().To<Sword>().Named("a");
+            this.kernel.Bind<Sword>().To<ShortSword>().Named("a");
+
+            var weapon = this.kernel.TryGet(service, "a", Array.Empty<IParameter>());
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(2);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+
+
+        [Fact(Skip = "Unique?")]
+        public void TryGet_ServiceAndNameAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsNotSelfBinding()
+        {
+            var service = typeof(IWeapon);
+
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapon = this.kernel.TryGet(service, "a", Array.Empty<IParameter>());
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(2);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+
+        [Fact(Skip = "Unique?")]
+        public void TryGet_ServiceAndConstraintAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsSelfBinding()
+        {
+            var service = typeof(Sword);
+
+            this.kernel.Bind<Sword>().To<ShortSword>().Named("b");
+            this.kernel.Bind<Sword>().To<Sword>().Named("a");
+            this.kernel.Bind<Sword>().To<ShortSword>().Named("a");
+
+            var weapon = this.kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(3);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+
+        [Fact(Skip = "Unique?")]
+        public void TryGet_ServiceAndConstraintAndParameters_ResolvesUsingFirstMatchingBindingWhenTypeIsNotSelfBindingAndNotGeneric()
+        {
+            var service = typeof(IWeapon);
+
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapon = this.kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+
+            weapon.Should().NotBeNull();
+            weapon.Should().BeOfType<Sword>();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(2);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullWhenBindingsDoNotMatchAndTypeIsNotSelfBindingAndNotOpenGeneric()
+        {
+            var service = typeof(IWeapon);
+
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("b");
+            this.kernel.Bind<IWeapon>().To<ShortSword>().Named("b");
+
+            var weapon = this.kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().HaveCount(2);
+            bindings.Should().OnlyContain(b => !b.IsImplicit);
+        }
+    }
+
+    public class WhenTryGetIsCalledForBoundListOfServices : StandardKernelContext
+    {
+        [Fact]
+        public void TryGetOfT_Parameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>(Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(2);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGetOfT_Parameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() });
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>(Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(1);
+            weapons.Should().AllBeOfType<Dagger>();
+        }
+
+        [Fact]
+        public void TryGetOfT_NameAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Dagger>().Named("b");
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>("a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(3);
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGetOfT_NameAndParameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Sword() }).Named("b");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() }).Named("a");
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>("a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(1);
+            weapons.Should().AllBeOfType<Dagger>();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void TryGetOfT_ConstraintAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Dagger>().Named("b");
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>((metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(3);
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGetOfT_ConstraintAndParameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Sword() }).Named("b");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() }).Named("a");
+
+            var weapons = this.kernel.TryGet<List<IWeapon>>((metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().HaveCount(1);
+            weapons.Should().AllBeOfType<Dagger>();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(2);
+        }
+
+
+        [Fact]
+        public void TryGet_ServiceAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(2);
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGet_ServiceAndParameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>();
+            this.kernel.Bind<IWeapon>().To<Shuriken>();
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() });
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(1);
+            weaponsList.Should().AllBeOfType<Dagger>();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Dagger>().Named("b");
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), "a", Array.Empty<IParameter>());
+
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(3);
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGet_ServiceAndNameAndParameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Sword() }).Named("b");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() }).Named("a");
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(1);
+            weaponsList.Should().AllBeOfType<Dagger>();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(2);
+        }
+
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters()
+        {
+            this.kernel.Bind<IWeapon>().To<Dagger>().Named("b");
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(3);
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(0);
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        public void TryGet_ServiceAndConstraintAndParameters_ShouldPreferBindingForList()
+        {
+            this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
+            this.kernel.Bind<IWeapon>().To<Shuriken>().Named("a");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Sword() }).Named("b");
+            this.kernel.Bind<List<IWeapon>>().ToMethod(c => new List<IWeapon> { new Dagger() }).Named("a");
+
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().HaveCount(1);
+            weaponsList.Should().AllBeOfType<Dagger>();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().HaveCount(2);
+        }
+
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/340")]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullWhenTypeIsUnboundGenericTypeDefinition()
+        {
+            var service = typeof(List<>);
+
+            this.kernel.Bind<List<int>>().ToConstant(new List<int> { 1 }).Named("a");
+
+            var weapon = this.kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().BeEmpty();
+        }
+    }
+
+    public class WhenTryGetIsCalledForUnboundListOfServices : StandardKernelContext
+    {
+        [Fact]
+        public void TryGetOfT_Parameters()
+        {
+            var weapons = this.kernel.TryGet<List<IWeapon>>(Array.Empty<IParameter>());
+
+            weapons.Should().NotBeNull();
+            weapons.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGetOfT_NameAndParameters()
+        {
+            var weapons = this.kernel.TryGet<List<IWeapon>>("b", Array.Empty<IParameter>());
+
+            weapons.Should().NotBeNull();
+            weapons.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGetOfT_ConstraintAndParameters()
+        {
+            var weapons = this.kernel.TryGet<List<IWeapon>>((metadata) => metadata.Name == "b", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndParameters()
+        {
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndNameAndParameters()
+        {
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void TryGet_ServiceAndConstraintAndParameters()
+        {
+            var weapons = this.kernel.TryGet(typeof(List<IWeapon>), (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+            weapons.Should().NotBeNull();
+            weapons.Should().BeOfType<List<IWeapon>>();
+
+            var weaponsList = (List<IWeapon>)weapons;
+            weaponsList.Should().BeEmpty();
+
+            var bindings = this.kernel.GetBindings(typeof(List<IWeapon>));
+            bindings.Should().BeEmpty();
+        }
+
+        [Fact(Skip = "https://github.com/ninject/Ninject/issues/340")]
+        public void TryGet_ServiceAndConstraintAndParameters_ReturnsNullWhenTypeIsUnboundGenericTypeDefinition()
+        {
+            var service = typeof(List<>);
+
+            var weapon = this.kernel.TryGet(service, (metadata) => metadata.Name == "a", Array.Empty<IParameter>());
+
+            weapon.Should().BeNull();
+
+            var bindings = this.kernel.GetBindings(service);
+            bindings.Should().BeEmpty();
+        }
+    }
+
 
     public class WhenTryGetAndThrowOnInvalidBindingIsCalledForInterfaceBoundService : StandardKernelContext
     {
@@ -419,7 +1070,7 @@
 
             service.Should().BeOfType<OpenGenericCoContraVarianceService<string, int>>();
         }
-    
+
         [Fact]
         public void ClosedGenericsWithCoAndContraVarianceCanBeResolved()
         {
@@ -459,10 +1110,10 @@
         public void WhenProviderReturnsNullThenActivationExceptionIsThrown()
         {
             this.kernel.Bind<IWeapon>().ToProvider<NullProvider>();
-            
+
             Assert.Throws<ActivationException>(() => this.kernel.Get<IWeapon>());
         }
-    
+
         [Fact]
         public void WhenProviderReturnsNullButAllowedInSettingsThenNullIsResolved()
         {
@@ -535,7 +1186,7 @@
             bindings.Length.Should().Be(1);
         }
     }
-     
+
     public class WhenCanResolveIsCalled : StandardKernelContext
     {
         [Fact]
@@ -563,7 +1214,7 @@
                     InjectParentPrivateProperties = true
                 }))
             {
-                kernel.Get<DerivedClassWithPrivateGetter>();   
+                kernel.Get<DerivedClassWithPrivateGetter>();
             }
         }
     }
@@ -636,14 +1287,14 @@
     public class ClosedGenericService : IGeneric<int> { }
     public interface IGenericWithConstraints<T> where T : class { }
     public class GenericServiceWithConstraints<T> : IGenericWithConstraints<T> where T : class { }
-    public interface IGenericCoContraVarianceService<in T, out TK> {}
+    public interface IGenericCoContraVarianceService<in T, out TK> { }
     public class ClosedGenericCoContraVarianceService : IGenericCoContraVarianceService<string, int> { }
     public class OpenGenericCoContraVarianceService<T, TK> : IGenericCoContraVarianceService<T, TK> { }
 
 
     public class NullProvider : Ninject.Activation.Provider<Sword>
     {
-        protected override Sword CreateInstance (Activation.IContext context)
+        protected override Sword CreateInstance(Activation.IContext context)
         {
             return null;
         }
