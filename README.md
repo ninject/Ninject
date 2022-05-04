@@ -1,7 +1,7 @@
 # Ninject 
 
 [![Build status](https://ci.appveyor.com/api/projects/status/vf412wymbva3x3nv?svg=true)](https://ci.appveyor.com/project/Ninject/ninject)
-[![codecov](https://codecov.io/gh/ninject/Ninject/branch/master/graph/badge.svg)](https://codecov.io/gh/ninject/Ninject)
+[![codecov](https://codecov.io/gh/ninject/Ninject/branch/main/graph/badge.svg)](https://codecov.io/gh/ninject/Ninject)
 [![NuGet Version](http://img.shields.io/nuget/v/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/) 
 [![NuGet Downloads](http://img.shields.io/nuget/dt/Ninject.svg?style=flat)](https://www.nuget.org/packages/Ninject/)
 
