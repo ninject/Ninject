@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 namespace Ninject.Benchmarks
 {
     [MemoryDiagnoser]
-    public class ReadOnlyKernelBenchmark
+    public class StandardKernelBenchmark
     {
         private const int PerThreadLoopCount = 1_000;
         private const int ThreadCount = 20;
 
-        private IReadOnlyKernel _kernelWithConstructorAndPropertyInjection;
-        private IReadOnlyKernel _kernelWithOnlyConstructorInjection;
+        private IKernel _kernelWithConstructorAndPropertyInjection;
+        private IKernel _kernelWithOnlyConstructorInjection;
         private IRequest _weaponRequest;
         private IRequest _clericRequest;
         private IRequest _reflectRequest;
@@ -86,7 +86,7 @@ namespace Ninject.Benchmarks
         [Benchmark]
         public void GetBindings_FromCache()
         {
-            var bindings = _readOnlyKernel.GetBindings(typeof(ICleric));
+            var bindings = _kernelWithConstructorAndPropertyInjection.GetBindings(typeof(ICleric));
             foreach (var binding in bindings)
             {
                 if (binding.Service == null)
@@ -381,17 +381,17 @@ namespace Ninject.Benchmarks
         {
         }
 
-        private static Dictionary<Type, IBinding[]> GetBindingCache(IReadOnlyKernel readOnlyKernel)
+        private static Dictionary<Type, IBinding[]> GetBindingCache(IKernel kernel)
         {
             const string bindingCacheFieldName = "bindingCache";
 
-            var bindingCacheField = typeof(ReadOnlyKernel).GetField(bindingCacheFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var bindingCacheField = typeof(StandardKernel).GetField(bindingCacheFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             if (bindingCacheField == null)
             {
-                throw new Exception($"Field '{bindingCacheFieldName}' does not exist in {nameof(ReadOnlyKernel)}. Update {nameof(ReadOnlyKernelBenchmark) + "." + nameof(GetBindingCache)} to match the {nameof(ReadOnlyKernel)} implementation.");
+                throw new Exception($"Field '{bindingCacheFieldName}' does not exist in {nameof(StandardKernel)}. Update {nameof(StandardKernelBenchmark) + "." + nameof(GetBindingCache)} to match the {nameof(StandardKernel)} implementation.");
             }
 
-            var bindingCache = bindingCacheField.GetValue(readOnlyKernel) as Dictionary<Type, IBinding[]>;
+            var bindingCache = bindingCacheField.GetValue(kernel) as Dictionary<Type, IBinding[]>;
             if (bindingCache == null)
             {
                 throw new Exception($"BindingCache is null or has changed type. Expected type {typeof(Dictionary<Type, IBinding[]>).FullName}, but was {bindingCacheField.FieldType.FullName}.");
@@ -400,34 +400,34 @@ namespace Ninject.Benchmarks
             return bindingCache;
         }
 
-        private static IReadOnlyKernel BuildKernel(INinjectSettings ninjectSettings)
+        private static IKernel BuildKernel(INinjectSettings ninjectSettings)
         {
-            var kernelConfiguration = new KernelConfiguration(ninjectSettings);
-            kernelConfiguration.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
-            kernelConfiguration.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWarrior>().To<FootSoldier>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWarrior>().To<FootSoldier>();
-            kernelConfiguration.Bind<IWeapon>().To<Shuriken>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWeapon>().To<ShortSword>().WhenInjectedExactlyInto<NinjaBarracks>();
-            kernelConfiguration.Bind<IWeapon>().To<Sword>();
-            kernelConfiguration.Bind<IWeapon>().To<Dagger>();
-            kernelConfiguration.Bind<ICleric>().To<Monk>();
-            kernelConfiguration.Bind(typeof(ICollection<>)).To(typeof(List<>));
-            kernelConfiguration.Bind(typeof(IList<>)).To(typeof(List<>));
-            kernelConfiguration.Bind<ISingletonService>().To<SingletonService>().InSingletonScope();
-            kernelConfiguration.Bind<IThreadLocalService>().To<ThreadLocalService>().InThreadScope();
+            var kernel = new StandardKernel(ninjectSettings);
+            kernel.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWarrior>().To<FootSoldier>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWarrior>().To<FootSoldier>();
+            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWeapon>().To<ShortSword>().WhenInjectedExactlyInto<NinjaBarracks>();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<IWeapon>().To<Dagger>();
+            kernel.Bind<ICleric>().To<Monk>();
+            kernel.Bind(typeof(ICollection<>)).To(typeof(List<>));
+            kernel.Bind(typeof(IList<>)).To(typeof(List<>));
+            kernel.Bind<ISingletonService>().To<SingletonService>().InSingletonScope();
+            kernel.Bind<IThreadLocalService>().To<ThreadLocalService>().InThreadScope();
 
-            kernelConfiguration.Bind<ILeasure>()
+            kernel.Bind<ILeasure>()
                                .To<TakeAWalk>()
                                .WithParameter(new ConstructorArgument("walkTime", TimeSpan.FromMinutes(5), true));
-            kernelConfiguration.Bind<IAnimal>()
+            kernel.Bind<IAnimal>()
                                .To<Dog>()
                                .WhenInjectedExactlyInto<TakeAWalk>();
-            kernelConfiguration.Bind<IWeapon>()
+            kernel.Bind<IWeapon>()
                                .To<Dagger>()
                                .WhenInjectedExactlyInto<TakeAWalk>();
 
-            return kernelConfiguration.BuildReadOnlyKernel();
+            return kernel;
         }
 
         public interface ISingletonService

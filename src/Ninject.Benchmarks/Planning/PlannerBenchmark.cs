@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Ninject.Components;
 using Ninject.Planning;
 using Ninject.Planning.Strategies;
 using Ninject.Tests.Fakes;
@@ -155,25 +156,17 @@ namespace Ninject.Benchmarks.Planning
             _plannerWithoutDelay = new Planner(_strategiesWithoutDelay);
         }
 
-        public class DelayPlanningStrategy : IPlanningStrategy
+        public class DelayPlanningStrategy : NinjectComponent, IPlanningStrategy
         {
             public void Execute(IPlan plan)
             {
                 Task.Delay(StrategyExecuteDelay);
             }
-
-            public void Dispose()
-            {
-            }
         }
 
-        public class NoOpPlanningStrategy : IPlanningStrategy
+        public class NoOpPlanningStrategy : NinjectComponent, IPlanningStrategy
         {
             public void Execute(IPlan plan)
-            {
-            }
-
-            public void Dispose()
             {
             }
         }

@@ -39,8 +39,7 @@ namespace Ninject.Benchmarks.Activation
         private ITarget _target;
         private IBinding _bindingWithoutParameters;
         private NinjectSettings _ninjectSettings;
-        private KernelConfiguration _kernelConfiguration;
-        private IReadOnlyKernel _kernel;
+        private IKernel _kernel;
 
         public RequestBenchmark()
         {
@@ -50,13 +49,12 @@ namespace Ninject.Benchmarks.Activation
                     ActivationCacheDisabled = true,
                     LoadExtensions = false
                 };
-            _kernelConfiguration = new KernelConfiguration(_ninjectSettings);
-            _kernel = _kernelConfiguration.BuildReadOnlyKernel();
+            _kernel = new StandardKernel(_ninjectSettings);
             _service = typeof(MyInstrumentedService);
             _target = CreatePropertyTarget(_service);
             _constraint = null;
             _scopeCallback = null;
-            _cachePruner = new GarbageCollectionCachePruner(_ninjectSettings);
+            _cachePruner = new GarbageCollectionCachePruner { Settings = _ninjectSettings };
             _pipeline = new Pipeline(Enumerable.Empty<IActivationStrategy>(), new ActivationCache(_cachePruner));
             _cache = new Cache(_pipeline, _cachePruner);
             _planner = new Planner(Enumerable.Empty<IPlanningStrategy>());
@@ -184,7 +182,7 @@ namespace Ninject.Benchmarks.Activation
 
         private Context CreateContext(IRequest request, IBinding binding)
         {
-            return new Context(_kernel, _ninjectSettings, request, binding, _cache, _planner, _pipeline, _exceptionFormatter);
+            return new Context(_kernel, request, binding, _cache, _planner, _pipeline, _exceptionFormatter);
         }
 
         private static ITarget CreatePropertyTarget(Type service)

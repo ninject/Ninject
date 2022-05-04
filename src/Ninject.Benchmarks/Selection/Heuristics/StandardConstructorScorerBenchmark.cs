@@ -49,17 +49,16 @@ namespace Ninject.Benchmarks.Selection.Heuristics
         {
             var ninjectSettings = new NinjectSettings { LoadExtensions = false };
 
-            var kernelConfiguration = new KernelConfiguration(ninjectSettings);
-            kernelConfiguration.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
-            kernelConfiguration.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWarrior>().To<FootSoldier>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWeapon>().To<Shuriken>().WhenInjectedExactlyInto<Barracks>();
-            kernelConfiguration.Bind<IWeapon>().To<ShortSword>().WhenInjectedExactlyInto<Spartan>();
+            var kernel = new StandardKernel(ninjectSettings);
+            kernel.Bind<IWarrior>().To<SpecialNinja>().WhenInjectedExactlyInto<NinjaBarracks>();
+            kernel.Bind<IWarrior>().To<Samurai>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWarrior>().To<FootSoldier>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWeapon>().To<Shuriken>().WhenInjectedExactlyInto<Barracks>();
+            kernel.Bind<IWeapon>().To<ShortSword>().WhenInjectedExactlyInto<Spartan>();
 
-            _injectorFactory = new ExpressionInjectorFactory();
+            _injectorFactory = new DynamicMethodInjectorFactory();
 
-            _contextWithParams = CreateContext(kernelConfiguration,
-                                               kernelConfiguration.BuildReadOnlyKernel(),
+            _contextWithParams = CreateContext(kernel,
                                                new List<IParameter>
                                                     {
                                                         new ConstructorArgument("height", 34),
@@ -67,14 +66,11 @@ namespace Ninject.Benchmarks.Selection.Heuristics
                                                         new ConstructorArgument("width", 17),
                                                         new ConstructorArgument("location", "Biutiful")
                                                     },
-                                               typeof(StandardConstructorScorerBenchmark),
-                                               ninjectSettings);
+                                               typeof(StandardConstructorScorerBenchmark));
 
-            _contextWithoutParams = CreateContext(kernelConfiguration,
-                                                  kernelConfiguration.BuildReadOnlyKernel(),
+            _contextWithoutParams = CreateContext(kernel,
                                                   Array.Empty<IParameter>(),
-                                                  typeof(StandardConstructorScorerBenchmark),
-                                                  ninjectSettings);
+                                                  typeof(StandardConstructorScorerBenchmark));
 
             _injectCtor = typeof(NinjaBarracks).GetConstructor(new[] { typeof(IWarrior), typeof(IWeapon) });
             _injectCtorDirective = new ConstructorInjectionDirective(_injectCtor, _injectorFactory.Create(_injectCtor));
@@ -103,7 +99,7 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _enumerableCtor = typeof(RequestsEnumerable).GetConstructor(new[] { typeof(IEnumerable<IChild>) });
             _enumerableCtorDirective = new ConstructorInjectionDirective(_enumerableCtor, _injectorFactory.Create(_enumerableCtor));
 
-            _standardConstructorScorer = new StandardConstructorScorer(ninjectSettings);
+            _standardConstructorScorer = new StandardConstructorScorer { Settings = ninjectSettings };
         }
 
         [Benchmark]
@@ -160,7 +156,7 @@ namespace Ninject.Benchmarks.Selection.Heuristics
             _standardConstructorScorer.Score(_contextWithParams, _spartanHeightAndWeaponCtorDirective);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernel kernel, IReadOnlyList<IParameter> parameters, Type serviceType)
         {
             var request = new Request(typeof(StandardConstructorScorerBenchmark),
                                       null,
@@ -169,14 +165,13 @@ namespace Ninject.Benchmarks.Selection.Heuristics
                                       false,
                                       true);
 
-            return new Context(readonlyKernel,
-                               ninjectSettings,
+            return new Context(kernel,
                                request,
                                new Binding(serviceType),
-                               kernelConfiguration.Components.Get<ICache>(),
-                               kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>(),
-                               kernelConfiguration.Components.Get<IExceptionFormatter>());
+                               kernel.Components.Get<ICache>(),
+                               kernel.Components.Get<IPlanner>(),
+                               kernel.Components.Get<IPipeline>(),
+                               kernel.Components.Get<IExceptionFormatter>());
         }
 
         public class Monastery

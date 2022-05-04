@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Tests.TestAssembly"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Tests.TestModule", "src\Ninject.Tests.TestModule\Ninject.Tests.TestModule.csproj", "{3D6710B4-726A-44B2-A4A2-CCF3882FC611}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ninject.Benchmarks", "src\Ninject.Benchmarks\Ninject.Benchmarks.csproj", "{78AA0240-EAAE-4D63-83C7-01E2BF702B8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{3D6710B4-726A-44B2-A4A2-CCF3882FC611}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D6710B4-726A-44B2-A4A2-CCF3882FC611}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D6710B4-726A-44B2-A4A2-CCF3882FC611}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78AA0240-EAAE-4D63-83C7-01E2BF702B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78AA0240-EAAE-4D63-83C7-01E2BF702B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78AA0240-EAAE-4D63-83C7-01E2BF702B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78AA0240-EAAE-4D63-83C7-01E2BF702B8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

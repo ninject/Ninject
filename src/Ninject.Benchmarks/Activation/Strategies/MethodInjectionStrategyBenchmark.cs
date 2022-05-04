@@ -22,19 +22,17 @@ namespace Ninject.Benchmarks.Activation.Strategies
 
         public MethodInjectionStrategyBenchmark()
         {
-            var injectorFactory = new ExpressionInjectorFactory();
+            var injectorFactory = new DynamicMethodInjectorFactory();
 
             var ninjectSettings = new NinjectSettings { LoadExtensions = false };
-            var kernelConfiguration = new KernelConfiguration(ninjectSettings);
-            kernelConfiguration.Bind<MyService>().ToSelf();
-            kernelConfiguration.Bind<IWarrior>().To<Monk>();
-            kernelConfiguration.Bind<IWeapon>().To<Sword>();
+            var kernel = new StandardKernel(ninjectSettings);
+            kernel.Bind<MyService>().ToSelf();
+            kernel.Bind<IWarrior>().To<Monk>();
+            kernel.Bind<IWeapon>().To<Sword>();
 
-            _context = CreateContext(kernelConfiguration,
-                                     kernelConfiguration.BuildReadOnlyKernel(),
+            _context = CreateContext(kernel,
                                      Array.Empty<IParameter>(),
-                                     typeof(MyService),
-                                     ninjectSettings);
+                                     typeof(MyService));
             _reference = new InstanceReference { Instance = _context.Resolve() };
 
             _methodInjectionStrategy = new MethodInjectionStrategy();
@@ -46,7 +44,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
             _methodInjectionStrategy.Activate(_context, _reference);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernel kernel, IReadOnlyList<IParameter> parameters, Type serviceType)
         {
             var request = new Request(serviceType,
                                       null,
@@ -55,16 +53,15 @@ namespace Ninject.Benchmarks.Activation.Strategies
                                       false,
                                       true);
 
-            var binding = kernelConfiguration.GetBindings(serviceType).Single();
+            var binding = kernel.GetBindings(serviceType).Single();
 
-            return new Context(readonlyKernel,
-                               ninjectSettings,
+            return new Context(kernel,
                                request,
                                binding,
-                               kernelConfiguration.Components.Get<ICache>(),
-                               kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>(),
-                               kernelConfiguration.Components.Get<IExceptionFormatter>());
+                               kernel.Components.Get<ICache>(),
+                               kernel.Components.Get<IPlanner>(),
+                               kernel.Components.Get<IPipeline>(),
+                               kernel.Components.Get<IExceptionFormatter>());
         }
 
         public class MyService

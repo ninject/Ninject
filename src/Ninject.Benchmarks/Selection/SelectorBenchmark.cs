@@ -25,43 +25,87 @@ namespace Ninject.Benchmarks.Selection
         public void GlobalSetup()
         {
             _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue = new NinjectSettings
+            {
+                InjectNonPublic = true,
+                InjectParentPrivateProperties = true
+            };
+            _selectorInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue = new Selector(
+                new[]
                 {
-                    InjectNonPublic = true,
-                    InjectParentPrivateProperties = true
-                };
-            _selectorInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue = new Selector(new[] { new StandardInjectionHeuristic(_settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue) },
-                                                                                                _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue);
+                    new StandardInjectionHeuristic
+                    {
+                        Settings = _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue
+                    }
+                })
+            {
+                Settings = _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsTrue
+            };
 
             _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse = new NinjectSettings
+            {
+                InjectNonPublic = true,
+                InjectParentPrivateProperties = false
+            };
+            _selectorInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse = new Selector(
+                new[]
                 {
-                    InjectNonPublic = true,
-                    InjectParentPrivateProperties = false
-                };
-            _selectorInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse = new Selector(new[] { new StandardInjectionHeuristic(_settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse) },
-                                                                                                 _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse);
+                    new StandardInjectionHeuristic
+                    {
+                        Settings = _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse
+                    }
+                })
+            {
+                Settings = _settingsInjectNonPublicIsTrueAndInjectParentPrivatePropertiesIsFalse
+            };
 
             _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue = new NinjectSettings
+            {
+                InjectNonPublic = false,
+                InjectParentPrivateProperties = true
+            };
+            _selectorInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue = new Selector(
+                new[]
                 {
-                    InjectNonPublic = false,
-                    InjectParentPrivateProperties = true
-                };
-            _selectorInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue = new Selector(new[] { new StandardInjectionHeuristic(_settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue) },
-                                                                                                 _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue);
+                    new StandardInjectionHeuristic
+                    {
+                        Settings =_settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue
+                    }
+                })
+            {
+                Settings = _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsTrue
+            };
 
             _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse = new NinjectSettings
+            {
+                InjectNonPublic = false,
+                InjectParentPrivateProperties = false
+            };
+            _selectorInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse = new Selector(
+                new[]
                 {
-                    InjectNonPublic = false,
-                    InjectParentPrivateProperties = false
-                };
-            _selectorInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse = new Selector(new[] { new StandardInjectionHeuristic(_settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse) },
-                                                                                                 _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse);
+                    new StandardInjectionHeuristic
+                    {
+                        Settings=_settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse
+                    }
+                })
+            {
+                Settings = _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse
+            };
         }
 
         [Benchmark]
         public void Constructor()
         {
-            new Selector(new[] { new StandardInjectionHeuristic(_settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse) },
-                         _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse);
+            new Selector(new[]
+            {
+                new StandardInjectionHeuristic
+                {
+                    Settings = _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse
+                }
+            })
+            {
+                Settings = _settingsInjectNonPublicIsFalseAndInjectParentPrivatePropertiesIsFalse
+            };
         }
 
         [Benchmark]

@@ -20,9 +20,9 @@ namespace Ninject.Benchmarks.Components
 
         public ComponentContainerBenchmark()
         {
-            _container = new ComponentContainer(new NinjectSettings());
-            _container.KernelConfiguration = new Mock<IKernelConfiguration>(MockBehavior.Strict).Object;
-            _container.Add<IInjectorFactory, ExpressionInjectorFactory>();
+            _container = new ComponentContainer();
+            _container.Kernel = new Mock<IKernel>(MockBehavior.Strict).Object;
+            _container.Add<IInjectorFactory, DynamicMethodInjectorFactory>();
             _container.Add<IActivationStrategy, PropertyInjectionStrategy>();
             _container.Add<IActivationStrategy, MethodInjectionStrategy>();
             _container.Add<IPipeline, Pipeline>();
@@ -47,10 +47,10 @@ namespace Ninject.Benchmarks.Components
         }
 
         [Benchmark]
-        public void Get_IKernelConfiguration()
+        public void Get_IKernel()
         {
-            var kernelConfiguration = _container.Get(typeof(IKernelConfiguration));
-            if (kernelConfiguration == null)
+            var kernel = _container.Get(typeof(IKernel));
+            if (kernel == null)
                 throw new Exception();
         }
 

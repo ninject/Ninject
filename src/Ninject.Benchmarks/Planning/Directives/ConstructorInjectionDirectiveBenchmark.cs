@@ -20,7 +20,7 @@ namespace Ninject.Benchmarks.Planning.Directives
             _zeroArgumentConstructor = typeof(NinjaBarracks).GetConstructor(new Type[0]);
             _twoArgumentConstructor = typeof(NinjaBarracks).GetConstructor(new[] { typeof(IWarrior), typeof(IWeapon) });
 
-            var injectorFactory = new ExpressionInjectorFactory();
+            var injectorFactory = new DynamicMethodInjectorFactory();
 
             _zeroArgumentIinjector = injectorFactory.Create(_zeroArgumentConstructor);
             _twoArgumentIinjector = injectorFactory.Create(_twoArgumentConstructor);

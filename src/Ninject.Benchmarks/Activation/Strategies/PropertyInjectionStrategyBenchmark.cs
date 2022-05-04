@@ -38,12 +38,12 @@ namespace Ninject.Benchmarks.Activation.Strategies
                     ActivationCacheDisabled = true,
                     LoadExtensions = false
                 };
-            var kernelConfiguration = new KernelConfiguration(ninjectSettings);
-            kernelConfiguration.Bind<MyInstrumentedService>().ToSelf();
-            kernelConfiguration.Bind<MyBareService>().ToSelf();
-            kernelConfiguration.Bind<IWarrior>().To<Monk>();
-            kernelConfiguration.Bind<IWeapon>().To<Sword>();
-            kernelConfiguration.Bind<ICleric>().To<Monk>();
+            var kernel = new StandardKernel(ninjectSettings);
+            kernel.Bind<MyInstrumentedService>().ToSelf();
+            kernel.Bind<MyBareService>().ToSelf();
+            kernel.Bind<IWarrior>().To<Monk>();
+            kernel.Bind<IWeapon>().To<Sword>();
+            kernel.Bind<ICleric>().To<Monk>();
 
             var propertyValuesFullMatch = new List<IPropertyValue>
                 {
@@ -57,33 +57,27 @@ namespace Ninject.Benchmarks.Activation.Strategies
                     new PropertyValue(nameof(MyInstrumentedService.Cleric), new Monk())
                 };
 
-            _instrumentedContextWithPropertyValuesFullMatch = CreateContext(kernelConfiguration,
-                                                                            kernelConfiguration.BuildReadOnlyKernel(),
+            _instrumentedContextWithPropertyValuesFullMatch = CreateContext(kernel,
                                                                             propertyValuesFullMatch,
                                                                             typeof(MyInstrumentedService),
                                                                             ninjectSettings);
-            _instrumentedContextWithPropertyValuesPartialMatch = CreateContext(kernelConfiguration,
-                                                                               kernelConfiguration.BuildReadOnlyKernel(),
+            _instrumentedContextWithPropertyValuesPartialMatch = CreateContext(kernel,
                                                                                propertyValuesPartialMatch,
                                                                                typeof(MyInstrumentedService),
                                                                                ninjectSettings);
-            _instrumentedContextWithoutPropertyValues = CreateContext(kernelConfiguration,
-                                                                      kernelConfiguration.BuildReadOnlyKernel(),
+            _instrumentedContextWithoutPropertyValues = CreateContext(kernel,
                                                                       Array.Empty<IParameter>(),
                                                                       typeof(MyInstrumentedService),
                                                                       ninjectSettings);
-            _bareContextWithPropertyValuesFullMatch = CreateContext(kernelConfiguration,
-                                                                    kernelConfiguration.BuildReadOnlyKernel(),
+            _bareContextWithPropertyValuesFullMatch = CreateContext(kernel,
                                                                     propertyValuesFullMatch,
                                                                     typeof(MyBareService),
                                                                     ninjectSettings);
-            _bareContextWithPropertyValuesPartialMatch = CreateContext(kernelConfiguration,
-                                                                       kernelConfiguration.BuildReadOnlyKernel(),
+            _bareContextWithPropertyValuesPartialMatch = CreateContext(kernel,
                                                                        propertyValuesPartialMatch,
                                                                        typeof(MyBareService),
                                                                        ninjectSettings);
-            _bareContextWithoutPropertyValues = CreateContext(kernelConfiguration,
-                                                              kernelConfiguration.BuildReadOnlyKernel(),
+            _bareContextWithoutPropertyValues = CreateContext(kernel,
                                                               Array.Empty<IParameter>(),
                                                               typeof(MyBareService),
                                                               ninjectSettings);
@@ -95,7 +89,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
             _instrumentedReferenceWithPropertyValuesPartialMatch = new InstanceReference { Instance = _instrumentedContextWithPropertyValuesPartialMatch.Resolve() };
             _instrumentedReferenceWithoutPropertyValues = new InstanceReference { Instance = _instrumentedContextWithoutPropertyValues.Resolve() };
 
-            _propertyInjectionStrategy = new PropertyInjectionStrategy(new ExpressionInjectorFactory(), ninjectSettings, new ExceptionFormatter());
+            _propertyInjectionStrategy = new PropertyInjectionStrategy(new DynamicMethodInjectorFactory(), new ExceptionFormatter()) { Settings = ninjectSettings };
         }
 
         [Benchmark]
@@ -134,7 +128,7 @@ namespace Ninject.Benchmarks.Activation.Strategies
             _propertyInjectionStrategy.Activate(_instrumentedContextWithoutPropertyValues, _instrumentedReferenceWithoutPropertyValues);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernel kernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
         {
             var request = new Request(serviceType,
                                       null,
@@ -143,16 +137,15 @@ namespace Ninject.Benchmarks.Activation.Strategies
                                       false,
                                       true);
 
-            var binding = kernelConfiguration.GetBindings(serviceType).Single();
+            var binding = kernel.GetBindings(serviceType).Single();
 
-            return new Context(readonlyKernel,
-                               ninjectSettings,
+            return new Context(kernel,
                                request,
                                binding,
-                               kernelConfiguration.Components.Get<ICache>(),
-                               kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>(),
-                               kernelConfiguration.Components.Get<IExceptionFormatter>());
+                               kernel.Components.Get<ICache>(),
+                               kernel.Components.Get<IPlanner>(),
+                               kernel.Components.Get<IPipeline>(),
+                               kernel.Components.Get<IExceptionFormatter>());
         }
 
         public class MyInstrumentedService

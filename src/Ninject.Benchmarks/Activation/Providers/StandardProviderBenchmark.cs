@@ -31,12 +31,11 @@ namespace Ninject.Benchmarks.Activation.Providers
                     ActivationCacheDisabled = true,
                     LoadExtensions = false
                 };
-            var kernelConfigurationWithoutBindings = new KernelConfiguration(ninjectSettings);
+            var kernelWithoutBindings = new StandardKernel(ninjectSettings);
 
             #region FromConstructorArguments
 
-            _contextWithConstructorArguments = CreateContext(kernelConfigurationWithoutBindings,
-                                                             kernelConfigurationWithoutBindings.BuildReadOnlyKernel(),
+            _contextWithConstructorArguments = CreateContext(kernelWithoutBindings,
                                                              new List<IParameter>
                                                                 {
                                                                     new ConstructorArgument("location", "Biutiful"),
@@ -44,42 +43,37 @@ namespace Ninject.Benchmarks.Activation.Providers
                                                                     new ConstructorArgument("warrior", new Monk()),
                                                                     new ConstructorArgument("weapon", new Dagger()),
                                                                 },
-                                                             typeof(NinjaBarracks),
-                                                             ninjectSettings);
-            _contextWithConstructorArguments.Plan = kernelConfigurationWithoutBindings.Components.Get<IPlanner>().GetPlan(typeof(NinjaBarracks));
+                                                             typeof(NinjaBarracks));
+            _contextWithConstructorArguments.Plan = kernelWithoutBindings.Components.Get<IPlanner>().GetPlan(typeof(NinjaBarracks));
 
             #endregion FromConstructorArguments
 
             #region FromBindings
 
-            var kernelConfigurationWithBindings = new KernelConfiguration(ninjectSettings);
-            kernelConfigurationWithBindings.Bind<IWarrior>().To<Monk>().InSingletonScope();
-            kernelConfigurationWithBindings.Bind<IWeapon>().To<Dagger>().InSingletonScope();
-            _contextWithoutConstructorArguments = CreateContext(kernelConfigurationWithBindings,
-                                                                kernelConfigurationWithBindings.BuildReadOnlyKernel(),
+            var kernelnWithBindings = new StandardKernel(ninjectSettings);
+            kernelnWithBindings.Bind<IWarrior>().To<Monk>().InSingletonScope();
+            kernelnWithBindings.Bind<IWeapon>().To<Dagger>().InSingletonScope();
+            _contextWithoutConstructorArguments = CreateContext(kernelnWithBindings,
                                                                 new List<IParameter>(),
-                                                                typeof(NinjaBarracks),
-                                                                ninjectSettings);
-            _contextWithoutConstructorArguments.Plan = kernelConfigurationWithBindings.Components.Get<IPlanner>().GetPlan(typeof(NinjaBarracks));
+                                                                typeof(NinjaBarracks));
+            _contextWithoutConstructorArguments.Plan = kernelnWithBindings.Components.Get<IPlanner>().GetPlan(typeof(NinjaBarracks));
 
             #endregion FromBindings
 
             #region FromDefaultConstructor
 
-            _contextWithDefaultConstructor = CreateContext(kernelConfigurationWithBindings,
-                                                           kernelConfigurationWithBindings.BuildReadOnlyKernel(),
+            _contextWithDefaultConstructor = CreateContext(kernelnWithBindings,
                                                            new List<IParameter>(),
-                                                           typeof(Dagger),
-                                                           ninjectSettings);
-            _contextWithDefaultConstructor.Plan = kernelConfigurationWithBindings.Components.Get<IPlanner>().GetPlan(typeof(Dagger));
+                                                           typeof(Dagger));
+            _contextWithDefaultConstructor.Plan = kernelnWithBindings.Components.Get<IPlanner>().GetPlan(typeof(Dagger));
 
             #endregion FromDefaultConstructor
 
             _warriorParameterTarget = CreateWarriorParameterTarget();
 
             _standardProvider = new StandardProvider(typeof(StandardProviderBenchmark),
-                                                     kernelConfigurationWithoutBindings.Components.Get<IPlanner>(),
-                                                     kernelConfigurationWithoutBindings.Components.Get<IConstructorScorer>());
+                                                     kernelWithoutBindings.Components.Get<IPlanner>(),
+                                                     kernelWithoutBindings.Components.Get<IConstructorScorer>());
 
         }
 
@@ -107,7 +101,7 @@ namespace Ninject.Benchmarks.Activation.Providers
             _standardProvider.GetValue(_contextWithConstructorArguments, _warriorParameterTarget);
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, IReadOnlyList<IParameter> parameters, Type serviceType, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernel kernel, IReadOnlyList<IParameter> parameters, Type serviceType)
         {
             var request = new Request(typeof(StandardProviderBenchmark),
                                       null,
@@ -116,14 +110,13 @@ namespace Ninject.Benchmarks.Activation.Providers
                                       false,
                                       true);
 
-            return new Context(readonlyKernel,
-                               ninjectSettings,
+            return new Context(kernel,
                                request,
                                new Binding(serviceType),
-                               kernelConfiguration.Components.Get<ICache>(),
-                               kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>(),
-                               kernelConfiguration.Components.Get<IExceptionFormatter>());
+                               kernel.Components.Get<ICache>(),
+                               kernel.Components.Get<IPlanner>(),
+                               kernel.Components.Get<IPipeline>(),
+                               kernel.Components.Get<IExceptionFormatter>());
         }
 
         private static ParameterTarget CreateWarriorParameterTarget()

@@ -20,8 +20,7 @@ namespace Ninject.Benchmarks.Activation.Caching
         private const int TryGetOperationsPerInvoke = 1000;
 
         private Cache _cache;
-        private KernelConfiguration _kernelConfiguration;
-        private IReadOnlyKernel _readOnlyKernel;
+        private IKernel _kernel;
         private object _instanceForScopeWithZeroEntries;
         private InstanceReference _instanceReferenceForScopeWithZeroEntries;
         private Context _contextWithNoCache;
@@ -44,8 +43,7 @@ namespace Ninject.Benchmarks.Activation.Caching
 
             _cache = new Cache(new Pipeline(Enumerable.Empty<IActivationStrategy>(), new ActivationCache(new NoOpCachePruner())), new NoOpCachePruner());
 
-            _kernelConfiguration = new KernelConfiguration();
-            _readOnlyKernel = _kernelConfiguration.BuildReadOnlyKernel();
+            _kernel = new StandardKernel(ninjectSettings);
             _instanceForScopeWithZeroEntries = new object();
             _instanceReferenceForScopeWithZeroEntries = new InstanceReference { Instance = _instanceForScopeWithZeroEntries };
 
@@ -54,10 +52,10 @@ namespace Ninject.Benchmarks.Activation.Caching
             _scopeWithZeroEntriesForBindingConfiguration = new object();
             _scopeWithMoreThanOneEntryForBindingConfiguration = new object();
 
-            _contextWithNoCache = CreateContext(_kernelConfiguration, _readOnlyKernel, typeof(string), _scopeWithNoCache, ninjectSettings);
-            _contextWithZeroEntriesForBindingConfiguration = CreateContext(_kernelConfiguration, _readOnlyKernel, typeof(string), _scopeWithZeroEntriesForBindingConfiguration, ninjectSettings);
-            _contextWithOneEntryForBindingConfiguration = CreateContext(_kernelConfiguration, _readOnlyKernel, typeof(string), _scopeWithOneEntryForBindingConfiguration, ninjectSettings);
-            _contextWithMoreThanOneEntryForBindingConfiguration = CreateContext(_kernelConfiguration, _readOnlyKernel, typeof(string), _scopeWithMoreThanOneEntryForBindingConfiguration, ninjectSettings);
+            _contextWithNoCache = CreateContext(_kernel, typeof(string), _scopeWithNoCache);
+            _contextWithZeroEntriesForBindingConfiguration = CreateContext(_kernel, typeof(string), _scopeWithZeroEntriesForBindingConfiguration);
+            _contextWithOneEntryForBindingConfiguration = CreateContext(_kernel, typeof(string), _scopeWithOneEntryForBindingConfiguration);
+            _contextWithMoreThanOneEntryForBindingConfiguration = CreateContext(_kernel, typeof(string), _scopeWithMoreThanOneEntryForBindingConfiguration);
         }
 
         [GlobalSetup]
@@ -284,7 +282,7 @@ namespace Ninject.Benchmarks.Activation.Caching
             Task.WaitAll(tasks.ToArray());
         }
 
-        private static Context CreateContext(IKernelConfiguration kernelConfiguration, IReadOnlyKernel readonlyKernel, Type serviceType, object scope, INinjectSettings ninjectSettings)
+        private static Context CreateContext(IKernel kernel, Type serviceType, object scope)
         {
             var request = new Request(typeof(CacheBenchmark),
                                       null,
@@ -300,23 +298,18 @@ namespace Ninject.Benchmarks.Activation.Caching
                 binding.ScopeCallback = ctx => scope;
             }
 
-            return new Context(readonlyKernel,
-                               ninjectSettings,
+            return new Context(kernel,
                                request,
                                binding,
-                               kernelConfiguration.Components.Get<ICache>(),
-                               kernelConfiguration.Components.Get<IPlanner>(),
-                               kernelConfiguration.Components.Get<IPipeline>(),
-                               kernelConfiguration.Components.Get<IExceptionFormatter>());
+                               kernel.Components.Get<ICache>(),
+                               kernel.Components.Get<IPlanner>(),
+                               kernel.Components.Get<IPipeline>(),
+                               kernel.Components.Get<IExceptionFormatter>());
         }
 
 
-        public class NoOpCachePruner : ICachePruner
+        public class NoOpCachePruner : NinjectComponent, ICachePruner
         {
-            public void Dispose()
-            {
-            }
-
             public void Start(IPruneable cache)
             {
             }

@@ -3,6 +3,7 @@ using Moq;
 using Ninject.Activation;
 using Ninject.Activation.Caching;
 using Ninject.Activation.Strategies;
+using Ninject.Components;
 using System.Collections.Generic;
 
 namespace Ninject.Benchmarks.Activation
@@ -18,7 +19,7 @@ namespace Ninject.Benchmarks.Activation
 
         public PipelineBenchmark()
         {
-            var cachePruner = new GarbageCollectionCachePruner(new NinjectSettings());
+            var cachePruner = new GarbageCollectionCachePruner();
             var activationCache = new ActivationCache(cachePruner);
 
             for (var i = 0; i < 1000; i++)
@@ -97,17 +98,13 @@ namespace Ninject.Benchmarks.Activation
             _pipelineWithoutStrategies.Deactivate(_context, _activatedReference);
         }
 
-        public class NoOpStrategy : IActivationStrategy
+        public class NoOpStrategy : NinjectComponent, IActivationStrategy
         {
             public void Activate(IContext context, InstanceReference reference)
             {
             }
 
             public void Deactivate(IContext context, InstanceReference reference)
-            {
-            }
-
-            public void Dispose()
             {
             }
         }
