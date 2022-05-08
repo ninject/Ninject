@@ -49,7 +49,7 @@ namespace Ninject.Benchmarks
             _kernelWithConstructorAndPropertyInjection = BuildKernel(ninjectSettingsWithConstructorAndPropertyInjection);
             _kernelWithOnlyConstructorInjection = BuildKernel(ninjectSettingsWithOnlyConstructorInjection);
 
-            _weaponRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(IWeapon), null, Array.Empty<IParameter>(), false, true);
+            _weaponRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(IWeapon), null, Array.Empty<IParameter>(), false, false);
             _clericRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(ICleric), null, Array.Empty<IParameter>(), false, true);
             _reflectRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(IReflect), null, Array.Empty<IParameter>(), false, true);
             _barracksRequest = _kernelWithConstructorAndPropertyInjection.CreateRequest(typeof(NinjaBarracks), null, Array.Empty<IParameter>(), false, true);
@@ -372,6 +372,8 @@ namespace Ninject.Benchmarks
             {
                 if (!enumerator.MoveNext())
                     throw new Exception();
+                if (!enumerator.MoveNext())
+                    throw new Exception();
                 if (enumerator.MoveNext())
                     throw new Exception();
             }
@@ -385,7 +387,7 @@ namespace Ninject.Benchmarks
         {
             const string bindingCacheFieldName = "bindingCache";
 
-            var bindingCacheField = typeof(StandardKernel).GetField(bindingCacheFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            var bindingCacheField = typeof(KernelBase).GetField(bindingCacheFieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             if (bindingCacheField == null)
             {
                 throw new Exception($"Field '{bindingCacheFieldName}' does not exist in {nameof(StandardKernel)}. Update {nameof(StandardKernelBenchmark) + "." + nameof(GetBindingCache)} to match the {nameof(StandardKernel)} implementation.");
