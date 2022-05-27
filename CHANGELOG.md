@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.3.6] - 2022-05-27
+
+### Fixed
+- Infinite loop when call `TryGet<T>(string name)` [#393](https://github.com/ninject/Ninject/issues/393)
+- `VerifycationException` when inject pointer type (.NET Framework only)
+
 ## [3.3.5] - 2022-04-23
 
 ### Fixed
