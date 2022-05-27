@@ -42,7 +42,7 @@ namespace Ninject.Injection
         /// <returns>The created injector.</returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) }, true);
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(object), new[] { typeof(object[]) }, constructor.Module, true);
 
             var il = dynamicMethod.GetILGenerator();
 
@@ -67,9 +67,9 @@ namespace Ninject.Injection
         public PropertyInjector Create(PropertyInfo property)
         {
 #if NO_SKIP_VISIBILITY
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) });
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object), property.Module });
 #else
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, true);
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object) }, property.Module, true);
 #endif
 
             var il = dynamicMethod.GetILGenerator();
@@ -96,9 +96,9 @@ namespace Ninject.Injection
         public MethodInjector Create(MethodInfo method)
         {
 #if NO_SKIP_VISIBILITY
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) });
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, method.Module);
 #else
-            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, true);
+            var dynamicMethod = new DynamicMethod(GetAnonymousMethodName(), typeof(void), new[] { typeof(object), typeof(object[]) }, method.Module, true);
 #endif
 
             var il = dynamicMethod.GetILGenerator();
