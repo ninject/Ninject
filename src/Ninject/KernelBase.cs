@@ -379,7 +379,7 @@ namespace Ninject
         /// <exception cref="ActivationException">More than one matching bindings is available for the request, and <see cref="IRequest.IsUnique"/> is <see langword="true"/>.</exception>
         public virtual IEnumerable<object> Resolve(IRequest request)
         {
-            return this.Resolve(request, true);
+            return this.Resolve(request, true, false);
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace Ninject
             return new Context(this, request, binding, this.Components.Get<ICache>(), this.Components.Get<IPlanner>(), this.Components.Get<IPipeline>(), this.Components.Get<IExceptionFormatter>());
         }
 
-        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings)
+        private IEnumerable<object> Resolve(IRequest request, bool handleMissingBindings, bool filterImplicitBindings)
         {
             void UpdateRequest(Type service)
             {
@@ -545,7 +545,7 @@ namespace Ninject
 
                 UpdateRequest(service);
 
-                return new[] { this.Resolve(request, false).CastSlow(service).ToArraySlow(service) };
+                return new[] { this.Resolve(request, false, true).CastSlow(service).ToArraySlow(service) };
             }
 
             if (request.Service.IsGenericType)
@@ -558,7 +558,7 @@ namespace Ninject
 
                     UpdateRequest(service);
 
-                    return new[] { this.Resolve(request, false).CastSlow(service).ToListSlow(service) };
+                    return new[] { this.Resolve(request, false, true).CastSlow(service).ToListSlow(service) };
                 }
 
                 if (gtd == typeof(IEnumerable<>))
@@ -567,19 +567,25 @@ namespace Ninject
 
                     UpdateRequest(service);
 
-                    return new[] { this.Resolve(request, false).CastSlow(service) };
+                    return new[] { this.Resolve(request, false, true).CastSlow(service) };
                 }
             }
 
             var satisfiedBindings = this.GetBindings(request.Service)
                                         .Where(this.SatifiesRequest(request));
+
+            if (filterImplicitBindings)
+            {
+                satisfiedBindings = satisfiedBindings.Where(binding => binding.IsImplicit == false);
+            }
+
             var satisfiedBindingEnumerator = satisfiedBindings.GetEnumerator();
 
             if (!satisfiedBindingEnumerator.MoveNext())
             {
                 if (handleMissingBindings && this.HandleMissingBinding(request))
                 {
-                    return this.Resolve(request);
+                    return this.Resolve(request, false, false);
                 }
 
                 if (request.IsOptional)
@@ -618,7 +624,7 @@ namespace Ninject
             }
             else
             {
-                if (satisfiedBindings.Any(binding => !binding.IsImplicit) || !handleMissingBindings)
+                if (satisfiedBindings.Any(binding => !binding.IsImplicit))
                 {
                     satisfiedBindings = satisfiedBindings.Where(binding => !binding.IsImplicit);
                 }
