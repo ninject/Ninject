@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed type of Parameters property in IBindingConfiguration (and implementing classes) from ICollection<IParameter> to IList<IParameter>.
 - Changed type of Parameters property in Request and Context from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
 
+## [3.3.6] - 2022-05-27
+
+### Fixed
+- Infinite loop when call `TryGet<T>(string name)` [#393](https://github.com/ninject/Ninject/issues/393)
+- `VerifycationException` when inject pointer type (.NET Framework only)
+
 ## [3.3.5] - 2022-04-23
 
 ### Fixed
