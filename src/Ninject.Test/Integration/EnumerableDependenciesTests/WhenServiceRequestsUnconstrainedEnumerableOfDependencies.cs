@@ -52,10 +52,12 @@
         [Fact]
         public void EmptyEnumerableIsResolvedIfElementTypeIsMissingBindingEvenIsWasResoved()
         {
+            var children1 = this.Kernel.Get<IEnumerable<ChildA>>();
             var child = this.Kernel.Get<ChildA>();
-            var children = this.Kernel.Get<IEnumerable<ChildA>>();
+            var children2 = this.Kernel.Get<IEnumerable<ChildA>>();
 
-            children.Should().BeEmpty();
+            children1.Should().BeEmpty();
+            children2.Should().BeEmpty();
         }
     }
 }
