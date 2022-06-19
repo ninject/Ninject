@@ -588,7 +588,7 @@
             weapons.Should().HaveCount(2);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGetOfT_Parameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>();
@@ -616,7 +616,7 @@
             bindings.Should().HaveCount(0);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGetOfT_NameAndParameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
@@ -648,7 +648,7 @@
             bindings.Should().HaveCount(0);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGetOfT_ConstraintAndParameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
@@ -683,7 +683,7 @@
             bindings.Should().HaveCount(0);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGet_ServiceAndParameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>();
@@ -721,7 +721,7 @@
             bindings.Should().HaveCount(0);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGet_ServiceAndNameAndParameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
@@ -760,7 +760,7 @@
             bindings.Should().HaveCount(0);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/333")]
+        [Fact]
         public void TryGet_ServiceAndConstraintAndParameters_ShouldPreferBindingForList()
         {
             this.kernel.Bind<IWeapon>().To<Sword>().Named("a");
