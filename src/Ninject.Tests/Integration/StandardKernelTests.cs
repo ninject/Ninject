@@ -257,7 +257,7 @@
             bindings.Should().HaveCount(1);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+        [Fact]
         public void TryGetOfT_NameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
         {
             var weapon = this.kernel.TryGet<Sword>("a", Array.Empty<IParameter>());
@@ -269,7 +269,7 @@
             bindings.Should().OnlyContain(b => b.IsImplicit);
         }
 
-        [Fact(Skip = "https://github.com/ninject/Ninject/issues/341")]
+        [Fact]
         public void TryGet_ServiceAndNameAndParameters_ReturnsNullWhenNoMatchingBindingExistsAndRegistersImplicitSelfBindingIfTypeIsSelfBindable()
         {
             var weapon = this.kernel.TryGet(typeof(Sword), "a", Array.Empty<IParameter>());
