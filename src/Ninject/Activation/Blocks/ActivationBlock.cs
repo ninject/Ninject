@@ -105,6 +105,20 @@ namespace Ninject.Activation.Blocks
         }
 
         /// <summary>
+        /// Resolves an instance for the specified request.
+        /// </summary>
+        /// <param name="request">The request to resolve.</param>
+        /// <returns>
+        /// An instance that matches the request.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ActivationException">More than one matching bindings is available for the request, and <see cref="IRequest.IsUnique"/> is <see langword="true"/>.</exception>
+        public object ResolveSingle(IRequest request)
+        {
+            return this.Parent.ResolveSingle(request);
+        }
+
+        /// <summary>
         /// Creates a request for the specified service.
         /// </summary>
         /// <param name="service">The service that is being requested.</param>
