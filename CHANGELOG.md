@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - Draft
+## [4.0.0-beta1] - 2022-10-04
 
 ### Changed
-- Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6 and .NET Standard 2.0 target frameworks.
+- Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6, .NET 6 and .NET Standard 2.0.
 - Changed return value of IBindingResolver (and implementing classes) from `IEnumerable<IBinding>` to `ICollection<IBinding>`.
 - The `IConstructorScorer ConstructorScorer` and `ICollection<IInjectionHeuristic> InjectionHeuristics` properties has been removed from **(I)Selector**
 - Changed return value of `ISelector.SelectConstructorsForInjection(Type type)` (and implementing classes) from `IEnumerable<ConstructorInfo>` to `ConstructorInfo[]`.
@@ -15,16 +15,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `GetBindings(Type service)` method in **IKernel** and **KernelBase** now returns `IBinding[]` instead of `IEnumerable<IBinding>`.
 - Removed `IHaveKernel` inheritance from `IBindingSyntax`.
 - Removed `IInjectorFactory InjectorFactory` property from `PropertyInjectionStrategy`.
-- Added a PropertyInjection setting that can be used to control whether property injection is enabled. By default, property injection is enabled.
-- Added a MethodInjection setting that can be used to control whether method injection is enabled. By default, method injection is enabled.
-- Changed type of parameters argument in Request constructor from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
-- Changed type of parameters argument in IResolutionRoot.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
-- Changed type of parameters argument in KernelBase.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
-- Changed type of parameters argument in ReadOnlyKernel.CreateRequest(...) from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
-- Changed type of Parameters property in IBindingConfiguration (and implementing classes) from ICollection<IParameter> to IList<IParameter>.
-- Changed type of Parameters property in Request and Context from IEnumerable<IParameter> to IReadOnlyList<IParameter>.
-- Added a `object ResolveSingle(IRequest request)` method to IResolutionRoot which is optimized for resolving a single instance of a given service.
-  This new method is used in the Get, TryGet and TryGetAndThrowOnInvalidBinding extension method.
+- Added a `PropertyInjection` setting that can be used to control whether property injection is enabled. By default, property injection is enabled.
+- Added a `MethodInjection` setting that can be used to control whether method injection is enabled. By default, method injection is enabled.
+- Changed type of parameters argument in `Request` constructor from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
+- Changed type of parameters argument in `IResolutionRoot.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
+- Changed type of parameters argument in `KernelBase.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
+- Changed type of parameters argument in `ReadOnlyKernel.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
+- Changed type of Parameters property in `IBindingConfiguration` (and implementing classes) from `ICollection<IParameter>` to `IList<IParameter>`.
+- Changed type of Parameters property in `Request` and `Context` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
+- Added a `object ResolveSingle(IRequest request)` method to `IResolutionRoot` which is optimized for resolving a single instance of a given service.
+  This new method is used in the `Get`, `TryGet` and `TryGetAndThrowOnInvalidBinding` extension method.
+
+### Fixed
+- Bind/Rebind to a constant generic List always returns an empty list [#333](https://github.com/ninject/Ninject/issues/333)
 
 ## [3.3.6] - 2022-05-27
 
