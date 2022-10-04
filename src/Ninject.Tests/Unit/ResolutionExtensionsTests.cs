@@ -8,20 +8,35 @@
     using Ninject.Tests.Fakes;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+    using System.Threading;
     using Xunit;
 
-    public class ResolutionExtensionsTests
+    public class ResolutionExtensionsTests : IDisposable
     {
         private Mock<IResolutionRoot> _rootMock;
         private Mock<IRequest> _requestMock;
         private MockSequence _sequence;
+        private CultureInfo originalCulture;
 
         public ResolutionExtensionsTests()
         {
             _rootMock = new Mock<IResolutionRoot>(MockBehavior.Strict);
             _requestMock = new Mock<IRequest>(MockBehavior.Strict);
             _sequence = new MockSequence();
+
+            // https://github.com/xunit/xunit/issues/1934
+            // https://github.com/xunit/samples.xunit/blob/main/UseCulture/UseCultureAttribute.cs
+            this.originalCulture = Thread.CurrentThread.CurrentUICulture;
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            CultureInfo.CurrentUICulture.ClearCachedData();
+        }
+
+        public void Dispose()
+        {
+            Thread.CurrentThread.CurrentUICulture = this.originalCulture;
+            CultureInfo.CurrentUICulture.ClearCachedData();
         }
 
         [Fact]
@@ -173,7 +188,7 @@
             var parameters = new IParameter[0];
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>) null, parameters, false, true))
+                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CanResolve(_requestMock.Object))
@@ -185,7 +200,7 @@
             _requestMock.Reset();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>) null, parameters, false, true)).Returns(_requestMock.Object);
+                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>)null, parameters, false, true)).Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CanResolve(_requestMock.Object))
                      .Returns(false);
@@ -201,7 +216,7 @@
             IParameter[] parameters = null;
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>) null, parameters, false, true))
+                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CanResolve(_requestMock.Object))
@@ -213,7 +228,7 @@
             _requestMock.Reset();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>) null, parameters, false, true))
+                     .Setup(p => p.CreateRequest(service, (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.CanResolve(_requestMock.Object))
@@ -411,7 +426,7 @@
             var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, false, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -451,7 +466,7 @@
             var activationException = new ActivationException();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, false, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, false, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -673,7 +688,7 @@
             var parameters = new IParameter[0];
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -692,7 +707,7 @@
             var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -712,7 +727,7 @@
             var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -732,7 +747,7 @@
             var activationException = new ActivationException();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.ResolveSingle(_requestMock.Object))
@@ -953,7 +968,7 @@
             var parameters = new IParameter[0];
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
@@ -974,7 +989,7 @@
             var resolvedInstance = new Dagger();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
@@ -996,7 +1011,7 @@
             var resolvedInstance = 5L;
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>) null, parameters, true, true))
+                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>)null, parameters, true, true))
                      .Returns(_requestMock.Object);
             _requestMock.InSequence(_sequence)
                         .SetupSet(p => p.ForceUnique = true);
@@ -1282,7 +1297,7 @@
             var resolvedInstances = Enumerable.Empty<object>();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
@@ -1302,11 +1317,11 @@
             var resolvedInstances = new object[] { new Dagger() };
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, parameters);
 
@@ -1328,11 +1343,11 @@
             var resolvedInstances = new object[] { 5L };
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWarrior), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWarrior>(root, parameters);
 
@@ -1355,11 +1370,11 @@
             var resolvedInstances = new object[] { new Dagger(), new Sword() };
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, parameters);
 
@@ -1375,11 +1390,11 @@
             var resolvedInstances = new object[] { new Dagger(), new Monk() };
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, parameters);
 
@@ -1405,7 +1420,7 @@
             var activationException = new ActivationException();
 
             _rootMock.InSequence(_sequence)
-                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>) null, parameters, true, false))
+                     .Setup(p => p.CreateRequest(typeof(IWeapon), (Func<IBindingMetadata, bool>)null, parameters, true, false))
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
@@ -1464,7 +1479,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, constraint, parameters);
 
@@ -1491,7 +1506,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWarrior>(root, constraint, parameters);
 
@@ -1519,7 +1534,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, constraint, parameters);
 
@@ -1539,7 +1554,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, constraint, parameters);
 
@@ -1623,7 +1638,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, name, parameters);
 
@@ -1644,7 +1659,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<string>(root, name, parameters);
 
@@ -1670,7 +1685,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, name, parameters);
 
@@ -1690,7 +1705,7 @@
                      .Returns(_requestMock.Object);
             _rootMock.InSequence(_sequence)
                      .Setup(p => p.Resolve(_requestMock.Object))
-                     .Returns((IEnumerable<object>) resolvedInstances);
+                     .Returns((IEnumerable<object>)resolvedInstances);
 
             var actual = ResolutionExtensions.GetAll<IWeapon>(root, name, parameters);
 
