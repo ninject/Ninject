@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.0.0-beta.30] - 2022-10-04
+## [4.0.0-beta.1] - 2022-10-05
 
 ### Changed
 - Dropped support for .NET Framework 4.5. We now only provide support for the .NET Framework 4.6, .NET 6 and .NET Standard 2.0.
@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed type of parameters argument in `Request` constructor from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
 - Changed type of parameters argument in `IResolutionRoot.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
 - Changed type of parameters argument in `KernelBase.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
-- Changed type of parameters argument in `ReadOnlyKernel.CreateRequest(...)` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
 - Changed type of Parameters property in `IBindingConfiguration` (and implementing classes) from `ICollection<IParameter>` to `IList<IParameter>`.
 - Changed type of Parameters property in `Request` and `Context` from `IEnumerable<IParameter>` to `IReadOnlyList<IParameter>`.
 - Added a `object ResolveSingle(IRequest request)` method to `IResolutionRoot` which is optimized for resolving a single instance of a given service.

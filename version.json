@@ -1,15 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
-  "version": "4.0.0-beta.{height}",
+  "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
+  "version": "4.0.0-beta.1",
+  "nuGetPackageVersion": {
+    "semVer": 2.0
+  },
+  "publicReleaseRefSpec": [
+    "^refs/tags/\\d+\\.\\d+\\.\\d+"
+  ],
   "cloudBuild": {
     "buildNumber": {
       "enabled": true
     }
-  },
-  "nugetPackageVersion": {
-    "semVer": 2
-  },
-  "publicReleaseRefSpec": [
-    "^refs/tags/v\\d+\\.\\d+" // we also release tags starting with vN.N
-  ]
+  }
 }
