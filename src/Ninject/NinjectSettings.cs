@@ -155,6 +155,16 @@ namespace Ninject
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether Ninject should seek for a useless constructor arguments in the binding
+        /// and fail the resolution process if it found.
+        /// </summary>
+        public bool CheckForUselessConstructorArgument
+        {
+            get { return this.Get("CheckForUselessConstructorArgument", false); }
+            set { this.Set("CheckForUselessConstructorArgument", value); }
+        }
+
+        /// <summary>
         /// Gets the value for the specified key.
         /// </summary>
         /// <typeparam name="T">The type of value to return.</typeparam>

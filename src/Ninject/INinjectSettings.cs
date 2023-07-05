@@ -104,6 +104,13 @@ namespace Ninject
         /// </summary>
         bool ThrowOnGetServiceNotFound { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Ninject should seek for a useless constructor arguments in the binding
+        /// and fail the resolution process if it found.
+        /// </summary>
+        bool CheckForUselessConstructorArgument { get; set; }
+
         /// <summary>
         /// Gets the value for the specified key.
         /// </summary>

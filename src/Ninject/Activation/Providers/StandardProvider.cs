@@ -115,6 +115,33 @@ namespace Ninject.Activation.Providers
 
             var directive = this.DetermineConstructorInjectionDirective(context);
 
+            #region check if any constructor argument is useless; fail if so
+
+            if (context.Kernel.Settings.CheckForUselessConstructorArgument)
+            {
+                foreach (IConstructorArgument constructorArgument in context.Parameters.OfType<IConstructorArgument>())
+                {
+                    var cpn = constructorArgument.Name;
+
+                    var match = false;
+                    foreach (var target in directive.Targets)
+                    {
+                        if (constructorArgument.AppliesToTarget(context, target))
+                        {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (!match)
+                    {
+                        throw new Ninject.ActivationException($"Boom");
+                    }
+                }
+            }
+
+            #endregion
+
             var arguments = directive.Targets.Select(target => this.GetValue(context, target)).ToArray();
 
             var cachedInstance = context.Cache.TryGet(context);
