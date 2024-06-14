@@ -13,8 +13,8 @@
     <PackageTags>IoC;DI;Ninject</PackageTags>
     <PackageProjectUrl>http://www.ninject.org/</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/ninject/Ninject/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageIconUrl>https://github.com/ninject/ninject/raw/master/logos/Ninject-Logo32.png</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/ninject/ninject/raw/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageIcon>Ninject-Logo100.png</PackageIcon>
+    <PackageLicenseExpression>Apache-2.0 OR MS-PL</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -33,6 +33,10 @@
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\logos\Ninject-Logo100.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
